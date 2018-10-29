@@ -4,10 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import mystiqa.main.screen.PlayScreen;
 
 public class Player extends Humanoid {
     @Override
-    public void update() {
+    public void update(PlayScreen play) {
         Vector2 dir = new Vector2();
 
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
@@ -42,6 +43,6 @@ public class Player extends Humanoid {
             leftHand.use(this);
         }
 
-        super.update();
+        super.update(play);
     }
 }

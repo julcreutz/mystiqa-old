@@ -11,6 +11,7 @@ import mystiqa.item.equipable.armor.HeadArmor;
 import mystiqa.item.equipable.hand.left.LeftHand;
 import mystiqa.item.equipable.hand.right.RightHand;
 import mystiqa.main.Game;
+import mystiqa.main.screen.PlayScreen;
 
 public class Humanoid extends Entity {
     public FeetArmor feetArmor;
@@ -35,7 +36,7 @@ public class Humanoid extends Entity {
     public TextureRegion[][] head;
 
     public Humanoid() {
-        hitbox.setSize(8, 7);
+        hitbox.set(4, 2, 8, 7);
 
         feet = Resources.getSpriteSheet("HumanFeet");
         body = Resources.getSpriteSheet("HumanBody");
@@ -43,9 +44,7 @@ public class Humanoid extends Entity {
     }
 
     @Override
-    public void update() {
-        hitbox.setPosition(x + 4, y + 2);
-
+    public void update(PlayScreen play) {
         step = MathUtils.round(stateTime * 7.5f) % 4;
         leftHandStep = leftHand != null ? leftHand.getHumanoidStep(this) : step;
         rightHandStep = rightHand != null ? rightHand.getHumanoidStep(this) : step;
@@ -58,7 +57,7 @@ public class Humanoid extends Entity {
             rightHand.update(this);
         }
 
-        super.update();
+        super.update(play);
     }
 
     @Override
