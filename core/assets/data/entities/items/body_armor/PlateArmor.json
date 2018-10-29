@@ -1,0 +1,6 @@
+{
+  "inherit": ["Item"],
+  "components": [
+    {"BodyArmorGraphics": "PlateArmor"}
+  ]
+}

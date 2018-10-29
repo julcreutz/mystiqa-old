@@ -1,0 +1,6 @@
+{
+  "components": [
+    {"Position": {}},
+    {"Velocity": {}}
+  ]
+}

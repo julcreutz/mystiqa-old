@@ -1,0 +1,6 @@
+{
+  "components": [
+    {"Position": {}},
+    {"Render": "Tile"}
+  ]
+}

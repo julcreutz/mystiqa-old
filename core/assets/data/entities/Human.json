@@ -1,0 +1,10 @@
+{
+  "inherit": ["Humanoid"],
+  "components": [
+    {"HumanoidGraphics": {
+      "feet": "HumanFeet",
+      "body": "HumanBody",
+      "head": "HumanHead"
+    }}
+  ]
+}

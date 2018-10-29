@@ -1,0 +1,7 @@
+{
+  "inherit": ["Being"],
+  "components": [
+    {"Attack": {}},
+    {"AttackCollision": {}}
+  ]
+}

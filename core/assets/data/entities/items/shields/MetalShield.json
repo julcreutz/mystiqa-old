@@ -1,0 +1,6 @@
+{
+  "inherit": ["Shield"],
+  "components": [
+    {"ShieldGraphics": "MetalShield"}
+  ]
+}
