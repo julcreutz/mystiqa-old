@@ -13,7 +13,7 @@ public class Hitbox {
         hitbox = new Rectangle();
     }
 
-    public void set(int x, int y, int w, int h) {
+    public void set(float x, float y, int w, int h) {
         this.x = x;
         this.y = y;
 
@@ -26,5 +26,9 @@ public class Hitbox {
 
     public void update(Entity e) {
         update(e, 0, 0);
+    }
+
+    public boolean overlaps(Hitbox hitbox) {
+        return this.hitbox.width > 0 && this.hitbox.height > 0 && this.hitbox.overlaps(hitbox.hitbox);
     }
 }

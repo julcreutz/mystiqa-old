@@ -1,6 +1,7 @@
 package mystiqa.main.screen;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import mystiqa.Resources;
 import mystiqa.entity.Entity;
@@ -38,9 +39,12 @@ public class PlayScreen extends Screen {
         ba.graphics = Resources.getSpriteSheet("PlateArmor");
         ba.equip(p);
 
+        p.damage = 1;
+
         addEntity(p);
 
-        addEntity(new Humanoid());
+        Humanoid h = new Humanoid();
+        addEntity(h);
     }
 
     @Override

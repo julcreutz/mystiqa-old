@@ -26,6 +26,8 @@ public class MeleeWeapon extends RightHand {
 
             h.blockDirectionChange = true;
 
+            h.attackHitbox.set(0, 0, 0, 0);
+
             if (attack) {
                 h.velX *= 0;
                 h.velY *= 0;
@@ -34,7 +36,10 @@ public class MeleeWeapon extends RightHand {
                 if (attackTime < 0) {
                     attackTime = 0;
                     h.blockDirectionChange = false;
+                } else {
+                    h.attackHitbox.set(MathUtils.cosDeg(rot) * 8f, MathUtils.sinDeg(rot) * 8f, 16, 16);
                 }
+
             } else {
                 h.velX *= .5f;
                 h.velY *= .5f;

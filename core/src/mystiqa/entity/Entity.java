@@ -2,6 +2,7 @@ package mystiqa.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
 import mystiqa.Hitbox;
 import mystiqa.main.Game;
 import mystiqa.main.screen.PlayScreen;
@@ -17,19 +18,69 @@ public abstract class Entity {
     public Hitbox attackHitbox;
     public Hitbox defendHitbox;
 
+    public Array<Entity> hit;
+    public float hitTime;
+
+    public int health;
+    public int maxHealth;
+
+    public int damage;
+
     public Entity() {
         hitbox = new Hitbox();
         attackHitbox = new Hitbox();
         defendHitbox = new Hitbox();
+
+        hit = new Array<Entity>();
+
+        health = maxHealth = 1;
     }
 
     public void update(PlayScreen play) {
+        attackHitbox.update(this);
+        defendHitbox.update(this);
+
+        // Attack collision detection
+        for (Entity e : play.entities) {
+            if (this != e) {
+                if (e.hitTime <= 0) {
+                    boolean contains = hit.contains(e, true);
+
+                    if (attackHitbox.overlaps(e.hitbox)) {
+                        if (!contains) {
+                            hit.add(e);
+                            if (attackHitbox.overlaps(e.defendHitbox)) {
+                                onDefend();
+                            } else {
+                                e.hitTime = .1f;
+
+                                e.health -= getDamage();
+
+                                onHit();
+                            }
+                        }
+                    } else if (contains) {
+                        hit.removeValue(e, true);
+                    }
+                }
+            }
+        }
+
+        if (hitTime > 0) {
+            hitTime -= Game.getDelta();
+        } else {
+            if (health <= 0) {
+                onDefend();
+                play.entities.removeValue(this, true);
+            }
+        }
+
         // Horizontal collision detection
         hitbox.update(this, velX * Game.getDelta(), 0);
 
         for (Entity e : play.entities) {
             if (this != e) {
-                if (hitbox.hitbox.overlaps(e.hitbox.hitbox)) {
+                if (hitbox.overlaps(e.hitbox)) {
                     if (velX > 0) {
                         x = e.hitbox.hitbox.x - hitbox.hitbox.width - hitbox.x;
                     } else if (velX < 0) {
@@ -47,7 +98,7 @@ public abstract class Entity {
 
         for (Entity e : play.entities) {
             if (this != e) {
-                if (hitbox.hitbox.overlaps(e.hitbox.hitbox)) {
+                if (hitbox.overlaps(e.hitbox)) {
                     if (velY > 0) {
                         y = e.hitbox.hitbox.y - hitbox.hitbox.height - hitbox.y;
                     } else if (velY < 0) {
@@ -81,5 +132,19 @@ public abstract class Entity {
 
     public void onAdded() {
 
+    }
+
+    public void onHit() {
+    }
+
+    public void onDefend() {
+    }
+
+    public void onDeath() {
+
+    }
+
+    public int getDamage() {
+        return damage;
     }
 }
