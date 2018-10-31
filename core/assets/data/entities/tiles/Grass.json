@@ -1,6 +1,0 @@
-{
-  "inherit": ["Tile"],
-  "components": [
-    {"TileGraphics": "Grass"}
-  ]
-}

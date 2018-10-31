@@ -3,6 +3,8 @@ package mystiqa.item.equipable.hand.right;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.utils.JsonValue;
+import mystiqa.Resources;
 import mystiqa.entity.Humanoid;
 import mystiqa.main.Game;
 
@@ -104,5 +106,14 @@ public class MeleeWeapon extends RightHand {
     @Override
     public int getHumanoidStep(Humanoid h) {
         return attackTime > 0 ? (attackTime > .67f ? 1 : (attackTime > .33f ? 0 : 3)) : super.getHumanoidStep(h);
+    }
+
+    @Override
+    public void deserialize(JsonValue json) {
+        super.deserialize(json);
+
+        if (json.has("graphics")) {
+            graphics = Resources.getSpriteSheet(json.getString("graphics"));
+        }
     }
 }

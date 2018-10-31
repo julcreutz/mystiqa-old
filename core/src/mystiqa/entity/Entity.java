@@ -1,9 +1,12 @@
 package mystiqa.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import mystiqa.Hitbox;
+import mystiqa.entity.stat.Damage;
+import mystiqa.entity.stat.MaxHealth;
+import mystiqa.entity.stat.Stat;
+import mystiqa.entity.stat.StatManager;
 import mystiqa.main.Game;
 import mystiqa.main.screen.PlayScreen;
 
@@ -21,10 +24,9 @@ public abstract class Entity {
     public Array<Entity> hit;
     public float hitTime;
 
-    public int health;
-    public int maxHealth;
+    public StatManager stats;
 
-    public int damage;
+    public int health;
 
     public Entity() {
         hitbox = new Hitbox();
@@ -33,7 +35,7 @@ public abstract class Entity {
 
         hit = new Array<Entity>();
 
-        health = maxHealth = 1;
+        stats = new StatManager();
     }
 
     public void update(PlayScreen play) {
@@ -131,7 +133,7 @@ public abstract class Entity {
     }
 
     public void onAdded() {
-
+        health = getMaxHealth();
     }
 
     public void onHit() {
@@ -145,6 +147,10 @@ public abstract class Entity {
     }
 
     public int getDamage() {
-        return damage;
+        return stats.countInteger(Damage.class);
+    }
+
+    public int getMaxHealth() {
+        return 1;
     }
 }

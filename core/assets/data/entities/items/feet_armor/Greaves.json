@@ -1,6 +1,0 @@
-{
-  "inherit": ["Item"],
-  "components": [
-    {"FeetArmorGraphics": "Greaves"}
-  ]
-}

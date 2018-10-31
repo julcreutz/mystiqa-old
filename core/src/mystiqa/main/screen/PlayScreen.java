@@ -1,16 +1,18 @@
 package mystiqa.main.screen;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import mystiqa.Resources;
 import mystiqa.entity.Entity;
-import mystiqa.entity.Humanoid;
 import mystiqa.entity.Player;
+import mystiqa.entity.stat.MaxHealth;
 import mystiqa.item.equipable.armor.BodyArmor;
 import mystiqa.item.equipable.armor.FeetArmor;
-import mystiqa.item.equipable.hand.left.Shield;
-import mystiqa.item.equipable.hand.right.MeleeWeapon;
+import mystiqa.item.equipable.armor.HeadArmor;
+import mystiqa.item.equipable.hand.left.LeftHand;
+import mystiqa.item.equipable.hand.right.RightHand;
+
+import java.util.Comparator;
 
 public class PlayScreen extends Screen {
     public Array<Entity> entities;
@@ -23,28 +25,15 @@ public class PlayScreen extends Screen {
 
         Player p = new Player();
 
-        Shield s = new Shield();
-        s.graphics = Resources.getSpriteSheet("MetalShield");
-        s.equip(p);
-
-        MeleeWeapon mw = new MeleeWeapon();
-        mw.graphics = Resources.getSpriteSheet("BattleAxe");
-        mw.equip(p);
-
-        FeetArmor fa = new FeetArmor();
-        fa.graphics = Resources.getSpriteSheet("Greaves");
-        fa.equip(p);
-
-        BodyArmor ba = new BodyArmor();
-        ba.graphics = Resources.getSpriteSheet("PlateArmor");
-        ba.equip(p);
-
-        p.damage = 1;
+        p.rightHand = (RightHand) Resources.getItem("BattleAxe");
+        p.leftHand = (LeftHand) Resources.getItem("MetalShield");
+        p.feetArmor = (FeetArmor) Resources.getItem("Greaves");
+        p.bodyArmor = (BodyArmor) Resources.getItem("PlateArmor");
+        p.headArmor = (HeadArmor) Resources.getItem("Helmet");
 
         addEntity(p);
 
-        Humanoid h = new Humanoid();
-        addEntity(h);
+        System.out.println(p.getDamage());
     }
 
     @Override
@@ -60,6 +49,13 @@ public class PlayScreen extends Screen {
     @Override
     public void render(SpriteBatch batch) {
         super.render(batch);
+
+        entities.sort(new Comparator<Entity>() {
+            @Override
+            public int compare(Entity o1, Entity o2) {
+                return Float.compare(o2.y, o1.y);
+            }
+        });
 
         for (Entity e : entities) {
             e.render(batch);

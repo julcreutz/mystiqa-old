@@ -1,0 +1,5 @@
+{
+  "inherit": "Shield",
+  "name": "Metal Shield",
+  "graphics": "MetalShield"
+}

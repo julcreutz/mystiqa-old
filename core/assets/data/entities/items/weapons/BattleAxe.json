@@ -1,6 +1,0 @@
-{
-  "inherit": ["MeleeWeapon"],
-  "components": [
-    {"MeleeWeaponGraphics": "BattleAxe"}
-  ]
-}

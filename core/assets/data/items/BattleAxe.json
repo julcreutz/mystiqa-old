@@ -1,0 +1,7 @@
+{
+  "inherit": "MeleeWeapon",
+  "name": "Battle Axe",
+  "graphics": "BattleAxe",
+  "stats": [
+    {"Damage": 6}
+  ]}

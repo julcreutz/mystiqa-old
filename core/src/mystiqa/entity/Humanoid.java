@@ -4,7 +4,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import mystiqa.Resources;
+import mystiqa.entity.stat.Damage;
+import mystiqa.item.equipable.Equipable;
 import mystiqa.item.equipable.armor.BodyArmor;
 import mystiqa.item.equipable.armor.FeetArmor;
 import mystiqa.item.equipable.armor.HeadArmor;
@@ -254,5 +257,42 @@ public class Humanoid extends Entity {
         }
 
         stateTime += Game.getDelta() * (new Vector2(velX, velY).len() / 48f);
+    }
+
+    @Override
+    public int getDamage() {
+        int total = super.getDamage();
+
+        for (Equipable e : getEquipment()) {
+            total += e.stats.countInteger(Damage.class);
+        }
+
+        return total;
+    }
+
+    public Array<Equipable> getEquipment() {
+        Array<Equipable> equipment = new Array<Equipable>();
+
+        if (feetArmor != null) {
+            equipment.add(feetArmor);
+        }
+
+        if (bodyArmor != null) {
+            equipment.add(bodyArmor);
+        }
+
+        if (headArmor != null) {
+            equipment.add(headArmor);
+        }
+
+        if (leftHand != null) {
+            equipment.add(leftHand);
+        }
+
+        if (rightHand != null) {
+            equipment.add(rightHand);
+        }
+
+        return equipment;
     }
 }
