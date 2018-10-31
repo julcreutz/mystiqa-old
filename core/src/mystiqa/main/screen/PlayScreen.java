@@ -25,6 +25,8 @@ public class PlayScreen extends Screen {
 
         Player p = new Player();
 
+        p.race = Resources.getHumanoidRace("Human");
+
         p.rightHand = (RightHand) Resources.getItem("BattleAxe");
         p.leftHand = (LeftHand) Resources.getItem("MetalShield");
         p.feetArmor = (FeetArmor) Resources.getItem("Greaves");
@@ -32,8 +34,6 @@ public class PlayScreen extends Screen {
         p.headArmor = (HeadArmor) Resources.getItem("Helmet");
 
         addEntity(p);
-
-        System.out.println(p.getDamage());
     }
 
     @Override

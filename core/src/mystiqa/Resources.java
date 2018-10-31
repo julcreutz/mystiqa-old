@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
+import mystiqa.entity.humanoid.HumanoidRace;
 import mystiqa.item.Item;
 import mystiqa.item.equipable.armor.BodyArmor;
 import mystiqa.item.equipable.armor.FeetArmor;
@@ -71,6 +72,21 @@ public class Resources {
                     item.deserialize(json);
                     return item;
                 }
+            }
+        }
+
+        return null;
+    }
+
+    public static HumanoidRace getHumanoidRace(String name) {
+        Array<FileHandle> files = new Array<FileHandle>();
+        Game.getFiles(Gdx.files.internal("data/humanoid_races/"), files);
+
+        for (FileHandle file : files) {
+            if (file.nameWithoutExtension().equals(name)) {
+                HumanoidRace race = new HumanoidRace();
+                race.deserialize(new JsonReader().parse(file));
+                return race;
             }
         }
 

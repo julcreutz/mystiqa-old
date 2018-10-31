@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.JsonValue;
 import mystiqa.Resources;
-import mystiqa.entity.Humanoid;
+import mystiqa.entity.humanoid.Humanoid;
 import mystiqa.main.Game;
 
 public class MeleeWeapon extends RightHand {

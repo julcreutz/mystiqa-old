@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.JsonValue;
 import mystiqa.Resources;
-import mystiqa.entity.Humanoid;
+import mystiqa.entity.humanoid.Humanoid;
 
 public class Shield extends LeftHand {
     public int dir;

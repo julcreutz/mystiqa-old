@@ -1,12 +1,12 @@
-package mystiqa.entity;
+package mystiqa.entity.humanoid;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import mystiqa.Resources;
+import mystiqa.entity.Entity;
 import mystiqa.entity.stat.Damage;
+import mystiqa.entity.stat.IntegerStat;
 import mystiqa.item.equipable.Equipable;
 import mystiqa.item.equipable.armor.BodyArmor;
 import mystiqa.item.equipable.armor.FeetArmor;
@@ -34,16 +34,10 @@ public class Humanoid extends Entity {
 
     public boolean blockDirectionChange;
 
-    public TextureRegion[][] feet;
-    public TextureRegion[][] body;
-    public TextureRegion[][] head;
+    public HumanoidRace race;
 
     public Humanoid() {
         hitbox.set(4, 2, 8, 7);
-
-        feet = Resources.getSpriteSheet("HumanFeet");
-        body = Resources.getSpriteSheet("HumanBody");
-        head = Resources.getSpriteSheet("HumanHead");
     }
 
     @Override
@@ -71,12 +65,12 @@ public class Humanoid extends Entity {
 
         switch (dir) {
             case 0:
-                batch.draw(feet[step % 2 != 0 ? (step == 1 ? 1 : 2) : 0][dir], x, y);
+                batch.draw(race.feet[step % 2 != 0 ? (step == 1 ? 1 : 2) : 0][dir], x, y);
                 if (feetArmor != null) {
                     batch.draw(feetArmor.graphics[step % 2 != 0 ? (step == 1 ? 1 : 2) : 0][dir], x, y);
                 }
 
-                batch.draw(feet[step % 2 != 0 ? (step == 1 ? 2 : 1) : 0][dir], x, y);
+                batch.draw(race.feet[step % 2 != 0 ? (step == 1 ? 2 : 1) : 0][dir], x, y);
                 if (feetArmor != null) {
                     batch.draw(feetArmor.graphics[step % 2 != 0 ? (step == 1 ? 2 : 1) : 0][dir], x, y);
                 }
@@ -85,22 +79,22 @@ public class Humanoid extends Entity {
                     leftHand.render(batch);
                 }
 
-                batch.draw(body[1 + (leftHandStep % 2 != 0 ? (leftHandStep == 1 ? 2 : 1) : 0)][dir], x, y);
+                batch.draw(race.body[1 + (leftHandStep % 2 != 0 ? (leftHandStep == 1 ? 2 : 1) : 0)][dir], x, y);
                 if (bodyArmor != null) {
                     batch.draw(bodyArmor.graphics[1 + (leftHandStep % 2 != 0 ? (leftHandStep == 1 ? 2 : 1) : 0)][dir], x, y);
                 }
 
-                batch.draw(body[0][dir], x, y);
+                batch.draw(race.body[0][dir], x, y);
                 if (bodyArmor != null) {
                     batch.draw(bodyArmor.graphics[0][dir], x, y);
                 }
 
-                batch.draw(body[1 + (rightHandStep % 2 != 0 ? (rightHandStep == 1 ? 1 : 2) : 0)][dir], x, y);
+                batch.draw(race.body[1 + (rightHandStep % 2 != 0 ? (rightHandStep == 1 ? 1 : 2) : 0)][dir], x, y);
                 if (bodyArmor != null) {
                     batch.draw(bodyArmor.graphics[1 + (rightHandStep % 2 != 0 ? (rightHandStep == 1 ? 1 : 2) : 0)][dir], x, y);
                 }
 
-                batch.draw(head[0][dir], x, y);
+                batch.draw(race.head[0][dir], x, y);
                 if (headArmor != null) {
                     batch.draw(headArmor.graphics[0][dir], x, y);
                 }
@@ -111,12 +105,12 @@ public class Humanoid extends Entity {
 
                 break;
             case 2:
-                batch.draw(feet[step % 2 != 0 ? (step == 1 ? 1 : 2) : 0][dir], x, y);
+                batch.draw(race.feet[step % 2 != 0 ? (step == 1 ? 1 : 2) : 0][dir], x, y);
                 if (feetArmor != null) {
                     batch.draw(feetArmor.graphics[step % 2 != 0 ? (step == 1 ? 1 : 2) : 0][dir], x, y);
                 }
 
-                batch.draw(feet[step % 2 != 0 ? (step == 1 ? 2 : 1) : 0][dir], x, y);
+                batch.draw(race.feet[step % 2 != 0 ? (step == 1 ? 2 : 1) : 0][dir], x, y);
                 if (feetArmor != null) {
                     batch.draw(feetArmor.graphics[step % 2 != 0 ? (step == 1 ? 2 : 1) : 0][dir], x, y);
                 }
@@ -125,22 +119,22 @@ public class Humanoid extends Entity {
                     rightHand.render(batch);
                 }
 
-                batch.draw(body[1 + (rightHandStep % 2 != 0 ? (rightHandStep == 1 ? 1 : 2) : 0)][dir], x, y);
+                batch.draw(race.body[1 + (rightHandStep % 2 != 0 ? (rightHandStep == 1 ? 1 : 2) : 0)][dir], x, y);
                 if (bodyArmor != null) {
                     batch.draw(bodyArmor.graphics[1 + (rightHandStep % 2 != 0 ? (rightHandStep == 1 ? 1 : 2) : 0)][dir], x, y);
                 }
 
-                batch.draw(body[0][dir], x, y);
+                batch.draw(race.body[0][dir], x, y);
                 if (bodyArmor != null) {
                     batch.draw(bodyArmor.graphics[0][dir], x, y);
                 }
 
-                batch.draw(body[1 + (leftHandStep % 2 != 0 ? (leftHandStep == 1 ? 2 : 1) : 0)][dir], x, y);
+                batch.draw(race.body[1 + (leftHandStep % 2 != 0 ? (leftHandStep == 1 ? 2 : 1) : 0)][dir], x, y);
                 if (bodyArmor != null) {
                     batch.draw(bodyArmor.graphics[1 + (leftHandStep % 2 != 0 ? (leftHandStep == 1 ? 2 : 1) : 0)][dir], x, y);
                 }
 
-                batch.draw(head[0][dir], x, y);
+                batch.draw(race.head[0][dir], x, y);
                 if (headArmor != null) {
                     batch.draw(headArmor.graphics[0][dir], x, y);
                 }
@@ -151,12 +145,12 @@ public class Humanoid extends Entity {
 
                 break;
             case 1:
-                batch.draw(feet[step % 2 != 0 ? (step == 1 ? 1 : 2) : 0][dir], x, y);
+                batch.draw(race.feet[step % 2 != 0 ? (step == 1 ? 1 : 2) : 0][dir], x, y);
                 if (feetArmor != null) {
                     batch.draw(feetArmor.graphics[step % 2 != 0 ? (step == 1 ? 1 : 2) : 0][dir], x, y);
                 }
 
-                batch.draw(feet[step % 2 != 0 ? (step == 1 ? 2 : 1) : 0][dir], x, y, 8, 8, 16, 16, -1, 1, 0);
+                batch.draw(race.feet[step % 2 != 0 ? (step == 1 ? 2 : 1) : 0][dir], x, y, 8, 8, 16, 16, -1, 1, 0);
                 if (feetArmor != null) {
                     batch.draw(feetArmor.graphics[step % 2 != 0 ? (step == 1 ? 2 : 1) : 0][dir], x, y, 8, 8, 16, 16, -1, 1, 0);
                 }
@@ -169,54 +163,54 @@ public class Humanoid extends Entity {
                     rightHand.render(batch);
                 }
 
-                batch.draw(body[0][dir], x, y);
+                batch.draw(race.body[0][dir], x, y);
                 if (bodyArmor != null) {
                     batch.draw(bodyArmor.graphics[0][dir], x, y);
                 }
 
-                batch.draw(body[1 + (rightHandStep % 2 != 0 ? (rightHandStep == 1 ? 2 : 1) : 0)][dir], x, y, 8, 8, 16, 16, -1, 1, 0);
+                batch.draw(race.body[1 + (rightHandStep % 2 != 0 ? (rightHandStep == 1 ? 2 : 1) : 0)][dir], x, y, 8, 8, 16, 16, -1, 1, 0);
                 if (bodyArmor != null) {
                     batch.draw(bodyArmor.graphics[1 + (rightHandStep % 2 != 0 ? (rightHandStep == 1 ? 2 : 1) : 0)][dir], x, y, 8, 8, 16, 16, -1, 1, 0);
                 }
 
-                batch.draw(body[1 + (leftHandStep % 2 != 0 ? (leftHandStep == 1 ? 1 : 2) : 0)][dir], x, y);
+                batch.draw(race.body[1 + (leftHandStep % 2 != 0 ? (leftHandStep == 1 ? 1 : 2) : 0)][dir], x, y);
                 if (bodyArmor != null) {
                     batch.draw(bodyArmor.graphics[1 + (leftHandStep % 2 != 0 ? (leftHandStep == 1 ? 1 : 2) : 0)][dir], x, y);
                 }
 
-                batch.draw(head[0][dir], x, y);
+                batch.draw(race.head[0][dir], x, y);
                 if (headArmor != null) {
                     batch.draw(headArmor.graphics[0][dir], x, y);
                 }
 
                 break;
             case 3:
-                batch.draw(feet[step % 2 != 0 ? (step == 1 ? 1 : 2) : 0][dir], x, y);
+                batch.draw(race.feet[step % 2 != 0 ? (step == 1 ? 1 : 2) : 0][dir], x, y);
                 if (feetArmor != null) {
                     batch.draw(feetArmor.graphics[step % 2 != 0 ? (step == 1 ? 1 : 2) : 0][dir], x, y);
                 }
 
-                batch.draw(feet[step % 2 != 0 ? (step == 1 ? 2 : 1) : 0][dir], x, y, 8, 8, 16, 16, -1, 1, 0);
+                batch.draw(race.feet[step % 2 != 0 ? (step == 1 ? 2 : 1) : 0][dir], x, y, 8, 8, 16, 16, -1, 1, 0);
                 if (feetArmor != null) {
                     batch.draw(feetArmor.graphics[step % 2 != 0 ? (step == 1 ? 2 : 1) : 0][dir], x, y, 8, 8, 16, 16, -1, 1, 0);
                 }
 
-                batch.draw(body[0][dir], x, y);
+                batch.draw(race.body[0][dir], x, y);
                 if (bodyArmor != null) {
                     batch.draw(bodyArmor.graphics[0][dir], x, y);
                 }
 
-                batch.draw(body[1 + (leftHandStep % 2 != 0 ? (leftHandStep == 1 ? 2 : 1) : 0)][dir], x, y, 8, 8, 16, 16, -1, 1, 0);
+                batch.draw(race.body[1 + (leftHandStep % 2 != 0 ? (leftHandStep == 1 ? 2 : 1) : 0)][dir], x, y, 8, 8, 16, 16, -1, 1, 0);
                 if (bodyArmor != null) {
                     batch.draw(bodyArmor.graphics[1 + (leftHandStep % 2 != 0 ? (leftHandStep == 1 ? 2 : 1) : 0)][dir], x, y, 8, 8, 16, 16, -1, 1, 0);
                 }
 
-                batch.draw(body[1 + (rightHandStep % 2 != 0 ? (rightHandStep == 1 ? 1 : 2) : 0)][dir], x, y);
+                batch.draw(race.body[1 + (rightHandStep % 2 != 0 ? (rightHandStep == 1 ? 1 : 2) : 0)][dir], x, y);
                 if (bodyArmor != null) {
                     batch.draw(bodyArmor.graphics[1 + (rightHandStep % 2 != 0 ? (rightHandStep == 1 ? 1 : 2) : 0)][dir], x, y);
                 }
 
-                batch.draw(head[0][dir], x, y);
+                batch.draw(race.head[0][dir], x, y);
                 if (headArmor != null) {
                     batch.draw(headArmor.graphics[0][dir], x, y);
                 }
@@ -261,13 +255,7 @@ public class Humanoid extends Entity {
 
     @Override
     public int getDamage() {
-        int total = super.getDamage();
-
-        for (Equipable e : getEquipment()) {
-            total += e.stats.countInteger(Damage.class);
-        }
-
-        return total;
+        return countInteger(Damage.class);
     }
 
     public Array<Equipable> getEquipment() {
@@ -294,5 +282,15 @@ public class Humanoid extends Entity {
         }
 
         return equipment;
+    }
+
+    public <T extends IntegerStat> int countInteger(Class<T> c) {
+        int total = stats.countInteger(c);
+
+        for (Equipable e : getEquipment()) {
+            total += e.stats.countInteger(c);
+        }
+
+        return total;
     }
 }

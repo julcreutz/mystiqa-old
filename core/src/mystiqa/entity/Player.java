@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import mystiqa.entity.humanoid.Humanoid;
 import mystiqa.main.screen.PlayScreen;
 
 public class Player extends Humanoid {

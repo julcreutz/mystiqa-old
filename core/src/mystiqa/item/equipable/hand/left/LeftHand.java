@@ -1,6 +1,6 @@
 package mystiqa.item.equipable.hand.left;
 
-import mystiqa.entity.Humanoid;
+import mystiqa.entity.humanoid.Humanoid;
 import mystiqa.item.equipable.hand.Hand;
 
 public class LeftHand extends Hand {

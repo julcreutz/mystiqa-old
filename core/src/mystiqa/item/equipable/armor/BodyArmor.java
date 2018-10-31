@@ -1,6 +1,6 @@
 package mystiqa.item.equipable.armor;
 
-import mystiqa.entity.Humanoid;
+import mystiqa.entity.humanoid.Humanoid;
 
 public class BodyArmor extends Armor {
     @Override

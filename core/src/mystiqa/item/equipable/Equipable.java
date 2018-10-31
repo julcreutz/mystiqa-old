@@ -1,7 +1,7 @@
 package mystiqa.item.equipable;
 
 import com.badlogic.gdx.utils.JsonValue;
-import mystiqa.entity.Humanoid;
+import mystiqa.entity.humanoid.Humanoid;
 import mystiqa.entity.stat.StatManager;
 import mystiqa.item.Item;
 

@@ -1,7 +1,6 @@
 package mystiqa.item.equipable.armor;
 
-import mystiqa.entity.Humanoid;
-import mystiqa.item.equipable.armor.Armor;
+import mystiqa.entity.humanoid.Humanoid;
 
 public class FeetArmor extends Armor {
     @Override
