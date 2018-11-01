@@ -4,8 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import mystiqa.Resources;
 import mystiqa.entity.Entity;
-import mystiqa.entity.Player;
-import mystiqa.entity.stat.MaxHealth;
+import mystiqa.entity.humanoid.Humanoid;
 import mystiqa.item.equipable.armor.BodyArmor;
 import mystiqa.item.equipable.armor.FeetArmor;
 import mystiqa.item.equipable.armor.HeadArmor;
@@ -23,17 +22,19 @@ public class PlayScreen extends Screen {
 
         entities = new Array<Entity>();
 
-        Player p = new Player();
+        Humanoid h = (Humanoid) Resources.getEntity("Human");
 
-        p.race = Resources.getHumanoidRace("Human");
+        if (h != null) {
+            h.controlledByPlayer = true;
 
-        p.rightHand = (RightHand) Resources.getItem("BattleAxe");
-        p.leftHand = (LeftHand) Resources.getItem("MetalShield");
-        p.feetArmor = (FeetArmor) Resources.getItem("Greaves");
-        p.bodyArmor = (BodyArmor) Resources.getItem("PlateArmor");
-        p.headArmor = (HeadArmor) Resources.getItem("Helmet");
+            h.rightHand = (RightHand) Resources.getItem("Longsword");
+            h.leftHand = (LeftHand) Resources.getItem("MetalShield");
+            h.feetArmor = (FeetArmor) Resources.getItem("Greaves");
+            h.bodyArmor = (BodyArmor) Resources.getItem("PlateArmor");
+            h.headArmor = (HeadArmor) Resources.getItem("Helmet");
 
-        addEntity(p);
+            addEntity(h);
+        }
     }
 
     @Override

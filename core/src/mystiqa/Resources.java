@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
+import mystiqa.entity.Entity;
+import mystiqa.entity.humanoid.Humanoid;
 import mystiqa.entity.humanoid.HumanoidRace;
 import mystiqa.item.Item;
 import mystiqa.item.equipable.armor.BodyArmor;
@@ -87,6 +89,31 @@ public class Resources {
                 HumanoidRace race = new HumanoidRace();
                 race.deserialize(new JsonReader().parse(file));
                 return race;
+            }
+        }
+
+        return null;
+    }
+
+    public static Entity getEntity(String name) {
+        Array<FileHandle> files = new Array<FileHandle>();
+        Game.getFiles(Gdx.files.internal("data/entities/"), files);
+
+        for (FileHandle file : files) {
+            if (file.nameWithoutExtension().equals(name)) {
+                JsonValue json = new JsonReader().parse(file);
+
+                String inherit = json.getString("inherit");
+                Entity e = null;
+
+                if (inherit.equals("Humanoid")) {
+                    e = new Humanoid();
+                }
+
+                if (e != null) {
+                    e.deserialize(json);
+                    return e;
+                }
             }
         }
 

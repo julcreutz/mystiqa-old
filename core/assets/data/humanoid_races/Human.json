@@ -1,5 +1,8 @@
 {
   "feet": "HumanFeet",
   "body": "HumanBody",
-  "head": "HumanHead"
+  "head": "HumanHead",
+  "stats": [
+    {"MaxHealth": 16}
+  ]
 }

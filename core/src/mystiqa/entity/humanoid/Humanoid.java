@@ -1,12 +1,17 @@
 package mystiqa.entity.humanoid;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.JsonValue;
+import mystiqa.Resources;
 import mystiqa.entity.Entity;
 import mystiqa.entity.stat.Damage;
 import mystiqa.entity.stat.IntegerStat;
+import mystiqa.entity.stat.MaxHealth;
 import mystiqa.item.equipable.Equipable;
 import mystiqa.item.equipable.armor.BodyArmor;
 import mystiqa.item.equipable.armor.FeetArmor;
@@ -36,15 +41,55 @@ public class Humanoid extends Entity {
 
     public HumanoidRace race;
 
+    public boolean controlledByPlayer;
+
     public Humanoid() {
         hitbox.set(4, 2, 8, 7);
     }
 
     @Override
     public void update(PlayScreen play) {
+        if (controlledByPlayer) {
+            Vector2 dir = new Vector2();
+
+            if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+                dir.x -= 1;
+            }
+
+            if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+                dir.x += 1;
+            }
+
+            if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+                dir.y -= 1;
+            }
+
+            if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+                dir.y += 1;
+            }
+
+            if (dir.x != 0 || dir.y != 0) {
+                float a = dir.angle();
+                float speed = 48;
+
+                velX += MathUtils.cosDeg(a) * speed;
+                velY += MathUtils.sinDeg(a) * speed;
+            }
+
+            if (rightHand != null && Gdx.input.isKeyPressed(Input.Keys.F)) {
+                rightHand.use(this);
+            }
+
+            if (leftHand != null && Gdx.input.isKeyPressed(Input.Keys.D)) {
+                leftHand.use(this);
+            }
+        } else {
+
+        }
+
         step = MathUtils.round(stateTime * 7.5f) % 4;
-        leftHandStep = leftHand != null ? leftHand.getHumanoidStep(this) : step;
-        rightHandStep = rightHand != null ? rightHand.getHumanoidStep(this) : step;
+        leftHandStep = leftHand != null ? leftHand.step : step;
+        rightHandStep = rightHand != null ? rightHand.step : step;
 
         if (leftHand != null) {
             leftHand.update(this);
@@ -63,6 +108,14 @@ public class Humanoid extends Entity {
 
         float y = this.y + (step % 2 != 0 ? -1 : 0);
 
+        if (leftHand != null && leftHand.behind) {
+            leftHand.render(batch);
+        }
+
+        if (rightHand != null && rightHand.behind) {
+            rightHand.render(batch);
+        }
+
         switch (dir) {
             case 0:
                 batch.draw(race.feet[step % 2 != 0 ? (step == 1 ? 1 : 2) : 0][dir], x, y);
@@ -73,10 +126,6 @@ public class Humanoid extends Entity {
                 batch.draw(race.feet[step % 2 != 0 ? (step == 1 ? 2 : 1) : 0][dir], x, y);
                 if (feetArmor != null) {
                     batch.draw(feetArmor.graphics[step % 2 != 0 ? (step == 1 ? 2 : 1) : 0][dir], x, y);
-                }
-
-                if (leftHand != null) {
-                    leftHand.render(batch);
                 }
 
                 batch.draw(race.body[1 + (leftHandStep % 2 != 0 ? (leftHandStep == 1 ? 2 : 1) : 0)][dir], x, y);
@@ -97,10 +146,6 @@ public class Humanoid extends Entity {
                 batch.draw(race.head[0][dir], x, y);
                 if (headArmor != null) {
                     batch.draw(headArmor.graphics[0][dir], x, y);
-                }
-
-                if (rightHand != null) {
-                    rightHand.render(batch);
                 }
 
                 break;
@@ -115,10 +160,6 @@ public class Humanoid extends Entity {
                     batch.draw(feetArmor.graphics[step % 2 != 0 ? (step == 1 ? 2 : 1) : 0][dir], x, y);
                 }
 
-                if (rightHand != null) {
-                    rightHand.render(batch);
-                }
-
                 batch.draw(race.body[1 + (rightHandStep % 2 != 0 ? (rightHandStep == 1 ? 1 : 2) : 0)][dir], x, y);
                 if (bodyArmor != null) {
                     batch.draw(bodyArmor.graphics[1 + (rightHandStep % 2 != 0 ? (rightHandStep == 1 ? 1 : 2) : 0)][dir], x, y);
@@ -139,10 +180,6 @@ public class Humanoid extends Entity {
                     batch.draw(headArmor.graphics[0][dir], x, y);
                 }
 
-                if (leftHand != null) {
-                    leftHand.render(batch);
-                }
-
                 break;
             case 1:
                 batch.draw(race.feet[step % 2 != 0 ? (step == 1 ? 1 : 2) : 0][dir], x, y);
@@ -153,14 +190,6 @@ public class Humanoid extends Entity {
                 batch.draw(race.feet[step % 2 != 0 ? (step == 1 ? 2 : 1) : 0][dir], x, y, 8, 8, 16, 16, -1, 1, 0);
                 if (feetArmor != null) {
                     batch.draw(feetArmor.graphics[step % 2 != 0 ? (step == 1 ? 2 : 1) : 0][dir], x, y, 8, 8, 16, 16, -1, 1, 0);
-                }
-
-                if (leftHand != null) {
-                    leftHand.render(batch);
-                }
-
-                if (rightHand != null) {
-                    rightHand.render(batch);
                 }
 
                 batch.draw(race.body[0][dir], x, y);
@@ -215,15 +244,15 @@ public class Humanoid extends Entity {
                     batch.draw(headArmor.graphics[0][dir], x, y);
                 }
 
-                if (leftHand != null) {
-                    leftHand.render(batch);
-                }
-
-                if (rightHand != null) {
-                    rightHand.render(batch);
-                }
-
                 break;
+        }
+
+        if (leftHand != null && !leftHand.behind) {
+            leftHand.render(batch);
+        }
+
+        if (rightHand != null && !rightHand.behind) {
+            rightHand.render(batch);
         }
     }
 
@@ -258,6 +287,11 @@ public class Humanoid extends Entity {
         return countInteger(Damage.class);
     }
 
+    @Override
+    public int getMaxHealth() {
+        return countInteger(MaxHealth.class);
+    }
+
     public Array<Equipable> getEquipment() {
         Array<Equipable> equipment = new Array<Equipable>();
 
@@ -287,10 +321,23 @@ public class Humanoid extends Entity {
     public <T extends IntegerStat> int countInteger(Class<T> c) {
         int total = stats.countInteger(c);
 
+        if (race != null) {
+            total += race.stats.countInteger(c);
+        }
+
         for (Equipable e : getEquipment()) {
             total += e.stats.countInteger(c);
         }
 
         return total;
+    }
+
+    @Override
+    public void deserialize(JsonValue json) {
+        super.deserialize(json);
+
+        if (json.has("race")) {
+            race = Resources.getHumanoidRace(json.getString("race"));
+        }
     }
 }

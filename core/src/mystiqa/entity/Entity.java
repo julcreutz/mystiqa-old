@@ -2,8 +2,10 @@ package mystiqa.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.JsonValue;
 import mystiqa.Hitbox;
 import mystiqa.entity.stat.Damage;
+import mystiqa.entity.stat.MaxHealth;
 import mystiqa.entity.stat.StatManager;
 import mystiqa.main.Game;
 import mystiqa.main.screen.PlayScreen;
@@ -149,6 +151,12 @@ public abstract class Entity {
     }
 
     public int getMaxHealth() {
-        return 1;
+        return stats.countInteger(MaxHealth.class);
+    }
+
+    public void deserialize(JsonValue json) {
+        if (json.has("stats")) {
+            stats.deserialize(json.get("stats"));
+        }
     }
 }
