@@ -9,9 +9,9 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import mystiqa.Resources;
 import mystiqa.entity.Entity;
-import mystiqa.entity.stat.Damage;
-import mystiqa.entity.stat.IntegerStat;
-import mystiqa.entity.stat.MaxHealth;
+import mystiqa.stat.Damage;
+import mystiqa.stat.IntegerStat;
+import mystiqa.stat.MaxHealth;
 import mystiqa.item.equipable.Equipable;
 import mystiqa.item.equipable.armor.BodyArmor;
 import mystiqa.item.equipable.armor.FeetArmor;
@@ -42,6 +42,8 @@ public class Humanoid extends Entity {
     public HumanoidRace race;
 
     public boolean controlledByPlayer;
+
+    public float idleTime;
 
     public Humanoid() {
         hitbox.set(4, 2, 8, 7);
@@ -86,6 +88,8 @@ public class Humanoid extends Entity {
         } else {
 
         }
+
+        idleTime += Game.getDelta();
 
         step = MathUtils.round(stateTime * 7.5f) % 4;
         leftHandStep = leftHand != null ? leftHand.step : step;
@@ -326,7 +330,7 @@ public class Humanoid extends Entity {
         }
 
         for (Equipable e : getEquipment()) {
-            total += e.stats.countInteger(c);
+            total += e.countInteger(c);
         }
 
         return total;

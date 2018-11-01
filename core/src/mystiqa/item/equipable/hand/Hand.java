@@ -11,8 +11,6 @@ public abstract class Hand extends Equipable {
     public int useState;
     public boolean using;
 
-    public float idleTime;
-
     public int step;
 
     public void use(Humanoid h) {
@@ -23,7 +21,7 @@ public abstract class Hand extends Equipable {
 
         using = true;
 
-        idleTime = 0;
+        h.idleTime = 0;
     }
 
     public void update(Humanoid h) {
@@ -33,8 +31,6 @@ public abstract class Hand extends Equipable {
         }
 
         using = false;
-
-        idleTime += Game.getDelta();
     }
 
     public void render(SpriteBatch batch) {

@@ -1,4 +1,4 @@
-package mystiqa.entity.stat;
+package mystiqa.stat;
 
 public class Damage extends IntegerStat {
 }

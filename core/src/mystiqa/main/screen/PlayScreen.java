@@ -10,6 +10,7 @@ import mystiqa.item.equipable.armor.FeetArmor;
 import mystiqa.item.equipable.armor.HeadArmor;
 import mystiqa.item.equipable.hand.left.LeftHand;
 import mystiqa.item.equipable.hand.right.RightHand;
+import mystiqa.main.Game;
 
 import java.util.Comparator;
 
@@ -35,6 +36,8 @@ public class PlayScreen extends Screen {
 
             addEntity(h);
         }
+
+        addEntity(Resources.getEntity("Human"));
     }
 
     @Override
@@ -61,6 +64,8 @@ public class PlayScreen extends Screen {
         for (Entity e : entities) {
             e.render(batch);
         }
+
+        batch.setShader(null);
     }
 
     public void addEntity(Entity e) {

@@ -3,7 +3,7 @@ package mystiqa.entity.humanoid;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.JsonValue;
 import mystiqa.Resources;
-import mystiqa.entity.stat.StatManager;
+import mystiqa.stat.StatManager;
 
 public class HumanoidRace {
     public TextureRegion[][] feet;

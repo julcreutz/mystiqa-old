@@ -4,9 +4,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import mystiqa.Hitbox;
-import mystiqa.entity.stat.Damage;
-import mystiqa.entity.stat.MaxHealth;
-import mystiqa.entity.stat.StatManager;
+import mystiqa.Resources;
+import mystiqa.stat.Damage;
+import mystiqa.stat.MaxHealth;
+import mystiqa.stat.StatManager;
 import mystiqa.main.Game;
 import mystiqa.main.screen.PlayScreen;
 
@@ -125,7 +126,11 @@ public abstract class Entity {
     }
 
     public void render(SpriteBatch batch) {
-
+        if (hitTime > 0) {
+            batch.setShader(Game.colorToAbsoluteShader(Resources.getColor("White")));
+        } else {
+            batch.setShader(null);
+        }
     }
 
     public void onMove() {

@@ -10,4 +10,8 @@ public abstract class Item {
             name = json.getString("name");
         }
     }
+
+    public String getName() {
+        return name;
+    }
 }

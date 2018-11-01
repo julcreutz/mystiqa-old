@@ -1,4 +1,4 @@
-package mystiqa.entity.stat;
+package mystiqa.stat;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;

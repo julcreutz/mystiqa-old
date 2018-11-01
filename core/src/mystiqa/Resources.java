@@ -2,6 +2,7 @@ package mystiqa;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
@@ -16,14 +17,12 @@ import mystiqa.item.equipable.armor.FeetArmor;
 import mystiqa.item.equipable.armor.HeadArmor;
 import mystiqa.item.equipable.hand.left.Shield;
 import mystiqa.item.equipable.hand.right.MeleeWeapon;
+import mystiqa.item.equipable.material.Material;
 import mystiqa.main.Game;
 
 public class Resources {
     public static TextureRegion[][] getSpriteSheet(String name) {
-        Array<FileHandle> files = new Array<FileHandle>();
-        Game.getFiles(Gdx.files.internal("data/sprite_sheets/"), files);
-
-        for (FileHandle file : files) {
+        for (FileHandle file : Game.getFiles(Gdx.files.internal("data/sprite_sheets/"))) {
             if (file.nameWithoutExtension().equals(name)) {
                 JsonValue root = new JsonReader().parse(file);
 
@@ -48,10 +47,7 @@ public class Resources {
     }
 
     public static Item getItem(String name) {
-        Array<FileHandle> files = new Array<FileHandle>();
-        Game.getFiles(Gdx.files.internal("data/items/"), files);
-
-        for (FileHandle file : files) {
+        for (FileHandle file : Game.getFiles(Gdx.files.internal("data/items/"))) {
             if (file.nameWithoutExtension().equals(name)) {
                 JsonValue json = new JsonReader().parse(file);
 
@@ -81,10 +77,7 @@ public class Resources {
     }
 
     public static HumanoidRace getHumanoidRace(String name) {
-        Array<FileHandle> files = new Array<FileHandle>();
-        Game.getFiles(Gdx.files.internal("data/humanoid_races/"), files);
-
-        for (FileHandle file : files) {
+        for (FileHandle file : Game.getFiles(Gdx.files.internal("data/humanoid_races/"))) {
             if (file.nameWithoutExtension().equals(name)) {
                 HumanoidRace race = new HumanoidRace();
                 race.deserialize(new JsonReader().parse(file));
@@ -96,10 +89,7 @@ public class Resources {
     }
 
     public static Entity getEntity(String name) {
-        Array<FileHandle> files = new Array<FileHandle>();
-        Game.getFiles(Gdx.files.internal("data/entities/"), files);
-
-        for (FileHandle file : files) {
+        for (FileHandle file : Game.getFiles(Gdx.files.internal("data/entities/"))) {
             if (file.nameWithoutExtension().equals(name)) {
                 JsonValue json = new JsonReader().parse(file);
 
@@ -114,6 +104,45 @@ public class Resources {
                     e.deserialize(json);
                     return e;
                 }
+            }
+        }
+
+        return null;
+    }
+
+    public static Material getMaterial(String name) {
+        for (FileHandle file : Game.getFiles(Gdx.files.internal("data/materials/"))) {
+            if (file.nameWithoutExtension().equals(name)) {
+                Material m = new Material();
+                m.deserialize(new JsonReader().parse(file));
+
+                return m;
+            }
+        }
+
+        return null;
+    }
+
+    public static Color getColor(String name) {
+        for (FileHandle file : Game.getFiles(Gdx.files.internal("data/colors/"))) {
+            if (file.nameWithoutExtension().equals(name)) {
+                JsonValue json = new JsonReader().parse(file);
+
+                Color c = new Color();
+
+                if (json.has("r")) {
+                    c.r = json.getInt("r");
+                }
+
+                if (json.has("g")) {
+                    c.g = json.getInt("g");
+                }
+
+                if (json.has("b")) {
+                    c.b = json.getInt("b");
+                }
+
+                return c;
             }
         }
 

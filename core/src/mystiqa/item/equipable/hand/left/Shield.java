@@ -16,7 +16,7 @@ public class Shield extends LeftHand {
 
     @Override
     public void update(Humanoid h) {
-        if (idleTime < 5) {
+        if (h.idleTime < 5) {
             if (using) {
                 dir = h.dir;
 

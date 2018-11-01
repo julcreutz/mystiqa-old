@@ -22,6 +22,8 @@ public class MeleeWeapon extends RightHand {
     public int angle;
     public float speed;
 
+    public boolean draw;
+
     public MeleeWeaponAttackType attackType;
 
     public MeleeWeapon() {
@@ -30,7 +32,9 @@ public class MeleeWeapon extends RightHand {
 
     @Override
     public void update(Humanoid h) {
-        if (idleTime < 5) {
+        if (h.idleTime < 5) {
+            draw = true;
+
             if (attackTime > 0) {
                 switch (attackType) {
                     case SLASH:
@@ -113,6 +117,8 @@ public class MeleeWeapon extends RightHand {
 
                 step = h.step;
             }
+        } else {
+            draw = false;
         }
 
         switch (h.dir) {
@@ -164,7 +170,7 @@ public class MeleeWeapon extends RightHand {
     public void render(SpriteBatch batch) {
         super.render(batch);
 
-        if (idleTime < 5) {
+        if (draw) {
             TextureRegion t = graphics[0][0];
             batch.draw(t, x, y, 0, t.getRegionHeight() * .5f, t.getRegionWidth(), t.getRegionHeight(), 1, 1, rot);
         }
