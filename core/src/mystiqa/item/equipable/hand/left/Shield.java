@@ -16,65 +16,42 @@ public class Shield extends LeftHand {
 
     @Override
     public void update(Humanoid h) {
-        if (h.idleTime < 5) {
-            if (using) {
-                dir = h.dir;
-
-                float[][] x = new float[][] {
-                        {12, 12, 12, 12},
-                        {-4, -4, -4, -4},
-                        {-12, -12, -12, -12},
-                        {4, 4, 4, 4}
-                };
-
-                float[][] y = new float[][] {
-                        {-1, -2, -1, -2},
-                        {2, 1, 2, 1},
-                        {-1, -2, -1, -2},
-                        {-4, -5, -4, -5}
-                };
-
-                this.x = h.x + x[dir][h.step];
-                this.y = h.y + y[dir][h.step];
-
-                step = 1;
-            } else {
-                dir = (h.dir + 1) % 4;
-
-                float[][] x = new float[][] {
-                        {13, 12, 13, 12},
-                        {0, 1, 0, -1},
-                        {-13, -12, -13, -12},
-                        {0, -1, 0, 1}
-                };
-
-                float[][] y = new float[][] {
-                        {-1, -2, -1, 0},
-                        {1, 0, 1, 0},
-                        {-1, 0, -1, -2},
-                        {-4, -5, -4, -5}
-                };
-
-                this.x = h.x + x[dir][h.step];
-                this.y = h.y + y[dir][h.step];
-
-                step = h.step;
-            }
-        } else {
-            dir = (h.dir + 2) % 4;
+        if (using) {
+            dir = h.dir;
 
             float[][] x = new float[][] {
-                    {11, 11, 11, 11},
-                    {0, 0, 0, 0},
-                    {-11, -11, -11, -11},
-                    {0, 0, 0, 0}
+                    {12, 12, 12, 12},
+                    {-4, -4, -4, -4},
+                    {-12, -12, -12, -12},
+                    {4, 4, 4, 4}
             };
 
             float[][] y = new float[][] {
                     {-1, -2, -1, -2},
                     {2, 1, 2, 1},
                     {-1, -2, -1, -2},
-                    {-2, -3, -2, -3}
+                    {-4, -5, -4, -5}
+            };
+
+            this.x = h.x + x[dir][h.step];
+            this.y = h.y + y[dir][h.step];
+
+            step = 1;
+        } else {
+            dir = (h.dir + 1) % 4;
+
+            float[][] x = new float[][] {
+                    {13, 12, 13, 12},
+                    {0, 1, 0, -1},
+                    {-13, -12, -13, -12},
+                    {0, -1, 0, 1}
+            };
+
+            float[][] y = new float[][] {
+                    {-1, -2, -1, 0},
+                    {1, 0, 1, 0},
+                    {-1, 0, -1, -2},
+                    {-4, -5, -4, -5}
             };
 
             this.x = h.x + x[dir][h.step];
@@ -119,13 +96,13 @@ public class Shield extends LeftHand {
     }
 
     @Override
-    public void beginUse(Humanoid h) {
-        super.beginUse(h);
+    public void onBeginUse(Humanoid h) {
+        super.onBeginUse(h);
     }
 
     @Override
-    public void endUse(Humanoid h) {
-        super.endUse(h);
+    public void onEndUse(Humanoid h) {
+        super.onEndUse(h);
 
         h.blockDirectionChange = false;
     }

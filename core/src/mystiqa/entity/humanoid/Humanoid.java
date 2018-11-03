@@ -43,8 +43,6 @@ public class Humanoid extends Entity {
 
     public boolean controlledByPlayer;
 
-    public float idleTime;
-
     public Humanoid() {
         hitbox.set(4, 2, 8, 7);
     }
@@ -88,8 +86,6 @@ public class Humanoid extends Entity {
         } else {
 
         }
-
-        idleTime += Game.getDelta();
 
         step = MathUtils.round(stateTime * 7.5f) % 4;
         leftHandStep = leftHand != null ? leftHand.step : step;

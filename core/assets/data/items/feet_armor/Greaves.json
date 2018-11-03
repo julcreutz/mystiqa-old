@@ -1,5 +1,6 @@
 {
   "inherit": "FeetArmor",
   "name": "Greaves",
-  "graphics": "Greaves"
+  "graphics": "Greaves",
+  "materialType": "METAL"
 }

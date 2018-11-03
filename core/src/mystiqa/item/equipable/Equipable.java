@@ -1,15 +1,15 @@
 package mystiqa.item.equipable;
 
 import com.badlogic.gdx.utils.JsonValue;
-import mystiqa.Resources;
 import mystiqa.entity.humanoid.Humanoid;
+import mystiqa.item.equipable.material.MaterialType;
 import mystiqa.stat.IntegerStat;
-import mystiqa.stat.Stat;
 import mystiqa.stat.StatManager;
 import mystiqa.item.Item;
 import mystiqa.item.equipable.material.Material;
 
 public abstract class Equipable extends Item {
+    public MaterialType materialType;
     public Material material;
 
     public StatManager stats;
@@ -24,8 +24,8 @@ public abstract class Equipable extends Item {
     public void deserialize(JsonValue json) {
         super.deserialize(json);
 
-        if (json.has("material")) {
-            material = Resources.getMaterial(json.getString("material"));
+        if (json.has("materialType")) {
+            materialType = MaterialType.valueOf(json.getString("materialType"));
         }
 
         if (json.has("stats")) {

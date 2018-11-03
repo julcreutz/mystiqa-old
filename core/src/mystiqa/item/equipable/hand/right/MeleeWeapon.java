@@ -10,6 +10,7 @@ import mystiqa.main.Game;
 
 public class MeleeWeapon extends RightHand {
     public TextureRegion[][] graphics;
+    public TextureRegion t;
 
     public float x;
     public float y;
@@ -22,8 +23,6 @@ public class MeleeWeapon extends RightHand {
     public int angle;
     public float speed;
 
-    public boolean draw;
-
     public MeleeWeaponAttackType attackType;
 
     public MeleeWeapon() {
@@ -32,93 +31,97 @@ public class MeleeWeapon extends RightHand {
 
     @Override
     public void update(Humanoid h) {
-        if (h.idleTime < 5) {
-            draw = true;
+        t = graphics[0][0];
 
-            if (attackTime > 0) {
-                switch (attackType) {
-                    case SLASH:
-                        rot = h.dir * 90 - 135 + (1 - attackTime) * angle;
+        float widthDiff = t.getRegionWidth() - 16;
 
-                        x = h.x + 8 + MathUtils.cosDeg(rot) * 4f;
-                        y = h.y + MathUtils.sinDeg(rot) * 4f - (h.step % 2 != 0 ? 1 : 0);
+        float[][] x = new float[][] {
+                {8, 6, 8, 10},
+                {13, 13, 13, 11},
+                {8, 10, 8, 5},
+                {4, 4, 4, 7},
+        };
 
-                        step = attackTime > .67f ? 1 : (attackTime > .33f ? 0 : 3);
+        float[][] y = new float[][] {
+                {-2, -3, -2, -2},
+                {-1, -1, -1, 1},
+                {-3, -4, -3, -3},
+                {-2, -2, -2, -3},
+        };
 
-                        break;
-                    case STAB:
-                        rot = h.dir * 90;
+        if (attackTime > 0) {
+            float attackHitboxDist = 0;
 
-                        float dist = MathUtils.sin(attackTime * MathUtils.PI) * 4f;
+            switch (attackType) {
+                case SLASH:
+                    rot = h.dir * 90 - 135 + (1 - attackTime) * angle;
 
-                        x = h.x + 8 + MathUtils.cosDeg(rot) * dist;
-                        y = h.y + MathUtils.sinDeg(rot) * dist - (h.step % 2 != 0 ? 1 : 0);
+                    step = attackTime > .67f ? 1 : (attackTime > .33f ? 0 : 3);
 
-                        switch (MathUtils.round((dist / 4f) * 2f)) {
-                            case 0:
-                                step = 1;
-                                break;
-                            case 1:
-                                step = 0;
-                                break;
-                            case 2:
-                                step = 3;
-                                break;
-                        }
+                    this.x = h.x + x[h.dir][step];
+                    this.y = h.y + y[h.dir][step];
 
-                        break;
-                }
+                    attackHitboxDist = 8 + widthDiff;
 
-                h.blockDirectionChange = true;
+                    break;
+                case STAB:
+                    rot = h.dir * 90;
 
-                h.attackHitbox.set(0, 0, 0, 0);
+                    float dist = MathUtils.clamp(MathUtils.sin(attackTime * MathUtils.PI) * (4f + widthDiff), 0, 16);
 
-                if (attack) {
-                    h.velX *= 0;
-                    h.velY *= 0;
-
-                    attackTime -= Game.getDelta() * 4f * speed;
-                    if (attackTime < 0) {
-                        attackTime = 0;
-                        h.blockDirectionChange = false;
-                    } else {
-                        h.attackHitbox.set(MathUtils.cosDeg(rot) * 8f, MathUtils.sinDeg(rot) * 8f, 16, 16);
+                    switch (MathUtils.round((dist / 4f) * 2f)) {
+                        case 0:
+                            step = 1;
+                            break;
+                        case 1:
+                            step = 0;
+                            break;
+                        case 2:
+                            step = 3;
+                            break;
                     }
 
+                    this.x = h.x + x[h.dir][step] + MathUtils.cosDeg(rot) * dist - MathUtils.cosDeg(rot) * widthDiff;
+                    this.y = h.y + y[h.dir][step] + MathUtils.sinDeg(rot) * dist - (h.step % 2 != 0 ? 1 : 0) - MathUtils.sinDeg(rot) * widthDiff;
+
+                    attackHitboxDist = dist + widthDiff;
+
+                    break;
+            }
+
+            h.blockDirectionChange = true;
+
+            h.attackHitbox.set(0, 0, 0, 0);
+
+            if (attack) {
+                h.velX *= 0;
+                h.velY *= 0;
+
+                attackTime -= Game.getDelta() * 4f * speed;
+                if (attackTime < 0) {
+                    attackTime = 0;
+                    h.blockDirectionChange = false;
                 } else {
-                    h.velX *= .5f;
-                    h.velY *= .5f;
+                    h.attackHitbox.set(MathUtils.cosDeg(rot) * attackHitboxDist, MathUtils.sinDeg(rot) * attackHitboxDist, 16, 16);
                 }
+
             } else {
-                float[][] x = new float[][] {
-                        {8, 6, 8, 10},
-                        {13, 13, 13, 11},
-                        {8, 10, 8, 5},
-                        {4, 4, 4, 7},
-                };
-
-                float[][] y = new float[][] {
-                        {-2, -3, -2, -2},
-                        {-1, -1, -1, 1},
-                        {-4, -5, -4, -4},
-                        {-2, -2, -2, -3},
-                };
-
-                float[][] rot = new float[][] {
-                        {0, -22.5f, 0, 22.5f},
-                        {90, 90 - 22.5f, 90, 90 + 22.5f},
-                        {180, 180 + 22.5f, 180, 180 - 22.5f},
-                        {270, 270 - 22.5f, 270, 270 + 22.5f},
-                };
-
-                this.x = h.x + x[h.dir][h.step];
-                this.y = h.y + y[h.dir][h.step];
-                this.rot = rot[h.dir][h.step];
-
-                step = h.step;
+                h.velX *= .5f;
+                h.velY *= .5f;
             }
         } else {
-            draw = false;
+            float[][] rot = new float[][] {
+                    {0, -22.5f, 0, 22.5f},
+                    {90, 90 - 22.5f, 90, 90 + 22.5f},
+                    {180, 180 + 22.5f, 180, 180 - 22.5f},
+                    {270, 270 - 22.5f, 270, 270 + 22.5f},
+            };
+
+            step = h.step;
+
+            this.rot = rot[h.dir][step];
+            this.x = h.x + x[h.dir][step] - MathUtils.cosDeg(this.rot) * widthDiff;
+            this.y = h.y + y[h.dir][step] - MathUtils.sinDeg(this.rot) * widthDiff;
         }
 
         switch (h.dir) {
@@ -126,21 +129,13 @@ public class MeleeWeapon extends RightHand {
                 behind = false;
                 break;
             case 1:
-                if (attackTime == 0) {
-                    behind = true;
-                } else {
-                    behind = y > h.y;
-                }
+                behind = true;
                 break;
             case 2:
                 behind = true;
                 break;
             case 3:
-                if (attackTime == 0) {
-                    behind = false;
-                } else {
-                    behind = y > h.y;
-                }
+                behind = false;
                 break;
         }
 
@@ -148,8 +143,8 @@ public class MeleeWeapon extends RightHand {
     }
 
     @Override
-    public void beginUse(Humanoid h) {
-        super.beginUse(h);
+    public void onBeginUse(Humanoid h) {
+        super.onBeginUse(h);
 
         if (attackTime == 0) {
             attackTime = 1;
@@ -158,8 +153,8 @@ public class MeleeWeapon extends RightHand {
     }
 
     @Override
-    public void endUse(Humanoid h) {
-        super.endUse(h);
+    public void onEndUse(Humanoid h) {
+        super.onEndUse(h);
 
         if (attackTime == 1) {
             attack = true;
@@ -170,10 +165,7 @@ public class MeleeWeapon extends RightHand {
     public void render(SpriteBatch batch) {
         super.render(batch);
 
-        if (draw) {
-            TextureRegion t = graphics[0][0];
-            batch.draw(t, x, y, 0, t.getRegionHeight() * .5f, t.getRegionWidth(), t.getRegionHeight(), 1, 1, rot);
-        }
+        batch.draw(t, x, y, 0, t.getRegionHeight() * .5f, t.getRegionWidth(), t.getRegionHeight(), 1, 1, rot);
     }
 
     @Override

@@ -1,0 +1,11 @@
+{
+  "inherit": "MeleeWeapon",
+  "name": "Spear",
+  "graphics": "Spear",
+  "speed": 0.5,
+  "attackType": "STAB",
+  "materialType": "METAL",
+  "stats": [
+    {"Damage": 4}
+  ]
+}

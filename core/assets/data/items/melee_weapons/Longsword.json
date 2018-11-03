@@ -5,7 +5,7 @@
   "angle": 180,
   "speed": 1,
   "attackType": "SLASH",
-  "material": "Iron",
+  "materialType": "METAL",
   "stats": [
     {"Damage": 7}
   ]

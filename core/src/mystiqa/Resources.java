@@ -29,7 +29,7 @@ public class Resources {
                 Texture t = new Texture(Gdx.files.internal(root.getString("path")));
 
                 int splitX = root.getInt("splitX");
-                int splitY = root.getInt("splitX");
+                int splitY = root.getInt("splitY");
 
                 TextureRegion[][] spriteSheet = new TextureRegion[t.getWidth() / splitX][t.getHeight() / splitY];
 
