@@ -1,5 +1,8 @@
 package mystiqa.item.equipable.hand.right;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
@@ -25,6 +28,8 @@ public class MeleeWeapon extends RightHand {
 
     public MeleeWeaponAttackType attackType;
 
+    public Texture tex;
+
     public MeleeWeapon() {
         speed = 1;
     }
@@ -44,7 +49,7 @@ public class MeleeWeapon extends RightHand {
 
         float[][] y = new float[][] {
                 {-2, -3, -2, -2},
-                {-1, -1, -1, 1},
+                {-1, -1, -2, 1},
                 {-3, -4, -3, -3},
                 {-2, -2, -2, -3},
         };
@@ -61,13 +66,14 @@ public class MeleeWeapon extends RightHand {
                     this.x = h.x + x[h.dir][step];
                     this.y = h.y + y[h.dir][step];
 
-                    attackHitboxDist = 8 + widthDiff;
+                    attackHitboxDist = 12 + widthDiff;
 
                     break;
                 case STAB:
                     rot = h.dir * 90;
 
-                    float dist = MathUtils.clamp(MathUtils.sin(attackTime * MathUtils.PI) * (4f + widthDiff), 0, 16);
+                    attackTime = (float) Math.pow(1 - (1 - this.attackTime), 3);
+                    float dist = MathUtils.sin(attackTime * MathUtils.PI) * MathUtils.clamp((4f + widthDiff), 0, 16);
 
                     switch (MathUtils.round((dist / 4f) * 2f)) {
                         case 0:
@@ -102,9 +108,8 @@ public class MeleeWeapon extends RightHand {
                     attackTime = 0;
                     h.blockDirectionChange = false;
                 } else {
-                    h.attackHitbox.set(MathUtils.cosDeg(rot) * attackHitboxDist, MathUtils.sinDeg(rot) * attackHitboxDist, 16, 16);
+                    h.attackHitbox.set(4 + MathUtils.cosDeg(rot) * attackHitboxDist, 4 + MathUtils.sinDeg(rot) * attackHitboxDist, 8, 8);
                 }
-
             } else {
                 h.velX *= .5f;
                 h.velY *= .5f;

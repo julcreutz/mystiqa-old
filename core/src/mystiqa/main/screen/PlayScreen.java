@@ -1,6 +1,8 @@
 package mystiqa.main.screen;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import mystiqa.Resources;
 import mystiqa.entity.Entity;
@@ -16,6 +18,7 @@ import java.util.Comparator;
 
 public class PlayScreen extends Screen {
     public Array<Entity> entities;
+    public float screenShake;
 
     @Override
     public void create() {
@@ -28,7 +31,7 @@ public class PlayScreen extends Screen {
         if (h != null) {
             h.controlledByPlayer = true;
 
-            h.rightHand = (RightHand) Resources.getItem("Longsword");
+            h.rightHand = (RightHand) Resources.getItem("BattleAxe");
             h.leftHand = (LeftHand) Resources.getItem("MetalShield");
             h.feetArmor = (FeetArmor) Resources.getItem("Greaves");
             h.bodyArmor = (BodyArmor) Resources.getItem("PlateArmor");
@@ -37,17 +40,31 @@ public class PlayScreen extends Screen {
             addEntity(h);
         }
 
-        addEntity(Resources.getEntity("Human"));
+        addEntity(Resources.getEntity("GreenSlime"));
+        addEntity(Resources.getEntity("GreenSlime"));
+        addEntity(Resources.getEntity("GreenSlime"));
     }
 
     @Override
     public void update() {
         super.update();
 
-        for (int i = 0; i < entities.size; i++) {
-            Entity e = entities.get(i);
-            e.update(this);
+        if (screenShake <= 0) {
+            for (int i = 0; i < entities.size; i++) {
+                Entity e = entities.get(i);
+                e.update(this);
+            }
+        } else {
+            screenShake -= Game.getDelta() * 10f;
+            if (screenShake < 0) {
+                screenShake = 0;
+            }
         }
+
+        cam.position.x = 128 + MathUtils.random(-screenShake, screenShake);
+        cam.position.y = 72 + MathUtils.random(-screenShake, screenShake);
+
+        cam.update();
     }
 
     @Override

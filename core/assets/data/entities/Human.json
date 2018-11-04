@@ -1,4 +1,5 @@
 {
   "inherit": "Humanoid",
-  "race": "Human"
+  "race": "Human",
+  "alignment": "GOOD"
 }

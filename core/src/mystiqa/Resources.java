@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import mystiqa.entity.Entity;
 import mystiqa.entity.humanoid.Humanoid;
 import mystiqa.entity.humanoid.HumanoidRace;
+import mystiqa.entity.slime.Slime;
 import mystiqa.item.Item;
 import mystiqa.item.equipable.armor.BodyArmor;
 import mystiqa.item.equipable.armor.FeetArmor;
@@ -98,6 +99,8 @@ public class Resources {
 
                 if (inherit.equals("Humanoid")) {
                     e = new Humanoid();
+                } else if (inherit.equals("Slime")) {
+                    e = new Slime();
                 }
 
                 if (e != null) {

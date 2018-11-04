@@ -44,6 +44,7 @@ public class Humanoid extends Entity {
     public boolean controlledByPlayer;
 
     public Humanoid() {
+        super();
         hitbox.set(4, 2, 8, 7);
     }
 

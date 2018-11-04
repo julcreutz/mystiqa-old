@@ -1,6 +1,7 @@
 package mystiqa.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import mystiqa.Hitbox;
@@ -29,6 +30,10 @@ public abstract class Entity {
 
     public int health;
 
+    public Alignment alignment;
+
+    public Entity nearestHostile;
+
     public Entity() {
         hitbox = new Hitbox();
         attackHitbox = new Hitbox();
@@ -40,6 +45,24 @@ public abstract class Entity {
     }
 
     public void update(PlayScreen play) {
+        // Find nearest hostile
+        if (nearestHostile == null) {
+            float nearestDist = Float.MAX_VALUE;
+
+            for (Entity other : play.entities) {
+                if (this != other) {
+                    if (alignment.isHostile(other.alignment)) {
+                        float dist = new Vector2(other.x, other.y).sub(x, y).len();
+
+                        if (dist < nearestDist) {
+                            nearestDist = dist;
+                            nearestHostile = other;
+                        }
+                    }
+                }
+            }
+        }
+
         attackHitbox.update(this);
         defendHitbox.update(this);
 
@@ -59,7 +82,7 @@ public abstract class Entity {
 
                                 e.health -= getDamage();
 
-                                onHit();
+                                e.onHit(play, this);
                             }
                         }
                     } else if (contains) {
@@ -72,53 +95,30 @@ public abstract class Entity {
         if (hitTime > 0) {
             hitTime -= Game.getDelta();
         } else {
-            if (health <= 0) {
-                onDefend();
+            if (isDead()) {
+                onDeath(play);
                 play.entities.removeValue(this, true);
             }
         }
 
-        // Horizontal collision detection
-        hitbox.update(this, velX * Game.getDelta(), 0);
+        // Collision detection
+        hitbox.update(this, velX * Game.getDelta(), velY * Game.getDelta());
 
         for (Entity e : play.entities) {
             if (this != e) {
                 if (hitbox.overlaps(e.hitbox)) {
-                    if (velX > 0) {
-                        x = e.hitbox.hitbox.x - hitbox.hitbox.width - hitbox.x;
-                    } else if (velX < 0) {
-                        x = e.hitbox.hitbox.x + e.hitbox.hitbox.width - hitbox.x;
-                    }
-
-                    velX = 0;
-                    break;
+                    Vector2 v = new Vector2(x, y).sub(e.x, e.y).nor();
+                    x += v.x;
+                    y += v.y;
                 }
             }
         }
 
-        // Vertical collision detection
-        hitbox.update(this, 0, velY * Game.getDelta());
-
-        for (Entity e : play.entities) {
-            if (this != e) {
-                if (hitbox.overlaps(e.hitbox)) {
-                    if (velY > 0) {
-                        y = e.hitbox.hitbox.y - hitbox.hitbox.height - hitbox.y;
-                    } else if (velY < 0) {
-                        y = e.hitbox.hitbox.y + e.hitbox.hitbox.height - hitbox.y;
-                    }
-
-                    velY = 0;
-                    break;
-                }
-            }
-        }
+        x += velX * Game.getDelta();
+        y += velY * Game.getDelta();
 
         if (velX != 0 || velY != 0) {
             onMove();
-
-            x += velX * Game.getDelta();
-            y += velY * Game.getDelta();
 
             velX = 0;
             velY = 0;
@@ -141,14 +141,15 @@ public abstract class Entity {
         health = getMaxHealth();
     }
 
-    public void onHit() {
+    public void onHit(PlayScreen play, Entity e) {
+        play.screenShake += isDead() ? 2 : 1;
+        nearestHostile = e;
     }
 
     public void onDefend() {
     }
 
-    public void onDeath() {
-
+    public void onDeath(PlayScreen play) {
     }
 
     public int getDamage() {
@@ -163,5 +164,13 @@ public abstract class Entity {
         if (json.has("stats")) {
             stats.deserialize(json.get("stats"));
         }
+
+        if (json.has("alignment")) {
+            alignment = Alignment.valueOf(json.getString("alignment"));
+        }
+    }
+
+    public boolean isDead() {
+        return health <= 0;
     }
 }
