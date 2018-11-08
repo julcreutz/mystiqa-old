@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.Array;
 import mystiqa.Resources;
 import mystiqa.entity.Entity;
 import mystiqa.entity.humanoid.Humanoid;
+import mystiqa.item.equipable.Equipable;
 import mystiqa.item.equipable.armor.BodyArmor;
 import mystiqa.item.equipable.armor.FeetArmor;
 import mystiqa.item.equipable.armor.HeadArmor;
@@ -31,11 +32,13 @@ public class PlayScreen extends Screen {
         if (h != null) {
             h.controlledByPlayer = true;
 
-            h.rightHand = (RightHand) Resources.getItem("BattleAxe");
-            h.leftHand = (LeftHand) Resources.getItem("MetalShield");
-            h.feetArmor = (FeetArmor) Resources.getItem("Greaves");
-            h.bodyArmor = (BodyArmor) Resources.getItem("PlateArmor");
-            h.headArmor = (HeadArmor) Resources.getItem("Helmet");
+            h.x = 50;
+
+            ((Equipable) (Resources.getItem("BattleAxe"))).equip(h);
+            ((Equipable) (Resources.getItem("MetalShield"))).equip(h);
+            ((Equipable) (Resources.getItem("Greaves"))).equip(h);
+            ((Equipable) (Resources.getItem("PlateArmor"))).equip(h);
+            ((Equipable) (Resources.getItem("Helmet"))).equip(h);
 
             addEntity(h);
         }

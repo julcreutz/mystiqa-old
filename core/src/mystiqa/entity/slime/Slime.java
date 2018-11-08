@@ -15,6 +15,7 @@ public class Slime extends Entity {
 
     public TextureRegion[][] graphics;
     public TextureRegion t;
+    public TextureRegion shadow;
 
     public float z;
     public float zVel;
@@ -23,6 +24,8 @@ public class Slime extends Entity {
     public float jumpAngle;
 
     public float attackTime;
+
+    public float groundTime;
 
     public Slime() {
         super();
@@ -82,7 +85,21 @@ public class Slime extends Entity {
             z = 0;
         }
 
-        t = graphics[0][0];
+        if (z <= 0) {
+            groundTime += Game.getDelta();
+        } else {
+            groundTime = 0;
+        }
+
+        if (z > 0) {
+            t = graphics[0][1];
+        } else if ((groundTime > 0 && groundTime < .1f) || attackTime < .1f) {
+            t = graphics[1][0];
+        } else {
+            t = graphics[0][0];
+        }
+
+        shadow = graphics[1][1];
 
         super.update(play);
     }
@@ -91,6 +108,9 @@ public class Slime extends Entity {
     public void render(SpriteBatch batch) {
         super.render(batch);
 
+        if (z > 0) {
+            batch.draw(shadow, x, y);
+        }
         batch.draw(t, x, y + z);
     }
 

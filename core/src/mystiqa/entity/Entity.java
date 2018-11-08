@@ -108,6 +108,7 @@ public abstract class Entity {
             if (this != e) {
                 if (hitbox.overlaps(e.hitbox)) {
                     Vector2 v = new Vector2(x, y).sub(e.x, e.y).nor();
+
                     x += v.x;
                     y += v.y;
                 }
@@ -127,7 +128,7 @@ public abstract class Entity {
 
     public void render(SpriteBatch batch) {
         if (hitTime > 0) {
-            batch.setShader(Game.colorToAbsoluteShader(Resources.getColor("White")));
+            batch.setShader(Game.colorToAbsolute(Resources.getColor("White")));
         } else {
             batch.setShader(null);
         }

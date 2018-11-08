@@ -2,7 +2,7 @@
   "inherit": "MeleeWeapon",
   "name": "Spear",
   "graphics": "Spear",
-  "speed": 0.5,
+  "speed": 0.75,
   "attackType": "STAB",
   "materialType": "METAL",
   "stats": [

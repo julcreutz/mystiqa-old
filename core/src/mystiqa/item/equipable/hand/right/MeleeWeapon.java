@@ -1,7 +1,5 @@
 package mystiqa.item.equipable.hand.right;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -27,8 +25,6 @@ public class MeleeWeapon extends RightHand {
     public float speed;
 
     public MeleeWeaponAttackType attackType;
-
-    public Texture tex;
 
     public MeleeWeapon() {
         speed = 1;
@@ -72,8 +68,8 @@ public class MeleeWeapon extends RightHand {
                 case STAB:
                     rot = h.dir * 90;
 
-                    attackTime = (float) Math.pow(1 - (1 - this.attackTime), 3);
-                    float dist = MathUtils.sin(attackTime * MathUtils.PI) * MathUtils.clamp((4f + widthDiff), 0, 16);
+                    //float dist = MathUtils.sin(attackTime * MathUtils.PI) * MathUtils.clamp((4f + widthDiff), 0, 16);
+                    float dist = (attackTime < .5f ? attackTime * 2f : 1 - (attackTime - .5f) * 2f) * (MathUtils.clamp(4f + widthDiff, 0, 16));
 
                     switch (MathUtils.round((dist / 4f) * 2f)) {
                         case 0:
