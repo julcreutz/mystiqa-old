@@ -37,6 +37,23 @@ public class Shield extends LeftHand {
             this.y = h.y + y[dir][h.step];
 
             step = 1;
+
+            switch (dir) {
+                case 0:
+                    h.defendHitbox.set(15, 0, 1, 16);
+                    break;
+                case 2:
+                    h.defendHitbox.set(0, 0, 1, 16);
+                    break;
+                case 1:
+                    h.defendHitbox.set(0, 15, 16, 1);
+                    break;
+                case 3:
+                    h.defendHitbox.set(0, 0, 16, 1);
+                    break;
+            }
+
+            h.defending = true;
         } else {
             dir = (h.dir + 1) % 4;
 

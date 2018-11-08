@@ -67,28 +67,34 @@ public abstract class Entity {
         defendHitbox.update(this);
 
         // Attack collision detection
-        for (Entity e : play.entities) {
-            if (this != e) {
-                if (e.hitTime <= 0) {
-                    boolean contains = hit.contains(e, true);
+        if (isAttacking()) {
+            for (Entity e : play.entities) {
+                if (this != e) {
+                    if (e.hitTime <= 0) {
+                        boolean contains = hit.contains(e, true);
 
-                    if (attackHitbox.overlaps(e.hitbox)) {
-                        if (!contains) {
-                            hit.add(e);
-                            if (attackHitbox.overlaps(e.defendHitbox)) {
-                                onDefend();
-                            } else {
-                                e.hitTime = .1f;
+                        if (attackHitbox.overlaps(e.hitbox)) {
+                            if (!contains) {
+                                hit.add(e);
+                                if (e.isDefending() && attackHitbox.overlaps(e.defendHitbox)) {
+                                    onDefend();
+                                } else {
+                                    e.hitTime = .1f;
 
-                                e.health -= getDamage();
+                                    e.health -= getDamage();
 
-                                e.onHit(play, this);
+                                    e.onHit(play, this);
+                                }
                             }
+                        } else if (contains) {
+                            hit.removeValue(e, true);
                         }
-                    } else if (contains) {
-                        hit.removeValue(e, true);
                     }
                 }
+            }
+        } else {
+            if (hit.size > 0) {
+                hit.clear();
             }
         }
 
@@ -102,15 +108,17 @@ public abstract class Entity {
         }
 
         // Collision detection
-        hitbox.update(this, velX * Game.getDelta(), velY * Game.getDelta());
+        if (isPushed()) {
+            hitbox.update(this, velX * Game.getDelta(), velY * Game.getDelta());
 
-        for (Entity e : play.entities) {
-            if (this != e) {
-                if (hitbox.overlaps(e.hitbox)) {
-                    Vector2 v = new Vector2(x, y).sub(e.x, e.y).nor();
+            for (Entity e : play.entities) {
+                if (this != e) {
+                    if (e.isPushing() && hitbox.overlaps(e.hitbox)) {
+                        Vector2 v = new Vector2(x, y).sub(e.x, e.y).nor();
 
-                    x += v.x;
-                    y += v.y;
+                        x += v.x;
+                        y += v.y;
+                    }
                 }
             }
         }
@@ -140,6 +148,7 @@ public abstract class Entity {
 
     public void onAdded() {
         health = getMaxHealth();
+        hitbox.update(this);
     }
 
     public void onHit(PlayScreen play, Entity e) {
@@ -173,5 +182,21 @@ public abstract class Entity {
 
     public boolean isDead() {
         return health <= 0;
+    }
+
+    public boolean isAttacking() {
+        return false;
+    }
+
+    public boolean isDefending() {
+        return false;
+    }
+
+    public boolean isPushed() {
+        return true;
+    }
+
+    public boolean isPushing() {
+        return true;
     }
 }

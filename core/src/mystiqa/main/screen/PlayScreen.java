@@ -44,8 +44,6 @@ public class PlayScreen extends Screen {
         }
 
         addEntity(Resources.getEntity("GreenSlime"));
-        addEntity(Resources.getEntity("GreenSlime"));
-        addEntity(Resources.getEntity("GreenSlime"));
     }
 
     @Override
@@ -83,6 +81,12 @@ public class PlayScreen extends Screen {
 
         for (Entity e : entities) {
             e.render(batch);
+        }
+
+        for (Entity e : entities) {
+            e.hitbox.render(batch);
+            e.defendHitbox.render(batch);
+            e.attackHitbox.render(batch);
         }
 
         batch.setShader(null);

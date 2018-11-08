@@ -43,6 +43,9 @@ public class Humanoid extends Entity {
 
     public boolean controlledByPlayer;
 
+    public boolean attacking;
+    public boolean defending;
+
     public Humanoid() {
         super();
         hitbox.set(4, 2, 8, 7);
@@ -91,6 +94,9 @@ public class Humanoid extends Entity {
         step = MathUtils.round(stateTime * 7.5f) % 4;
         leftHandStep = leftHand != null ? leftHand.step : step;
         rightHandStep = rightHand != null ? rightHand.step : step;
+
+        attacking = false;
+        defending = false;
 
         if (leftHand != null) {
             leftHand.update(this);
@@ -340,5 +346,15 @@ public class Humanoid extends Entity {
         if (json.has("race")) {
             race = Resources.getHumanoidRace(json.getString("race"));
         }
+    }
+
+    @Override
+    public boolean isAttacking() {
+        return attacking;
+    }
+
+    @Override
+    public boolean isDefending() {
+        return defending;
     }
 }

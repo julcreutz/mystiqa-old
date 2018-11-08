@@ -31,6 +31,8 @@ public class Slime extends Entity {
         super();
 
         hitbox.set(2, 2, 12, 7);
+        attackHitbox = hitbox;
+        defendHitbox = hitbox;
 
         state = SlimeState.IDLE;
     }
@@ -121,5 +123,20 @@ public class Slime extends Entity {
         if (json.has("graphics")) {
             graphics = Resources.getSpriteSheet(json.getString("graphics"));
         }
+    }
+
+    @Override
+    public boolean isAttacking() {
+        return groundTime > 0 && groundTime < .1f;
+    }
+
+    @Override
+    public boolean isPushing() {
+        return groundTime > .1f;
+    }
+
+    @Override
+    public boolean isPushed() {
+        return groundTime > .1f;
     }
 }

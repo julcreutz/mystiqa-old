@@ -1,5 +1,6 @@
 package mystiqa;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import mystiqa.entity.Entity;
 
@@ -30,5 +31,13 @@ public class Hitbox {
 
     public boolean overlaps(Hitbox hitbox) {
         return this.hitbox.width > 0 && this.hitbox.height > 0 && this.hitbox.overlaps(hitbox.hitbox);
+    }
+
+    public void render(SpriteBatch batch) {
+        batch.draw(Resources.getSpriteSheet("Hitbox")[0][0], hitbox.x, hitbox.y, hitbox.width, 1);
+        batch.draw(Resources.getSpriteSheet("Hitbox")[0][0], hitbox.x, hitbox.y + hitbox.height - 1, hitbox.width, 1);
+
+        batch.draw(Resources.getSpriteSheet("Hitbox")[0][0], hitbox.x, hitbox.y, 1, hitbox.height);
+        batch.draw(Resources.getSpriteSheet("Hitbox")[0][0], hitbox.x + hitbox.width - 1, hitbox.y, 1, hitbox.height);
     }
 }

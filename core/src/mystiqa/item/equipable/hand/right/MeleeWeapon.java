@@ -1,6 +1,5 @@
 package mystiqa.item.equipable.hand.right;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
@@ -105,6 +104,7 @@ public class MeleeWeapon extends RightHand {
                     h.blockDirectionChange = false;
                 } else {
                     h.attackHitbox.set(4 + MathUtils.cosDeg(rot) * attackHitboxDist, 4 + MathUtils.sinDeg(rot) * attackHitboxDist, 8, 8);
+                    h.attacking = true;
                 }
             } else {
                 h.velX *= .5f;
