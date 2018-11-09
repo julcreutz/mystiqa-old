@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import mystiqa.Resources;
 import mystiqa.entity.Entity;
+import mystiqa.entity.Tile;
 import mystiqa.entity.humanoid.Humanoid;
 import mystiqa.item.equipable.Equipable;
 import mystiqa.item.equipable.armor.BodyArmor;
@@ -27,12 +28,24 @@ public class PlayScreen extends Screen {
 
         entities = new Array<Entity>();
 
+        for (int x = 1; x < 14; x++) {
+            for (int y = 1; y < 5; y++) {
+                Tile t = new Tile();
+                t.x = x * 16;
+                t.y = y * 16;
+                t.z = -16;
+                addEntity(t);
+            }
+        }
+
         Humanoid h = (Humanoid) Resources.getEntity("Human");
 
         if (h != null) {
             h.controlledByPlayer = true;
 
             h.x = 50;
+            h.y = 50;
+            h.z = 16;
 
             ((Equipable) (Resources.getItem("BattleAxe"))).equip(h);
             ((Equipable) (Resources.getItem("MetalShield"))).equip(h);
@@ -75,18 +88,13 @@ public class PlayScreen extends Screen {
         entities.sort(new Comparator<Entity>() {
             @Override
             public int compare(Entity o1, Entity o2) {
-                return Float.compare(o2.y, o1.y);
+                return Float.compare(o1.z, o2.z) + Float.compare(o2.y, o1.y);
             }
         });
 
         for (Entity e : entities) {
             e.render(batch);
-        }
-
-        for (Entity e : entities) {
             e.hitbox.render(batch);
-            e.defendHitbox.render(batch);
-            e.attackHitbox.render(batch);
         }
 
         batch.setShader(null);

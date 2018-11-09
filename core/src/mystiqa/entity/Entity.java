@@ -1,6 +1,7 @@
 package mystiqa.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
@@ -43,6 +44,8 @@ public abstract class Entity {
     public boolean pushing;
     public boolean pushed;
 
+    public boolean gravity;
+
     public Entity() {
         hitbox = new Hitbox();
         attackHitbox = new Hitbox();
@@ -54,16 +57,18 @@ public abstract class Entity {
 
         pushing = true;
         pushed = true;
+
+        gravity = true;
     }
 
     public void update(PlayScreen play) {
         // Find nearest hostile
-        if (nearestHostile == null) {
+        if (alignment != null && nearestHostile == null) {
             float nearestDist = Float.MAX_VALUE;
 
             for (Entity other : play.entities) {
                 if (this != other) {
-                    if (alignment.isHostile(other.alignment)) {
+                    if (other.alignment != null && alignment.isHostile(other.alignment)) {
                         float dist = new Vector2(other.x, other.y).sub(x, y).len();
 
                         if (dist < nearestDist) {
@@ -121,6 +126,7 @@ public abstract class Entity {
         }
 
         // Collision detection
+        /*
         if (pushed) {
             for (Entity e : play.entities) {
                 if (this != e) {
@@ -129,22 +135,79 @@ public abstract class Entity {
 
                         x += v.x;
                         y += v.y;
-                        z += v.z;
+
+                        if (v.z != 0) {
+                            z += v.z;
+                            velZ = 0;
+                        }
                     }
+                }
+            }
+        }*/
+
+        float newX = x;
+        float newY = y;
+        float newZ = z;
+
+        if (gravity) {
+            velZ -= 500 * Game.getDelta();
+        }
+
+        hitbox.update(this, velX * Game.getDelta(), 0, 0);
+
+        for (Entity e : play.entities) {
+            if (this != e) {
+                if (hitbox.overlaps(e.hitbox)) {
+                    if (velX > 0) {
+                        newX = e.hitbox.x - hitbox.ox - hitbox.w;
+                    } else if (velX < 0) {
+                        newX = e.hitbox.x + e.hitbox.w - hitbox.ox;
+                    }
+
+                    velX = 0;
                 }
             }
         }
 
-        velZ -= 500 * Game.getDelta();
+        hitbox.update(this, 0, velY * Game.getDelta(), 0);
+
+        for (Entity e : play.entities) {
+            if (this != e) {
+                if (hitbox.overlaps(e.hitbox)) {
+                    if (velY > 0) {
+                        newY = e.hitbox.y - hitbox.oy - hitbox.h;
+                    } else if (velY < 0) {
+                        newY = e.hitbox.y + e.hitbox.h - hitbox.oy;
+                    }
+
+                    velY = 0;
+                }
+            }
+        }
+
+        hitbox.update(this, 0, 0, velZ * Game.getDelta());
+
+        for (Entity e : play.entities) {
+            if (this != e) {
+                if (hitbox.overlaps(e.hitbox)) {
+                    if (velZ > 0) {
+                        newZ = e.hitbox.z - hitbox.oz - hitbox.d;
+                    } else if (velZ < 0) {
+                        newZ = e.hitbox.z + e.hitbox.d - hitbox.oz;
+                    }
+
+                    velZ = 0;
+                }
+            }
+        }
+
+        x = newX;
+        y = newY;
+        z = newZ;
 
         x += velX * Game.getDelta();
         y += velY * Game.getDelta();
         z += velZ * Game.getDelta();
-
-        if (z < 0) {
-            z = 0;
-            velZ = 0;
-        }
 
         if (velX != 0 || velY != 0) {
             onMove();
@@ -152,6 +215,8 @@ public abstract class Entity {
             velX = 0;
             velY = 0;
         }
+
+        hitbox.update(this);
     }
 
     public void render(SpriteBatch batch) {
@@ -187,7 +252,7 @@ public abstract class Entity {
     }
 
     public int getMaxHealth() {
-        return stats.countInteger(MaxHealth.class);
+        return MathUtils.clamp(stats.countInteger(MaxHealth.class), 1, Integer.MAX_VALUE);
     }
 
     public void deserialize(JsonValue json) {

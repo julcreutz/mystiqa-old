@@ -84,10 +84,6 @@ public class Humanoid extends Entity {
             if (leftHand != null && Gdx.input.isKeyPressed(Input.Keys.D)) {
                 leftHand.use(this);
             }
-
-            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-                velZ = 100;
-            }
         } else {
 
         }

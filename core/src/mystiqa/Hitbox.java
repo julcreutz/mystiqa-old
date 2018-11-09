@@ -51,6 +51,8 @@ public class Hitbox {
     }
 
     public void render(SpriteBatch batch) {
+        batch.setColor(1, 1, 1, .25f);
+
         // Bottom
         batch.draw(border, x, y + z, w, 1);
         batch.draw(border, x, y + z + h - 1, w, 1);
@@ -71,5 +73,7 @@ public class Hitbox {
 
         batch.draw(border, x, y + z + d - 1, 1, h);
         batch.draw(border, x + w - 1, y + z + d - 1, 1, h);
+
+        batch.setColor(1, 1, 1, 1);
     }
 }
