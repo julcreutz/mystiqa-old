@@ -2,6 +2,7 @@ package mystiqa.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import mystiqa.Hitbox;
@@ -15,9 +16,11 @@ import mystiqa.main.screen.PlayScreen;
 public abstract class Entity {
     public float x;
     public float y;
+    public float z;
 
     public float velX;
     public float velY;
+    public float velZ;
 
     public Hitbox hitbox;
     public Hitbox attackHitbox;
@@ -34,6 +37,12 @@ public abstract class Entity {
 
     public Entity nearestHostile;
 
+    public boolean attacking;
+    public boolean defending;
+
+    public boolean pushing;
+    public boolean pushed;
+
     public Entity() {
         hitbox = new Hitbox();
         attackHitbox = new Hitbox();
@@ -42,6 +51,9 @@ public abstract class Entity {
         hit = new Array<Entity>();
 
         stats = new StatManager();
+
+        pushing = true;
+        pushed = true;
     }
 
     public void update(PlayScreen play) {
@@ -63,11 +75,12 @@ public abstract class Entity {
             }
         }
 
+        hitbox.update(this, velX * Game.getDelta(), velY * Game.getDelta(), velZ * Game.getDelta());
         attackHitbox.update(this);
         defendHitbox.update(this);
 
         // Attack collision detection
-        if (isAttacking()) {
+        if (attacking) {
             for (Entity e : play.entities) {
                 if (this != e) {
                     if (e.hitTime <= 0) {
@@ -76,8 +89,8 @@ public abstract class Entity {
                         if (attackHitbox.overlaps(e.hitbox)) {
                             if (!contains) {
                                 hit.add(e);
-                                if (e.isDefending() && attackHitbox.overlaps(e.defendHitbox)) {
-                                    onDefend();
+                                if (e.defending && attackHitbox.overlaps(e.defendHitbox)) {
+                                    e.onDefend();
                                 } else {
                                     e.hitTime = .1f;
 
@@ -108,23 +121,30 @@ public abstract class Entity {
         }
 
         // Collision detection
-        if (isPushed()) {
-            hitbox.update(this, velX * Game.getDelta(), velY * Game.getDelta());
-
+        if (pushed) {
             for (Entity e : play.entities) {
                 if (this != e) {
-                    if (e.isPushing() && hitbox.overlaps(e.hitbox)) {
-                        Vector2 v = new Vector2(x, y).sub(e.x, e.y).nor();
+                    if (e.pushing && hitbox.overlaps(e.hitbox)) {
+                        Vector3 v = new Vector3(x, y, z).sub(e.x, e.y, e.z).nor();
 
                         x += v.x;
                         y += v.y;
+                        z += v.z;
                     }
                 }
             }
         }
 
+        velZ -= 500 * Game.getDelta();
+
         x += velX * Game.getDelta();
         y += velY * Game.getDelta();
+        z += velZ * Game.getDelta();
+
+        if (z < 0) {
+            z = 0;
+            velZ = 0;
+        }
 
         if (velX != 0 || velY != 0) {
             onMove();
@@ -182,21 +202,5 @@ public abstract class Entity {
 
     public boolean isDead() {
         return health <= 0;
-    }
-
-    public boolean isAttacking() {
-        return false;
-    }
-
-    public boolean isDefending() {
-        return false;
-    }
-
-    public boolean isPushed() {
-        return true;
-    }
-
-    public boolean isPushing() {
-        return true;
     }
 }

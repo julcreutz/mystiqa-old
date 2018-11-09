@@ -43,12 +43,9 @@ public class Humanoid extends Entity {
 
     public boolean controlledByPlayer;
 
-    public boolean attacking;
-    public boolean defending;
-
     public Humanoid() {
         super();
-        hitbox.set(4, 2, 8, 7);
+        hitbox.set(2, 1, 0, 12, 14, 10);
     }
 
     @Override
@@ -87,6 +84,10 @@ public class Humanoid extends Entity {
             if (leftHand != null && Gdx.input.isKeyPressed(Input.Keys.D)) {
                 leftHand.use(this);
             }
+
+            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+                velZ = 100;
+            }
         } else {
 
         }
@@ -94,9 +95,6 @@ public class Humanoid extends Entity {
         step = MathUtils.round(stateTime * 7.5f) % 4;
         leftHandStep = leftHand != null ? leftHand.step : step;
         rightHandStep = rightHand != null ? rightHand.step : step;
-
-        attacking = false;
-        defending = false;
 
         if (leftHand != null) {
             leftHand.update(this);
@@ -125,130 +123,130 @@ public class Humanoid extends Entity {
 
         switch (dir) {
             case 0:
-                batch.draw(race.feet[step % 2 != 0 ? (step == 1 ? 1 : 2) : 0][dir], x, y);
+                batch.draw(race.feet[step % 2 != 0 ? (step == 1 ? 1 : 2) : 0][dir], x, y + z);
                 if (feetArmor != null) {
-                    batch.draw(feetArmor.graphics[step % 2 != 0 ? (step == 1 ? 1 : 2) : 0][dir], x, y);
+                    batch.draw(feetArmor.graphics[step % 2 != 0 ? (step == 1 ? 1 : 2) : 0][dir], x, y + z);
                 }
 
-                batch.draw(race.feet[step % 2 != 0 ? (step == 1 ? 2 : 1) : 0][dir], x, y);
+                batch.draw(race.feet[step % 2 != 0 ? (step == 1 ? 2 : 1) : 0][dir], x, y + z);
                 if (feetArmor != null) {
-                    batch.draw(feetArmor.graphics[step % 2 != 0 ? (step == 1 ? 2 : 1) : 0][dir], x, y);
+                    batch.draw(feetArmor.graphics[step % 2 != 0 ? (step == 1 ? 2 : 1) : 0][dir], x, y + z);
                 }
 
-                batch.draw(race.body[1 + (leftHandStep % 2 != 0 ? (leftHandStep == 1 ? 2 : 1) : 0)][dir], x, y);
+                batch.draw(race.body[1 + (leftHandStep % 2 != 0 ? (leftHandStep == 1 ? 2 : 1) : 0)][dir], x, y + z);
                 if (bodyArmor != null) {
-                    batch.draw(bodyArmor.graphics[1 + (leftHandStep % 2 != 0 ? (leftHandStep == 1 ? 2 : 1) : 0)][dir], x, y);
+                    batch.draw(bodyArmor.graphics[1 + (leftHandStep % 2 != 0 ? (leftHandStep == 1 ? 2 : 1) : 0)][dir], x, y + z);
                 }
 
-                batch.draw(race.body[0][dir], x, y);
+                batch.draw(race.body[0][dir], x, y + z);
                 if (bodyArmor != null) {
-                    batch.draw(bodyArmor.graphics[0][dir], x, y);
+                    batch.draw(bodyArmor.graphics[0][dir], x, y + z);
                 }
 
-                batch.draw(race.body[1 + (rightHandStep % 2 != 0 ? (rightHandStep == 1 ? 1 : 2) : 0)][dir], x, y);
+                batch.draw(race.body[1 + (rightHandStep % 2 != 0 ? (rightHandStep == 1 ? 1 : 2) : 0)][dir], x, y + z);
                 if (bodyArmor != null) {
-                    batch.draw(bodyArmor.graphics[1 + (rightHandStep % 2 != 0 ? (rightHandStep == 1 ? 1 : 2) : 0)][dir], x, y);
+                    batch.draw(bodyArmor.graphics[1 + (rightHandStep % 2 != 0 ? (rightHandStep == 1 ? 1 : 2) : 0)][dir], x, y + z);
                 }
 
-                batch.draw(race.head[0][dir], x, y);
+                batch.draw(race.head[0][dir], x, y + z);
                 if (headArmor != null) {
-                    batch.draw(headArmor.graphics[0][dir], x, y);
+                    batch.draw(headArmor.graphics[0][dir], x, y + z);
                 }
 
                 break;
             case 2:
-                batch.draw(race.feet[step % 2 != 0 ? (step == 1 ? 1 : 2) : 0][dir], x, y);
+                batch.draw(race.feet[step % 2 != 0 ? (step == 1 ? 1 : 2) : 0][dir], x, y + z);
                 if (feetArmor != null) {
-                    batch.draw(feetArmor.graphics[step % 2 != 0 ? (step == 1 ? 1 : 2) : 0][dir], x, y);
+                    batch.draw(feetArmor.graphics[step % 2 != 0 ? (step == 1 ? 1 : 2) : 0][dir], x, y + z);
                 }
 
-                batch.draw(race.feet[step % 2 != 0 ? (step == 1 ? 2 : 1) : 0][dir], x, y);
+                batch.draw(race.feet[step % 2 != 0 ? (step == 1 ? 2 : 1) : 0][dir], x, y + z);
                 if (feetArmor != null) {
-                    batch.draw(feetArmor.graphics[step % 2 != 0 ? (step == 1 ? 2 : 1) : 0][dir], x, y);
+                    batch.draw(feetArmor.graphics[step % 2 != 0 ? (step == 1 ? 2 : 1) : 0][dir], x, y + z);
                 }
 
-                batch.draw(race.body[1 + (rightHandStep % 2 != 0 ? (rightHandStep == 1 ? 1 : 2) : 0)][dir], x, y);
+                batch.draw(race.body[1 + (rightHandStep % 2 != 0 ? (rightHandStep == 1 ? 1 : 2) : 0)][dir], x, y + z);
                 if (bodyArmor != null) {
-                    batch.draw(bodyArmor.graphics[1 + (rightHandStep % 2 != 0 ? (rightHandStep == 1 ? 1 : 2) : 0)][dir], x, y);
+                    batch.draw(bodyArmor.graphics[1 + (rightHandStep % 2 != 0 ? (rightHandStep == 1 ? 1 : 2) : 0)][dir], x, y + z);
                 }
 
-                batch.draw(race.body[0][dir], x, y);
+                batch.draw(race.body[0][dir], x, y + z);
                 if (bodyArmor != null) {
-                    batch.draw(bodyArmor.graphics[0][dir], x, y);
+                    batch.draw(bodyArmor.graphics[0][dir], x, y + z);
                 }
 
-                batch.draw(race.body[1 + (leftHandStep % 2 != 0 ? (leftHandStep == 1 ? 2 : 1) : 0)][dir], x, y);
+                batch.draw(race.body[1 + (leftHandStep % 2 != 0 ? (leftHandStep == 1 ? 2 : 1) : 0)][dir], x, y + z);
                 if (bodyArmor != null) {
-                    batch.draw(bodyArmor.graphics[1 + (leftHandStep % 2 != 0 ? (leftHandStep == 1 ? 2 : 1) : 0)][dir], x, y);
+                    batch.draw(bodyArmor.graphics[1 + (leftHandStep % 2 != 0 ? (leftHandStep == 1 ? 2 : 1) : 0)][dir], x, y + z);
                 }
 
-                batch.draw(race.head[0][dir], x, y);
+                batch.draw(race.head[0][dir], x, y + z);
                 if (headArmor != null) {
-                    batch.draw(headArmor.graphics[0][dir], x, y);
+                    batch.draw(headArmor.graphics[0][dir], x, y + z);
                 }
 
                 break;
             case 1:
-                batch.draw(race.feet[step % 2 != 0 ? (step == 1 ? 1 : 2) : 0][dir], x, y);
+                batch.draw(race.feet[step % 2 != 0 ? (step == 1 ? 1 : 2) : 0][dir], x, y + z);
                 if (feetArmor != null) {
-                    batch.draw(feetArmor.graphics[step % 2 != 0 ? (step == 1 ? 1 : 2) : 0][dir], x, y);
+                    batch.draw(feetArmor.graphics[step % 2 != 0 ? (step == 1 ? 1 : 2) : 0][dir], x, y + z);
                 }
 
-                batch.draw(race.feet[step % 2 != 0 ? (step == 1 ? 2 : 1) : 0][dir], x, y, 8, 8, 16, 16, -1, 1, 0);
+                batch.draw(race.feet[step % 2 != 0 ? (step == 1 ? 2 : 1) : 0][dir], x, y + z, 8, 8, 16, 16, -1, 1, 0);
                 if (feetArmor != null) {
-                    batch.draw(feetArmor.graphics[step % 2 != 0 ? (step == 1 ? 2 : 1) : 0][dir], x, y, 8, 8, 16, 16, -1, 1, 0);
+                    batch.draw(feetArmor.graphics[step % 2 != 0 ? (step == 1 ? 2 : 1) : 0][dir], x, y + z, 8, 8, 16, 16, -1, 1, 0);
                 }
 
-                batch.draw(race.body[0][dir], x, y);
+                batch.draw(race.body[0][dir], x, y + z);
                 if (bodyArmor != null) {
-                    batch.draw(bodyArmor.graphics[0][dir], x, y);
+                    batch.draw(bodyArmor.graphics[0][dir], x, y + z);
                 }
 
-                batch.draw(race.body[1 + (rightHandStep % 2 != 0 ? (rightHandStep == 1 ? 2 : 1) : 0)][dir], x, y, 8, 8, 16, 16, -1, 1, 0);
+                batch.draw(race.body[1 + (rightHandStep % 2 != 0 ? (rightHandStep == 1 ? 2 : 1) : 0)][dir], x, y + z, 8, 8, 16, 16, -1, 1, 0);
                 if (bodyArmor != null) {
-                    batch.draw(bodyArmor.graphics[1 + (rightHandStep % 2 != 0 ? (rightHandStep == 1 ? 2 : 1) : 0)][dir], x, y, 8, 8, 16, 16, -1, 1, 0);
+                    batch.draw(bodyArmor.graphics[1 + (rightHandStep % 2 != 0 ? (rightHandStep == 1 ? 2 : 1) : 0)][dir], x, y + z, 8, 8, 16, 16, -1, 1, 0);
                 }
 
-                batch.draw(race.body[1 + (leftHandStep % 2 != 0 ? (leftHandStep == 1 ? 1 : 2) : 0)][dir], x, y);
+                batch.draw(race.body[1 + (leftHandStep % 2 != 0 ? (leftHandStep == 1 ? 1 : 2) : 0)][dir], x, y + z);
                 if (bodyArmor != null) {
-                    batch.draw(bodyArmor.graphics[1 + (leftHandStep % 2 != 0 ? (leftHandStep == 1 ? 1 : 2) : 0)][dir], x, y);
+                    batch.draw(bodyArmor.graphics[1 + (leftHandStep % 2 != 0 ? (leftHandStep == 1 ? 1 : 2) : 0)][dir], x, y + z);
                 }
 
-                batch.draw(race.head[0][dir], x, y);
+                batch.draw(race.head[0][dir], x, y + z);
                 if (headArmor != null) {
-                    batch.draw(headArmor.graphics[0][dir], x, y);
+                    batch.draw(headArmor.graphics[0][dir], x, y + z);
                 }
 
                 break;
             case 3:
-                batch.draw(race.feet[step % 2 != 0 ? (step == 1 ? 1 : 2) : 0][dir], x, y);
+                batch.draw(race.feet[step % 2 != 0 ? (step == 1 ? 1 : 2) : 0][dir], x, y + z);
                 if (feetArmor != null) {
-                    batch.draw(feetArmor.graphics[step % 2 != 0 ? (step == 1 ? 1 : 2) : 0][dir], x, y);
+                    batch.draw(feetArmor.graphics[step % 2 != 0 ? (step == 1 ? 1 : 2) : 0][dir], x, y + z);
                 }
 
-                batch.draw(race.feet[step % 2 != 0 ? (step == 1 ? 2 : 1) : 0][dir], x, y, 8, 8, 16, 16, -1, 1, 0);
+                batch.draw(race.feet[step % 2 != 0 ? (step == 1 ? 2 : 1) : 0][dir], x, y + z, 8, 8, 16, 16, -1, 1, 0);
                 if (feetArmor != null) {
-                    batch.draw(feetArmor.graphics[step % 2 != 0 ? (step == 1 ? 2 : 1) : 0][dir], x, y, 8, 8, 16, 16, -1, 1, 0);
+                    batch.draw(feetArmor.graphics[step % 2 != 0 ? (step == 1 ? 2 : 1) : 0][dir], x, y + z, 8, 8, 16, 16, -1, 1, 0);
                 }
 
-                batch.draw(race.body[0][dir], x, y);
+                batch.draw(race.body[0][dir], x, y + z);
                 if (bodyArmor != null) {
-                    batch.draw(bodyArmor.graphics[0][dir], x, y);
+                    batch.draw(bodyArmor.graphics[0][dir], x, y + z);
                 }
 
-                batch.draw(race.body[1 + (leftHandStep % 2 != 0 ? (leftHandStep == 1 ? 2 : 1) : 0)][dir], x, y, 8, 8, 16, 16, -1, 1, 0);
+                batch.draw(race.body[1 + (leftHandStep % 2 != 0 ? (leftHandStep == 1 ? 2 : 1) : 0)][dir], x, y + z, 8, 8, 16, 16, -1, 1, 0);
                 if (bodyArmor != null) {
-                    batch.draw(bodyArmor.graphics[1 + (leftHandStep % 2 != 0 ? (leftHandStep == 1 ? 2 : 1) : 0)][dir], x, y, 8, 8, 16, 16, -1, 1, 0);
+                    batch.draw(bodyArmor.graphics[1 + (leftHandStep % 2 != 0 ? (leftHandStep == 1 ? 2 : 1) : 0)][dir], x, y + z, 8, 8, 16, 16, -1, 1, 0);
                 }
 
-                batch.draw(race.body[1 + (rightHandStep % 2 != 0 ? (rightHandStep == 1 ? 1 : 2) : 0)][dir], x, y);
+                batch.draw(race.body[1 + (rightHandStep % 2 != 0 ? (rightHandStep == 1 ? 1 : 2) : 0)][dir], x, y + z);
                 if (bodyArmor != null) {
-                    batch.draw(bodyArmor.graphics[1 + (rightHandStep % 2 != 0 ? (rightHandStep == 1 ? 1 : 2) : 0)][dir], x, y);
+                    batch.draw(bodyArmor.graphics[1 + (rightHandStep % 2 != 0 ? (rightHandStep == 1 ? 1 : 2) : 0)][dir], x, y + z);
                 }
 
-                batch.draw(race.head[0][dir], x, y);
+                batch.draw(race.head[0][dir], x, y + z);
                 if (headArmor != null) {
-                    batch.draw(headArmor.graphics[0][dir], x, y);
+                    batch.draw(headArmor.graphics[0][dir], x, y + z);
                 }
 
                 break;
@@ -346,15 +344,5 @@ public class Humanoid extends Entity {
         if (json.has("race")) {
             race = Resources.getHumanoidRace(json.getString("race"));
         }
-    }
-
-    @Override
-    public boolean isAttacking() {
-        return attacking;
-    }
-
-    @Override
-    public boolean isDefending() {
-        return defending;
     }
 }

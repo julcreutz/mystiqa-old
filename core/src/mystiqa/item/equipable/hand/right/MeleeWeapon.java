@@ -14,6 +14,7 @@ public class MeleeWeapon extends RightHand {
 
     public float x;
     public float y;
+    public float z;
 
     public float rot;
 
@@ -32,6 +33,8 @@ public class MeleeWeapon extends RightHand {
     @Override
     public void update(Humanoid h) {
         t = graphics[0][0];
+
+        z = h.z;
 
         float widthDiff = t.getRegionWidth() - 16;
 
@@ -92,7 +95,7 @@ public class MeleeWeapon extends RightHand {
 
             h.blockDirectionChange = true;
 
-            h.attackHitbox.set(0, 0, 0, 0);
+            h.attackHitbox.set(0, 0, 0, 0, 0, 0);
 
             if (attack) {
                 h.velX *= 0;
@@ -102,9 +105,9 @@ public class MeleeWeapon extends RightHand {
                 if (attackTime < 0) {
                     attackTime = 0;
                     h.blockDirectionChange = false;
+                    h.attacking = false;
                 } else {
-                    h.attackHitbox.set(4 + MathUtils.cosDeg(rot) * attackHitboxDist, 4 + MathUtils.sinDeg(rot) * attackHitboxDist, 8, 8);
-                    h.attacking = true;
+                    h.attackHitbox.set(4 + MathUtils.cosDeg(rot) * attackHitboxDist, 4 + MathUtils.sinDeg(rot) * attackHitboxDist, 0, 8, 8, 8);
                 }
             } else {
                 h.velX *= .5f;
@@ -159,6 +162,7 @@ public class MeleeWeapon extends RightHand {
 
         if (attackTime == 1) {
             attack = true;
+            h.attacking = true;
         }
     }
 
@@ -166,7 +170,7 @@ public class MeleeWeapon extends RightHand {
     public void render(SpriteBatch batch) {
         super.render(batch);
 
-        batch.draw(t, x, y, 0, t.getRegionHeight() * .5f, t.getRegionWidth(), t.getRegionHeight(), 1, 1, rot);
+        batch.draw(t, x, y + z, 0, t.getRegionHeight() * .5f, t.getRegionWidth(), t.getRegionHeight(), 1, 1, rot);
     }
 
     @Override

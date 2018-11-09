@@ -17,9 +17,6 @@ public class Slime extends Entity {
     public TextureRegion t;
     public TextureRegion shadow;
 
-    public float z;
-    public float zVel;
-
     public float jumpSpeed;
     public float jumpAngle;
 
@@ -30,7 +27,7 @@ public class Slime extends Entity {
     public Slime() {
         super();
 
-        hitbox.set(2, 2, 12, 7);
+        hitbox.set(2, 2, 0, 12, 12, 4);
         attackHitbox = hitbox;
         defendHitbox = hitbox;
 
@@ -56,7 +53,7 @@ public class Slime extends Entity {
                     jumpSpeed = v.len() * 2f;
                     jumpAngle = v.angle();
 
-                    zVel = 100;
+                    velZ = 100;
 
                     attackTime = MathUtils.random(1f, 2f);
 
@@ -66,7 +63,7 @@ public class Slime extends Entity {
 
                 break;
             case JUMP:
-                if (z <= 0 && zVel <= 0) {
+                if (z <= 0 && velZ <= 0) {
                     jumpSpeed = 0;
                     jumpAngle = 0;
 
@@ -78,14 +75,6 @@ public class Slime extends Entity {
 
         velX += MathUtils.cosDeg(jumpAngle) * jumpSpeed;
         velY += MathUtils.sinDeg(jumpAngle) * jumpSpeed;
-
-        z += zVel * Game.getDelta();
-
-        zVel -= 500 * Game.getDelta();
-        if (z < 0) {
-            zVel = 0;
-            z = 0;
-        }
 
         if (z <= 0) {
             groundTime += Game.getDelta();
@@ -102,6 +91,9 @@ public class Slime extends Entity {
         }
 
         shadow = graphics[1][1];
+
+        attacking = true;
+        //pushing = pushed = groundTime > .1f;
 
         super.update(play);
     }
@@ -123,20 +115,5 @@ public class Slime extends Entity {
         if (json.has("graphics")) {
             graphics = Resources.getSpriteSheet(json.getString("graphics"));
         }
-    }
-
-    @Override
-    public boolean isAttacking() {
-        return groundTime > 0 && groundTime < .1f;
-    }
-
-    @Override
-    public boolean isPushing() {
-        return groundTime > .1f;
-    }
-
-    @Override
-    public boolean isPushed() {
-        return groundTime > .1f;
     }
 }

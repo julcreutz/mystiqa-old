@@ -11,11 +11,14 @@ public class Shield extends LeftHand {
 
     public float x;
     public float y;
+    public float z;
 
     public TextureRegion[][] graphics;
 
     @Override
     public void update(Humanoid h) {
+        z = h.z;
+
         if (using) {
             dir = h.dir;
 
@@ -40,20 +43,18 @@ public class Shield extends LeftHand {
 
             switch (dir) {
                 case 0:
-                    h.defendHitbox.set(15, 0, 1, 16);
+                    h.defendHitbox.set(15, 0, 0, 1, 16, 8);
                     break;
                 case 2:
-                    h.defendHitbox.set(0, 0, 1, 16);
+                    h.defendHitbox.set(0, 0, 0, 1, 16, 8);
                     break;
                 case 1:
-                    h.defendHitbox.set(0, 15, 16, 1);
+                    h.defendHitbox.set(0, 15, 0, 16, 1, 8);
                     break;
                 case 3:
-                    h.defendHitbox.set(0, 0, 16, 1);
+                    h.defendHitbox.set(0, 0, 0, 16, 1, 8);
                     break;
             }
-
-            h.defending = true;
         } else {
             dir = (h.dir + 1) % 4;
 
@@ -99,7 +100,7 @@ public class Shield extends LeftHand {
     public void render(SpriteBatch batch) {
         super.render(batch);
 
-        batch.draw(graphics[0][dir], x, y);
+        batch.draw(graphics[0][dir], x, y + z);
     }
 
     @Override
@@ -115,6 +116,8 @@ public class Shield extends LeftHand {
     @Override
     public void onBeginUse(Humanoid h) {
         super.onBeginUse(h);
+
+        h.defending = true;
     }
 
     @Override
@@ -122,6 +125,8 @@ public class Shield extends LeftHand {
         super.onEndUse(h);
 
         h.blockDirectionChange = false;
+
+        h.defending = false;
     }
 
     @Override
