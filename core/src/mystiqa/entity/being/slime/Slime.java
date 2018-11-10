@@ -1,4 +1,4 @@
-package mystiqa.entity.slime;
+package mystiqa.entity.being.slime;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -6,11 +6,11 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonValue;
 import mystiqa.Resources;
-import mystiqa.entity.Entity;
+import mystiqa.entity.being.Being;
 import mystiqa.main.Game;
 import mystiqa.main.screen.PlayScreen;
 
-public class Slime extends Entity {
+public class Slime extends Being {
     public SlimeState state;
 
     public TextureRegion[][] graphics;
@@ -63,7 +63,7 @@ public class Slime extends Entity {
 
                 break;
             case JUMP:
-                if (z <= 0 && velZ <= 0) {
+                if (velZ == 0) {
                     jumpSpeed = 0;
                     jumpAngle = 0;
 
@@ -76,13 +76,13 @@ public class Slime extends Entity {
         velX += MathUtils.cosDeg(jumpAngle) * jumpSpeed;
         velY += MathUtils.sinDeg(jumpAngle) * jumpSpeed;
 
-        if (z <= 0) {
+        if (velZ == 0) {
             groundTime += Game.getDelta();
         } else {
             groundTime = 0;
         }
 
-        if (z > 0) {
+        if (groundTime == 0) {
             t = graphics[0][1];
         } else if ((groundTime > 0 && groundTime < .1f) || attackTime < .1f) {
             t = graphics[1][0];

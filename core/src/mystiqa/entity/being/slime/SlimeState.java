@@ -1,4 +1,4 @@
-package mystiqa.entity.slime;
+package mystiqa.entity.being.slime;
 
 public enum SlimeState {
     IDLE,

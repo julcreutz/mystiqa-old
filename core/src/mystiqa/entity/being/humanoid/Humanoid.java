@@ -1,4 +1,4 @@
-package mystiqa.entity.humanoid;
+package mystiqa.entity.being.humanoid;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import mystiqa.Resources;
-import mystiqa.entity.Entity;
+import mystiqa.entity.being.Being;
 import mystiqa.stat.Damage;
 import mystiqa.stat.IntegerStat;
 import mystiqa.stat.MaxHealth;
@@ -21,7 +21,7 @@ import mystiqa.item.equipable.hand.right.RightHand;
 import mystiqa.main.Game;
 import mystiqa.main.screen.PlayScreen;
 
-public class Humanoid extends Entity {
+public class Humanoid extends Being {
     public FeetArmor feetArmor;
     public BodyArmor bodyArmor;
     public HeadArmor headArmor;
@@ -83,6 +83,10 @@ public class Humanoid extends Entity {
 
             if (leftHand != null && Gdx.input.isKeyPressed(Input.Keys.D)) {
                 leftHand.use(this);
+            }
+
+            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+                velZ += 130;
             }
         } else {
 
@@ -261,26 +265,36 @@ public class Humanoid extends Entity {
     public void onMove() {
         super.onMove();
 
-        if (!blockDirectionChange) {
-            int _dir = MathUtils.round(new Vector2(velX, velY).angle() / 45f);
+        if (velZ == 0) {
+            if (!blockDirectionChange) {
+                int _dir = MathUtils.round(new Vector2(velX, velY).angle() / 45f);
 
-            switch (_dir) {
-                case 0:
-                    this.dir = 0;
-                    break;
-                case 2:
-                    this.dir = 1;
-                    break;
-                case 4:
-                    this.dir = 2;
-                    break;
-                case 6:
-                    this.dir = 3;
-                    break;
+                switch (_dir) {
+                    case 0:
+                        this.dir = 0;
+                        break;
+                    case 2:
+                        this.dir = 1;
+                        break;
+                    case 4:
+                        this.dir = 2;
+                        break;
+                    case 6:
+                        this.dir = 3;
+                        break;
+                }
             }
-        }
 
-        stateTime += Game.getDelta() * (new Vector2(velX, velY).len() / 48f);
+            stateTime += Game.getDelta() * (new Vector2(velX, velY).len() / 48f);
+        } else {
+            stateTime = 1 / 7.5f;
+        }
+    }
+
+    @Override
+    public void onGround() {
+        super.onGround();
+        stateTime = 2 / 7.5f;
     }
 
     @Override

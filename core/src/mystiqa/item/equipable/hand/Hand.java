@@ -1,7 +1,7 @@
 package mystiqa.item.equipable.hand;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import mystiqa.entity.humanoid.Humanoid;
+import mystiqa.entity.being.humanoid.Humanoid;
 import mystiqa.item.equipable.Equipable;
 
 public abstract class Hand extends Equipable {

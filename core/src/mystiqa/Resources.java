@@ -5,13 +5,12 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
-import mystiqa.entity.Entity;
-import mystiqa.entity.humanoid.Humanoid;
-import mystiqa.entity.humanoid.HumanoidRace;
-import mystiqa.entity.slime.Slime;
+import mystiqa.entity.being.Being;
+import mystiqa.entity.being.humanoid.Humanoid;
+import mystiqa.entity.being.humanoid.HumanoidRace;
+import mystiqa.entity.being.slime.Slime;
 import mystiqa.item.Item;
 import mystiqa.item.equipable.armor.BodyArmor;
 import mystiqa.item.equipable.armor.FeetArmor;
@@ -89,13 +88,13 @@ public class Resources {
         return null;
     }
 
-    public static Entity getEntity(String name) {
-        for (FileHandle file : Game.getFiles(Gdx.files.internal("data/entities/"))) {
+    public static Being getBeing(String name) {
+        for (FileHandle file : Game.getFiles(Gdx.files.internal("data/beings/"))) {
             if (file.nameWithoutExtension().equals(name)) {
                 JsonValue json = new JsonReader().parse(file);
 
                 String inherit = json.getString("inherit");
-                Entity e = null;
+                Being e = null;
 
                 if (inherit.equals("Humanoid")) {
                     e = new Humanoid();

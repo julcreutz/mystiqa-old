@@ -1,4 +1,4 @@
-package mystiqa.entity;
+package mystiqa.entity.being;
 
 public enum Alignment {
     EVIL,

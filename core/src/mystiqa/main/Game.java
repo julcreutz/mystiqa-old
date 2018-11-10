@@ -18,6 +18,8 @@ public class Game extends ApplicationAdapter {
 	public static HashMap<Color, ShaderProgram> absoluteShaders;
 	public static HashMap<Color, ShaderProgram> relativeShaders;
 
+	public static float time;
+
 	public Array<Screen> screens;
 	public int currScreen;
 
@@ -41,6 +43,8 @@ public class Game extends ApplicationAdapter {
 
 	@Override
 	public void render() {
+		time += getDelta();
+
 		screens.get(currScreen).update();
 		screens.get(currScreen).renderMaster();
 	}

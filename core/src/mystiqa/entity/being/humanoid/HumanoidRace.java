@@ -1,4 +1,4 @@
-package mystiqa.entity.humanoid;
+package mystiqa.entity.being.humanoid;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.JsonValue;

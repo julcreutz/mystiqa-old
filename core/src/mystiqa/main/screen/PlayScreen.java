@@ -2,49 +2,39 @@ package mystiqa.main.screen;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import mystiqa.Resources;
 import mystiqa.entity.Entity;
+import mystiqa.entity.being.Being;
 import mystiqa.entity.Tile;
-import mystiqa.entity.humanoid.Humanoid;
+import mystiqa.entity.being.humanoid.Humanoid;
 import mystiqa.item.equipable.Equipable;
-import mystiqa.item.equipable.armor.BodyArmor;
-import mystiqa.item.equipable.armor.FeetArmor;
-import mystiqa.item.equipable.armor.HeadArmor;
-import mystiqa.item.equipable.hand.left.LeftHand;
-import mystiqa.item.equipable.hand.right.RightHand;
 import mystiqa.main.Game;
 
 import java.util.Comparator;
 
 public class PlayScreen extends Screen {
+    public Array<Being> beings;
+    public Tile[][][] tiles;
+
     public Array<Entity> entities;
+
     public float screenShake;
 
     @Override
     public void create() {
         super.create();
 
+        beings = new Array<Being>();
+        tiles = new Tile[16][9][256];
+
         entities = new Array<Entity>();
 
-        for (int x = 1; x < 14; x++) {
-            for (int y = 1; y < 5; y++) {
-                Tile t = new Tile();
-                t.x = x * 16;
-                t.y = y * 16;
-                t.z = -16;
-                addEntity(t);
-            }
-        }
-
-        Humanoid h = (Humanoid) Resources.getEntity("Human");
+        Humanoid h = (Humanoid) Resources.getBeing("Human");
 
         if (h != null) {
             h.controlledByPlayer = true;
 
-            h.x = 50;
-            h.y = 50;
             h.z = 16;
 
             ((Equipable) (Resources.getItem("BattleAxe"))).equip(h);
@@ -53,20 +43,50 @@ public class PlayScreen extends Screen {
             ((Equipable) (Resources.getItem("PlateArmor"))).equip(h);
             ((Equipable) (Resources.getItem("Helmet"))).equip(h);
 
-            addEntity(h);
+            addBeing(h);
         }
 
-        addEntity(Resources.getEntity("GreenSlime"));
+        for (int x = 0; x < 16; x += 2) {
+            for (int y = 0; y < 9; y++) {
+                setTile(new Tile(), x, y, 0);
+            }
+        }
     }
 
     @Override
     public void update() {
         super.update();
 
+        entities.clear();
+
+        for (Being b : beings) {
+            entities.add(b);
+        }
+
+        for (int x = 0; x < tiles.length; x++) {
+            for (int y = 0; y < tiles[0].length; y++) {
+                for (int z = 0; z < 8; z++) {
+                    Tile t = tiles[x][y][z];
+
+                    if (t != null) {
+                        entities.add(tiles[x][y][z]);
+                    }
+                }
+            }
+        }
+
+        entities.sort(new Comparator<Entity>() {
+            @Override
+            public int compare(Entity o1, Entity o2) {
+                int z = Float.compare(o1.z, o2.z);
+                int y = Float.compare(o2.y, o1.y);
+                return z == 0 ? y : z;
+            }
+        });
+
         if (screenShake <= 0) {
             for (int i = 0; i < entities.size; i++) {
-                Entity e = entities.get(i);
-                e.update(this);
+                entities.get(i).update(this);
             }
         } else {
             screenShake -= Game.getDelta() * 10f;
@@ -85,13 +105,6 @@ public class PlayScreen extends Screen {
     public void render(SpriteBatch batch) {
         super.render(batch);
 
-        entities.sort(new Comparator<Entity>() {
-            @Override
-            public int compare(Entity o1, Entity o2) {
-                return Float.compare(o1.z, o2.z) + Float.compare(o2.y, o1.y);
-            }
-        });
-
         for (Entity e : entities) {
             e.render(batch);
             e.hitbox.render(batch);
@@ -100,8 +113,27 @@ public class PlayScreen extends Screen {
         batch.setShader(null);
     }
 
-    public void addEntity(Entity e) {
-        entities.add(e);
+    public void addBeing(Being e) {
+        beings.add(e);
         e.onAdded();
+    }
+
+    public void setTile(Tile t, int x, int y, int z) {
+        t.x = x * 16;
+        t.y = y * 16;
+        t.z = z * 16;
+        tiles[x][y][z] = t;
+    }
+
+    public Array<Tile> getTiles() {
+        Array<Tile> tiles = new Array<Tile>();
+
+        for (Entity e : entities) {
+            if (e instanceof Tile) {
+                tiles.add((Tile) e);
+            }
+        }
+
+        return tiles;
     }
 }
