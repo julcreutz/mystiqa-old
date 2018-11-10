@@ -1,9 +1,11 @@
 package mystiqa.entity;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.JsonValue;
 import mystiqa.Resources;
+import mystiqa.main.Game;
 import mystiqa.main.screen.PlayScreen;
 
 public class Tile extends Entity {
@@ -15,17 +17,20 @@ public class Tile extends Entity {
     public TextureRegion[][] sideGraphics;
     public TextureRegion sideGraphic;
 
+    public Color topColor;
+    public Color sideColor;
+
     public Tile() {
-        hitbox.set(0, 0, 0, 16, 16, 16);
+        hitbox.set(0, 0, 0, 8, 8, 8);
     }
 
     @Override
     public void update(PlayScreen play) {
         super.update(play);
 
-        int x = (int) (this.x / 16f);
-        int y = (int) (this.y / 16f);
-        int z = (int) (this.z / 16f);
+        int x = (int) (this.x / 8f);
+        int y = (int) (this.y / 8f);
+        int z = (int) (this.z / 8f);
 
         if (topGraphics != null) {
             int n = 0;
@@ -102,6 +107,26 @@ public class Tile extends Entity {
                     break;
             }
         }
+
+        if (sideGraphics != null) {
+            Tile l = play.getTile(x - 1, y, z);
+            Tile r = play.getTile(x + 1, y, z);
+
+            boolean hl = l != null && l.name.equals(name);
+            boolean hr = r != null && r.name.equals(name);
+
+            int tx = hl && hr ? 1 : (hl && !hr ? 2 : (!hl && hr ? 0 : 3));
+
+            Tile b = play.getTile(x, y, z - 1);
+            Tile t = play.getTile(x, y, z + 1);
+
+            boolean hb = b != null && b.name.equals(name);
+            boolean ht = t != null && t.name.equals(name);
+
+            int ty = hb && ht ? 1 : (hb && !ht ? 0 : (!hb && ht ? 2 : 3));
+
+            sideGraphic = sideGraphics[tx][ty];
+        }
     }
 
     @Override
@@ -109,11 +134,13 @@ public class Tile extends Entity {
         super.render(batch);
 
         if (sideGraphics != null) {
-            batch.draw(sideGraphics[3][3], x, y + z);
+            batch.setShader(Game.colorToRelative(sideColor));
+            batch.draw(sideGraphic, x, y + z);
         }
 
         if (topGraphic != null) {
-            batch.draw(topGraphic, x, y + z + 16);
+            batch.setShader(Game.colorToRelative(topColor));
+            batch.draw(topGraphic, x, y + z + 8);
         }
     }
 
@@ -128,6 +155,14 @@ public class Tile extends Entity {
 
         if (json.has("sideGraphics")) {
             sideGraphics = Resources.getSpriteSheet(json.getString("sideGraphics"));
+        }
+
+        if (json.has("topColor")) {
+            topColor = Resources.getColor(json.getString("topColor"));
+        }
+
+        if (json.has("sideColor")) {
+            sideColor = Resources.getColor(json.getString("sideColor"));
         }
     }
 }

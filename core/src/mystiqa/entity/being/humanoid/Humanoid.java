@@ -45,7 +45,7 @@ public class Humanoid extends Being {
 
     public Humanoid() {
         super();
-        hitbox.set(2, 1, 0, 12, 6, 10);
+        hitbox.set(1, 1, 0, 6, 2, 6);
     }
 
     @Override
@@ -71,7 +71,7 @@ public class Humanoid extends Being {
 
             if (dir.x != 0 || dir.y != 0) {
                 float a = dir.angle();
-                float speed = 48;
+                float speed = 24;
 
                 velX += MathUtils.cosDeg(a) * speed;
                 velY += MathUtils.sinDeg(a) * speed;
@@ -86,7 +86,7 @@ public class Humanoid extends Being {
             }
 
             if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && onGround) {
-                velZ += 130;
+                velZ += 100;
             }
         } else {
 
@@ -114,11 +114,17 @@ public class Humanoid extends Being {
         float y = this.y + (step % 2 != 0 ? -1 : 0);
 
         if (leftHand != null && leftHand.behind) {
-            leftHand.render(batch);
+            //leftHand.render(batch);
         }
 
         if (rightHand != null && rightHand.behind) {
-            rightHand.render(batch);
+            //rightHand.render(batch);
+        }
+
+        batch.draw(Resources.getSpriteSheet("Humanoid")[step][dir], x, this.y + z);
+
+        if (true) {
+            return;
         }
 
         switch (dir) {
@@ -287,7 +293,7 @@ public class Humanoid extends Being {
                 }
             }
 
-            stateTime += Game.getDelta() * (new Vector2(velX, velY).len() / 48f);
+            stateTime += Game.getDelta() * (new Vector2(velX, velY).len() / 24f);
         } else {
             stateTime = 1 / 7.5f;
         }

@@ -97,8 +97,8 @@ public class PlayScreen extends Screen {
             }
         }
 
-        cam.position.x = 128 + MathUtils.random(-screenShake, screenShake);
-        cam.position.y = 72 + MathUtils.random(-screenShake, screenShake);
+        cam.position.x = 64 + MathUtils.random(-screenShake, screenShake);
+        cam.position.y = 36 + MathUtils.random(-screenShake, screenShake);
 
         cam.update();
     }
@@ -121,9 +121,9 @@ public class PlayScreen extends Screen {
     }
 
     public void setTile(Tile t, int x, int y, int z) {
-        t.x = x * 16;
-        t.y = y * 16;
-        t.z = z * 16;
+        t.x = x * 8;
+        t.y = y * 8;
+        t.z = z * 8;
         tiles[x][y][z] = t;
     }
 

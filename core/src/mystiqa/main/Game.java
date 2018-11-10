@@ -61,7 +61,7 @@ public class Game extends ApplicationAdapter {
 	}
 
 	public static FrameBuffer createFrameBuffer() {
-		FrameBuffer fb = new FrameBuffer(Pixmap.Format.RGBA8888, 256, 144, false);
+		FrameBuffer fb = new FrameBuffer(Pixmap.Format.RGBA8888, 128, 72, false);
 		fb.getColorBufferTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 		return fb;
 	}

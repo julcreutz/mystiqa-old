@@ -1,5 +1,5 @@
 {
-  "path": "graphics/tiles/grass_side.png",
-  "splitX": 16,
-  "splitY": 16
+  "path": "graphics/tiles/grass_side_2.png",
+  "splitX": 8,
+  "splitY": 8
 }

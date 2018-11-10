@@ -17,7 +17,7 @@ public class Screen {
     public void create() {
         batch = new SpriteBatch();
         cam = new OrthographicCamera();
-        cam.setToOrtho(false, 256, 144);
+        cam.setToOrtho(false, 128, 72);
         viewport = new FitViewport(cam.viewportWidth, cam.viewportHeight, cam);
         viewport.apply();
     }
@@ -28,7 +28,6 @@ public class Screen {
     }
 
     public void update() {
-
     }
 
     public final void renderMaster() {
@@ -49,7 +48,7 @@ public class Screen {
 
         batch.setProjectionMatrix(cam.combined);
         batch.begin();
-        batch.draw(fb.getColorBufferTexture(), cam.position.x - 128, cam.position.y - 72 + fb.getHeight(), fb.getWidth(), -fb.getHeight());
+        batch.draw(fb.getColorBufferTexture(), cam.position.x - 64, cam.position.y - 36 + fb.getHeight(), fb.getWidth(), -fb.getHeight());
         batch.end();
     }
 

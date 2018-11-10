@@ -6,12 +6,12 @@ import mystiqa.main.Game;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {
-		final int scale = 6;
+		final int scale = 12;
 
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.title = "Mystiqa";
-		config.width = 256 * scale;
-		config.height = 144 * scale;
+		config.width = 128 * scale;
+		config.height = 72 * scale;
 		config.backgroundFPS = 0;
 		config.foregroundFPS = 0;
 		config.vSyncEnabled = true;
