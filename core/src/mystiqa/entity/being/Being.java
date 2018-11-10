@@ -137,6 +137,8 @@ public abstract class Being extends Entity {
         if (collisionDetection) {
             hitbox.update(this, velX * Game.getDelta(), 0, 0);
 
+            boolean collided = false;
+
             for (Tile t : play.getTiles()) {
                 t.hitbox.update(t);
 
@@ -147,9 +149,12 @@ public abstract class Being extends Entity {
                         newX = t.hitbox.x + t.hitbox.w - hitbox.ox;
                     }
 
-                    velX = 0;
-                    break;
+                    collided = true;
                 }
+            }
+
+            if (collided) {
+                velX = 0;
             }
         }
 
@@ -158,6 +163,8 @@ public abstract class Being extends Entity {
 
         if (collisionDetection) {
             hitbox.update(this, 0, velY * Game.getDelta(), 0);
+
+            boolean collided = false;
 
             for (Tile t : play.getTiles()) {
                 t.hitbox.update(t);
@@ -169,9 +176,12 @@ public abstract class Being extends Entity {
                         newY = t.hitbox.y + t.hitbox.h - hitbox.oy;
                     }
 
-                    velY = 0;
-                    break;
+                    collided = true;
                 }
+            }
+
+            if (collided) {
+                velY = 0;
             }
         }
 
@@ -180,6 +190,8 @@ public abstract class Being extends Entity {
 
         if (collisionDetection) {
             hitbox.update(this, 0, 0, velZ * Game.getDelta());
+
+            boolean collided = false;
 
             for (Tile t : play.getTiles()) {
                 t.hitbox.update(t);
@@ -191,9 +203,12 @@ public abstract class Being extends Entity {
                         newZ = t.hitbox.z + t.hitbox.d - hitbox.oz;
                     }
 
-                    velZ = 0;
-                    break;
+                    collided = true;
                 }
+            }
+
+            if (collided) {
+                velZ = 0;
             }
         }
 

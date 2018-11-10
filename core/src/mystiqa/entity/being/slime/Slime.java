@@ -27,7 +27,7 @@ public class Slime extends Being {
     public Slime() {
         super();
 
-        hitbox.set(2, 2, 0, 12, 12, 4);
+        hitbox.set(2, 2, 0, 12, 4, 4);
         attackHitbox = hitbox;
         defendHitbox = hitbox;
 

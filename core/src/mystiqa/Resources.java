@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
+import mystiqa.entity.Tile;
 import mystiqa.entity.being.Being;
 import mystiqa.entity.being.humanoid.Humanoid;
 import mystiqa.entity.being.humanoid.HumanoidRace;
@@ -145,6 +146,21 @@ public class Resources {
                 }
 
                 return c;
+            }
+        }
+
+        return null;
+    }
+
+    public static Tile getTile(String name) {
+        for (FileHandle file : Game.getFiles(Gdx.files.internal("data/tiles/"))) {
+            if (file.nameWithoutExtension().equals(name)) {
+                JsonValue json = new JsonReader().parse(file);
+
+                Tile t = new Tile();
+                t.deserialize(json);
+
+                return t;
             }
         }
 

@@ -46,9 +46,11 @@ public class PlayScreen extends Screen {
             addBeing(h);
         }
 
-        for (int x = 0; x < 16; x += 2) {
-            for (int y = 0; y < 9; y++) {
-                setTile(new Tile(), x, y, 0);
+        for (int z = 0; z < 3; z++) {
+            for (int x = z; x < 16 - z; x++) {
+                for (int y = z; y < 9 - z; y++) {
+                    setTile(Resources.getTile("Grass"), x, y, z);
+                }
             }
         }
     }
@@ -65,7 +67,7 @@ public class PlayScreen extends Screen {
 
         for (int x = 0; x < tiles.length; x++) {
             for (int y = 0; y < tiles[0].length; y++) {
-                for (int z = 0; z < 8; z++) {
+                for (int z = 0; z < 9; z++) {
                     Tile t = tiles[x][y][z];
 
                     if (t != null) {
@@ -107,7 +109,7 @@ public class PlayScreen extends Screen {
 
         for (Entity e : entities) {
             e.render(batch);
-            e.hitbox.render(batch);
+            //e.hitbox.render(batch);
         }
 
         batch.setShader(null);
@@ -123,6 +125,10 @@ public class PlayScreen extends Screen {
         t.y = y * 16;
         t.z = z * 16;
         tiles[x][y][z] = t;
+    }
+
+    public Tile getTile(int x, int y, int z) {
+        return x >= 0 && x < tiles.length && y >= 0 && y < tiles[0].length && z >= 0 && z < tiles[0][0].length ? tiles[x][y][z] : null;
     }
 
     public Array<Tile> getTiles() {

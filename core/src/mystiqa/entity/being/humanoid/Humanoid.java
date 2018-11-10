@@ -45,7 +45,7 @@ public class Humanoid extends Being {
 
     public Humanoid() {
         super();
-        hitbox.set(2, 1, 0, 12, 14, 10);
+        hitbox.set(2, 1, 0, 12, 6, 10);
     }
 
     @Override
@@ -85,7 +85,7 @@ public class Humanoid extends Being {
                 leftHand.use(this);
             }
 
-            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && onGround) {
                 velZ += 130;
             }
         } else {
@@ -267,21 +267,23 @@ public class Humanoid extends Being {
 
         if (velZ == 0) {
             if (!blockDirectionChange) {
-                int _dir = MathUtils.round(new Vector2(velX, velY).angle() / 45f);
+                if (velX != 0 || velY != 0) {
+                    int _dir = MathUtils.round(new Vector2(velX, velY).angle() / 45f);
 
-                switch (_dir) {
-                    case 0:
-                        this.dir = 0;
-                        break;
-                    case 2:
-                        this.dir = 1;
-                        break;
-                    case 4:
-                        this.dir = 2;
-                        break;
-                    case 6:
-                        this.dir = 3;
-                        break;
+                    switch (_dir) {
+                        case 0:
+                            this.dir = 0;
+                            break;
+                        case 2:
+                            this.dir = 1;
+                            break;
+                        case 4:
+                            this.dir = 2;
+                            break;
+                        case 6:
+                            this.dir = 3;
+                            break;
+                    }
                 }
             }
 
