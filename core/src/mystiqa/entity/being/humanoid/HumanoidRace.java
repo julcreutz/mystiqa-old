@@ -1,5 +1,6 @@
 package mystiqa.entity.being.humanoid;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.JsonValue;
 import mystiqa.Resources;
@@ -11,6 +12,8 @@ public class HumanoidRace {
     public TextureRegion[][] head;
 
     public StatManager stats;
+
+    public Color color;
 
     public HumanoidRace() {
         stats = new StatManager();
@@ -31,6 +34,10 @@ public class HumanoidRace {
 
         if (json.has("stats")) {
             stats.deserialize(json.get("stats"));
+        }
+
+        if (json.has("color")) {
+            color = Resources.getColor(json.getString("color"));
         }
     }
 }

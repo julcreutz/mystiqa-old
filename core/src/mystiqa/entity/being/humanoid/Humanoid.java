@@ -2,6 +2,7 @@ package mystiqa.entity.being.humanoid;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -42,6 +43,8 @@ public class Humanoid extends Being {
     public HumanoidRace race;
 
     public boolean controlledByPlayer;
+
+    public Color color;
 
     public Humanoid() {
         super();
@@ -86,7 +89,7 @@ public class Humanoid extends Being {
             }
 
             if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && onGround) {
-                velZ += 100;
+                velZ += 85;
             }
         } else {
 
@@ -111,148 +114,190 @@ public class Humanoid extends Being {
     public void render(SpriteBatch batch) {
         super.render(batch);
 
-        float y = this.y + (step % 2 != 0 ? -1 : 0);
+        float y = this.y + (step % 2 != 0 ? -1 : 0) + z;
 
         if (leftHand != null && leftHand.behind) {
-            //leftHand.render(batch);
+            leftHand.render(batch);
         }
 
         if (rightHand != null && rightHand.behind) {
-            //rightHand.render(batch);
-        }
-
-        batch.draw(Resources.getSpriteSheet("Humanoid")[step][dir], x, this.y + z);
-
-        if (true) {
-            return;
+            rightHand.render(batch);
         }
 
         switch (dir) {
             case 0:
-                batch.draw(race.feet[step % 2 != 0 ? (step == 1 ? 1 : 2) : 0][dir], x, y + z);
+                batch.setShader(Game.colorToRelative(race.color));
+                batch.draw(race.feet[step % 2 != 0 ? (step == 1 ? 1 : 2) : 0][dir], x, y);
+
                 if (feetArmor != null) {
-                    batch.draw(feetArmor.graphics[step % 2 != 0 ? (step == 1 ? 1 : 2) : 0][dir], x, y + z);
+                    feetArmor.render(batch, x, y, step % 2 != 0 ? (step == 1 ? 1 : 2) : 0, dir);
                 }
 
-                batch.draw(race.feet[step % 2 != 0 ? (step == 1 ? 2 : 1) : 0][dir], x, y + z);
+                batch.setShader(Game.colorToRelative(race.color));
+                batch.draw(race.feet[step % 2 != 0 ? (step == 1 ? 2 : 1) : 0][dir], x, y);
+
                 if (feetArmor != null) {
-                    batch.draw(feetArmor.graphics[step % 2 != 0 ? (step == 1 ? 2 : 1) : 0][dir], x, y + z);
+                    feetArmor.render(batch, x, y, step % 2 != 0 ? (step == 1 ? 2 : 1) : 0, dir);
                 }
 
-                batch.draw(race.body[1 + (leftHandStep % 2 != 0 ? (leftHandStep == 1 ? 2 : 1) : 0)][dir], x, y + z);
+                batch.setShader(Game.colorToRelative(race.color));
+                batch.draw(race.body[1 + (leftHandStep % 2 != 0 ? (leftHandStep == 1 ? 2 : 1) : 0)][dir], x, y);
+
                 if (bodyArmor != null) {
-                    batch.draw(bodyArmor.graphics[1 + (leftHandStep % 2 != 0 ? (leftHandStep == 1 ? 2 : 1) : 0)][dir], x, y + z);
+                    bodyArmor.render(batch, x, y, 1 + (leftHandStep % 2 != 0 ? (leftHandStep == 1 ? 2 : 1) : 0), dir);
                 }
 
-                batch.draw(race.body[0][dir], x, y + z);
+                batch.setShader(Game.colorToRelative(race.color));
+                batch.draw(race.body[0][dir], x, y);
+
                 if (bodyArmor != null) {
-                    batch.draw(bodyArmor.graphics[0][dir], x, y + z);
+                    bodyArmor.render(batch, x, y, 0, dir);
                 }
 
-                batch.draw(race.body[1 + (rightHandStep % 2 != 0 ? (rightHandStep == 1 ? 1 : 2) : 0)][dir], x, y + z);
-                if (bodyArmor != null) {
-                    batch.draw(bodyArmor.graphics[1 + (rightHandStep % 2 != 0 ? (rightHandStep == 1 ? 1 : 2) : 0)][dir], x, y + z);
-                }
+                batch.setShader(Game.colorToRelative(race.color));
+                batch.draw(race.head[0][dir], x, y);
 
-                batch.draw(race.head[0][dir], x, y + z);
                 if (headArmor != null) {
-                    batch.draw(headArmor.graphics[0][dir], x, y + z);
+                    headArmor.render(batch, x, y, 0, dir);
+                }
+
+                batch.setShader(Game.colorToRelative(race.color));
+                batch.draw(race.body[1 + (rightHandStep % 2 != 0 ? (rightHandStep == 1 ? 1 : 2) : 0)][dir], x, y);
+
+                if (bodyArmor != null) {
+                    bodyArmor.render(batch, x, y, 1 + (rightHandStep % 2 != 0 ? (rightHandStep == 1 ? 1 : 2) : 0), dir);
                 }
 
                 break;
             case 2:
-                batch.draw(race.feet[step % 2 != 0 ? (step == 1 ? 1 : 2) : 0][dir], x, y + z);
+                batch.setShader(Game.colorToRelative(race.color));
+                batch.draw(race.feet[step % 2 != 0 ? (step == 1 ? 1 : 2) : 0][dir], x, y);
+
                 if (feetArmor != null) {
-                    batch.draw(feetArmor.graphics[step % 2 != 0 ? (step == 1 ? 1 : 2) : 0][dir], x, y + z);
+                    feetArmor.render(batch, x, y, step % 2 != 0 ? (step == 1 ? 1 : 2) : 0, dir);
                 }
 
-                batch.draw(race.feet[step % 2 != 0 ? (step == 1 ? 2 : 1) : 0][dir], x, y + z);
+                batch.setShader(Game.colorToRelative(race.color));
+                batch.draw(race.feet[step % 2 != 0 ? (step == 1 ? 2 : 1) : 0][dir], x, y);
+
                 if (feetArmor != null) {
-                    batch.draw(feetArmor.graphics[step % 2 != 0 ? (step == 1 ? 2 : 1) : 0][dir], x, y + z);
+                    feetArmor.render(batch, x, y, step % 2 != 0 ? (step == 1 ? 2 : 1) : 0, dir);
                 }
 
-                batch.draw(race.body[1 + (rightHandStep % 2 != 0 ? (rightHandStep == 1 ? 1 : 2) : 0)][dir], x, y + z);
+                batch.setShader(Game.colorToRelative(race.color));
+                batch.draw(race.body[1 + (rightHandStep % 2 != 0 ? (rightHandStep == 1 ? 1 : 2) : 0)][dir], x, y);
+
                 if (bodyArmor != null) {
-                    batch.draw(bodyArmor.graphics[1 + (rightHandStep % 2 != 0 ? (rightHandStep == 1 ? 1 : 2) : 0)][dir], x, y + z);
+                    bodyArmor.render(batch, x, y, 1 + (rightHandStep % 2 != 0 ? (rightHandStep == 1 ? 1 : 2) : 0), dir);
                 }
 
-                batch.draw(race.body[0][dir], x, y + z);
+                batch.setShader(Game.colorToRelative(race.color));
+                batch.draw(race.body[0][dir], x, y);
+
                 if (bodyArmor != null) {
-                    batch.draw(bodyArmor.graphics[0][dir], x, y + z);
+                    bodyArmor.render(batch, x, y, 0, dir);
                 }
 
-                batch.draw(race.body[1 + (leftHandStep % 2 != 0 ? (leftHandStep == 1 ? 2 : 1) : 0)][dir], x, y + z);
-                if (bodyArmor != null) {
-                    batch.draw(bodyArmor.graphics[1 + (leftHandStep % 2 != 0 ? (leftHandStep == 1 ? 2 : 1) : 0)][dir], x, y + z);
-                }
+                batch.setShader(Game.colorToRelative(race.color));
+                batch.draw(race.head[0][dir], x, y);
 
-                batch.draw(race.head[0][dir], x, y + z);
                 if (headArmor != null) {
-                    batch.draw(headArmor.graphics[0][dir], x, y + z);
+                    headArmor.render(batch, x, y, 0, dir);
+                }
+
+                batch.setShader(Game.colorToRelative(race.color));
+                batch.draw(race.body[1 + (leftHandStep % 2 != 0 ? (leftHandStep == 1 ? 2 : 1) : 0)][dir], x, y);
+
+                if (bodyArmor != null) {
+                    bodyArmor.render(batch, x, y, 1 + (leftHandStep % 2 != 0 ? (leftHandStep == 1 ? 2 : 1) : 0), dir);
                 }
 
                 break;
             case 1:
-                batch.draw(race.feet[step % 2 != 0 ? (step == 1 ? 1 : 2) : 0][dir], x, y + z);
+                batch.setShader(Game.colorToRelative(race.color));
+                batch.draw(race.feet[step % 2 != 0 ? (step == 1 ? 1 : 2) : 0][dir], x, y);
+
                 if (feetArmor != null) {
-                    batch.draw(feetArmor.graphics[step % 2 != 0 ? (step == 1 ? 1 : 2) : 0][dir], x, y + z);
+                    feetArmor.render(batch, x, y, step % 2 != 0 ? (step == 1 ? 1 : 2) : 0, dir);
                 }
 
-                batch.draw(race.feet[step % 2 != 0 ? (step == 1 ? 2 : 1) : 0][dir], x, y + z, 8, 8, 16, 16, -1, 1, 0);
+                batch.setShader(Game.colorToRelative(race.color));
+                batch.draw(race.feet[step % 2 != 0 ? (step == 1 ? 2 : 1) : 0][dir], x, y, 4, 4, 8, 8, -1, 1, 0);
+
                 if (feetArmor != null) {
-                    batch.draw(feetArmor.graphics[step % 2 != 0 ? (step == 1 ? 2 : 1) : 0][dir], x, y + z, 8, 8, 16, 16, -1, 1, 0);
+                    feetArmor.render(batch, x, y, step % 2 != 0 ? (step == 1 ? 2 : 1) : 0, dir, true);
                 }
 
-                batch.draw(race.body[0][dir], x, y + z);
+                batch.setShader(Game.colorToRelative(race.color));
+                batch.draw(race.body[0][dir], x, y);
+
                 if (bodyArmor != null) {
-                    batch.draw(bodyArmor.graphics[0][dir], x, y + z);
+                    bodyArmor.render(batch, x, y, 0, dir);
                 }
 
-                batch.draw(race.body[1 + (rightHandStep % 2 != 0 ? (rightHandStep == 1 ? 2 : 1) : 0)][dir], x, y + z, 8, 8, 16, 16, -1, 1, 0);
+                batch.setShader(Game.colorToRelative(race.color));
+                batch.draw(race.body[1 + (rightHandStep % 2 != 0 ? (rightHandStep == 1 ? 2 : 1) : 0)][dir], x, y, 4, 4, 8, 8, -1, 1, 0);
+
                 if (bodyArmor != null) {
-                    batch.draw(bodyArmor.graphics[1 + (rightHandStep % 2 != 0 ? (rightHandStep == 1 ? 2 : 1) : 0)][dir], x, y + z, 8, 8, 16, 16, -1, 1, 0);
+                    bodyArmor.render(batch, x, y, 1 + (rightHandStep % 2 != 0 ? (rightHandStep == 1 ? 2 : 1) : 0), dir, true);
                 }
 
-                batch.draw(race.body[1 + (leftHandStep % 2 != 0 ? (leftHandStep == 1 ? 1 : 2) : 0)][dir], x, y + z);
+                batch.setShader(Game.colorToRelative(race.color));
+                batch.draw(race.body[1 + (leftHandStep % 2 != 0 ? (leftHandStep == 1 ? 1 : 2) : 0)][dir], x, y);
+
                 if (bodyArmor != null) {
-                    batch.draw(bodyArmor.graphics[1 + (leftHandStep % 2 != 0 ? (leftHandStep == 1 ? 1 : 2) : 0)][dir], x, y + z);
+                    bodyArmor.render(batch, x, y, 1 + (leftHandStep % 2 != 0 ? (leftHandStep == 1 ? 1 : 2) : 0), dir);
                 }
 
-                batch.draw(race.head[0][dir], x, y + z);
+                batch.setShader(Game.colorToRelative(race.color));
+                batch.draw(race.head[0][dir], x, y);
+
                 if (headArmor != null) {
-                    batch.draw(headArmor.graphics[0][dir], x, y + z);
+                    headArmor.render(batch, x, y, 0, dir);
                 }
 
                 break;
             case 3:
-                batch.draw(race.feet[step % 2 != 0 ? (step == 1 ? 1 : 2) : 0][dir], x, y + z);
+                batch.setShader(Game.colorToRelative(race.color));
+                batch.draw(race.feet[step % 2 != 0 ? (step == 1 ? 1 : 2) : 0][dir], x, y);
+
                 if (feetArmor != null) {
-                    batch.draw(feetArmor.graphics[step % 2 != 0 ? (step == 1 ? 1 : 2) : 0][dir], x, y + z);
+                    feetArmor.render(batch, x, y, step % 2 != 0 ? (step == 1 ? 1 : 2) : 0, dir);
                 }
 
-                batch.draw(race.feet[step % 2 != 0 ? (step == 1 ? 2 : 1) : 0][dir], x, y + z, 8, 8, 16, 16, -1, 1, 0);
+                batch.setShader(Game.colorToRelative(race.color));
+                batch.draw(race.feet[step % 2 != 0 ? (step == 1 ? 2 : 1) : 0][dir], x, y, 4, 4, 8, 8, -1, 1, 0);
+
                 if (feetArmor != null) {
-                    batch.draw(feetArmor.graphics[step % 2 != 0 ? (step == 1 ? 2 : 1) : 0][dir], x, y + z, 8, 8, 16, 16, -1, 1, 0);
+                    feetArmor.render(batch, x, y, step % 2 != 0 ? (step == 1 ? 2 : 1) : 0, dir, true);
                 }
 
-                batch.draw(race.body[0][dir], x, y + z);
+                batch.setShader(Game.colorToRelative(race.color));
+                batch.draw(race.body[0][dir], x, y);
+
                 if (bodyArmor != null) {
-                    batch.draw(bodyArmor.graphics[0][dir], x, y + z);
+                    bodyArmor.render(batch, x, y, 0, dir);
                 }
 
-                batch.draw(race.body[1 + (leftHandStep % 2 != 0 ? (leftHandStep == 1 ? 2 : 1) : 0)][dir], x, y + z, 8, 8, 16, 16, -1, 1, 0);
+                batch.setShader(Game.colorToRelative(race.color));
+                batch.draw(race.body[1 + (leftHandStep % 2 != 0 ? (leftHandStep == 1 ? 2 : 1) : 0)][dir], x, y, 4, 4, 8, 8, -1, 1, 0);
+
                 if (bodyArmor != null) {
-                    batch.draw(bodyArmor.graphics[1 + (leftHandStep % 2 != 0 ? (leftHandStep == 1 ? 2 : 1) : 0)][dir], x, y + z, 8, 8, 16, 16, -1, 1, 0);
+                    bodyArmor.render(batch, x, y, 1 + (leftHandStep % 2 != 0 ? (leftHandStep == 1 ? 2 : 1) : 0), dir, true);
                 }
 
-                batch.draw(race.body[1 + (rightHandStep % 2 != 0 ? (rightHandStep == 1 ? 1 : 2) : 0)][dir], x, y + z);
+                batch.setShader(Game.colorToRelative(race.color));
+                batch.draw(race.body[1 + (rightHandStep % 2 != 0 ? (rightHandStep == 1 ? 1 : 2) : 0)][dir], x, y);
+
                 if (bodyArmor != null) {
-                    batch.draw(bodyArmor.graphics[1 + (rightHandStep % 2 != 0 ? (rightHandStep == 1 ? 1 : 2) : 0)][dir], x, y + z);
+                    bodyArmor.render(batch, x, y, 1 + (rightHandStep % 2 != 0 ? (rightHandStep == 1 ? 1 : 2) : 0), dir);
                 }
 
-                batch.draw(race.head[0][dir], x, y + z);
+                batch.setShader(Game.colorToRelative(race.color));
+                batch.draw(race.head[0][dir], x, y);
+
                 if (headArmor != null) {
-                    batch.draw(headArmor.graphics[0][dir], x, y + z);
+                    headArmor.render(batch, x, y, 0, dir);
                 }
 
                 break;
@@ -361,6 +406,10 @@ public class Humanoid extends Being {
 
         if (json.has("race")) {
             race = Resources.getHumanoidRace(json.getString("race"));
+        }
+
+        if (json.has("color")) {
+            color = Resources.getColor(json.getString("color"));
         }
     }
 }

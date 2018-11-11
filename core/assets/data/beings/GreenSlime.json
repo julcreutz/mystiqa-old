@@ -4,5 +4,6 @@
   "alignment": "EVIL",
   "stats": [
     {"MaxHealth": 5}
-  ]
+  ],
+  "color": "Green"
 }

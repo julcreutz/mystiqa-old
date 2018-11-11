@@ -3,6 +3,7 @@ package mystiqa.item.equipable.hand;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import mystiqa.entity.being.humanoid.Humanoid;
 import mystiqa.item.equipable.Equipable;
+import mystiqa.main.Game;
 
 public abstract class Hand extends Equipable {
     public boolean behind;
@@ -31,7 +32,7 @@ public abstract class Hand extends Equipable {
     }
 
     public void render(SpriteBatch batch) {
-
+        batch.setShader(Game.colorToRelative(material.color));
     }
 
     public void onBeginUse(Humanoid h) {

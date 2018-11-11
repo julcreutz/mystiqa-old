@@ -37,22 +37,33 @@ public class PlayScreen extends Screen {
 
             h.z = 16;
 
+            /*
             ((Equipable) (Resources.getItem("BattleAxe"))).equip(h);
+            h.rightHand.material = Resources.getMaterial("Iron");
+
             ((Equipable) (Resources.getItem("MetalShield"))).equip(h);
-            ((Equipable) (Resources.getItem("Greaves"))).equip(h);
+            h.leftHand.material = Resources.getMaterial("Iron");
+            */
+
             ((Equipable) (Resources.getItem("PlateArmor"))).equip(h);
+            h.bodyArmor.material = Resources.getMaterial("Iron");
+
+            ((Equipable) (Resources.getItem("Greaves"))).equip(h);
+            h.feetArmor.material = Resources.getMaterial("Iron");
+
             ((Equipable) (Resources.getItem("Helmet"))).equip(h);
+            h.headArmor.material = Resources.getMaterial("Iron");
 
             addBeing(h);
         }
 
-        for (int z = 0; z < 3; z++) {
-            for (int x = z; x < 16 - z; x++) {
-                for (int y = z; y < 9 - z; y++) {
-                    setTile(Resources.getTile("Grass"), x, y, z);
-                }
+        for (int x = 0; x < 16; x++) {
+            for (int y = 0; y < 9; y++) {
+                setTile(Resources.getTile("Grass"), x, y, 0);
             }
         }
+
+        //addBeing(Resources.getBeing("GreenSlime"));
     }
 
     @Override

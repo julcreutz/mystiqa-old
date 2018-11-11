@@ -1,5 +1,6 @@
 package mystiqa.entity.being.slime;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
@@ -24,10 +25,12 @@ public class Slime extends Being {
 
     public float groundTime;
 
+    public Color color;
+
     public Slime() {
         super();
 
-        hitbox.set(2, 2, 0, 12, 4, 4);
+        hitbox.set(1, 1, 0, 6, 2, 3);
         attackHitbox = hitbox;
         defendHitbox = hitbox;
 
@@ -53,7 +56,7 @@ public class Slime extends Being {
                     jumpSpeed = v.len() * 2f;
                     jumpAngle = v.angle();
 
-                    velZ = 100;
+                    velZ = 85;
 
                     attackTime = MathUtils.random(1f, 2f);
 
@@ -103,8 +106,10 @@ public class Slime extends Being {
         super.render(batch);
 
         if (z > 0) {
-            batch.draw(shadow, x, y);
+            //batch.draw(shadow, x, y);
         }
+
+        batch.setShader(Game.colorToRelative(color));
         batch.draw(t, x, y + z);
     }
 
@@ -114,6 +119,10 @@ public class Slime extends Being {
 
         if (json.has("graphics")) {
             graphics = Resources.getSpriteSheet(json.getString("graphics"));
+        }
+
+        if (json.has("color")) {
+            color = Resources.getColor(json.getString("color"));
         }
     }
 }

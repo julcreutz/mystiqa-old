@@ -36,19 +36,19 @@ public class MeleeWeapon extends RightHand {
 
         z = h.z;
 
-        float widthDiff = t.getRegionWidth() - 16;
+        float widthDiff = t.getRegionWidth() - 8;
 
         float[][] x = new float[][] {
-                {8, 6, 8, 10},
-                {13, 13, 13, 11},
-                {8, 10, 8, 5},
-                {4, 4, 4, 7},
+                {4, 3, 4, 5},
+                {7, 7, 6, 5},
+                {4, 5, 4, 2},
+                {1, 2, 1, 3},
         };
 
         float[][] y = new float[][] {
+                {-1, -1, -1, -1},
+                {-2, -2, -1, -1},
                 {-2, -3, -2, -2},
-                {-1, -1, -2, 1},
-                {-3, -4, -3, -3},
                 {-2, -2, -2, -3},
         };
 
@@ -64,13 +64,12 @@ public class MeleeWeapon extends RightHand {
                     this.x = h.x + x[h.dir][step];
                     this.y = h.y + y[h.dir][step];
 
-                    attackHitboxDist = 12 + widthDiff;
+                    attackHitboxDist = 6 + widthDiff;
 
                     break;
                 case STAB:
                     rot = h.dir * 90;
 
-                    //float dist = MathUtils.sin(attackTime * MathUtils.PI) * MathUtils.clamp((4f + widthDiff), 0, 16);
                     float dist = (attackTime < .5f ? attackTime * 2f : 1 - (attackTime - .5f) * 2f) * (MathUtils.clamp(4f + widthDiff, 0, 16));
 
                     switch (MathUtils.round((dist / 4f) * 2f)) {
@@ -107,7 +106,7 @@ public class MeleeWeapon extends RightHand {
                     h.blockDirectionChange = false;
                     h.attacking = false;
                 } else {
-                    h.attackHitbox.set(4 + MathUtils.cosDeg(rot) * attackHitboxDist, 4 + MathUtils.sinDeg(rot) * attackHitboxDist, 0, 8, 8, 8);
+                    h.attackHitbox.set(2 + MathUtils.cosDeg(rot) * attackHitboxDist, 2 + MathUtils.sinDeg(rot) * attackHitboxDist, 0, 4, 4, 4);
                 }
             } else {
                 h.velX *= .5f;

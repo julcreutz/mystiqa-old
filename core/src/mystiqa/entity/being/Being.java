@@ -80,10 +80,6 @@ public abstract class Being extends Entity {
             }
         }
 
-        if (gravity) {
-            velZ -= 500 * Game.getDelta();
-        }
-
         hitbox.update(this);
         attackHitbox.update(this);
         defendHitbox.update(this);
@@ -100,6 +96,8 @@ public abstract class Being extends Entity {
                                 hit.add(e);
                                 if (e.defending && attackHitbox.overlaps(e.defendHitbox)) {
                                     e.onDefend();
+
+                                    play.screenShake += 1;
                                 } else {
                                     e.hitTime = .1f;
 
@@ -187,6 +185,10 @@ public abstract class Being extends Entity {
 
         y = newY;
         y += velY * Game.getDelta();
+
+        if (gravity) {
+            velZ -= 400 * Game.getDelta();
+        }
 
         if (collisionDetection) {
             hitbox.update(this, 0, 0, velZ * Game.getDelta());

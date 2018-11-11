@@ -1,5 +1,6 @@
 package mystiqa.item.equipable.armor;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import mystiqa.entity.being.humanoid.Humanoid;
 
 public class FeetArmor extends Armor {

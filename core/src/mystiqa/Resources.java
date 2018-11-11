@@ -21,30 +21,41 @@ import mystiqa.item.equipable.hand.right.MeleeWeapon;
 import mystiqa.item.equipable.material.Material;
 import mystiqa.main.Game;
 
+import java.util.HashMap;
+
 public class Resources {
+    private static HashMap<String, TextureRegion[][]> spriteSheets;
+
     public static TextureRegion[][] getSpriteSheet(String name) {
-        for (FileHandle file : Game.getFiles(Gdx.files.internal("data/sprite_sheets/"))) {
-            if (file.nameWithoutExtension().equals(name)) {
-                JsonValue root = new JsonReader().parse(file);
+        if (spriteSheets == null) {
+            spriteSheets = new HashMap<String, TextureRegion[][]>();
+        }
 
-                Texture t = new Texture(Gdx.files.internal(root.getString("path")));
+        if (!spriteSheets.containsKey(name)) {
+            for (FileHandle file : Game.getFiles(Gdx.files.internal("data/sprite_sheets/"))) {
+                if (file.nameWithoutExtension().equals(name)) {
+                    JsonValue root = new JsonReader().parse(file);
 
-                int splitX = root.getInt("splitX");
-                int splitY = root.getInt("splitY");
+                    Texture t = new Texture(Gdx.files.internal(root.getString("path")));
 
-                TextureRegion[][] spriteSheet = new TextureRegion[t.getWidth() / splitX][t.getHeight() / splitY];
+                    int splitX = root.getInt("splitX");
+                    int splitY = root.getInt("splitY");
 
-                for (int x = 0; x < spriteSheet.length; x++) {
-                    for (int y = 0; y < spriteSheet[0].length; y++) {
-                        spriteSheet[x][y] = new TextureRegion(t, x * splitX, y * splitY, splitX, splitY);
+                    TextureRegion[][] spriteSheet = new TextureRegion[t.getWidth() / splitX][t.getHeight() / splitY];
+
+                    for (int x = 0; x < spriteSheet.length; x++) {
+                        for (int y = 0; y < spriteSheet[0].length; y++) {
+                            spriteSheet[x][y] = new TextureRegion(t, x * splitX, y * splitY, splitX, splitY);
+                        }
                     }
-                }
 
-                return spriteSheet;
+                    spriteSheets.put(name, spriteSheet);
+                    break;
+                }
             }
         }
 
-        return null;
+        return spriteSheets.get(name);
     }
 
     public static Item getItem(String name) {

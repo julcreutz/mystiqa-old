@@ -23,17 +23,17 @@ public class Shield extends LeftHand {
             dir = h.dir;
 
             float[][] x = new float[][] {
-                    {12, 12, 12, 12},
-                    {-4, -4, -4, -4},
-                    {-12, -12, -12, -12},
-                    {4, 4, 4, 4}
+                    {7, 7, 7, 7},
+                    {-2, -2, -2, -2},
+                    {-7, -7, -7, -7},
+                    {2, 2, 2, 2}
             };
 
             float[][] y = new float[][] {
-                    {-1, -2, -1, -2},
+                    {0, -1, 0, 1},
                     {2, 1, 2, 1},
-                    {-1, -2, -1, -2},
-                    {-4, -5, -4, -5}
+                    {0, -1, -0, -1},
+                    {-2, -3, -2, -3}
             };
 
             this.x = h.x + x[dir][h.step];
@@ -43,25 +43,25 @@ public class Shield extends LeftHand {
 
             switch (dir) {
                 case 0:
-                    h.defendHitbox.set(15, 0, 0, 1, 16, 8);
+                    h.defendHitbox.set(7, 0, 0, 1, 8, 8);
                     break;
                 case 2:
-                    h.defendHitbox.set(0, 0, 0, 1, 16, 8);
+                    h.defendHitbox.set(0, 0, 0, 1, 8, 8);
                     break;
                 case 1:
-                    h.defendHitbox.set(0, 15, 0, 16, 1, 8);
+                    h.defendHitbox.set(0, 7, 0, 8, 1, 8);
                     break;
                 case 3:
-                    h.defendHitbox.set(0, 0, 0, 16, 1, 8);
+                    h.defendHitbox.set(0, 0, 0, 8, 1, 8);
                     break;
             }
         } else {
             dir = (h.dir + 1) % 4;
 
             float[][] x = new float[][] {
-                    {13, 12, 13, 12},
+                    {8, 7, 8, 7},
                     {0, 1, 0, -1},
-                    {-13, -12, -13, -12},
+                    {-8, -7, -8, -7},
                     {0, -1, 0, 1}
             };
 
@@ -69,7 +69,7 @@ public class Shield extends LeftHand {
                     {-1, -2, -1, 0},
                     {1, 0, 1, 0},
                     {-1, 0, -1, -2},
-                    {-4, -5, -4, -5}
+                    {-2, -3, -2, -3}
             };
 
             this.x = h.x + x[dir][h.step];

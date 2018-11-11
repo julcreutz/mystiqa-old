@@ -1,4 +1,5 @@
 {
   "name": "Iron",
-  "type": "METAL"
+  "type": "METAL",
+  "color": "LightGrey"
 }
