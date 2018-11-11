@@ -1,10 +1,11 @@
-package mystiqa.entity;
+package mystiqa.entity.tile;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.JsonValue;
 import mystiqa.Resources;
+import mystiqa.entity.Entity;
 import mystiqa.main.Game;
 import mystiqa.main.screen.PlayScreen;
 

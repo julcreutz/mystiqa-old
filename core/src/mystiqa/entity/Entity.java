@@ -22,4 +22,16 @@ public class Entity {
     public void render(SpriteBatch batch) {
 
     }
+
+    public int getTileX() {
+        return (int) (x / 8);
+    }
+
+    public int getTileY() {
+        return (int) (y / 8);
+    }
+
+    public int getTileZ() {
+        return (int) (z / 8);
+    }
 }

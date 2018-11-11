@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
-import mystiqa.entity.Tile;
+import mystiqa.entity.tile.Tile;
 import mystiqa.entity.being.Being;
 import mystiqa.entity.being.humanoid.Humanoid;
 import mystiqa.entity.being.humanoid.HumanoidRace;
@@ -25,6 +25,8 @@ import java.util.HashMap;
 
 public class Resources {
     private static HashMap<String, TextureRegion[][]> spriteSheets;
+    private static HashMap<String, Color> colors;
+    private static HashMap<String, JsonValue> tiles;
 
     public static TextureRegion[][] getSpriteSheet(String name) {
         if (spriteSheets == null) {
@@ -138,43 +140,54 @@ public class Resources {
     }
 
     public static Color getColor(String name) {
-        for (FileHandle file : Game.getFiles(Gdx.files.internal("data/colors/"))) {
-            if (file.nameWithoutExtension().equals(name)) {
-                JsonValue json = new JsonReader().parse(file);
+        if (colors == null) {
+            colors = new HashMap<String, Color>();
+        }
 
-                Color c = new Color();
+        if (!colors.containsKey(name)) {
+            for (FileHandle file : Game.getFiles(Gdx.files.internal("data/colors/"))) {
+                if (file.nameWithoutExtension().equals(name)) {
+                    JsonValue json = new JsonReader().parse(file);
 
-                if (json.has("r")) {
-                    c.r = json.getInt("r");
+                    Color c = new Color();
+
+                    if (json.has("r")) {
+                        c.r = json.getInt("r");
+                    }
+
+                    if (json.has("g")) {
+                        c.g = json.getInt("g");
+                    }
+
+                    if (json.has("b")) {
+                        c.b = json.getInt("b");
+                    }
+
+                    colors.put(name, c);
+                    break;
                 }
-
-                if (json.has("g")) {
-                    c.g = json.getInt("g");
-                }
-
-                if (json.has("b")) {
-                    c.b = json.getInt("b");
-                }
-
-                return c;
             }
         }
 
-        return null;
+        return colors.get(name);
     }
 
     public static Tile getTile(String name) {
-        for (FileHandle file : Game.getFiles(Gdx.files.internal("data/tiles/"))) {
-            if (file.nameWithoutExtension().equals(name)) {
-                JsonValue json = new JsonReader().parse(file);
+        if (tiles == null) {
+            tiles = new HashMap<String, JsonValue>();
+        }
 
-                Tile t = new Tile();
-                t.deserialize(json);
-
-                return t;
+        if (!tiles.containsKey(name)) {
+            for (FileHandle file : Game.getFiles(Gdx.files.internal("data/tiles/"))) {
+                if (file.nameWithoutExtension().equals(name)) {
+                    tiles.put(name, new JsonReader().parse(file));
+                    break;
+                }
             }
         }
 
-        return null;
+        Tile t = new Tile();
+        t.deserialize(tiles.get(name));
+        return t;
     }
 }

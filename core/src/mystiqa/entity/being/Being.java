@@ -8,7 +8,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import mystiqa.Hitbox;
 import mystiqa.Resources;
 import mystiqa.entity.Entity;
-import mystiqa.entity.Tile;
+import mystiqa.entity.tile.Tile;
 import mystiqa.stat.Damage;
 import mystiqa.stat.MaxHealth;
 import mystiqa.stat.StatManager;

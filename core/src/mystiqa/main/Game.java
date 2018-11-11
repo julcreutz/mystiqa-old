@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
+import mystiqa.Perlin;
 import mystiqa.main.screen.PlayScreen;
 import mystiqa.main.screen.Screen;
 
