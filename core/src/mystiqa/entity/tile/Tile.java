@@ -10,8 +10,6 @@ import mystiqa.main.Game;
 import mystiqa.main.screen.PlayScreen;
 
 public class Tile extends Entity {
-    public String name;
-
     public TextureRegion[][] topGraphics;
     public TextureRegion topGraphic;
 
@@ -41,19 +39,19 @@ public class Tile extends Entity {
             Tile l = play.getTile(x - 1, y, z);
             Tile d = play.getTile(x, y - 1, z);
 
-            if (r != null && r.name.equals(name)) {
+            if (r != null && r.getClass().isInstance(this)) {
                 n += 1;
             }
 
-            if (u != null && u.name.equals(name)) {
+            if (u != null && u.getClass().isInstance(this)) {
                 n += 2;
             }
 
-            if (l != null && l.name.equals(name)) {
+            if (l != null && l.getClass().isInstance(this)) {
                 n += 4;
             }
 
-            if (d != null && d.name.equals(name)) {
+            if (d != null && d.getClass().isInstance(this)) {
                 n += 8;
             }
 
@@ -113,16 +111,16 @@ public class Tile extends Entity {
             Tile l = play.getTile(x - 1, y, z);
             Tile r = play.getTile(x + 1, y, z);
 
-            boolean hl = l != null && l.name.equals(name);
-            boolean hr = r != null && r.name.equals(name);
+            boolean hl = l != null && l.getClass().isInstance(this);
+            boolean hr = r != null && r.getClass().isInstance(this);
 
             int tx = hl && hr ? 1 : (hl && !hr ? 2 : (!hl && hr ? 0 : 3));
 
             Tile b = play.getTile(x, y, z - 1);
             Tile t = play.getTile(x, y, z + 1);
 
-            boolean hb = b != null && b.name.equals(name);
-            boolean ht = t != null && t.name.equals(name);
+            boolean hb = b != null && b.getClass().isInstance(this);
+            boolean ht = t != null && t.getClass().isInstance(this);
 
             int ty = hb && ht ? 1 : (hb && !ht ? 0 : (!hb && ht ? 2 : 3));
 
@@ -142,28 +140,6 @@ public class Tile extends Entity {
         if (topGraphic != null) {
             batch.setShader(Game.colorToRelative(topColor));
             batch.draw(topGraphic, x, y + z + 8);
-        }
-    }
-
-    public void deserialize(JsonValue json) {
-        if (json.has("name")) {
-            name = json.getString("name");
-        }
-
-        if (json.has("topGraphics")) {
-            topGraphics = Resources.getSpriteSheet(json.getString("topGraphics"));
-        }
-
-        if (json.has("sideGraphics")) {
-            sideGraphics = Resources.getSpriteSheet(json.getString("sideGraphics"));
-        }
-
-        if (json.has("topColor")) {
-            topColor = Resources.getColor(json.getString("topColor"));
-        }
-
-        if (json.has("sideColor")) {
-            sideColor = Resources.getColor(json.getString("sideColor"));
         }
     }
 }

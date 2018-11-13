@@ -1,6 +1,0 @@
-{
-  "inherit": "HeadArmor",
-  "name": "Helmet",
-  "graphics": "Helmet",
-  "materialType": "METAL"
-}

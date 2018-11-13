@@ -1,6 +1,0 @@
-{
-  "inherit": "Shield",
-  "name": "Shield",
-  "graphics": "MetalShield",
-  "materialType": "METAL"
-}

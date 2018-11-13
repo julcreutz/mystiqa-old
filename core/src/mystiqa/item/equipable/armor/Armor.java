@@ -20,13 +20,4 @@ public abstract class Armor extends Equipable {
     public void render(SpriteBatch batch, float x, float y, int step, int dir) {
         render(batch, x, y, step, dir, false);
     }
-
-    @Override
-    public void deserialize(JsonValue json) {
-        super.deserialize(json);
-
-        if (json.has("graphics")) {
-            graphics = Resources.getSpriteSheet(json.getString("graphics"));
-        }
-    }
 }

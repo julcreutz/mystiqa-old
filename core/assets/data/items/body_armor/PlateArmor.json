@@ -1,9 +1,0 @@
-{
-  "inherit": "BodyArmor",
-  "name": "Plate Armor",
-  "graphics": "PlateArmor",
-  "materialType": "METAL",
-  "stats": [
-
-  ]
-}

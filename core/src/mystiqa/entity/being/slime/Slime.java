@@ -28,7 +28,7 @@ public class Slime extends Being {
     public Color color;
 
     public Slime() {
-        super();
+
 
         hitbox.set(1, 1, 0, 6, 2, 3);
         attackHitbox = hitbox;
@@ -111,18 +111,5 @@ public class Slime extends Being {
 
         batch.setShader(Game.colorToRelative(color));
         batch.draw(t, x, y + z);
-    }
-
-    @Override
-    public void deserialize(JsonValue json) {
-        super.deserialize(json);
-
-        if (json.has("graphics")) {
-            graphics = Resources.getSpriteSheet(json.getString("graphics"));
-        }
-
-        if (json.has("color")) {
-            color = Resources.getColor(json.getString("color"));
-        }
     }
 }

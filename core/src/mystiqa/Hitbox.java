@@ -21,7 +21,7 @@ public class Hitbox {
     public TextureRegion border;
 
     public Hitbox() {
-        border = Resources.getSpriteSheet("Hitbox")[0][0];
+        border = Resources.getSpriteSheet("graphics/debug/hitbox.png", 1, 1)[0][0];
     }
 
     public void set(float ox, float oy, float oz, int w, int h, int d) {

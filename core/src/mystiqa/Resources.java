@@ -1,193 +1,53 @@
 package mystiqa;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.utils.JsonReader;
-import com.badlogic.gdx.utils.JsonValue;
-import mystiqa.entity.tile.Tile;
-import mystiqa.entity.being.Being;
-import mystiqa.entity.being.humanoid.Humanoid;
-import mystiqa.entity.being.humanoid.HumanoidRace;
-import mystiqa.entity.being.slime.Slime;
-import mystiqa.item.Item;
-import mystiqa.item.equipable.armor.BodyArmor;
-import mystiqa.item.equipable.armor.FeetArmor;
-import mystiqa.item.equipable.armor.HeadArmor;
-import mystiqa.item.equipable.hand.left.Shield;
-import mystiqa.item.equipable.hand.right.MeleeWeapon;
-import mystiqa.item.equipable.material.Material;
-import mystiqa.main.Game;
+import com.badlogic.gdx.utils.Array;
 
 import java.util.HashMap;
 
 public class Resources {
-    private static HashMap<String, TextureRegion[][]> spriteSheets;
-    private static HashMap<String, Color> colors;
-    private static HashMap<String, JsonValue> tiles;
+    private static HashMap<String, Texture> textures;
+    private static HashMap<Texture, Array<TextureRegion[][]>> spriteSheets;
 
-    public static TextureRegion[][] getSpriteSheet(String name) {
+    public static TextureRegion[][] getSpriteSheet(String path, int splitX, int splitY) {
+        if (textures == null) {
+            textures = new HashMap<String, Texture>();
+        }
+
+        if (!textures.containsKey(path)) {
+            textures.put(path, new Texture(Gdx.files.internal(path)));
+        }
+
+        Texture t = textures.get(path);
+
+        int w = t.getWidth() / splitX;
+        int h = t.getHeight() / splitY;
+
         if (spriteSheets == null) {
-            spriteSheets = new HashMap<String, TextureRegion[][]>();
+            spriteSheets = new HashMap<Texture, Array<TextureRegion[][]>>();
         }
 
-        if (!spriteSheets.containsKey(name)) {
-            for (FileHandle file : Game.getFiles(Gdx.files.internal("data/sprite_sheets/"))) {
-                if (file.nameWithoutExtension().equals(name)) {
-                    JsonValue root = new JsonReader().parse(file);
+        if (!spriteSheets.containsKey(t)) {
+            spriteSheets.put(t, new Array<TextureRegion[][]>());
+        }
 
-                    Texture t = new Texture(Gdx.files.internal(root.getString("path")));
-
-                    int splitX = root.getInt("splitX");
-                    int splitY = root.getInt("splitY");
-
-                    TextureRegion[][] spriteSheet = new TextureRegion[t.getWidth() / splitX][t.getHeight() / splitY];
-
-                    for (int x = 0; x < spriteSheet.length; x++) {
-                        for (int y = 0; y < spriteSheet[0].length; y++) {
-                            spriteSheet[x][y] = new TextureRegion(t, x * splitX, y * splitY, splitX, splitY);
-                        }
-                    }
-
-                    spriteSheets.put(name, spriteSheet);
-                    break;
-                }
+        for (TextureRegion[][] spriteSheet : spriteSheets.get(t)) {
+            if (spriteSheet.length == w && spriteSheet[0].length == h) {
+                return spriteSheet;
             }
         }
 
-        return spriteSheets.get(name);
-    }
-
-    public static Item getItem(String name) {
-        for (FileHandle file : Game.getFiles(Gdx.files.internal("data/items/"))) {
-            if (file.nameWithoutExtension().equals(name)) {
-                JsonValue json = new JsonReader().parse(file);
-
-                String inherit = json.getString("inherit");
-                Item item = null;
-
-                if (inherit.equals("MeleeWeapon")) {
-                    item = new MeleeWeapon();
-                } else if (inherit.equals("Shield")) {
-                    item = new Shield();
-                } else if (inherit.equals("FeetArmor")) {
-                    item = new FeetArmor();
-                } else if (inherit.equals("BodyArmor")) {
-                    item = new BodyArmor();
-                } else if (inherit.equals("HeadArmor")) {
-                    item = new HeadArmor();
-                }
-
-                if (item != null) {
-                    item.deserialize(json);
-                    return item;
-                }
+        TextureRegion[][] spriteSheet = new TextureRegion[w][h];
+        for (int x = 0; x < spriteSheet.length; x++) {
+            for (int y = 0; y < spriteSheet[0].length; y++) {
+                spriteSheet[x][y] = new TextureRegion(t, x * splitX, y * splitY, splitX, splitY);
             }
         }
 
-        return null;
-    }
+        spriteSheets.get(t).add(spriteSheet);
 
-    public static HumanoidRace getHumanoidRace(String name) {
-        for (FileHandle file : Game.getFiles(Gdx.files.internal("data/humanoid_races/"))) {
-            if (file.nameWithoutExtension().equals(name)) {
-                HumanoidRace race = new HumanoidRace();
-                race.deserialize(new JsonReader().parse(file));
-                return race;
-            }
-        }
-
-        return null;
-    }
-
-    public static Being getBeing(String name) {
-        for (FileHandle file : Game.getFiles(Gdx.files.internal("data/beings/"))) {
-            if (file.nameWithoutExtension().equals(name)) {
-                JsonValue json = new JsonReader().parse(file);
-
-                String inherit = json.getString("inherit");
-                Being e = null;
-
-                if (inherit.equals("Humanoid")) {
-                    e = new Humanoid();
-                } else if (inherit.equals("Slime")) {
-                    e = new Slime();
-                }
-
-                if (e != null) {
-                    e.deserialize(json);
-                    return e;
-                }
-            }
-        }
-
-        return null;
-    }
-
-    public static Material getMaterial(String name) {
-        for (FileHandle file : Game.getFiles(Gdx.files.internal("data/materials/"))) {
-            if (file.nameWithoutExtension().equals(name)) {
-                Material m = new Material();
-                m.deserialize(new JsonReader().parse(file));
-
-                return m;
-            }
-        }
-
-        return null;
-    }
-
-    public static Color getColor(String name) {
-        if (colors == null) {
-            colors = new HashMap<String, Color>();
-        }
-
-        if (!colors.containsKey(name)) {
-            for (FileHandle file : Game.getFiles(Gdx.files.internal("data/colors/"))) {
-                if (file.nameWithoutExtension().equals(name)) {
-                    JsonValue json = new JsonReader().parse(file);
-
-                    Color c = new Color();
-
-                    if (json.has("r")) {
-                        c.r = json.getInt("r");
-                    }
-
-                    if (json.has("g")) {
-                        c.g = json.getInt("g");
-                    }
-
-                    if (json.has("b")) {
-                        c.b = json.getInt("b");
-                    }
-
-                    colors.put(name, c);
-                    break;
-                }
-            }
-        }
-
-        return colors.get(name);
-    }
-
-    public static Tile getTile(String name) {
-        if (tiles == null) {
-            tiles = new HashMap<String, JsonValue>();
-        }
-
-        if (!tiles.containsKey(name)) {
-            for (FileHandle file : Game.getFiles(Gdx.files.internal("data/tiles/"))) {
-                if (file.nameWithoutExtension().equals(name)) {
-                    tiles.put(name, new JsonReader().parse(file));
-                    break;
-                }
-            }
-        }
-
-        Tile t = new Tile();
-        t.deserialize(tiles.get(name));
-        return t;
+        return spriteSheet;
     }
 }

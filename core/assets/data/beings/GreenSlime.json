@@ -1,9 +1,0 @@
-{
-  "inherit": "Slime",
-  "graphics": "GreenSlime",
-  "alignment": "EVIL",
-  "stats": [
-    {"MaxHealth": 5}
-  ],
-  "color": "Green"
-}

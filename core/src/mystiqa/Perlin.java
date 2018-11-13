@@ -31,4 +31,17 @@ public class Perlin {
 
         return MathUtils.lerp(i1, i2, wy);
     }
+
+    public static float layeredNoise(float x, float y, int octaves, float freq, float freqScale, float amp, float ampScale) {
+        float val = 0;
+
+        for (int i = 0; i < octaves; i++) {
+            val += noise(x * freq, y * freq) * amp;
+
+            freq *= freqScale;
+            amp *= ampScale;
+        }
+
+        return val;
+    }
 }

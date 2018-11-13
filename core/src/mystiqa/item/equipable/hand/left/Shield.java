@@ -128,13 +128,4 @@ public class Shield extends LeftHand {
 
         h.defending = false;
     }
-
-    @Override
-    public void deserialize(JsonValue json) {
-        super.deserialize(json);
-
-        if (json.has("graphics")) {
-            graphics = Resources.getSpriteSheet(json.getString("graphics"));
-        }
-    }
 }

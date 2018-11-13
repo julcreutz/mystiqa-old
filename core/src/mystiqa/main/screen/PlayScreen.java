@@ -3,26 +3,30 @@ package mystiqa.main.screen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.TimeUtils;
 import mystiqa.Perlin;
 import mystiqa.Resources;
 import mystiqa.entity.Entity;
 import mystiqa.entity.being.Being;
-import mystiqa.entity.tile.Chunk;
+import mystiqa.entity.being.humanoid.Human;
+import mystiqa.entity.tile.Grass;
 import mystiqa.entity.tile.Tile;
 import mystiqa.entity.being.humanoid.Humanoid;
 import mystiqa.item.equipable.Equipable;
+import mystiqa.item.equipable.armor.body.PlateArmor;
+import mystiqa.item.equipable.armor.feet.Greaves;
+import mystiqa.item.equipable.armor.head.Helmet;
+import mystiqa.item.equipable.material.Iron;
 import mystiqa.main.Game;
 
 import java.util.Comparator;
 
 public class PlayScreen extends Screen {
     public Array<Being> beings;
-    public Array<Chunk> chunks;
+    public Tile[][][] tiles;
 
     public Array<Entity> entities;
 
-    public Entity player;
+    public Being player;
 
     public float screenShake;
 
@@ -31,61 +35,37 @@ public class PlayScreen extends Screen {
         super.create();
 
         beings = new Array<Being>();
-        chunks = new Array<Chunk>();
+        tiles = new Tile[256][256][256];
 
         entities = new Array<Entity>();
 
-        Humanoid h = (Humanoid) Resources.getBeing("Human");
+        Human h = new Human();
 
-        if (h != null) {
-            h.controlledByPlayer = true;
+        h.controlledByPlayer = true;
 
-            h.z = 80 * 8;
+        h.x = 256 * 4;
+        h.y = 256 * 4;
+        h.z = 64 * 8;
 
-            ((Equipable) (Resources.getItem("PlateArmor"))).equip(h);
-            h.bodyArmor.material = Resources.getMaterial("Iron");
+        new PlateArmor().equip(h);
+        h.bodyArmor.material = new Iron();
 
-            ((Equipable) (Resources.getItem("Greaves"))).equip(h);
-            h.feetArmor.material = Resources.getMaterial("Iron");
+        new Greaves().equip(h);
+        h.feetArmor.material = new Iron();
 
-            ((Equipable) (Resources.getItem("Helmet"))).equip(h);
-            h.headArmor.material = Resources.getMaterial("Iron");
+        new Helmet().equip(h);
+        h.headArmor.material = new Iron();
 
-            addBeing(h);
+        addBeing(h);
 
-            player = h;
-        }
+        player = h;
+
+        generate();
     }
 
     @Override
     public void update() {
         super.update();
-
-        for (int x = -1; x <= 1; x++) {
-            for (int y = -1; y <= 1; y++) {
-                int chunkX = MathUtils.floor((float) player.getTileX() / Chunk.WIDTH) * Chunk.WIDTH + x * Chunk.WIDTH;
-                int chunkY = MathUtils.floor((float) player.getTileY() / Chunk.HEIGHT) * Chunk.HEIGHT + y * Chunk.HEIGHT;
-                int chunkZ = MathUtils.floor((float) player.getTileZ() / Chunk.DEPTH) * Chunk.DEPTH;
-
-                if (getChunk(chunkX, chunkY, chunkZ) == null) {
-                    Chunk c = new Chunk(chunkX, chunkY, chunkZ);
-
-                    for (int xx = 0; xx < c.tiles.length; xx++) {
-                        for (int yy = 0; yy < c.tiles[0].length; yy++) {
-                            for (int zz = 0; zz <= 10 + Perlin.noise((c.x + xx) * .05f, (c.y + yy) * .05f) * 10f; zz++) {
-                                Tile t = Resources.getTile("Grass");
-                                t.x = (c.x + xx) * 8;
-                                t.y = (c.y + yy) * 8;
-                                t.z = (c.z + zz) * 8;
-
-                                c.tiles[xx][yy][zz] = t;
-                            }
-                        }
-                    }
-                    chunks.add(c);
-                }
-            }
-        }
 
         entities.clear();
 
@@ -95,16 +75,15 @@ public class PlayScreen extends Screen {
 
         int xView = 16;
         int yView = 9;
-        int zView = 18;
+        int zView = 9;
 
         for (int x = player.getTileX() - xView; x < player.getTileX() + xView; x++) {
             for (int y = player.getTileY() - yView; y < player.getTileY() + yView; y++) {
-                for (int z = player.getTileZ() + zView; z >= player.getTileZ() - zView; z--) {
+                for (int z = player.getTileZ() - zView; z < player.getTileZ() + zView; z++) {
                     Tile t = getTile(x, y, z);
 
                     if (t != null) {
                         entities.add(t);
-                        break;
                     }
                 }
             }
@@ -113,9 +92,9 @@ public class PlayScreen extends Screen {
         entities.sort(new Comparator<Entity>() {
             @Override
             public int compare(Entity o1, Entity o2) {
-                int z = Float.compare(o1.z, o2.z);
-                int y = Float.compare(o2.y, o1.y);
-                return z == 0 ? y : z;
+                int z = Float.compare(o1.getTileZ(), o2.getTileZ());
+                int y = Float.compare(o2.getTileY(), o1.getTileY());
+                return y == 0 ? z : y;
             }
         });
 
@@ -134,6 +113,17 @@ public class PlayScreen extends Screen {
         cam.position.y = player.y + player.z + MathUtils.random(-screenShake, screenShake) + 4;
 
         cam.update();
+
+        // Sort out invisible tiles
+        for (Tile t : getTiles()) {
+            int x = t.getTileX();
+            int y = t.getTileY();
+            int z = t.getTileZ();
+
+            if (getTile(x, y, z + 1) != null && getTile(x, y - 1, z) != null) {
+                entities.removeValue(t, true);
+            }
+        }
     }
 
     @Override
@@ -177,23 +167,27 @@ public class PlayScreen extends Screen {
         return beings;
     }
 
-    public Chunk getChunk(int x, int y, int z) {
-        for (Chunk c : chunks) {
-            if (x >= c.x && x < c.x + Chunk.WIDTH && y >= c.y && y < c.y + Chunk.HEIGHT && z >= c.z && z < c.z + Chunk.DEPTH) {
-                return c;
-            }
-        }
-
-        return null;
+    public Tile getTile(int x, int y, int z) {
+        return x >= 0 && x < tiles.length && y >= 0 && y < tiles[0].length && z >= 0 && z < tiles[0][0].length ? tiles[x][y][z] : null;
     }
 
-    public Tile getTile(int x, int y, int z) {
-        Chunk c = getChunk(x, y, z);
+    public void setTile(Tile t, int x, int y, int z) {
+        t.x = x * 8;
+        t.y = y * 8;
+        t.z = z * 8;
 
-        if (c != null) {
-            return c.tiles[x - c.x][y - c.y][z - c.z];
+        tiles[x][y][z] = t;
+    }
+
+    public void generate() {
+        for (int x = 0; x < tiles.length; x++) {
+            for (int y = 0; y < tiles[0].length; y++) {
+                int z = 64 + (int) (Perlin.layeredNoise(x, y, 1, .01f, 2, 1, .5f) * 20f);
+
+                for (int zz = 0; zz <= z; zz++) {
+                    setTile(new Grass(), x, y, zz);
+                }
+            }
         }
-
-        return null;
     }
 }
