@@ -1,6 +1,7 @@
 package mystiqa.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import mystiqa.Hitbox;
 import mystiqa.main.screen.PlayScreen;
 
@@ -24,14 +25,14 @@ public class Entity {
     }
 
     public int getTileX() {
-        return (int) (x / 8);
+        return MathUtils.floor(x / 8f);
     }
 
     public int getTileY() {
-        return (int) (y / 8);
+        return MathUtils.floor(y / 8f);
     }
 
     public int getTileZ() {
-        return (int) (z / 8);
+        return MathUtils.floor(z / 8f);
     }
 }

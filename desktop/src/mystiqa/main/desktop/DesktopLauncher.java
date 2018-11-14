@@ -5,7 +5,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import mystiqa.main.Game;
 
 public class DesktopLauncher {
-	public static void main (String[] arg) {
+	public static void main(String[] arg) {
 		final int scale = 12;
 
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
@@ -16,6 +16,7 @@ public class DesktopLauncher {
 		config.foregroundFPS = 0;
 		config.vSyncEnabled = true;
 		config.resizable = false;
+
 		new LwjglApplication(new Game(), config);
 	}
 }
