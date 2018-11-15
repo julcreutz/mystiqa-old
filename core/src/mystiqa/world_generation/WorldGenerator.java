@@ -1,93 +1,70 @@
 package mystiqa.world_generation;
 
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
 import mystiqa.Perlin;
-import mystiqa.Resources;
-import mystiqa.entity.tile.Grass;
+import mystiqa.entity.tile.Chunk;
 import mystiqa.entity.tile.Tile;
 import mystiqa.entity.tile.Water;
+import mystiqa.world_generation.biome.Biome;
+import mystiqa.world_generation.biome.Grassland;
+import mystiqa.world_generation.biome.Hills;
 
-public class WorldGenerator extends ApplicationAdapter {
-    public SpriteBatch batch;
+public class WorldGenerator {
+    public static final int WATER_LEVEL = 64;
 
-    private TextureRegion pixel;
+    private Perlin perlin;
+    private Grassland grassland;
+    private Hills hills;
 
-    private Color[][] colors;
-
-    @Override
-    public void create() {
-        batch = new SpriteBatch();
-
-        pixel = Resources.getSpriteSheet("graphics/debug/hitbox.png", 1, 1)[0][0];
-
-        int w = 256 * 3;
-        int h = 256 * 3;
-
-        colors = new Color[w][h];
+    public WorldGenerator() {
+        perlin = new Perlin();
+        grassland = new Grassland();
+        hills = new Hills();
     }
 
-    @Override
-    public void render() {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
-            generateHeightmap();
-        }
-
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-
-        batch.begin();
-
-        for (int x = 0; x < colors.length; x++) {
-            for (int y = 0; y < colors[0].length; y++) {
-                Color c = colors[x][y];
-
-                if (c != null) {
-                    batch.setColor(c.r, c.g, c.b, 1);
-                    batch.draw(pixel, x, y);
+    public void generateChunk(Chunk c) {
+        for (int x = 0; x < c.tiles.length; x++) {
+            for (int y = 0; y < c.tiles[0].length; y++) {
+                for (int z = 0; z < getHeight(c.x + x, c.y + y); z++) {
+                    c.setTile(get(c.x + x, c.y + y, z), x, y, z);
                 }
             }
         }
 
-        batch.end();
-    }
-
-    public void generateHeightmap() {
-        Perlin perlin = new Perlin();
-
-        for (int x = 0; x < colors.length; x++) {
-            for (int y = 0; y < colors[0].length; y++) {
-                float noise = perlin.layeredNoise(x * .0075f, y * .0075f, 8, 1, 4f, 1, 1 / 4f);
-
-                if (noise > .45f) {
-                    if (noise > .65f) {
-                        colors[x][y] = Color.WHITE;
-                    } else if (noise > .6f) {
-                        colors[x][y] = Color.GRAY;
-                    } else if (noise > .55f) {
-                        colors[x][y] = Color.LIGHT_GRAY;
-                    } else if (noise > .5f) {
-                        colors[x][y] = Color.FOREST;
-                    } else if (noise > .46f) {
-                        colors[x][y] = Color.GREEN;
-                    } else {
-                        colors[x][y] = Color.YELLOW;
+        for (int x = 0; x < c.tiles.length; x++) {
+            for (int y = 0; y < c.tiles[0].length; y++) {
+                for (int z = 0; z < WATER_LEVEL; z++) {
+                    if (c.getTile(x, y, z) == null) {
+                        c.setTile(new Water(), x, y, z);
                     }
-                } else {
-                    colors[x][y] = Color.BLUE;
                 }
-
-                int zz = (int) (noise * 128f);
-                Tile t = zz < 58 ? new Water() : new Grass();
-                colors[x][y] = new Color(t.topColor.r / 255f, t.topColor.g / 255f, t.topColor.b / 255f, 1);
             }
         }
+    }
+
+    public Tile get(int x, int y, int z) {
+        Biome b = getBiome(x, y);
+        int height = b.getHeight(x, y);
+
+        if (z <= WATER_LEVEL) {
+            return b.getWaterTile();
+        } else {
+            return b.getGroundTile();
+        }
+    }
+
+    public int getHeight(int x, int y) {
+        int height = 0;
+        int n = 0;
+        for (int xx = -1; xx <= 1; xx++) {
+            for (int yy = -1; yy <= 1; yy++) {
+                height += getBiome(x + xx, y + yy).getHeight(x + xx, y + yy);
+                n++;
+            }
+        }
+        return height / n;
+    }
+
+    public Biome getBiome(int x, int y) {
+        return perlin.layeredNoise(x, y, 4, .0075f, 1 / 4f, 1, 4f) > .5f ? hills : grassland;
     }
 }

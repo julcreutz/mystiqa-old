@@ -21,6 +21,7 @@ import mystiqa.item.equipable.hand.left.HeaterShield;
 import mystiqa.item.equipable.hand.right.melee_weapon.BattleAxe;
 import mystiqa.item.equipable.material.Iron;
 import mystiqa.main.Game;
+import mystiqa.world_generation.WorldGenerator;
 
 import java.util.Comparator;
 
@@ -30,11 +31,11 @@ public class PlayScreen extends Screen {
 
     public Array<Entity> entities;
 
+    public WorldGenerator worldGenerator;
+
     public Being player;
 
     public float screenShake;
-
-    public Perlin perlin;
 
     @Override
     public void create() {
@@ -44,6 +45,8 @@ public class PlayScreen extends Screen {
         chunks = new Array<Chunk>();
 
         entities = new Array<Entity>();
+
+        worldGenerator = new WorldGenerator();
 
         Human h = new Human();
 
@@ -73,8 +76,6 @@ public class PlayScreen extends Screen {
         addBeing(g);
 
         player = h;
-
-        perlin = new Perlin();
     }
 
     @Override
@@ -85,25 +86,14 @@ public class PlayScreen extends Screen {
             for (int y = -1; y <= 1; y++) {
                 int chunkX = MathUtils.floor((player.getTileX() + x * Chunk.WIDTH) / (float) Chunk.WIDTH) * Chunk.HEIGHT;
                 int chunkY = MathUtils.floor((player.getTileY() + y * Chunk.HEIGHT) / (float) Chunk.HEIGHT) * Chunk.HEIGHT;
-                int chunkZ = 0;
 
-                if (getChunk(chunkX, chunkY, chunkZ) == null) {
+                if (getChunk(chunkX, chunkY) == null) {
                     Chunk c = new Chunk();
 
                     c.x = chunkX;
                     c.y = chunkY;
-                    c.z = chunkZ;
 
-                    for (int xx = 0; xx < c.tiles.length; xx++) {
-                        for (int yy = 0; yy < c.tiles[0].length; yy++) {
-                            float noise = perlin.layeredNoise((c.x + xx) * .0075f, (c.y + yy) * .0075f, 8, 1, 4f, 1, 1 / 4f);
-
-                            for (int zz = 0; zz < 64 + noise * 16f; zz++) {
-                                c.setTile(zz < 64 ? new Water() : new Grass(), xx, yy, zz < 64 ? 64 : zz);
-                            }
-                        }
-                    }
-
+                    worldGenerator.generateChunk(c);
                     chunks.add(c);
                 }
             }
@@ -117,7 +107,7 @@ public class PlayScreen extends Screen {
 
         int xView = 16;
         int yView = 9;
-        int zView = 18;
+        int zView = 9;
 
         for (int x = player.getTileX() - xView; x < player.getTileX() + xView; x++) {
             for (int y = player.getTileY() - yView; y < player.getTileY() + yView; y++) {
@@ -211,9 +201,9 @@ public class PlayScreen extends Screen {
         return beings;
     }
 
-    public Chunk getChunk(int x, int y, int z) {
+    public Chunk getChunk(int x, int y) {
         for (Chunk c : chunks) {
-            if (x >= c.x && x < c.x + Chunk.WIDTH && y >= c.y && y < c.y + Chunk.HEIGHT && z >= c.z && z < c.z + Chunk.DEPTH) {
+            if (x >= c.x && x < c.x + Chunk.WIDTH && y >= c.y && y < c.y + Chunk.HEIGHT) {
                 return c;
             }
         }
@@ -222,20 +212,20 @@ public class PlayScreen extends Screen {
     }
 
     public Tile getTile(int x, int y, int z) {
-        Chunk c = getChunk(x, y, z);
+        Chunk c = getChunk(x, y);
 
         if (c != null) {
-            return c.getTile(x - c.x, y - c.y, z - c.z);
+            return c.getTile(x - c.x, y - c.y, z);
         }
 
         return null;
     }
 
     public void setTile(Tile t, int x, int y, int z) {
-        Chunk c = getChunk(x, y, z);
+        Chunk c = getChunk(x, y);
 
         if (c != null) {
-            c.setTile(t, x - c.x, y - c.y, z - c.z);
+            c.setTile(t, x - c.x, y - c.y, z);
         }
     }
 }

@@ -7,7 +7,6 @@ public class Chunk {
 
     public int x;
     public int y;
-    public int z;
 
     public Tile[][][] tiles;
 
@@ -27,7 +26,7 @@ public class Chunk {
         if (inBounds(x, y, z)) {
             t.x = (this.x + x) * 8;
             t.y = (this.y + y) * 8;
-            t.z = (this.z + z) * 8;
+            t.z = z * 8;
 
             tiles[x][y][z] = t;
         }

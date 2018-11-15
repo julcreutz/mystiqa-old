@@ -1,6 +1,6 @@
 package mystiqa.item.equipable.material;
 
-import mystiqa.color.LightGrey;
+import mystiqa.color.LightGray;
 
 public class Iron extends Material {
     public Iron() {
@@ -9,6 +9,6 @@ public class Iron extends Material {
         name = "Iron";
         type = MaterialType.METAL;
 
-        color = new LightGrey();
+        color = new LightGray();
     }
 }
