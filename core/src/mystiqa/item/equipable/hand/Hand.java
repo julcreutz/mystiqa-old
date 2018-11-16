@@ -32,7 +32,7 @@ public abstract class Hand extends Equipable {
     }
 
     public void render(SpriteBatch batch) {
-        batch.setShader(Game.colorToRelative(material.color));
+        batch.setColor(material.color);
     }
 
     public void onBeginUse(Humanoid h) {

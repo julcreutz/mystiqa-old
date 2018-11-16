@@ -1,0 +1,7 @@
+{
+  "name": "Grass",
+  "topGraphics": "GrassTop",
+  "sideGraphics": "GrassSide",
+  "topColor": "Green",
+  "sideColor": "Brown"
+}

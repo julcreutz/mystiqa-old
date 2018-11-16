@@ -1,6 +1,6 @@
 package mystiqa.world_generation.biome;
 
-import mystiqa.entity.tile.Grass;
+import mystiqa.Resources;
 import mystiqa.entity.tile.Tile;
 
 public class Grassland extends Biome {
@@ -31,11 +31,11 @@ public class Grassland extends Biome {
 
     @Override
     public Tile getGroundTile() {
-        return new Grass();
+        return Resources.getTile("Grass");
     }
 
     @Override
     public Tile getWaterTile() {
-        return new Grass();
+        return Resources.getTile("Grass");
     }
 }

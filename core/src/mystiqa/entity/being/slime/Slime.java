@@ -5,8 +5,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.JsonValue;
-import mystiqa.Resources;
 import mystiqa.entity.being.Being;
 import mystiqa.main.Game;
 import mystiqa.main.screen.PlayScreen;
@@ -28,8 +26,6 @@ public class Slime extends Being {
     public Color color;
 
     public Slime() {
-
-
         hitbox.set(1, 1, 0, 6, 2, 3);
         attackHitbox = hitbox;
         defendHitbox = hitbox;
@@ -109,7 +105,7 @@ public class Slime extends Being {
             //batch.draw(shadow, x, y);
         }
 
-        batch.setShader(Game.colorToRelative(color));
+        batch.setColor(color);
         batch.draw(t, x, y + z);
     }
 }

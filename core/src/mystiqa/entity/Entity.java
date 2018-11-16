@@ -2,6 +2,7 @@ package mystiqa.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.utils.JsonValue;
 import mystiqa.Hitbox;
 import mystiqa.main.screen.PlayScreen;
 
@@ -34,5 +35,9 @@ public class Entity {
 
     public int getTileZ() {
         return MathUtils.floor(z / 8f);
+    }
+
+    public void deserialize(JsonValue json) {
+
     }
 }

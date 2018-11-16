@@ -7,7 +7,6 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import mystiqa.Hitbox;
 import mystiqa.Resources;
-import mystiqa.color.White;
 import mystiqa.entity.Entity;
 import mystiqa.entity.tile.Tile;
 import mystiqa.stat.Damage;
@@ -45,8 +44,6 @@ public abstract class Being extends Entity {
     public boolean collisionDetection;
     public boolean onGround;
 
-    private White white;
-
     public Being() {
         attackHitbox = new Hitbox();
         defendHitbox = new Hitbox();
@@ -62,8 +59,6 @@ public abstract class Being extends Entity {
 
         gravity = true;
         collisionDetection = true;
-
-        white = new White();
     }
 
     public void update(PlayScreen play) {
@@ -248,7 +243,7 @@ public abstract class Being extends Entity {
         super.render(batch);
 
         if (hitTime > 0) {
-            batch.setShader(Game.colorToAbsolute(white));
+            batch.setColor(Resources.getColor("White"));
         } else {
             batch.setShader(null);
         }
@@ -288,5 +283,14 @@ public abstract class Being extends Entity {
 
     public boolean isDead() {
         return health <= 0;
+    }
+
+    @Override
+    public void deserialize(JsonValue json) {
+        super.deserialize(json);
+
+        if (json.has("stats")) {
+            stats.deserialize(json.get("stats"));
+        }
     }
 }

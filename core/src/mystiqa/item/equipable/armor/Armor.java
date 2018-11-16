@@ -11,7 +11,7 @@ public abstract class Armor extends Equipable {
     public TextureRegion[][] graphics;
 
     public void render(SpriteBatch batch, float x, float y, int step, int dir, boolean flipped) {
-        batch.setShader(Game.colorToRelative(material.color));
+        batch.setColor(material.color);
 
         TextureRegion t = graphics[step][dir];
         batch.draw(t, x, y, t.getRegionWidth() * .5f, t.getRegionHeight() * .5f, t.getRegionWidth(), t.getRegionHeight(), flipped ? -1 : 1, 1, 0);

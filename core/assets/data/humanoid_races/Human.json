@@ -1,0 +1,9 @@
+{
+  "feet": "HumanFeet",
+  "body": "HumanBody",
+  "head": "HumanHead",
+  "color": "LightPink",
+  "stats": [
+    {"MaxHealth": 16}
+  ]
+}

@@ -25,4 +25,23 @@ public class StatManager {
 
         return count;
     }
+
+    public void deserialize(JsonValue json) {
+        for (JsonValue stat : json.iterator()) {
+            Stat s = null;
+
+            String name = stat.child.name;
+
+            if (name.equals("MaxHealth")) {
+                s = new MaxHealth();
+            } else if (name.equals("Damage")) {
+                s = new Damage();
+            }
+
+            if (s != null) {
+                s.deserialize(stat.child);
+                add(s);
+            }
+        }
+    }
 }

@@ -1,9 +1,9 @@
 package mystiqa.world_generation;
 
 import mystiqa.Perlin;
+import mystiqa.Resources;
 import mystiqa.entity.tile.Chunk;
 import mystiqa.entity.tile.Tile;
-import mystiqa.entity.tile.Water;
 import mystiqa.world_generation.biome.Biome;
 import mystiqa.world_generation.biome.Grassland;
 import mystiqa.world_generation.biome.Hills;
@@ -34,7 +34,7 @@ public class WorldGenerator {
             for (int y = 0; y < c.tiles[0].length; y++) {
                 for (int z = 0; z < WATER_LEVEL; z++) {
                     if (c.getTile(x, y, z) == null) {
-                        c.setTile(new Water(), x, y, z);
+                        c.setTile(Resources.getTile("Water"), x, y, z);
                     }
                 }
             }
@@ -53,6 +53,7 @@ public class WorldGenerator {
     }
 
     public int getHeight(int x, int y) {
+        int originalHeight = getBiome(x, y).getHeight(x, y);
         int height = 0;
         int n = 0;
         for (int xx = -1; xx <= 1; xx++) {
@@ -61,10 +62,18 @@ public class WorldGenerator {
                 n++;
             }
         }
-        return height / n;
+
+        float p = (float) height / (float) originalHeight;
+        float factor = .5f;
+
+        if (p > 1 + factor || p < 1 - factor) {
+            return height / n;
+        } else {
+            return originalHeight;
+        }
     }
 
     public Biome getBiome(int x, int y) {
-        return perlin.layeredNoise(x, y, 4, .0075f, 1 / 4f, 1, 4f) > .5f ? hills : grassland;
+        return perlin.layeredNoise(x, y, 4, .0075f, 4, 1, 1 / 4f) > .55f ? hills : grassland;
     }
 }

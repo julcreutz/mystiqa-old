@@ -1,9 +1,7 @@
 package mystiqa.world_generation.biome;
 
-import mystiqa.entity.tile.Grass;
-import mystiqa.entity.tile.Hill;
+import mystiqa.Resources;
 import mystiqa.entity.tile.Tile;
-import mystiqa.entity.tile.Water;
 
 public class Hills extends Biome {
     @Override
@@ -33,11 +31,11 @@ public class Hills extends Biome {
 
     @Override
     public Tile getGroundTile() {
-        return new Hill();
+        return Resources.getTile("Grass");
     }
 
     @Override
     public Tile getWaterTile() {
-        return new Grass();
+        return Resources.getTile("Grass");
     }
 }

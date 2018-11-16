@@ -1,25 +1,15 @@
 package mystiqa.main.screen;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import mystiqa.Perlin;
-import mystiqa.color.Green;
+import mystiqa.Resources;
 import mystiqa.entity.Entity;
 import mystiqa.entity.being.Being;
-import mystiqa.entity.being.humanoid.Human;
-import mystiqa.entity.being.slime.GreenSlime;
+import mystiqa.entity.being.humanoid.Humanoid;
 import mystiqa.entity.tile.Chunk;
-import mystiqa.entity.tile.Grass;
 import mystiqa.entity.tile.Tile;
-import mystiqa.entity.tile.Water;
-import mystiqa.item.equipable.armor.body.PlateArmor;
-import mystiqa.item.equipable.armor.feet.Greaves;
-import mystiqa.item.equipable.armor.head.Helmet;
-import mystiqa.item.equipable.hand.left.HeaterShield;
-import mystiqa.item.equipable.hand.right.melee_weapon.BattleAxe;
-import mystiqa.item.equipable.material.Iron;
 import mystiqa.main.Game;
 import mystiqa.world_generation.WorldGenerator;
 
@@ -48,34 +38,12 @@ public class PlayScreen extends Screen {
 
         worldGenerator = new WorldGenerator();
 
-        Human h = new Human();
-
+        Humanoid h = (Humanoid) Resources.getBeing("Human");
         h.controlledByPlayer = true;
-
-        h.z = 128 * 8;
-
-        new PlateArmor().equip(h);
-        h.bodyArmor.material = new Iron();
-
-        new Greaves().equip(h);
-        h.feetArmor.material = new Iron();
-
-        new Helmet().equip(h);
-        h.headArmor.material = new Iron();
-
-        new BattleAxe().equip(h);
-        h.rightHand.material = new Iron();
-
-        new HeaterShield().equip(h);
-        h.leftHand.material = new Iron();
+        h.z = 100 * 8;
+        player = h;
 
         addBeing(h);
-
-        GreenSlime g = new GreenSlime();
-        g.z = 100;
-        addBeing(g);
-
-        player = h;
     }
 
     @Override
@@ -105,13 +73,9 @@ public class PlayScreen extends Screen {
             entities.add(b);
         }
 
-        int xView = 16;
-        int yView = 9;
-        int zView = 9;
-
-        for (int x = player.getTileX() - xView; x < player.getTileX() + xView; x++) {
-            for (int y = player.getTileY() - yView; y < player.getTileY() + yView; y++) {
-                for (int z = player.getTileZ() - zView; z < player.getTileZ() + zView; z++) {
+        for (int x = player.getTileX() - 10; x < player.getTileX() + 10; x++) {
+            for (int y = player.getTileY() - 16; y < player.getTileY() + 8; y++) {
+                for (int z = player.getTileZ() - 4; z < player.getTileZ() + 16; z++) {
                     Tile t = getTile(x, y, z);
 
                     if (t != null) {
@@ -120,17 +84,6 @@ public class PlayScreen extends Screen {
                 }
             }
         }
-
-        // Sort first by y, then by z
-        entities.sort(new Comparator<Entity>() {
-            @Override
-            public int compare(Entity o1, Entity o2) {
-                int z = Float.compare(o1.getTileZ(), o2.getTileZ());
-                int y = Float.compare(o2.getTileY(), o1.getTileY());
-
-                return z == 0 ? y : z;
-            }
-        });
 
         if (screenShake <= 0) {
             for (int i = 0; i < entities.size; i++) {
@@ -158,6 +111,17 @@ public class PlayScreen extends Screen {
                 entities.removeValue(t, true);
             }
         }
+
+        // Sort first by y, then by z
+        entities.sort(new Comparator<Entity>() {
+            @Override
+            public int compare(Entity o1, Entity o2) {
+                int z = Float.compare(o1.getTileZ(), o2.getTileZ());
+                int y = Float.compare(o2.getTileY(), o1.getTileY());
+
+                return z == 0 ? y : z;
+            }
+        });
     }
 
     @Override
@@ -169,7 +133,7 @@ public class PlayScreen extends Screen {
             //e.hitbox.render(batch);
         }
 
-        batch.setShader(null);
+        batch.setColor(Resources.getColor("White"));
     }
 
     public void addBeing(Being e) {
