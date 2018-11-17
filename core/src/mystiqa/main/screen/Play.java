@@ -1,6 +1,5 @@
 package mystiqa.main.screen;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
@@ -15,7 +14,9 @@ import mystiqa.world_generation.WorldGenerator;
 
 import java.util.Comparator;
 
-public class PlayScreen extends Screen {
+public class Play extends Screen {
+    private static Play instance;
+
     public Array<Being> beings;
     public Array<Chunk> chunks;
 
@@ -26,6 +27,10 @@ public class PlayScreen extends Screen {
     public Being player;
 
     public float screenShake;
+
+    private Play() {
+
+    }
 
     @Override
     public void create() {
@@ -38,7 +43,7 @@ public class PlayScreen extends Screen {
 
         worldGenerator = new WorldGenerator();
 
-        Humanoid h = (Humanoid) Resources.getBeing("Human");
+        Humanoid h = (Humanoid) Resources.getInstance().getBeing("Human");
         h.controlledByPlayer = true;
         h.z = 100 * 8;
         player = h;
@@ -50,19 +55,24 @@ public class PlayScreen extends Screen {
     public void update() {
         super.update();
 
+        // Generate new chunks
         for (int x = -1; x <= 1; x++) {
             for (int y = -1; y <= 1; y++) {
-                int chunkX = MathUtils.floor((player.getTileX() + x * Chunk.WIDTH) / (float) Chunk.WIDTH) * Chunk.HEIGHT;
-                int chunkY = MathUtils.floor((player.getTileY() + y * Chunk.HEIGHT) / (float) Chunk.HEIGHT) * Chunk.HEIGHT;
+                for (int z = -1; z <= 1; z++) {
+                    int cx = player.getChunkX() + x * Chunk.WIDTH;
+                    int cy = player.getChunkY() + y * Chunk.HEIGHT;
+                    int cz = player.getChunkZ() + z * Chunk.DEPTH;
 
-                if (getChunk(chunkX, chunkY) == null) {
-                    Chunk c = new Chunk();
+                    if (getChunk(cx, cy, cz) == null) {
+                        Chunk c = new Chunk();
 
-                    c.x = chunkX;
-                    c.y = chunkY;
+                        c.x = cx;
+                        c.y = cy;
+                        c.z = cz;
 
-                    worldGenerator.generateChunk(c);
-                    chunks.add(c);
+                        worldGenerator.generateChunk(c);
+                        chunks.add(c);
+                    }
                 }
             }
         }
@@ -73,13 +83,26 @@ public class PlayScreen extends Screen {
             entities.add(b);
         }
 
-        for (int x = player.getTileX() - 10; x < player.getTileX() + 10; x++) {
-            for (int y = player.getTileY() - 16; y < player.getTileY() + 8; y++) {
-                for (int z = player.getTileZ() - 4; z < player.getTileZ() + 16; z++) {
-                    Tile t = getTile(x, y, z);
+        for (int cx = -1; cx <= 1; cx++) {
+            for (int cy = -1; cy <= 1; cy++) {
+                for (int cz = 0; cz <= 0; cz++) {
+                    Chunk c = getChunk(player.getChunkX() + cx * Chunk.WIDTH, player.getChunkY() + cy * Chunk.HEIGHT, player.getChunkZ() + cz * Chunk.DEPTH);
 
-                    if (t != null) {
-                        entities.add(t);
+                    for (int x = 0; x < c.tiles.length; x++) {
+                        for (int y = 0; y < c.tiles[0].length; y++) {
+                            for (int z = 0; z < c.tiles[0][0].length; z++) {
+                                Tile t = c.getTile(x, y, z);
+
+                                if (t != null) {
+                                    boolean surrounded = getTile(x - 1, y, z) != null && getTile(x + 1, y, z) != null && getTile(x, y - 1, z) != null && getTile(x, y + 1, z) != null && getTile(x, y, z + 1) != null;
+                                    if (surrounded || Math.abs(c.x + x - player.getTileX()) > 12) {
+                                        break;
+                                    } else {
+                                        entities.add(t);
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -87,7 +110,7 @@ public class PlayScreen extends Screen {
 
         if (screenShake <= 0) {
             for (int i = 0; i < entities.size; i++) {
-                entities.get(i).update(this);
+                entities.get(i).update();
             }
         } else {
             screenShake -= Game.getDelta() * 10f;
@@ -133,7 +156,7 @@ public class PlayScreen extends Screen {
             //e.hitbox.render(batch);
         }
 
-        batch.setColor(Resources.getColor("White"));
+        batch.setColor(Resources.getInstance().getColor("White"));
     }
 
     public void addBeing(Being e) {
@@ -165,9 +188,9 @@ public class PlayScreen extends Screen {
         return beings;
     }
 
-    public Chunk getChunk(int x, int y) {
+    public Chunk getChunk(int x, int y, int z) {
         for (Chunk c : chunks) {
-            if (x >= c.x && x < c.x + Chunk.WIDTH && y >= c.y && y < c.y + Chunk.HEIGHT) {
+            if (x >= c.x && x < c.x + Chunk.WIDTH && y >= c.y && y < c.y + Chunk.HEIGHT && z >= c.z && z < c.z + Chunk.DEPTH) {
                 return c;
             }
         }
@@ -176,20 +199,28 @@ public class PlayScreen extends Screen {
     }
 
     public Tile getTile(int x, int y, int z) {
-        Chunk c = getChunk(x, y);
+        Chunk c = getChunk(x, y, z);
 
         if (c != null) {
-            return c.getTile(x - c.x, y - c.y, z);
+            return c.getTile(x - c.x, y - c.y, z - c.z);
         }
 
         return null;
     }
 
     public void setTile(Tile t, int x, int y, int z) {
-        Chunk c = getChunk(x, y);
+        Chunk c = getChunk(x, y, z);
 
         if (c != null) {
-            c.setTile(t, x - c.x, y - c.y, z);
+            c.setTile(t, x - c.x, y - c.y, c.z - z);
         }
+    }
+
+    public static Play getInstance() {
+        if (instance == null) {
+            instance = new Play();
+        }
+
+        return instance;
     }
 }

@@ -20,19 +20,19 @@ public class TileType {
         }
 
         if (json.has("topGraphics")) {
-            topGraphics = Resources.getSpriteSheet(json.getString("topGraphics"));
+            topGraphics = Resources.getInstance().getSpriteSheet(json.getString("topGraphics"));
         }
 
         if (json.has("sideGraphics")) {
-            sideGraphics = Resources.getSpriteSheet(json.getString("sideGraphics"));
+            sideGraphics = Resources.getInstance().getSpriteSheet(json.getString("sideGraphics"));
         }
 
         if (json.has("topColor")) {
-            topColor = Resources.getColor(json.getString("topColor"));
+            topColor = Resources.getInstance().getColor(json.getString("topColor"));
         }
 
         if (json.has("sideColor")) {
-            sideColor = Resources.getColor(json.getString("sideColor"));
+            sideColor = Resources.getInstance().getColor(json.getString("sideColor"));
         }
     }
 }

@@ -20,7 +20,6 @@ import mystiqa.item.equipable.Equipable;
 import mystiqa.item.equipable.hand.left.LeftHand;
 import mystiqa.item.equipable.hand.right.RightHand;
 import mystiqa.main.Game;
-import mystiqa.main.screen.PlayScreen;
 
 public class Humanoid extends Being {
     public HumanoidRace race;
@@ -49,7 +48,7 @@ public class Humanoid extends Being {
     }
 
     @Override
-    public void update(PlayScreen play) {
+    public void update() {
         if (controlledByPlayer) {
             Vector2 dir = new Vector2();
 
@@ -104,7 +103,7 @@ public class Humanoid extends Being {
             rightHand.update(this);
         }
 
-        super.update(play);
+        super.update();
     }
 
     @Override
@@ -401,7 +400,7 @@ public class Humanoid extends Being {
         super.deserialize(json);
 
         if (json.has("race")) {
-            race = Resources.getHumanoidRace(json.getString("race"));
+            race = Resources.getInstance().getHumanoidRace(json.getString("race"));
         }
     }
 }

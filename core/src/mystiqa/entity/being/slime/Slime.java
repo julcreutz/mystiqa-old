@@ -7,7 +7,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import mystiqa.entity.being.Being;
 import mystiqa.main.Game;
-import mystiqa.main.screen.PlayScreen;
 
 public class Slime extends Being {
     public SlimeState state;
@@ -34,7 +33,7 @@ public class Slime extends Being {
     }
 
     @Override
-    public void update(PlayScreen play) {
+    public void update() {
         switch (state) {
             case IDLE:
                 if (nearestHostile != null) {
@@ -94,7 +93,7 @@ public class Slime extends Being {
         attacking = true;
         //pushing = pushed = groundTime > .1f;
 
-        super.update(play);
+        super.update();
     }
 
     @Override

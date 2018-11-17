@@ -13,7 +13,7 @@ import mystiqa.stat.Damage;
 import mystiqa.stat.MaxHealth;
 import mystiqa.stat.StatManager;
 import mystiqa.main.Game;
-import mystiqa.main.screen.PlayScreen;
+import mystiqa.main.screen.Play;
 
 public abstract class Being extends Entity {
     public float velX;
@@ -61,14 +61,12 @@ public abstract class Being extends Entity {
         collisionDetection = true;
     }
 
-    public void update(PlayScreen play) {
-        super.update(play);
-
+    public void update() {
         // Find nearest hostile
         if (alignment != null && nearestHostile == null) {
             float nearestDist = Float.MAX_VALUE;
 
-            for (Being other : play.beings) {
+            for (Being other : Play.getInstance().beings) {
                 if (this != other) {
                     if (other.alignment != null && alignment.isHostile(other.alignment)) {
                         float dist = new Vector2(other.x, other.y).sub(x, y).len();
@@ -88,7 +86,7 @@ public abstract class Being extends Entity {
 
         // Attack collision detection
         if (attacking) {
-            for (Being e : play.beings) {
+            for (Being e : Play.getInstance().beings) {
                 if (this != e) {
                     if (e.hitTime <= 0) {
                         boolean contains = hit.contains(e, true);
@@ -99,13 +97,13 @@ public abstract class Being extends Entity {
                                 if (e.defending && attackHitbox.overlaps(e.defendHitbox)) {
                                     e.onDefend();
 
-                                    play.screenShake += 1;
+                                    Play.getInstance().screenShake += 1;
                                 } else {
                                     e.hitTime = .1f;
 
                                     e.health -= getDamage();
 
-                                    e.onHit(play, this);
+                                    e.onHit(this);
                                 }
                             }
                         } else if (contains) {
@@ -124,8 +122,8 @@ public abstract class Being extends Entity {
             hitTime -= Game.getDelta();
         } else {
             if (isDead()) {
-                onDeath(play);
-                play.beings.removeValue(this, true);
+                onDeath();
+                Play.getInstance().beings.removeValue(this, true);
             }
         }
 
@@ -139,7 +137,7 @@ public abstract class Being extends Entity {
 
             boolean collided = false;
 
-            for (Tile t : play.getTiles()) {
+            for (Tile t : Play.getInstance().getTiles()) {
                 t.hitbox.update(t);
 
                 if (hitbox.overlaps(t.hitbox)) {
@@ -166,7 +164,7 @@ public abstract class Being extends Entity {
 
             boolean collided = false;
 
-            for (Tile t : play.getTiles()) {
+            for (Tile t : Play.getInstance().getTiles()) {
                 t.hitbox.update(t);
 
                 if (hitbox.overlaps(t.hitbox)) {
@@ -197,7 +195,7 @@ public abstract class Being extends Entity {
 
             boolean collided = false;
 
-            for (Tile t : play.getTiles()) {
+            for (Tile t : Play.getInstance().getTiles()) {
                 t.hitbox.update(t);
 
                 if (hitbox.overlaps(t.hitbox)) {
@@ -243,7 +241,7 @@ public abstract class Being extends Entity {
         super.render(batch);
 
         if (hitTime > 0) {
-            batch.setColor(Resources.getColor("White"));
+            batch.setColor(Resources.getInstance().getColor("White"));
         } else {
             batch.setShader(null);
         }
@@ -254,19 +252,21 @@ public abstract class Being extends Entity {
     }
 
     public void onAdded() {
+        super.onAdded();
+
         health = getMaxHealth();
         hitbox.update(this);
     }
 
-    public void onHit(PlayScreen play, Being e) {
-        play.screenShake += isDead() ? 2 : 1;
+    public void onHit(Being e) {
+        Play.getInstance().screenShake += isDead() ? 2 : 1;
         nearestHostile = e;
     }
 
     public void onDefend() {
     }
 
-    public void onDeath(PlayScreen play) {
+    public void onDeath() {
     }
 
     public void onGround() {

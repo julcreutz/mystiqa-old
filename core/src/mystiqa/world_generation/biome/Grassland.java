@@ -31,11 +31,11 @@ public class Grassland extends Biome {
 
     @Override
     public Tile getGroundTile() {
-        return Resources.getTile("Grass");
+        return Resources.getInstance().getTile("Grass");
     }
 
     @Override
     public Tile getWaterTile() {
-        return Resources.getTile("Grass");
+        return Resources.getInstance().getTile("Grass");
     }
 }

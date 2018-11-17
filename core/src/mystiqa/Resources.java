@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
-import mystiqa.entity.Entity;
 import mystiqa.entity.being.Being;
 import mystiqa.entity.being.humanoid.Humanoid;
 import mystiqa.entity.being.humanoid.race.HumanoidRace;
@@ -19,19 +18,25 @@ import mystiqa.main.Game;
 import java.util.HashMap;
 
 public class Resources {
-    private static HashMap<String, Texture> textures;
-    private static HashMap<Texture, TextureRegion[][]> spriteSheets;
+    private static Resources instance;
 
-    private static HashMap<String, Color> colors;
+    private HashMap<String, Texture> textures;
+    private HashMap<Texture, TextureRegion[][]> spriteSheets;
 
-    private static HashMap<String, HumanoidRace> humanoidRaces;
+    private HashMap<String, Color> colors;
 
-    private static HashMap<String, TileType> tileTypes;
-    private static HashMap<String, JsonValue> tiles;
+    private HashMap<String, HumanoidRace> humanoidRaces;
 
-    private static HashMap<String, JsonValue> beings;
+    private HashMap<String, TileType> tileTypes;
+    private HashMap<String, JsonValue> tiles;
 
-    public static TextureRegion[][] getSpriteSheet(String name) {
+    private HashMap<String, JsonValue> beings;
+
+    public Resources() {
+
+    }
+
+    public TextureRegion[][] getSpriteSheet(String name) {
         if (textures == null) {
             textures = new HashMap<String, Texture>();
         }
@@ -75,7 +80,7 @@ public class Resources {
         return spriteSheets.get(textures.get(name));
     }
 
-    public static Color getColor(String name) {
+    public Color getColor(String name) {
         if (colors == null) {
             colors = new HashMap<String, Color>();
         }
@@ -101,7 +106,7 @@ public class Resources {
         return colors.get(name);
     }
 
-    public static HumanoidRace getHumanoidRace(String name) {
+    public HumanoidRace getHumanoidRace(String name) {
         if (humanoidRaces == null) {
             humanoidRaces = new HashMap<String, HumanoidRace>();
         }
@@ -122,7 +127,7 @@ public class Resources {
         return humanoidRaces.get(name);
     }
 
-    public static TileType getTileType(String name) {
+    public TileType getTileType(String name) {
         if (tileTypes == null) {
             tileTypes = new HashMap<String, TileType>();
         }
@@ -143,7 +148,7 @@ public class Resources {
         return tileTypes.get(name);
     }
 
-    public static Tile getTile(String name) {
+    public Tile getTile(String name) {
         if (tiles == null) {
             tiles = new HashMap<String, JsonValue>();
         }
@@ -163,7 +168,7 @@ public class Resources {
         return t;
     }
 
-    public static Being getBeing(String name) {
+    public Being getBeing(String name) {
         if (beings == null) {
             beings = new HashMap<String, JsonValue>();
         }
@@ -193,5 +198,13 @@ public class Resources {
         }
 
         return b;
+    }
+
+    public static Resources getInstance() {
+        if (instance == null) {
+            instance = new Resources();
+        }
+
+        return instance;
     }
 }

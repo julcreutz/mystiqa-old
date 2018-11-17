@@ -24,17 +24,11 @@ public class WorldGenerator {
     public void generateChunk(Chunk c) {
         for (int x = 0; x < c.tiles.length; x++) {
             for (int y = 0; y < c.tiles[0].length; y++) {
-                for (int z = 0; z < getHeight(c.x + x, c.y + y); z++) {
-                    c.setTile(get(c.x + x, c.y + y, z), x, y, z);
-                }
-            }
-        }
+                for (int z = 0; z < c.tiles[0][0].length; z++) {
+                    Tile t = get(c.x + x, c.y + y, c.z + z);
 
-        for (int x = 0; x < c.tiles.length; x++) {
-            for (int y = 0; y < c.tiles[0].length; y++) {
-                for (int z = 0; z < WATER_LEVEL; z++) {
-                    if (c.getTile(x, y, z) == null) {
-                        c.setTile(Resources.getTile("Water"), x, y, z);
+                    if (t != null) {
+                        c.setTile(t, x, y, z);
                     }
                 }
             }
@@ -46,31 +40,22 @@ public class WorldGenerator {
         int height = b.getHeight(x, y);
 
         if (z <= WATER_LEVEL) {
-            return b.getWaterTile();
+            if (z > height) {
+                return Resources.getInstance().getTile("Water");
+            } else {
+                return b.getWaterTile();
+            }
         } else {
-            return b.getGroundTile();
-        }
-    }
-
-    public int getHeight(int x, int y) {
-        int originalHeight = getBiome(x, y).getHeight(x, y);
-        int height = 0;
-        int n = 0;
-        for (int xx = -1; xx <= 1; xx++) {
-            for (int yy = -1; yy <= 1; yy++) {
-                height += getBiome(x + xx, y + yy).getHeight(x + xx, y + yy);
-                n++;
+            if (z <= height) {
+                return b.getGroundTile();
             }
         }
 
-        float p = (float) height / (float) originalHeight;
-        float factor = .5f;
+        return null;
+    }
 
-        if (p > 1 + factor || p < 1 - factor) {
-            return height / n;
-        } else {
-            return originalHeight;
-        }
+    public int getHeight(int x, int y) {
+        return getBiome(x, y).getHeight(x, y);
     }
 
     public Biome getBiome(int x, int y) {

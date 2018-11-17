@@ -3,10 +3,11 @@ package mystiqa.entity.tile;
 public class Chunk {
     public static final int WIDTH = 16;
     public static final int HEIGHT = 16;
-    public static final int DEPTH = 256;
+    public static final int DEPTH = 16;
 
     public int x;
     public int y;
+    public int z;
 
     public Tile[][][] tiles;
 
@@ -26,7 +27,7 @@ public class Chunk {
         if (inBounds(x, y, z)) {
             t.x = (this.x + x) * 8;
             t.y = (this.y + y) * 8;
-            t.z = z * 8;
+            t.z = (this.z + z) * 8;
 
             tiles[x][y][z] = t;
         }

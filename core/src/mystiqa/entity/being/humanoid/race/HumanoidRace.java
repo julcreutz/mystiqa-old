@@ -21,19 +21,19 @@ public class HumanoidRace {
 
     public void deserialize(JsonValue json) {
         if (json.has("feet")) {
-            feet = Resources.getSpriteSheet(json.getString("feet"));
+            feet = Resources.getInstance().getSpriteSheet(json.getString("feet"));
         }
 
         if (json.has("body")) {
-            body = Resources.getSpriteSheet(json.getString("body"));
+            body = Resources.getInstance().getSpriteSheet(json.getString("body"));
         }
 
         if (json.has("head")) {
-            head = Resources.getSpriteSheet(json.getString("head"));
+            head = Resources.getInstance().getSpriteSheet(json.getString("head"));
         }
 
         if (json.has("color")) {
-            color = Resources.getColor(json.getString("color"));
+            color = Resources.getInstance().getColor(json.getString("color"));
         }
 
         if (json.has("stats")) {

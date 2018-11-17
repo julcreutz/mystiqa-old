@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import mystiqa.main.Game;
 
-public class Screen {
+public abstract class Screen {
     public FrameBuffer fb;
     public SpriteBatch batch;
     public OrthographicCamera cam;

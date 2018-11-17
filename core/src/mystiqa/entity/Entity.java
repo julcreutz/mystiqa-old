@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.JsonValue;
 import mystiqa.Hitbox;
-import mystiqa.main.screen.PlayScreen;
+import mystiqa.entity.tile.Chunk;
 
 public class Entity {
     public float x;
@@ -17,7 +17,7 @@ public class Entity {
         hitbox = new Hitbox();
     }
 
-    public void update(PlayScreen play) {
+    public void update() {
 
     }
 
@@ -35,6 +35,22 @@ public class Entity {
 
     public int getTileZ() {
         return MathUtils.floor(z / 8f);
+    }
+
+    public int getChunkX() {
+        return MathUtils.floor(getTileX() / (float) Chunk.WIDTH) * Chunk.WIDTH;
+    }
+
+    public int getChunkY() {
+        return MathUtils.floor(getTileY() / (float) Chunk.HEIGHT) * Chunk.HEIGHT;
+    }
+
+    public int getChunkZ() {
+        return MathUtils.floor(getTileZ() / (float) Chunk.DEPTH) * Chunk.DEPTH;
+    }
+
+    public void onAdded() {
+
     }
 
     public void deserialize(JsonValue json) {
