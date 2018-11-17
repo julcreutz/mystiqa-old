@@ -130,7 +130,13 @@ public class Play extends Screen {
             int y = t.getTileY();
             int z = t.getTileZ();
 
-            if (getTile(x, y, z + 1) != null && getTile(x, y - 1, z) != null) {
+            float xx = cam.position.x + 64 - t.x;
+            float yy = cam.position.y + 36 - (t.y + t.z);
+
+            float range = 16;
+            if (xx <= -range || xx > 128 + range || yy <= -range || yy >= 72 + range) {
+                entities.removeValue(t, true);
+            } else if (getTile(x, y, z + 1) != null && getTile(x, y - 1, z) != null) {
                 entities.removeValue(t, true);
             }
         }
