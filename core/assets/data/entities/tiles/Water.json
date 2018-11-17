@@ -1,3 +1,5 @@
 {
-  "type": "Water"
+  "type": "Water",
+  "topColor": "Blue",
+  "sideColor": "Blue"
 }

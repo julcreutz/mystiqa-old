@@ -4,29 +4,14 @@ import mystiqa.Resources;
 import mystiqa.entity.tile.Tile;
 
 public class Grassland extends Biome {
-    @Override
-    public float getFrequency() {
-        return 0.0075f;
-    }
+    public Grassland() {
+        targetElevation = .45f;
 
-    @Override
-    public int getOctaves() {
-        return 8;
-    }
+        frequency = .0075f;
+        octaves = 8;
 
-    @Override
-    public float getMultiplier() {
-        return 4;
-    }
-
-    @Override
-    public float getHeight() {
-        return 16f;
-    }
-
-    @Override
-    public int getHeightOffset() {
-        return 56;
+        minHeight = -8;
+        maxHeight = 16;
     }
 
     @Override

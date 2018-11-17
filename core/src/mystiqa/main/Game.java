@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
+import mystiqa.Perlin;
 import mystiqa.main.screen.Play;
 import mystiqa.main.screen.Screen;
 
@@ -22,6 +23,8 @@ public class Game extends ApplicationAdapter {
 
 		Play.getInstance().create();
 		screen = Play.getInstance();
+
+		Perlin p = new Perlin();
 	}
 
 	@Override

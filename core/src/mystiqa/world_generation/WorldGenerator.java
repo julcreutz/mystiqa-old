@@ -1,5 +1,7 @@
 package mystiqa.world_generation;
 
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.utils.Array;
 import mystiqa.Perlin;
 import mystiqa.Resources;
 import mystiqa.entity.tile.Chunk;
@@ -8,17 +10,20 @@ import mystiqa.world_generation.biome.Biome;
 import mystiqa.world_generation.biome.Grassland;
 import mystiqa.world_generation.biome.Hills;
 
+import java.util.HashMap;
+
 public class WorldGenerator {
     public static final int WATER_LEVEL = 64;
 
     private Perlin perlin;
-    private Grassland grassland;
-    private Hills hills;
+    private Array<Biome> biomes;
 
     public WorldGenerator() {
         perlin = new Perlin();
-        grassland = new Grassland();
-        hills = new Hills();
+        biomes = new Array<Biome>();
+
+        biomes.add(new Grassland());
+        biomes.add(new Hills());
     }
 
     public void generateChunk(Chunk c) {
@@ -37,7 +42,7 @@ public class WorldGenerator {
 
     public Tile get(int x, int y, int z) {
         Biome b = getBiome(x, y);
-        int height = b.getHeight(x, y);
+        int height = getHeight(x, y);
 
         if (z <= WATER_LEVEL) {
             if (z > height) {
@@ -55,10 +60,53 @@ public class WorldGenerator {
     }
 
     public int getHeight(int x, int y) {
-        return getBiome(x, y).getHeight(x, y);
+        float elevation = 0;
+        float maxElevation = 0;
+
+        HashMap<Biome, Float> biomes = getBiomes(x, y);
+
+        for (Biome b : biomes.keySet()) {
+            float height = b.getHeight(x, y);
+
+            elevation += height * biomes.get(b);
+            //maxElevation +=
+        }
+
+        //System.out.println(perlin.layeredNoise(x, y, .0075f * 2f, 4, .5f));
+        return (int) (WATER_LEVEL + MathUtils.lerp(-4, 4, perlin.layeredNoise(x, y, .0075f * 2f, 4, 1)));
+    }
+
+    public float getElevation(int x, int y) {
+        float noise = perlin.layeredNoise(x, y, .0075f, 8, 1);
+        //System.out.println(perlin.normalise(noise));
+        return noise;
+    }
+
+    public HashMap<Biome, Float> getBiomes(int x, int y) {
+        HashMap<Biome, Float> biomes = new HashMap<Biome, Float>();
+
+        for (Biome b : this.biomes) {
+            biomes.put(b, 1 - Math.abs(b.targetElevation - getElevation(x, y)));
+        }
+
+        return biomes;
     }
 
     public Biome getBiome(int x, int y) {
-        return perlin.layeredNoise(x, y, 4, .0075f, 4, 1, 1 / 4f) > .55f ? hills : grassland;
+        HashMap<Biome, Float> biomes = getBiomes(x, y);
+
+        Biome biome = null;
+        float max = 0;
+
+        for (Biome b : biomes.keySet()) {
+            float curr = biomes.get(b);
+
+            if (curr >= max) {
+                max = curr;
+                biome = b;
+            }
+        }
+
+        return this.biomes.get(0);
     }
 }

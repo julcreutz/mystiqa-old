@@ -4,34 +4,19 @@ import mystiqa.Resources;
 import mystiqa.entity.tile.Tile;
 
 public class Hills extends Biome {
-    @Override
-    public float getFrequency() {
-        return 0.0075f;
-    }
+    public Hills() {
+        targetElevation = .575f;
 
-    @Override
-    public int getOctaves() {
-        return 8;
-    }
+        frequency = .0075f;
+        octaves = 8;
 
-    @Override
-    public float getMultiplier() {
-        return 4;
-    }
-
-    @Override
-    public float getHeight() {
-        return 32f;
-    }
-
-    @Override
-    public int getHeightOffset() {
-        return 56;
+        minHeight = -16;
+        maxHeight = 32;
     }
 
     @Override
     public Tile getGroundTile() {
-        return Resources.getInstance().getTile("Grass");
+        return Resources.getInstance().getTile("Hill");
     }
 
     @Override

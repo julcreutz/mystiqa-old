@@ -130,6 +130,7 @@ public class Play extends Screen {
             int y = t.getTileY();
             int z = t.getTileZ();
 
+            // Transform tile position to camera position
             float xx = cam.position.x + 64 - t.x;
             float yy = cam.position.y + 36 - (t.y + t.z);
 

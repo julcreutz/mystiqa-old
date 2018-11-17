@@ -14,7 +14,8 @@ public class Perlin {
 
             for (int xx = 0; xx < gradients.length; xx++) {
                 for (int yy = 0; yy < gradients[0].length; yy++) {
-                    gradients[xx][yy] = new Vector2(MathUtils.random(-1f, 1f), MathUtils.random(-1f, 1f));
+                    //gradients[xx][yy] = new Vector2(MathUtils.random(-1f, 1f), MathUtils.random(-1f, 1f));
+                    gradients[xx][yy] = getRandomGradient();
                 }
             }
         }
@@ -58,23 +59,38 @@ public class Perlin {
 
         float i2 = MathUtils.lerp(v1, v2, wx);
 
-        return (MathUtils.lerp(i1, i2, wy) + 1) * .5f;
+        return MathUtils.lerp(i1, i2, wy) + 0.5f;
     }
 
-    public float layeredNoise(float x, float y, int octaves, float freq, float freqScale, float amp, float ampScale) {
+    public float layeredNoise(float x, float y, float freq, int octaves, float persistence) {
         float val = 0;
+        float total = 0;
 
-        float max = 0;
+        float amp = 1;
 
         for (int i = 0; i < octaves; i++) {
             val += noise(x * freq, y * freq) * amp;
+            total += amp;
 
-            max += amp;
+            float scale = 2;
 
-            freq *= freqScale;
-            amp *= ampScale;
+            freq *= scale;
+
+            amp *= 1 / scale;
+            amp *= persistence;
         }
 
-        return val / max;
+        return val / total;
+    }
+
+    private Vector2 getRandomGradient() {
+        Vector2[] possible = new Vector2[] {
+                new Vector2(1, 0),
+                new Vector2(0, 1),
+                new Vector2(-1, 0),
+                new Vector2(0, -1)
+        };
+
+        return possible[MathUtils.random(possible.length - 1)];
     }
 }
