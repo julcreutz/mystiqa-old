@@ -18,6 +18,13 @@ import mystiqa.main.Game;
 import java.util.HashMap;
 
 public class Resources {
+    public static final String SPRITE_SHEETS = "data/sprite_sheets/";
+    public static final String COLORS = "data/colors/";
+    public static final String HUMANOID_RACES = "data/entities/beings/humanoid/races/";
+    public static final String TILE_TYPES = "data/entities/tiles/types/";
+    public static final String TILES = "data/entities/tiles/";
+    public static final String BEINGS = "data/entities/beings/";
+
     private static Resources instance;
 
     private HashMap<String, Texture> textures;
@@ -42,7 +49,7 @@ public class Resources {
         }
 
         if (!textures.containsKey(name)) {
-            for (FileHandle f : Game.getFiles(Gdx.files.internal("data/sprite_sheets/"))) {
+            for (FileHandle f : Game.getFiles(Gdx.files.internal(SPRITE_SHEETS))) {
                 if (f.nameWithoutExtension().equals(name)) {
                     JsonValue json = new JsonReader().parse(f);
 
@@ -86,7 +93,7 @@ public class Resources {
         }
 
         if (!colors.containsKey(name)) {
-            for (FileHandle f : Game.getFiles(Gdx.files.internal("data/colors/"))) {
+            for (FileHandle f : Game.getFiles(Gdx.files.internal(COLORS))) {
                 if (f.nameWithoutExtension().equals(name)) {
                     JsonValue json = new JsonReader().parse(f);
 
@@ -112,7 +119,7 @@ public class Resources {
         }
 
         if (!humanoidRaces.containsKey(name)) {
-            for (FileHandle f : Game.getFiles(Gdx.files.internal("data/humanoid_races/"))) {
+            for (FileHandle f : Game.getFiles(Gdx.files.internal(HUMANOID_RACES))) {
                 if (f.nameWithoutExtension().equals(name)) {
                     HumanoidRace race = new HumanoidRace();
                     race.deserialize(new JsonReader().parse(f));
@@ -133,7 +140,7 @@ public class Resources {
         }
 
         if (!tileTypes.containsKey(name)) {
-            for (FileHandle f : Game.getFiles(Gdx.files.internal("data/tile_types/"))) {
+            for (FileHandle f : Game.getFiles(Gdx.files.internal(TILE_TYPES))) {
                 if (f.nameWithoutExtension().equals(name)) {
                     TileType type = new TileType();
                     type.deserialize(new JsonReader().parse(f));
@@ -154,7 +161,7 @@ public class Resources {
         }
 
         if (!tiles.containsKey(name)) {
-            for (FileHandle f : Game.getFiles(Gdx.files.internal("data/entities/tiles/"))) {
+            for (FileHandle f : Game.getFiles(Gdx.files.internal(TILES))) {
                 if (f.nameWithoutExtension().equals(name)) {
                     tiles.put(name, new JsonReader().parse(f));
                     break;
@@ -174,7 +181,7 @@ public class Resources {
         }
 
         if (!beings.containsKey(name)) {
-            for (FileHandle f : Game.getFiles(Gdx.files.internal("data/entities/beings/"))) {
+            for (FileHandle f : Game.getFiles(Gdx.files.internal(BEINGS))) {
                 if (f.nameWithoutExtension().equals(name)) {
                     beings.put(name, new JsonReader().parse(f));
                     break;
