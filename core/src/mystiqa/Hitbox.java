@@ -3,7 +3,6 @@ package mystiqa;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import mystiqa.entity.Entity;
-import mystiqa.entity.being.Being;
 
 public class Hitbox {
     public float x;
@@ -21,7 +20,7 @@ public class Hitbox {
     public TextureRegion border;
 
     public Hitbox() {
-        border = Resources.getInstance().getSpriteSheet("Hitbox")[0][0];
+        border = Assets.getInstance().getSpriteSheet("Hitbox")[0][0];
     }
 
     public void set(float ox, float oy, float oz, int w, int h, int d) {

@@ -1,17 +1,18 @@
 package mystiqa.main.screen;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
-import mystiqa.Resources;
+import mystiqa.Assets;
 import mystiqa.entity.Entity;
 import mystiqa.entity.being.Being;
 import mystiqa.entity.being.humanoid.Humanoid;
 import mystiqa.entity.tile.Chunk;
 import mystiqa.entity.tile.Tile;
 import mystiqa.main.Game;
-import mystiqa.world_generation.WorldGenerator;
+import mystiqa.world.WorldGenerator;
 
 import java.util.Comparator;
 
@@ -50,9 +51,9 @@ public class Play extends Screen {
 
         entities = new Array<Entity>();
 
-        worldGenerator = new WorldGenerator();
+        worldGenerator = Assets.getInstance().getWorldGenerator("WorldGenerator");
 
-        Humanoid h = (Humanoid) Resources.getInstance().getBeing("Human");
+        Humanoid h = (Humanoid) Assets.getInstance().getBeing("Human");
         h.controlledByPlayer = true;
         h.z = 64 * Chunk.DEPTH;
         h.x = 256 * Chunk.WIDTH;
@@ -97,9 +98,17 @@ public class Play extends Screen {
                 entities.add(b);
             }
 
-            for (int cx = -1; cx <= 1; cx++) {
-                for (int cy = -1; cy <= 1; cy++) {
-                    for (int cz = -1; cz <= 1; cz++) {
+            float pChunkX = MathUtils.round((player.x / 8f - player.getChunkX()) / Chunk.WIDTH * 2f) / 2f;
+            float pChunkY = MathUtils.round((player.y / 8f - player.getChunkY()) / Chunk.HEIGHT * 2f) / 2f;
+            float pChunkZ = MathUtils.round((player.z / 8f - player.getChunkZ()) / Chunk.DEPTH * 2f) / 2f;
+
+            int n = 0;
+
+            for (int cx = (pChunkX <= .5f ? -1 : 0); cx <= (pChunkX >= .5f ? 1 : 0); cx++) {
+                for (int cy = (pChunkY <= .5f ? -1 : 0); cy <= (pChunkY >= .5f ? 1 : 0); cy++) {
+                    for (int cz = (pChunkZ <= .5f ? -1 : 0); cz <= (pChunkZ >= .5f ? 1 : 0); cz++) {
+                        n++;
+
                         Chunk c = getChunk(player.getChunkX() + cx * Chunk.WIDTH, player.getChunkY() + cy * Chunk.HEIGHT, player.getChunkZ() + cz * Chunk.DEPTH);
 
                         if (c != null) {
@@ -126,6 +135,8 @@ public class Play extends Screen {
                     }
                 }
             }
+
+            System.out.println(n);
         }
 
         playerChunkX = player.getChunkX();
@@ -173,7 +184,7 @@ public class Play extends Screen {
             //e.hitbox.render(batch);
         }
 
-        batch.setColor(Resources.getInstance().getColor("White"));
+        batch.setColor(Assets.getInstance().getColor("White"));
     }
 
     public void addBeing(Being e) {
@@ -235,14 +246,6 @@ public class Play extends Screen {
         }
 
         return null;
-    }
-
-    public void setTile(Tile t, int x, int y, int z) {
-        Chunk c = getChunk(x, y, z);
-
-        if (c != null) {
-            c.setTile(t, x - c.x, y - c.y, c.z - z);
-        }
     }
 
     public static Play getInstance() {

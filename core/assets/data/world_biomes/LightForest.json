@@ -1,0 +1,9 @@
+{
+  "name": "Light Forest",
+  "targetTemperature": 0.4,
+  "targetMoisture": 0.4,
+  "terrain": ["Plain", "Hills", "Mountains"],
+  "underWaterTile": "Grass",
+  "aboveWaterTile": "Grass",
+  "waterTile": "Water"
+}

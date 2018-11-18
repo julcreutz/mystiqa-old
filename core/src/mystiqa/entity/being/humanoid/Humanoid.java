@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
-import mystiqa.Resources;
+import mystiqa.Assets;
 import mystiqa.entity.being.Being;
 import mystiqa.entity.being.humanoid.race.HumanoidRace;
 import mystiqa.item.equipable.armor.body.BodyArmor;
@@ -400,7 +400,7 @@ public class Humanoid extends Being {
         super.deserialize(json);
 
         if (json.has("race")) {
-            race = Resources.getInstance().getHumanoidRace(json.getString("race"));
+            race = Assets.getInstance().getHumanoidRace(json.getString("race"));
         }
     }
 }

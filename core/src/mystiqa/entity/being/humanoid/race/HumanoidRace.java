@@ -3,7 +3,7 @@ package mystiqa.entity.being.humanoid.race;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.JsonValue;
-import mystiqa.Resources;
+import mystiqa.Assets;
 import mystiqa.stat.StatManager;
 
 public class HumanoidRace {
@@ -21,19 +21,19 @@ public class HumanoidRace {
 
     public void deserialize(JsonValue json) {
         if (json.has("feet")) {
-            feet = Resources.getInstance().getSpriteSheet(json.getString("feet"));
+            feet = Assets.getInstance().getSpriteSheet(json.getString("feet"));
         }
 
         if (json.has("body")) {
-            body = Resources.getInstance().getSpriteSheet(json.getString("body"));
+            body = Assets.getInstance().getSpriteSheet(json.getString("body"));
         }
 
         if (json.has("head")) {
-            head = Resources.getInstance().getSpriteSheet(json.getString("head"));
+            head = Assets.getInstance().getSpriteSheet(json.getString("head"));
         }
 
         if (json.has("color")) {
-            color = Resources.getInstance().getColor(json.getString("color"));
+            color = Assets.getInstance().getColor(json.getString("color"));
         }
 
         if (json.has("stats")) {

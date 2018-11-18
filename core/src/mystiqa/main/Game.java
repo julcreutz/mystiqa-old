@@ -53,19 +53,4 @@ public class Game extends ApplicationAdapter {
 		return fb;
 	}
 
-	public static Array<FileHandle> getFiles(FileHandle root) {
-		Array<FileHandle> files = new Array<FileHandle>();
-		getFiles(root, files);
-		return files;
-	}
-
-	private static void getFiles(FileHandle root, Array<FileHandle> files) {
-		for (FileHandle file : root.list()) {
-			if (file.isDirectory()) {
-				getFiles(file, files);
-			} else {
-				files.add(file);
-			}
-		}
-	}
 }

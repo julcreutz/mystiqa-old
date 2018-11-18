@@ -2,10 +2,7 @@ package mystiqa.item.equipable.armor;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.utils.JsonValue;
-import mystiqa.Resources;
 import mystiqa.item.equipable.Equipable;
-import mystiqa.main.Game;
 
 public abstract class Armor extends Equipable {
     public TextureRegion[][] graphics;

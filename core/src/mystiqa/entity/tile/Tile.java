@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.JsonValue;
-import mystiqa.Resources;
+import mystiqa.Assets;
 import mystiqa.entity.Entity;
 import mystiqa.main.screen.Play;
 
@@ -135,7 +135,7 @@ public class Tile extends Entity {
 
         if (topGraphic != null) {
             batch.setColor(topColor);
-            batch.draw(topGraphic, x, y + z + type.height);
+            batch.draw(topGraphic, x, y + z + 8);
         }
     }
 
@@ -144,15 +144,15 @@ public class Tile extends Entity {
         super.deserialize(json);
 
         if (json.has("type")) {
-            type = Resources.getInstance().getTileType(json.getString("type"));
+            type = Assets.getInstance().getTileType(json.getString("type"));
         }
 
         if (json.has("topColor")) {
-            topColor = Resources.getInstance().getColor(json.getString("topColor"));
+            topColor = Assets.getInstance().getColor(json.getString("topColor"));
         }
 
         if (json.has("sideColor")) {
-            sideColor = Resources.getInstance().getColor(json.getString("sideColor"));
+            sideColor = Assets.getInstance().getColor(json.getString("sideColor"));
         }
     }
 }

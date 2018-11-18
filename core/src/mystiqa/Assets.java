@@ -5,6 +5,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import mystiqa.entity.being.Being;
@@ -13,19 +14,24 @@ import mystiqa.entity.being.humanoid.race.HumanoidRace;
 import mystiqa.entity.being.slime.Slime;
 import mystiqa.entity.tile.Tile;
 import mystiqa.entity.tile.TileType;
-import mystiqa.main.Game;
+import mystiqa.world.Biome;
+import mystiqa.world.WorldGenerator;
+import mystiqa.world.Terrain;
 
 import java.util.HashMap;
 
-public class Resources {
+public class Assets {
     public static final String SPRITE_SHEETS = "data/sprite_sheets/";
     public static final String COLORS = "data/colors/";
-    public static final String HUMANOID_RACES = "data/entities/beings/humanoid/races/";
-    public static final String TILE_TYPES = "data/entities/tiles/types/";
+    public static final String HUMANOID_RACES = "data/humanoid_races/";
+    public static final String TILE_TYPES = "data/tile_types/";
     public static final String TILES = "data/entities/tiles/";
     public static final String BEINGS = "data/entities/beings/";
+    public static final String TERRAIN = "data/world_terrain/";
+    public static final String BIOMES = "data/world_biomes/";
+    public static final String WORLD_GENERATORS = "data/world_generators/";
 
-    private static Resources instance;
+    private static Assets instance;
 
     private HashMap<String, Texture> textures;
     private HashMap<Texture, TextureRegion[][]> spriteSheets;
@@ -39,8 +45,28 @@ public class Resources {
 
     private HashMap<String, JsonValue> beings;
 
-    public Resources() {
+    private HashMap<String, Terrain> terrain;
+    private HashMap<String, Biome> biomes;
+    private HashMap<String, WorldGenerator> worldGenerators;
 
+    private Assets() {
+
+    }
+
+    public Array<FileHandle> getFiles(FileHandle root) {
+        Array<FileHandle> files = new Array<FileHandle>();
+        getFiles(root, files);
+        return files;
+    }
+
+    public void getFiles(FileHandle root, Array<FileHandle> files) {
+        for (FileHandle file : root.list()) {
+            if (file.isDirectory()) {
+                getFiles(file, files);
+            } else {
+                files.add(file);
+            }
+        }
     }
 
     public TextureRegion[][] getSpriteSheet(String name) {
@@ -49,7 +75,7 @@ public class Resources {
         }
 
         if (!textures.containsKey(name)) {
-            for (FileHandle f : Game.getFiles(Gdx.files.internal(SPRITE_SHEETS))) {
+            for (FileHandle f : getFiles(Gdx.files.internal(SPRITE_SHEETS))) {
                 if (f.nameWithoutExtension().equals(name)) {
                     JsonValue json = new JsonReader().parse(f);
 
@@ -93,7 +119,7 @@ public class Resources {
         }
 
         if (!colors.containsKey(name)) {
-            for (FileHandle f : Game.getFiles(Gdx.files.internal(COLORS))) {
+            for (FileHandle f : getFiles(Gdx.files.internal(COLORS))) {
                 if (f.nameWithoutExtension().equals(name)) {
                     JsonValue json = new JsonReader().parse(f);
 
@@ -119,7 +145,7 @@ public class Resources {
         }
 
         if (!humanoidRaces.containsKey(name)) {
-            for (FileHandle f : Game.getFiles(Gdx.files.internal(HUMANOID_RACES))) {
+            for (FileHandle f : getFiles(Gdx.files.internal(HUMANOID_RACES))) {
                 if (f.nameWithoutExtension().equals(name)) {
                     HumanoidRace race = new HumanoidRace();
                     race.deserialize(new JsonReader().parse(f));
@@ -140,7 +166,7 @@ public class Resources {
         }
 
         if (!tileTypes.containsKey(name)) {
-            for (FileHandle f : Game.getFiles(Gdx.files.internal(TILE_TYPES))) {
+            for (FileHandle f : getFiles(Gdx.files.internal(TILE_TYPES))) {
                 if (f.nameWithoutExtension().equals(name)) {
                     TileType type = new TileType();
                     type.deserialize(new JsonReader().parse(f));
@@ -161,7 +187,7 @@ public class Resources {
         }
 
         if (!tiles.containsKey(name)) {
-            for (FileHandle f : Game.getFiles(Gdx.files.internal(TILES))) {
+            for (FileHandle f : getFiles(Gdx.files.internal(TILES))) {
                 if (f.nameWithoutExtension().equals(name)) {
                     tiles.put(name, new JsonReader().parse(f));
                     break;
@@ -181,7 +207,7 @@ public class Resources {
         }
 
         if (!beings.containsKey(name)) {
-            for (FileHandle f : Game.getFiles(Gdx.files.internal(BEINGS))) {
+            for (FileHandle f : getFiles(Gdx.files.internal(BEINGS))) {
                 if (f.nameWithoutExtension().equals(name)) {
                     beings.put(name, new JsonReader().parse(f));
                     break;
@@ -207,9 +233,72 @@ public class Resources {
         return b;
     }
 
-    public static Resources getInstance() {
+    public Terrain getTerrain(String name) {
+        if (terrain == null) {
+            terrain = new HashMap<String, Terrain>();
+        }
+
+        if (!terrain.containsKey(name)) {
+            for (FileHandle f : getFiles(Gdx.files.internal(TERRAIN))) {
+                if (f.nameWithoutExtension().equals(name)) {
+                    Terrain t = new Terrain();
+                    t.deserialize((new JsonReader()).parse(f));
+
+                    terrain.put(name, t);
+
+                    break;
+                }
+            }
+        }
+
+        return terrain.get(name);
+    }
+
+    public Biome getBiome(String name) {
+        if (biomes == null) {
+            biomes = new HashMap<String, Biome>();
+        }
+
+        if (!biomes.containsKey(name)) {
+            for (FileHandle f : getFiles(Gdx.files.internal(BIOMES))) {
+                if (f.nameWithoutExtension().equals(name)) {
+                    Biome b = new Biome();
+                    b.deserialize((new JsonReader()).parse(f));
+
+                    biomes.put(name, b);
+
+                    break;
+                }
+            }
+        }
+
+        return biomes.get(name);
+    }
+
+    public WorldGenerator getWorldGenerator(String name) {
+        if (worldGenerators == null) {
+            worldGenerators = new HashMap<String, WorldGenerator>();
+        }
+
+        if (!worldGenerators.containsKey(name)) {
+            for (FileHandle f : getFiles(Gdx.files.internal(WORLD_GENERATORS))) {
+                if (f.nameWithoutExtension().equals(name)) {
+                    WorldGenerator generator = new WorldGenerator();
+                    generator.deserialize(new JsonReader().parse(f));
+
+                    worldGenerators.put(name, generator);
+
+                    break;
+                }
+            }
+        }
+
+        return worldGenerators.get(name);
+    }
+
+    public static Assets getInstance() {
         if (instance == null) {
-            instance = new Resources();
+            instance = new Assets();
         }
 
         return instance;

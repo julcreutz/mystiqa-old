@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import mystiqa.Hitbox;
-import mystiqa.Resources;
+import mystiqa.Assets;
 import mystiqa.entity.Entity;
 import mystiqa.entity.tile.Tile;
 import mystiqa.stat.Damage;
@@ -241,7 +241,7 @@ public abstract class Being extends Entity {
         super.render(batch);
 
         if (hitTime > 0) {
-            batch.setColor(Resources.getInstance().getColor("White"));
+            batch.setColor(Assets.getInstance().getColor("White"));
         } else {
             batch.setShader(null);
         }

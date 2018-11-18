@@ -2,8 +2,6 @@ package mystiqa.item.equipable.hand.left;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.utils.JsonValue;
-import mystiqa.Resources;
 import mystiqa.entity.being.humanoid.Humanoid;
 
 public class Shield extends LeftHand {

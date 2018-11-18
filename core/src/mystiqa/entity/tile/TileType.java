@@ -2,7 +2,7 @@ package mystiqa.entity.tile;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.JsonValue;
-import mystiqa.Resources;
+import mystiqa.Assets;
 
 public class TileType {
     public String name;
@@ -22,11 +22,11 @@ public class TileType {
         }
 
         if (json.has("topGraphics")) {
-            topGraphics = Resources.getInstance().getSpriteSheet(json.getString("topGraphics"));
+            topGraphics = Assets.getInstance().getSpriteSheet(json.getString("topGraphics"));
         }
 
         if (json.has("sideGraphics")) {
-            sideGraphics = Resources.getInstance().getSpriteSheet(json.getString("sideGraphics"));
+            sideGraphics = Assets.getInstance().getSpriteSheet(json.getString("sideGraphics"));
         }
 
         if (json.has("solid")) {
