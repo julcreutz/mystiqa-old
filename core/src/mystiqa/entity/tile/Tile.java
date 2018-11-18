@@ -135,7 +135,7 @@ public class Tile extends Entity {
 
         if (topGraphic != null) {
             batch.setColor(topColor);
-            batch.draw(topGraphic, x, y + z + 8);
+            batch.draw(topGraphic, x, y + z + type.height);
         }
     }
 

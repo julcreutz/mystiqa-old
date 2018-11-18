@@ -3,16 +3,16 @@ package mystiqa.world_generation.biome;
 import mystiqa.Resources;
 import mystiqa.entity.tile.Tile;
 
-public class Grassland extends Biome {
-    public Grassland() {
-        targetElevation = .3f;
+public class Mountains extends Biome {
+    public Mountains() {
+        targetElevation = .7f;
 
-        frequency = .0075f * .5f;
+        frequency = .0075f * 4f;
         octaves = 4;
         persistence = 1;
 
-        minHeight = -8;
-        maxHeight = 8;
+        minHeight = -32;
+        maxHeight = 64;
     }
 
     @Override

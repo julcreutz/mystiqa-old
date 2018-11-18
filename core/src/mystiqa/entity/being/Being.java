@@ -137,7 +137,7 @@ public abstract class Being extends Entity {
 
             boolean collided = false;
 
-            for (Tile t : Play.getInstance().getTiles()) {
+            for (Tile t : Play.getInstance().getSolidTiles()) {
                 t.hitbox.update(t);
 
                 if (hitbox.overlaps(t.hitbox)) {
@@ -164,7 +164,7 @@ public abstract class Being extends Entity {
 
             boolean collided = false;
 
-            for (Tile t : Play.getInstance().getTiles()) {
+            for (Tile t : Play.getInstance().getSolidTiles()) {
                 t.hitbox.update(t);
 
                 if (hitbox.overlaps(t.hitbox)) {
@@ -195,7 +195,7 @@ public abstract class Being extends Entity {
 
             boolean collided = false;
 
-            for (Tile t : Play.getInstance().getTiles()) {
+            for (Tile t : Play.getInstance().getSolidTiles()) {
                 t.hitbox.update(t);
 
                 if (hitbox.overlaps(t.hitbox)) {

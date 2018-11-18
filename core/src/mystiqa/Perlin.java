@@ -14,7 +14,6 @@ public class Perlin {
 
             for (int xx = 0; xx < gradients.length; xx++) {
                 for (int yy = 0; yy < gradients[0].length; yy++) {
-                    //gradients[xx][yy] = new Vector2(MathUtils.random(-1f, 1f), MathUtils.random(-1f, 1f));
                     gradients[xx][yy] = getRandomGradient();
                 }
             }
@@ -30,24 +29,10 @@ public class Perlin {
         float wy = y - y0;
 
         int gx0 = x0 % gradients.length;
-        while (gx0 < 0) {
-            gx0 += gradients.length;
-        }
-
         int gx1 = x1 % gradients.length;
-        while (gx1 < 0) {
-            gx1 += gradients.length;
-        }
 
         int gy0 = y0 % gradients[0].length;
-        while (gy0 < 0) {
-            gy0 += gradients[0].length;
-        }
-
         int gy1 = y1 % gradients[0].length;
-        while (gy1 < 0) {
-            gy1 += gradients[0].length;
-        }
 
         float v1 = new Vector2(x, y).sub(x0, y0).dot(gradients[gx0][gy0]);
         float v2 = new Vector2(x, y).sub(x1, y0).dot(gradients[gx1][gy0]);
@@ -76,8 +61,12 @@ public class Perlin {
 
             freq *= scale;
 
-            amp *= 1 / scale;
+            amp *= 1f / scale;
             amp *= persistence;
+        }
+
+        if (val / total > 1) {
+            System.out.println(val / total);
         }
 
         return val / total;

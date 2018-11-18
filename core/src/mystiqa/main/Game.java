@@ -23,8 +23,6 @@ public class Game extends ApplicationAdapter {
 
 		Play.getInstance().create();
 		screen = Play.getInstance();
-
-		Perlin p = new Perlin();
 	}
 
 	@Override

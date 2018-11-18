@@ -10,6 +10,12 @@ public class TileType {
     public TextureRegion[][] topGraphics;
     public TextureRegion[][] sideGraphics;
 
+    public boolean solid;
+
+    public TileType() {
+        solid = true;
+    }
+
     public void deserialize(JsonValue json) {
         if (json.has("name")) {
             name = json.getString("name");
@@ -21,6 +27,10 @@ public class TileType {
 
         if (json.has("sideGraphics")) {
             sideGraphics = Resources.getInstance().getSpriteSheet(json.getString("sideGraphics"));
+        }
+
+        if (json.has("solid")) {
+            solid = json.getBoolean("solid");
         }
     }
 }

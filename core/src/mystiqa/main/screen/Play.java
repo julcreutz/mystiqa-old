@@ -2,6 +2,7 @@ package mystiqa.main.screen;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import mystiqa.Resources;
 import mystiqa.entity.Entity;
@@ -28,6 +29,14 @@ public class Play extends Screen {
 
     public float screenShake;
 
+    private int playerChunkX;
+    private int playerChunkY;
+    private int playerChunkZ;
+
+    private int playerTileX;
+    private int playerTileY;
+    private int playerTileZ;
+
     private Play() {
 
     }
@@ -45,7 +54,9 @@ public class Play extends Screen {
 
         Humanoid h = (Humanoid) Resources.getInstance().getBeing("Human");
         h.controlledByPlayer = true;
-        h.z = 100 * 8;
+        h.z = 64 * Chunk.DEPTH;
+        h.x = 256 * Chunk.WIDTH;
+        h.y = 256 * Chunk.HEIGHT;
         player = h;
 
         addBeing(h);
@@ -55,50 +66,59 @@ public class Play extends Screen {
     public void update() {
         super.update();
 
-        // Generate new chunks
-        for (int x = -1; x <= 1; x++) {
-            for (int y = -1; y <= 1; y++) {
-                for (int z = -1; z <= 1; z++) {
-                    int cx = player.getChunkX() + x * Chunk.WIDTH;
-                    int cy = player.getChunkY() + y * Chunk.HEIGHT;
-                    int cz = player.getChunkZ() + z * Chunk.DEPTH;
+        if (player.getChunkX() != playerChunkX || player.getChunkY() != playerChunkY || player.getChunkZ() != playerChunkZ) {
+            // Generate new chunks
+            for (int x = -1; x <= 1; x++) {
+                for (int y = -1; y <= 1; y++) {
+                    for (int z = -1; z <= 1; z++) {
+                        int cx = MathUtils.clamp(player.getChunkX() + x * Chunk.WIDTH, 0, Integer.MAX_VALUE);
+                        int cy = MathUtils.clamp(player.getChunkY() + y * Chunk.HEIGHT, 0, Integer.MAX_VALUE);
+                        int cz = MathUtils.clamp(player.getChunkZ() + z * Chunk.DEPTH, 0, Integer.MAX_VALUE);
 
-                    if (getChunk(cx, cy, cz) == null) {
-                        Chunk c = new Chunk();
+                        if (getChunk(cx, cy, cz) == null) {
+                            Chunk c = new Chunk();
 
-                        c.x = cx;
-                        c.y = cy;
-                        c.z = cz;
+                            c.x = cx;
+                            c.y = cy;
+                            c.z = cz;
 
-                        worldGenerator.generateChunk(c);
-                        chunks.add(c);
+                            worldGenerator.generateChunk(c);
+                            chunks.add(c);
+                        }
                     }
                 }
             }
         }
 
-        entities.clear();
+        if (player.getTileX() != playerTileX || player.getTileY() != playerTileY || player.getTileZ() != playerTileZ) {
+            entities.clear();
 
-        for (Being b : beings) {
-            entities.add(b);
-        }
+            for (Being b : beings) {
+                entities.add(b);
+            }
 
-        for (int cx = -1; cx <= 1; cx++) {
-            for (int cy = -1; cy <= 1; cy++) {
-                for (int cz = 0; cz <= 0; cz++) {
-                    Chunk c = getChunk(player.getChunkX() + cx * Chunk.WIDTH, player.getChunkY() + cy * Chunk.HEIGHT, player.getChunkZ() + cz * Chunk.DEPTH);
+            for (int cx = -1; cx <= 1; cx++) {
+                for (int cy = -1; cy <= 1; cy++) {
+                    for (int cz = -1; cz <= 1; cz++) {
+                        Chunk c = getChunk(player.getChunkX() + cx * Chunk.WIDTH, player.getChunkY() + cy * Chunk.HEIGHT, player.getChunkZ() + cz * Chunk.DEPTH);
 
-                    for (int x = 0; x < c.tiles.length; x++) {
-                        for (int y = 0; y < c.tiles[0].length; y++) {
-                            for (int z = 0; z < c.tiles[0][0].length; z++) {
-                                Tile t = c.getTile(x, y, z);
+                        if (c != null) {
+                            for (int x = 0; x < c.tiles.length; x++) {
+                                for (int y = 0; y < c.tiles[0].length; y++) {
+                                    for (int z = 0; z < c.tiles[0][0].length; z++) {
+                                        Tile t = c.getTile(x, y, z);
 
-                                if (t != null) {
-                                    boolean surrounded = getTile(x - 1, y, z) != null && getTile(x + 1, y, z) != null && getTile(x, y - 1, z) != null && getTile(x, y + 1, z) != null && getTile(x, y, z + 1) != null;
-                                    if (surrounded || Math.abs(c.x + x - player.getTileX()) > 12) {
-                                        break;
-                                    } else {
-                                        entities.add(t);
+                                        if (t != null) {
+                                            Vector3 v = cam.project(new Vector3(t.x, t.y + t.z, 0));
+
+                                            v.x /= viewport.getScreenWidth();
+                                            v.y /= viewport.getScreenHeight();
+
+                                            float range = .25f;
+                                            if (v.x >= -range && v.x <= 1 + range && v.y >= -range && v.y <= 1 + range) {
+                                                entities.add(t);
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -107,6 +127,14 @@ public class Play extends Screen {
                 }
             }
         }
+
+        playerChunkX = player.getChunkX();
+        playerChunkY = player.getChunkY();
+        playerChunkZ = player.getChunkZ();
+
+        playerTileX = player.getTileX();
+        playerTileY = player.getTileY();
+        playerTileZ = player.getTileZ();
 
         if (screenShake <= 0) {
             for (int i = 0; i < entities.size; i++) {
@@ -123,24 +151,6 @@ public class Play extends Screen {
         cam.position.y = player.y + player.z + MathUtils.random(-screenShake, screenShake) + 4;
 
         cam.update();
-
-        // Sort out invisible tiles
-        for (Tile t : getTiles()) {
-            int x = t.getTileX();
-            int y = t.getTileY();
-            int z = t.getTileZ();
-
-            // Transform tile position to camera position
-            float xx = cam.position.x + 64 - t.x;
-            float yy = cam.position.y + 36 - (t.y + t.z);
-
-            float range = 16;
-            if (xx <= -range || xx > 128 + range || yy <= -range || yy >= 72 + range) {
-                entities.removeValue(t, true);
-            } else if (getTile(x, y, z + 1) != null && getTile(x, y - 1, z) != null) {
-                entities.removeValue(t, true);
-            }
-        }
 
         // Sort first by y, then by z
         entities.sort(new Comparator<Entity>() {
@@ -181,6 +191,18 @@ public class Play extends Screen {
         }
 
         return tiles;
+    }
+
+    public Array<Tile> getSolidTiles() {
+        Array<Tile> solid = new Array<Tile>();
+
+        for (Tile t : getTiles()) {
+            if (t.type.solid) {
+                solid.add(t);
+            }
+        }
+
+        return solid;
     }
 
     public Array<Being> getBeings() {
