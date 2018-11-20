@@ -1,4 +1,4 @@
-package mystiqa;
+package mystiqa.world;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -63,10 +63,6 @@ public class Perlin {
 
             amp *= 1f / scale;
             amp *= persistence;
-        }
-
-        if (val / total > 1) {
-            System.out.println(val / total);
         }
 
         return val / total;

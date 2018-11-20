@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
-import mystiqa.Hitbox;
+import mystiqa.entity.Hitbox;
 import mystiqa.Assets;
 import mystiqa.entity.Entity;
 import mystiqa.entity.tile.Tile;

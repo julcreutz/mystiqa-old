@@ -1,15 +1,15 @@
 package mystiqa.world;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
-import mystiqa.Perlin;
 import mystiqa.Assets;
-import mystiqa.entity.tile.Chunk;
 import mystiqa.entity.tile.Tile;
+import mystiqa.world.structure.Structure;
+import mystiqa.world.structure.StructureComponent;
 
 import java.util.HashMap;
-import java.util.Vector;
 
 public class WorldGenerator {
     public int waterLevel;
@@ -35,8 +35,20 @@ public class WorldGenerator {
     public void generateChunk(Chunk c) {
         for (int x = 0; x < c.tiles.length; x++) {
             for (int y = 0; y < c.tiles[0].length; y++) {
+                if (MathUtils.randomBoolean(1)) {
+                    int z = getHeight(x, y) - c.z;
+
+                    if (z > 0 && z < c.structures[0][0].length) {
+                        c.structures[x][y][z] = Assets.getInstance().getStructure("Tree");
+                    }
+                }
+            }
+        }
+
+        for (int x = 0; x < c.tiles.length; x++) {
+            for (int y = 0; y < c.tiles[0].length; y++) {
                 for (int z = 0; z < c.tiles[0][0].length; z++) {
-                    Tile t = get(c.x + x, c.y + y, c.z + z);
+                    Tile t = get(c, c.x + x, c.y + y, c.z + z);
 
                     if (t != null) {
                         c.setTile(t, x, y, z);
@@ -46,9 +58,38 @@ public class WorldGenerator {
         }
     }
 
-    public Tile get(int x, int y, int z) {
+    public Tile get(Chunk c, int x, int y, int z) {
         Biome b = getBiome(x, y);
         int height = getHeight(x, y);
+
+        Structure structure = null;
+        int structureX = 0;
+        int structureY = 0;
+        int structureZ = 0;
+
+        for (int xx = 0; xx < c.structures.length; xx++) {
+            for (int yy = 0; yy < c.structures[0].length; yy++) {
+                for (int zz = 0; zz < c.structures[0][0].length; zz++) {
+                    Structure _structure = c.structures[xx][yy][zz];
+
+                    if (_structure != null) {
+                        for (StructureComponent component : _structure.components) {
+                            if (xx + component.x == x && yy + component.y == y && zz + component.z == z) {
+                                structure = _structure;
+
+                                structureX = xx + component.x;
+                                structureY = yy + component.y;
+                                structureZ = zz + component.z;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (structure != null) {
+            return Assets.getInstance().getTile(structure.getTile(structureX, structureY, structureZ));
+        }
 
         if (height < waterLevel) {
             if (z > height && z <= waterLevel) {

@@ -2,7 +2,6 @@ package mystiqa.world;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.JsonValue;
-import mystiqa.Perlin;
 
 public class Terrain {
     public String name;

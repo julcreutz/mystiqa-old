@@ -1,15 +1,13 @@
 package mystiqa.main.screen;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import mystiqa.Assets;
 import mystiqa.entity.Entity;
 import mystiqa.entity.being.Being;
 import mystiqa.entity.being.humanoid.Humanoid;
-import mystiqa.entity.tile.Chunk;
+import mystiqa.world.Chunk;
 import mystiqa.entity.tile.Tile;
 import mystiqa.main.Game;
 import mystiqa.world.WorldGenerator;
@@ -20,7 +18,7 @@ public class Play extends Screen {
     private static Play instance;
 
     public Array<Being> beings;
-    public Array<Chunk> chunks;
+    public Chunk[][][] chunks;
 
     public Array<Entity> entities;
 
@@ -47,7 +45,7 @@ public class Play extends Screen {
         super.create();
 
         beings = new Array<Being>();
-        chunks = new Array<Chunk>();
+        chunks = new Chunk[256][256][16];
 
         entities = new Array<Entity>();
 
@@ -72,19 +70,19 @@ public class Play extends Screen {
             for (int x = -1; x <= 1; x++) {
                 for (int y = -1; y <= 1; y++) {
                     for (int z = -1; z <= 1; z++) {
-                        int cx = MathUtils.clamp(player.getChunkX() + x * Chunk.WIDTH, 0, Integer.MAX_VALUE);
-                        int cy = MathUtils.clamp(player.getChunkY() + y * Chunk.HEIGHT, 0, Integer.MAX_VALUE);
-                        int cz = MathUtils.clamp(player.getChunkZ() + z * Chunk.DEPTH, 0, Integer.MAX_VALUE);
+                        int cx = MathUtils.clamp(player.getChunkX() + x * Chunk.WIDTH, 0, Integer.MAX_VALUE) / Chunk.WIDTH;
+                        int cy = MathUtils.clamp(player.getChunkY() + y * Chunk.HEIGHT, 0, Integer.MAX_VALUE) / Chunk.HEIGHT;
+                        int cz = MathUtils.clamp(player.getChunkZ() + z * Chunk.DEPTH, 0, Integer.MAX_VALUE) / Chunk.DEPTH;
 
-                        if (getChunk(cx, cy, cz) == null) {
+                        if (chunks[cx][cy][cz] == null) {
                             Chunk c = new Chunk();
 
-                            c.x = cx;
-                            c.y = cy;
-                            c.z = cz;
+                            c.x = cx * Chunk.WIDTH;
+                            c.y = cy * Chunk.HEIGHT;
+                            c.z = cz * Chunk.DEPTH;
 
                             worldGenerator.generateChunk(c);
-                            chunks.add(c);
+                            chunks[cx][cy][cz] = c;
                         }
                     }
                 }
@@ -98,17 +96,9 @@ public class Play extends Screen {
                 entities.add(b);
             }
 
-            float pChunkX = MathUtils.round((player.x / 8f - player.getChunkX()) / Chunk.WIDTH * 2f) / 2f;
-            float pChunkY = MathUtils.round((player.y / 8f - player.getChunkY()) / Chunk.HEIGHT * 2f) / 2f;
-            float pChunkZ = MathUtils.round((player.z / 8f - player.getChunkZ()) / Chunk.DEPTH * 2f) / 2f;
-
-            int n = 0;
-
-            for (int cx = (pChunkX <= .5f ? -1 : 0); cx <= (pChunkX >= .5f ? 1 : 0); cx++) {
-                for (int cy = (pChunkY <= .5f ? -1 : 0); cy <= (pChunkY >= .5f ? 1 : 0); cy++) {
-                    for (int cz = (pChunkZ <= .5f ? -1 : 0); cz <= (pChunkZ >= .5f ? 1 : 0); cz++) {
-                        n++;
-
+            for (int cx = -1; cx <= 1; cx++) {
+                for (int cy = -1; cy <= 1; cy++) {
+                    for (int cz = -2; cz <= 2; cz++) {
                         Chunk c = getChunk(player.getChunkX() + cx * Chunk.WIDTH, player.getChunkY() + cy * Chunk.HEIGHT, player.getChunkZ() + cz * Chunk.DEPTH);
 
                         if (c != null) {
@@ -118,13 +108,10 @@ public class Play extends Screen {
                                         Tile t = c.getTile(x, y, z);
 
                                         if (t != null) {
-                                            Vector3 v = cam.project(new Vector3(t.x, t.y + t.z, 0));
+                                            float xx = t.x - cam.position.x;
+                                            float yy = (t.y + t.z) - cam.position.y;
 
-                                            v.x /= viewport.getScreenWidth();
-                                            v.y /= viewport.getScreenHeight();
-
-                                            float range = .25f;
-                                            if (v.x >= -range && v.x <= 1 + range && v.y >= -range && v.y <= 1 + range) {
+                                            if (xx >= -80 && xx <= 72 && yy >= -56 && yy <= 48) {
                                                 entities.add(t);
                                             }
                                         }
@@ -135,8 +122,6 @@ public class Play extends Screen {
                     }
                 }
             }
-
-            System.out.println(n);
         }
 
         playerChunkX = player.getChunkX();
@@ -229,13 +214,11 @@ public class Play extends Screen {
     }
 
     public Chunk getChunk(int x, int y, int z) {
-        for (Chunk c : chunks) {
-            if (x >= c.x && x < c.x + Chunk.WIDTH && y >= c.y && y < c.y + Chunk.HEIGHT && z >= c.z && z < c.z + Chunk.DEPTH) {
-                return c;
-            }
-        }
+        int xx = x / Chunk.WIDTH;
+        int yy = y / Chunk.HEIGHT;
+        int zz = z / Chunk.DEPTH;
 
-        return null;
+        return xx >= 0 && xx < chunks.length && yy >= 0 && yy < chunks[0].length && zz >= 0 && zz < chunks[0][0].length ? chunks[xx][yy][zz] : null;
     }
 
     public Tile getTile(int x, int y, int z) {

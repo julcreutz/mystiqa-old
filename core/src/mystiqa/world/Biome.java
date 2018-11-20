@@ -18,6 +18,8 @@ public class Biome {
     public String aboveWaterTile;
     public String waterTile;
 
+    public String[] structures;
+
     public Biome() {
         terrain = new Array<Terrain>();
     }

@@ -1,8 +1,8 @@
-package mystiqa;
+package mystiqa.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import mystiqa.entity.Entity;
+import mystiqa.Assets;
 
 public class Hitbox {
     public float x;

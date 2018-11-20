@@ -1,18 +1,23 @@
-package mystiqa.entity.tile;
+package mystiqa.world;
+
+import mystiqa.entity.tile.Tile;
+import mystiqa.world.structure.Structure;
 
 public class Chunk {
-    public static final int WIDTH = 16;
-    public static final int HEIGHT = 16;
-    public static final int DEPTH = 16;
+    public static final int WIDTH = 8;
+    public static final int HEIGHT = 8;
+    public static final int DEPTH = 8;
 
     public int x;
     public int y;
     public int z;
 
     public Tile[][][] tiles;
+    public Structure[][][] structures;
 
     public Chunk() {
         tiles = new Tile[WIDTH][HEIGHT][DEPTH];
+        structures = new Structure[WIDTH][HEIGHT][DEPTH];
     }
 
     public boolean inBounds(int x, int y, int z) {

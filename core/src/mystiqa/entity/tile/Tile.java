@@ -23,9 +23,9 @@ public class Tile extends Entity {
 
     @Override
     public void update() {
-        int x = (int) (this.x / 8f);
-        int y = (int) (this.y / 8f);
-        int z = (int) (this.z / 8f);
+        int x = getTileX();
+        int y = getTileY();
+        int z = getTileZ();
 
         if (type.topGraphics != null) {
             int n = 0;

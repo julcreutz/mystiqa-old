@@ -3,8 +3,7 @@ package mystiqa.entity;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.JsonValue;
-import mystiqa.Hitbox;
-import mystiqa.entity.tile.Chunk;
+import mystiqa.world.Chunk;
 
 public class Entity {
     public float x;
