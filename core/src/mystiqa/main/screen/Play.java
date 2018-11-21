@@ -2,6 +2,8 @@ package mystiqa.main.screen;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import mystiqa.Assets;
 import mystiqa.entity.Entity;
@@ -15,6 +17,8 @@ import mystiqa.world.WorldGenerator;
 import java.util.Comparator;
 
 public class Play extends Screen {
+    public static final float CAM_SPEED = 10f;
+
     private static Play instance;
 
     public Array<Being> beings;
@@ -54,8 +58,8 @@ public class Play extends Screen {
         Humanoid h = (Humanoid) Assets.getInstance().getBeing("Human");
         h.controlledByPlayer = true;
         h.z = 64 * Chunk.DEPTH;
-        h.x = 256 * Chunk.WIDTH;
-        h.y = 256 * Chunk.HEIGHT;
+        h.x = chunks.length * .5f * Chunk.WIDTH * 8;
+        h.y = chunks[0].length * .5f * Chunk.HEIGHT * 8;
         player = h;
 
         addBeing(h);
@@ -64,6 +68,8 @@ public class Play extends Screen {
     @Override
     public void update() {
         super.update();
+
+        System.out.println(worldGenerator.getBiome(player.getTileX(), player.getTileY()).name + ", " + worldGenerator.getTerrain(player.getTileX(), player.getTileY()).name);
 
         if (player.getChunkX() != playerChunkX || player.getChunkY() != playerChunkY || player.getChunkZ() != playerChunkZ) {
             // Generate new chunks
@@ -98,7 +104,7 @@ public class Play extends Screen {
 
             for (int cx = -1; cx <= 1; cx++) {
                 for (int cy = -1; cy <= 1; cy++) {
-                    for (int cz = -2; cz <= 2; cz++) {
+                    for (int cz = -1; cz <= 1; cz++) {
                         Chunk c = getChunk(player.getChunkX() + cx * Chunk.WIDTH, player.getChunkY() + cy * Chunk.HEIGHT, player.getChunkZ() + cz * Chunk.DEPTH);
 
                         if (c != null) {
@@ -143,6 +149,7 @@ public class Play extends Screen {
             }
         }
 
+        // Camera logic
         cam.position.x = player.x + MathUtils.random(-screenShake, screenShake) + 4;
         cam.position.y = player.y + player.z + MathUtils.random(-screenShake, screenShake) + 4;
 

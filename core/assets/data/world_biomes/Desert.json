@@ -1,0 +1,9 @@
+{
+  "name": "Desert",
+  "targetTemperature": 0.7,
+  "targetMoisture": 0.2,
+  "terrain": ["Plain", "Hills"],
+  "underWaterTile": "Sand",
+  "aboveWaterTile": "Sand",
+  "waterTile": "Water"
+}

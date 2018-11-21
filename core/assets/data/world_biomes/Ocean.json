@@ -1,10 +1,10 @@
 {
   "name": "Ocean",
-  "targetTemperature": 0.3,
+  "targetTemperature": 0.6,
   "targetMoisture": 0.7,
   "terrain": ["Plain", "Hills"],
   "heightOffset": -16,
-  "underWaterTile": "Grass",
+  "underWaterTile": "Sand",
   "aboveWaterTile": "Grass",
   "waterTile": "Water"
 }

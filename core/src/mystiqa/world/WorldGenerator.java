@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import mystiqa.Assets;
 import mystiqa.entity.tile.Tile;
+import mystiqa.main.screen.Play;
 import mystiqa.world.structure.Structure;
 import mystiqa.world.structure.StructureComponent;
 
@@ -62,33 +63,35 @@ public class WorldGenerator {
         Biome b = getBiome(x, y);
         int height = getHeight(x, y);
 
-        Structure structure = null;
-        int structureX = 0;
-        int structureY = 0;
-        int structureZ = 0;
+        if (c != null) {
+            Structure structure = null;
+            int structureX = 0;
+            int structureY = 0;
+            int structureZ = 0;
 
-        for (int xx = 0; xx < c.structures.length; xx++) {
-            for (int yy = 0; yy < c.structures[0].length; yy++) {
-                for (int zz = 0; zz < c.structures[0][0].length; zz++) {
-                    Structure _structure = c.structures[xx][yy][zz];
+            for (int xx = 0; xx < c.structures.length; xx++) {
+                for (int yy = 0; yy < c.structures[0].length; yy++) {
+                    for (int zz = 0; zz < c.structures[0][0].length; zz++) {
+                        Structure _structure = c.structures[xx][yy][zz];
 
-                    if (_structure != null) {
-                        for (StructureComponent component : _structure.components) {
-                            if (xx + component.x == x && yy + component.y == y && zz + component.z == z) {
-                                structure = _structure;
+                        if (_structure != null) {
+                            for (StructureComponent component : _structure.components) {
+                                if (xx + component.x == x && yy + component.y == y && zz + component.z == z) {
+                                    structure = _structure;
 
-                                structureX = xx + component.x;
-                                structureY = yy + component.y;
-                                structureZ = zz + component.z;
+                                    structureX = xx + component.x;
+                                    structureY = yy + component.y;
+                                    structureZ = zz + component.z;
+                                }
                             }
                         }
                     }
                 }
             }
-        }
 
-        if (structure != null) {
-            return Assets.getInstance().getTile(structure.getTile(structureX, structureY, structureZ));
+            if (structure != null) {
+                return Assets.getInstance().getTile(structure.getTile(structureX, structureY, structureZ));
+            }
         }
 
         if (height < waterLevel) {
