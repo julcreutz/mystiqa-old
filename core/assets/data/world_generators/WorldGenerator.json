@@ -1,5 +1,4 @@
 {
   "waterLevel": 64,
-  "biomes": ["LightForest", "Ocean", "Desert"],
-  "terrain": ["Plain", "Hills", "Mountains"]
+  "biomes": ["LightForest", "Ocean", "Desert", "Snow", "Mountains"]
 }

@@ -16,8 +16,6 @@ import mystiqa.entity.tile.Tile;
 import mystiqa.entity.tile.TileType;
 import mystiqa.world.Biome;
 import mystiqa.world.WorldGenerator;
-import mystiqa.world.Terrain;
-import mystiqa.world.structure.Structure;
 
 import java.util.HashMap;
 
@@ -28,10 +26,8 @@ public class Assets {
     public static final String TILE_TYPES = "data/tile_types/";
     public static final String TILES = "data/entities/tiles/";
     public static final String BEINGS = "data/entities/beings/";
-    public static final String TERRAIN = "data/world_terrain/";
     public static final String BIOMES = "data/world_biomes/";
     public static final String WORLD_GENERATORS = "data/world_generators/";
-    public static final String STRUCTURES = "data/structures/";
 
     private static Assets instance;
 
@@ -47,11 +43,8 @@ public class Assets {
 
     private HashMap<String, JsonValue> beings;
 
-    private HashMap<String, Terrain> terrain;
     private HashMap<String, Biome> biomes;
     private HashMap<String, WorldGenerator> worldGenerators;
-
-    private HashMap<String, Structure> structures;
 
     private Assets() {
 
@@ -237,27 +230,6 @@ public class Assets {
         return b;
     }
 
-    public Terrain getTerrain(String name) {
-        if (terrain == null) {
-            terrain = new HashMap<String, Terrain>();
-        }
-
-        if (!terrain.containsKey(name)) {
-            for (FileHandle f : getFiles(Gdx.files.internal(TERRAIN))) {
-                if (f.nameWithoutExtension().equals(name)) {
-                    Terrain t = new Terrain();
-                    t.deserialize((new JsonReader()).parse(f));
-
-                    terrain.put(name, t);
-
-                    break;
-                }
-            }
-        }
-
-        return terrain.get(name);
-    }
-
     public Biome getBiome(String name) {
         if (biomes == null) {
             biomes = new HashMap<String, Biome>();
@@ -298,27 +270,6 @@ public class Assets {
         }
 
         return worldGenerators.get(name);
-    }
-
-    public Structure getStructure(String name) {
-        if (structures == null) {
-            structures = new HashMap<String, Structure>();
-        }
-
-        if (!structures.containsKey(name)) {
-            for (FileHandle f : getFiles(Gdx.files.internal(STRUCTURES))) {
-                if (f.nameWithoutExtension().equals(name)) {
-                    Structure s = new Structure();
-                    s.deserialize(new JsonReader().parse(f));
-
-                    structures.put(name, s);
-
-                    break;
-                }
-            }
-        }
-
-        return structures.get(name);
     }
 
     public static Assets getInstance() {

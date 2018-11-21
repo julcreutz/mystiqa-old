@@ -1,9 +1,13 @@
 {
   "name": "Desert",
+  "targetElevation": 0.3,
   "targetTemperature": 0.7,
   "targetMoisture": 0.2,
-  "terrain": ["Plain", "Hills"],
   "underWaterTile": "Sand",
   "aboveWaterTile": "Sand",
-  "waterTile": "Water"
+  "waterTile": "Water",
+  "noise": {
+    "frequency": 0.0075,
+    "octaves": 3
+  }
 }

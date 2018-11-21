@@ -1,7 +1,6 @@
 package mystiqa.world;
 
 import mystiqa.entity.tile.Tile;
-import mystiqa.world.structure.Structure;
 
 public class Chunk {
     public static final int WIDTH = 8;
@@ -13,11 +12,9 @@ public class Chunk {
     public int z;
 
     public Tile[][][] tiles;
-    public Structure[][][] structures;
 
     public Chunk() {
         tiles = new Tile[WIDTH][HEIGHT][DEPTH];
-        structures = new Structure[WIDTH][HEIGHT][DEPTH];
     }
 
     public boolean inBounds(int x, int y, int z) {

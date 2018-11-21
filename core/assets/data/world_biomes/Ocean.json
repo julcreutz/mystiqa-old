@@ -1,10 +1,14 @@
 {
   "name": "Ocean",
+  "targetElevation": 0.3,
   "targetTemperature": 0.6,
   "targetMoisture": 0.7,
-  "terrain": ["Plain", "Hills"],
   "heightOffset": -16,
   "underWaterTile": "Sand",
   "aboveWaterTile": "Grass",
-  "waterTile": "Water"
+  "waterTile": "Water",
+  "noise": {
+    "frequency": 0.0075,
+    "octaves": 5
+  }
 }

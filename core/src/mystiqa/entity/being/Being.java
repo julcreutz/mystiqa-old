@@ -119,7 +119,7 @@ public abstract class Being extends Entity {
         }
 
         if (hitTime > 0) {
-            hitTime -= Game.getDelta();
+            hitTime -= Game.delta();
         } else {
             if (isDead()) {
                 onDeath();
@@ -133,7 +133,7 @@ public abstract class Being extends Entity {
         float newZ = z;
 
         if (collisionDetection) {
-            hitbox.update(this, velX * Game.getDelta(), 0, 0);
+            hitbox.update(this, velX * Game.delta(), 0, 0);
 
             boolean collided = false;
 
@@ -157,10 +157,10 @@ public abstract class Being extends Entity {
         }
 
         x = newX;
-        x += velX * Game.getDelta();
+        x += velX * Game.delta();
 
         if (collisionDetection) {
-            hitbox.update(this, 0, velY * Game.getDelta(), 0);
+            hitbox.update(this, 0, velY * Game.delta(), 0);
 
             boolean collided = false;
 
@@ -184,14 +184,14 @@ public abstract class Being extends Entity {
         }
 
         y = newY;
-        y += velY * Game.getDelta();
+        y += velY * Game.delta();
 
         if (gravity) {
-            velZ -= 400 * Game.getDelta();
+            velZ -= 400 * Game.delta();
         }
 
         if (collisionDetection) {
-            hitbox.update(this, 0, 0, velZ * Game.getDelta());
+            hitbox.update(this, 0, 0, velZ * Game.delta());
 
             boolean collided = false;
 
@@ -215,7 +215,7 @@ public abstract class Being extends Entity {
         }
 
         z = newZ;
-        z += velZ * Game.getDelta();
+        z += velZ * Game.delta();
 
         if (velZ == 0) {
             if (!onGround) {

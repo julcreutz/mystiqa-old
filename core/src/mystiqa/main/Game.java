@@ -29,7 +29,7 @@ public class Game extends ApplicationAdapter {
 
 	@Override
 	public void render() {
-		time += getDelta();
+		time += delta();
 
 		screen.update();
 		screen.renderMaster();
@@ -40,7 +40,7 @@ public class Game extends ApplicationAdapter {
 		screen.dispose();
 	}
 
-	public static float getDelta() {
+	public static float delta() {
 		return Gdx.graphics.getDeltaTime();
 	}
 
@@ -49,5 +49,4 @@ public class Game extends ApplicationAdapter {
 		fb.getColorBufferTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 		return fb;
 	}
-
 }

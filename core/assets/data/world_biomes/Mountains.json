@@ -1,0 +1,13 @@
+{
+  "name": "Mountains",
+  "targetElevation": 0.8,
+  "targetTemperature": 0.3,
+  "targetMoisture": 0.5,
+  "underWaterTile": "Sand",
+  "aboveWaterTile": "Stone",
+  "waterTile": "Water",
+  "noise": {
+    "frequency": 0.0075,
+    "octaves": 3
+  }
+}

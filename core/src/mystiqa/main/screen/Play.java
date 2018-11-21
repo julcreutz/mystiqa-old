@@ -2,8 +2,6 @@ package mystiqa.main.screen;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import mystiqa.Assets;
 import mystiqa.entity.Entity;
@@ -17,12 +15,10 @@ import mystiqa.world.WorldGenerator;
 import java.util.Comparator;
 
 public class Play extends Screen {
-    public static final float CAM_SPEED = 10f;
-
     private static Play instance;
 
     public Array<Being> beings;
-    public Chunk[][][] chunks;
+    public Array<Chunk> chunks;
 
     public Array<Entity> entities;
 
@@ -49,7 +45,7 @@ public class Play extends Screen {
         super.create();
 
         beings = new Array<Being>();
-        chunks = new Chunk[256][256][16];
+        chunks = new Array<Chunk>();
 
         entities = new Array<Entity>();
 
@@ -58,8 +54,6 @@ public class Play extends Screen {
         Humanoid h = (Humanoid) Assets.getInstance().getBeing("Human");
         h.controlledByPlayer = true;
         h.z = 64 * Chunk.DEPTH;
-        h.x = chunks.length * .5f * Chunk.WIDTH * 8;
-        h.y = chunks[0].length * .5f * Chunk.HEIGHT * 8;
         player = h;
 
         addBeing(h);
@@ -69,26 +63,24 @@ public class Play extends Screen {
     public void update() {
         super.update();
 
-        System.out.println(worldGenerator.getBiome(player.getTileX(), player.getTileY()).name + ", " + worldGenerator.getTerrain(player.getTileX(), player.getTileY()).name);
-
         if (player.getChunkX() != playerChunkX || player.getChunkY() != playerChunkY || player.getChunkZ() != playerChunkZ) {
             // Generate new chunks
             for (int x = -1; x <= 1; x++) {
                 for (int y = -1; y <= 1; y++) {
                     for (int z = -1; z <= 1; z++) {
-                        int cx = MathUtils.clamp(player.getChunkX() + x * Chunk.WIDTH, 0, Integer.MAX_VALUE) / Chunk.WIDTH;
-                        int cy = MathUtils.clamp(player.getChunkY() + y * Chunk.HEIGHT, 0, Integer.MAX_VALUE) / Chunk.HEIGHT;
-                        int cz = MathUtils.clamp(player.getChunkZ() + z * Chunk.DEPTH, 0, Integer.MAX_VALUE) / Chunk.DEPTH;
+                        int cx = player.getChunkX() + x * Chunk.WIDTH;
+                        int cy = player.getChunkY() + y * Chunk.HEIGHT;
+                        int cz = player.getChunkZ() + z * Chunk.DEPTH;
 
-                        if (chunks[cx][cy][cz] == null) {
+                        if (getChunk(cx, cy, cz) == null) {
                             Chunk c = new Chunk();
 
-                            c.x = cx * Chunk.WIDTH;
-                            c.y = cy * Chunk.HEIGHT;
-                            c.z = cz * Chunk.DEPTH;
+                            c.x = cx;
+                            c.y = cy;
+                            c.z = cz;
 
                             worldGenerator.generateChunk(c);
-                            chunks[cx][cy][cz] = c;
+                            chunks.add(c);
                         }
                     }
                 }
@@ -143,7 +135,7 @@ public class Play extends Screen {
                 entities.get(i).update();
             }
         } else {
-            screenShake -= Game.getDelta() * 10f;
+            screenShake -= Game.delta() * 10f;
             if (screenShake < 0) {
                 screenShake = 0;
             }
@@ -221,11 +213,13 @@ public class Play extends Screen {
     }
 
     public Chunk getChunk(int x, int y, int z) {
-        int xx = x / Chunk.WIDTH;
-        int yy = y / Chunk.HEIGHT;
-        int zz = z / Chunk.DEPTH;
+        for (Chunk c : chunks) {
+            if (x >= c.x && x < c.x + c.tiles.length && y >= c.y && y < c.y + c.tiles[0].length && z >= c.z && z < c.z + c.tiles[0][0].length) {
+                return c;
+            }
+        }
 
-        return xx >= 0 && xx < chunks.length && yy >= 0 && yy < chunks[0].length && zz >= 0 && zz < chunks[0][0].length ? chunks[xx][yy][zz] : null;
+        return null;
     }
 
     public Tile getTile(int x, int y, int z) {

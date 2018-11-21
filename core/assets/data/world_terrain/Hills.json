@@ -1,7 +1,7 @@
 {
   "name": "Hills",
   "targetElevation": 0.5,
-  "frequency": 0.0075,
+  "frequency": 1,
   "octaves": 5,
   "minHeight": -8,
   "maxHeight": 16

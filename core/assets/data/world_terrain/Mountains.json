@@ -1,8 +1,8 @@
 {
   "name": "Mountains",
   "targetElevation": 0.7,
-  "frequency": 0.015,
+  "frequency": 0.2,
   "octaves": 6,
-  "minHeight": -16,
+  "minHeight": -8,
   "maxHeight": 32
 }

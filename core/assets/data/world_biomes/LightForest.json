@@ -1,9 +1,13 @@
 {
   "name": "Light Forest",
+  "targetElevation": 0.5,
   "targetTemperature": 0.4,
   "targetMoisture": 0.4,
-  "terrain": ["Plain", "Hills", "Mountains"],
   "underWaterTile": "Sand",
   "aboveWaterTile": "Grass",
-  "waterTile": "Water"
+  "waterTile": "Water",
+  "noise": {
+    "frequency": 0.0075,
+    "octaves": 2
+  }
 }
