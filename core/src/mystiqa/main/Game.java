@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import mystiqa.Assets;
 import mystiqa.main.screen.Play;
 import mystiqa.main.screen.Screen;
 
@@ -38,6 +39,7 @@ public class Game extends ApplicationAdapter {
 	@Override
 	public void dispose() {
 		screen.dispose();
+		Assets.getInstance().dispose();
 	}
 
 	public static float delta() {

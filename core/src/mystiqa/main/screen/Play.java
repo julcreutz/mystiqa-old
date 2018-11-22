@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import mystiqa.Assets;
+import mystiqa.Perlin;
 import mystiqa.entity.Entity;
 import mystiqa.entity.being.Being;
 import mystiqa.entity.being.humanoid.Humanoid;
@@ -49,7 +50,16 @@ public class Play extends Screen {
 
         entities = new Array<Entity>();
 
-        worldGenerator = Assets.getInstance().getWorldGenerator("WorldGenerator");
+        worldGenerator = new WorldGenerator();
+        worldGenerator.waterLevel = 64;
+        worldGenerator.possibleTerrains.addAll(
+                Assets.getInstance().getTerrain("Plains"),
+                Assets.getInstance().getTerrain("Hills"),
+                Assets.getInstance().getTerrain("Mountains")
+        );
+        worldGenerator.possibleClimates.addAll(
+                Assets.getInstance().getClimate("Grasslands")
+        );
 
         Humanoid h = (Humanoid) Assets.getInstance().getBeing("Human");
         h.controlledByPlayer = true;

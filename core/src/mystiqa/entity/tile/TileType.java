@@ -1,5 +1,6 @@
 package mystiqa.entity.tile;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.JsonValue;
 import mystiqa.Assets;
@@ -9,6 +10,9 @@ public class TileType {
 
     public TextureRegion[][] topGraphics;
     public TextureRegion[][] sideGraphics;
+
+    public Color topColor;
+    public Color sideColor;
 
     public boolean solid;
 
@@ -31,6 +35,14 @@ public class TileType {
 
         if (json.has("solid")) {
             solid = json.getBoolean("solid");
+        }
+
+        if (json.has("topColor")) {
+            topColor = Assets.getInstance().getColor(json.getString("topColor"));
+        }
+
+        if (json.has("sideColor")) {
+            sideColor = Assets.getInstance().getColor(json.getString("sideColor"));
         }
     }
 }

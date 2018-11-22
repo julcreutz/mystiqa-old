@@ -1,6 +1,5 @@
 package mystiqa.entity.tile;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.JsonValue;
@@ -10,9 +9,6 @@ import mystiqa.main.screen.Play;
 
 public class Tile extends Entity {
     public TileType type;
-
-    public Color topColor;
-    public Color sideColor;
 
     public TextureRegion topGraphic;
     public TextureRegion sideGraphic;
@@ -129,30 +125,13 @@ public class Tile extends Entity {
         super.render(batch);
 
         if (type.sideGraphics != null) {
-            batch.setColor(sideColor);
+            batch.setColor(type.sideColor);
             batch.draw(sideGraphic, x, y + z);
         }
 
         if (topGraphic != null) {
-            batch.setColor(topColor);
+            batch.setColor(type.topColor);
             batch.draw(topGraphic, x, y + z + 8);
-        }
-    }
-
-    @Override
-    public void deserialize(JsonValue json) {
-        super.deserialize(json);
-
-        if (json.has("type")) {
-            type = Assets.getInstance().getTileType(json.getString("type"));
-        }
-
-        if (json.has("topColor")) {
-            topColor = Assets.getInstance().getColor(json.getString("topColor"));
-        }
-
-        if (json.has("sideColor")) {
-            sideColor = Assets.getInstance().getColor(json.getString("sideColor"));
         }
     }
 }

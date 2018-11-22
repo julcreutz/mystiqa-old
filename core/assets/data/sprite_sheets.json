@@ -1,0 +1,100 @@
+{
+  "spriteSheets": [
+    {
+      "id": "Hitbox",
+      "path": "graphics/debug/hitbox.png",
+      "splitX": 1,
+      "splitY": 1
+    },
+    {
+      "id": "HumanBody",
+      "path": "graphics/entities/beings/humanoid/human/human_body.png",
+      "splitX": 8,
+      "splitY": 8
+    },
+    {
+      "id": "HumanFeet",
+      "path": "graphics/entities/beings/humanoid/human/human_feet.png",
+      "splitX": 8,
+      "splitY": 8
+    },
+    {
+      "id": "HumanHead",
+      "path": "graphics/entities/beings/humanoid/human/human_head.png",
+      "splitX": 8,
+      "splitY": 8
+    },
+    {
+      "id": "Slime",
+      "path": "graphics/entities/beings/slime/slime.png",
+      "splitX": 8,
+      "splitY": 8
+    },
+    {
+      "id": "GrassSide",
+      "path": "graphics/entities/tiles/grass_side.png",
+      "splitX": 8,
+      "splitY": 8
+    },
+    {
+      "id": "GrassTop",
+      "path": "graphics/entities/tiles/grass_top.png",
+      "splitX": 8,
+      "splitY": 8
+    },
+    {
+      "id": "Ice",
+      "path": "graphics/entities/tiles/ice.png",
+      "splitX": 8,
+      "splitY": 8
+    },
+    {
+      "id": "LogSide",
+      "path": "graphics/entities/tiles/log_side.png",
+      "splitX": 8,
+      "splitY": 8
+    },
+    {
+      "id": "LogTop",
+      "path": "graphics/entities/tiles/log_top.png",
+      "splitX": 8,
+      "splitY": 8
+    },
+    {
+      "id": "Water",
+      "path": "graphics/entities/tiles/water.png",
+      "splitX": 8,
+      "splitY": 8
+    },
+    {
+      "id": "PlateArmor",
+      "path": "graphics/items/equipable/armor/body/plate_armor.png",
+      "splitX": 8,
+      "splitY": 8
+    },
+    {
+      "id": "Greaves",
+      "path": "graphics/items/equipable/armor/feet/greaves.png",
+      "splitX": 8,
+      "splitY": 8
+    },
+    {
+      "id": "Helmet",
+      "path": "graphics/items/equipable/armor/head/helmet.png",
+      "splitX": 8,
+      "splitY": 8
+    },
+    {
+      "id": "BattleAxe",
+      "path": "graphics/items/equipable/melee_weapons/battle_axe.png",
+      "splitX": 8,
+      "splitY": 8
+    },
+    {
+      "id": "HeaterShield",
+      "path": "graphics/items/equipable/shields/heater_shield.png",
+      "splitX": 8,
+      "splitY": 8
+    }
+  ]
+}

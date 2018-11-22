@@ -1,0 +1,19 @@
+{
+  "tiles": [
+    {
+      "id": "Grass",
+      "name": "Grass",
+      "topGraphics": "GrassTop",
+      "sideGraphics": "GrassSide",
+      "topColor": "Green",
+      "sideColor": "Brown"
+    },
+    {
+      "id": "Water",
+      "name": "Water",
+      "topGraphics": "Water",
+      "topColor": "Blue",
+      "solid": false
+    }
+  ]
+}

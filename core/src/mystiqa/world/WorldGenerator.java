@@ -1,31 +1,25 @@
 package mystiqa.world;
 
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.JsonValue;
 import mystiqa.Assets;
 import mystiqa.Perlin;
-import mystiqa.Voronoi;
 import mystiqa.entity.tile.Tile;
-
-import java.util.HashMap;
 
 public class WorldGenerator {
     public int waterLevel;
 
-    private Array<Biome> biomes;
-    private Perlin elevationNoise;
-    private Perlin terrainNoise;
+    public Array<Terrain> possibleTerrains;
+    public Array<Climate> possibleClimates;
+
+    public Perlin elevationNoise;
+    public Perlin temperatureNoise;
 
     public WorldGenerator() {
-        waterLevel = 0;
+        possibleTerrains = new Array<Terrain>();
+        possibleClimates = new Array<Climate>();
 
-        biomes = new Array<Biome>();
-
-        elevationNoise = new Perlin(.002f, 8);
-        terrainNoise = new Perlin(.0075f, 8);
+        elevationNoise = new Perlin(.0075f, 4);
+        temperatureNoise = new Perlin(.00375f, 2);
     }
 
     public void generateChunk(Chunk c) {
@@ -43,34 +37,61 @@ public class WorldGenerator {
     }
 
     public Tile get(int x, int y, int z) {
-        int _height = getHeight(x, y);
+        Climate climate = getClimate(x, y);
+        int height = getHeight(x, y);
 
-        if (z <= _height) {
-            return Assets.getInstance().getTile("Grass");
-        } else if (z <= waterLevel) {
-            return Assets.getInstance().getTile("Water");
+        if (z <= waterLevel) {
+            if (z <= height) {
+                return Assets.getInstance().getTile(climate.underWaterTile);
+            } else {
+                return Assets.getInstance().getTile(climate.waterTile);
+            }
+        } else {
+            if (z <= height) {
+                return Assets.getInstance().getTile(climate.aboveWaterTile);
+            }
         }
 
         return null;
     }
 
-    public float getElevation(int x, int y) {
-        return MathUtils.clamp(elevationNoise.get(x, y), 0, 1);
-    }
-
     public int getHeight(int x, int y) {
-        return (int) (waterLevel + MathUtils.lerp(-8, 16, terrainNoise.get(x, y)));
+        return waterLevel + getTerrain(x, y).getHeight(x, y);
     }
 
-    public void deserialize(JsonValue json) {
-        if (json.has("waterLevel")) {
-            waterLevel = json.getInt("waterLevel");
-        }
+    public Terrain getTerrain(int x, int y) {
+        float elevation = elevationNoise.get(x, y);
 
-        if (json.has("biomes")) {
-            for (JsonValue biome : json.get("biomes")) {
-                biomes.add(Assets.getInstance().getBiome(biome.asString()));
+        Terrain terrain = null;
+        float best = 1;
+
+        for (Terrain _terrain : possibleTerrains) {
+            float _elevation = Math.abs(_terrain.targetElevation - elevation);
+
+            if (_elevation <= best) {
+                terrain = _terrain;
+                best = _elevation;
             }
         }
+
+        return terrain;
+    }
+
+    public Climate getClimate(int x, int y) {
+        float temperature = temperatureNoise.get(x, y);
+
+        Climate climate = null;
+        float best = 1;
+
+        for (Climate _climate : possibleClimates) {
+            float _temperature = Math.abs(_climate.targetTemperature - temperature);
+
+            if (_temperature <= best) {
+                climate = _climate;
+                best = _temperature;
+            }
+        }
+
+        return climate;
     }
 }

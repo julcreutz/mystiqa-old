@@ -2,7 +2,7 @@
   "feet": "HumanFeet",
   "body": "HumanBody",
   "head": "HumanHead",
-  "color": "LightPink",
+  "color": "Peach",
   "stats": [
     {"MaxHealth": 16}
   ]
