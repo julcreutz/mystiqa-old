@@ -1,0 +1,51 @@
+{
+  "biomes": [
+    {
+      "id": "Forest",
+      "name": "Forest",
+      "targetElevation": "0.4",
+      "targetTemperature": "0.4",
+      "targetMoisture": "0.4",
+      "noise": {
+        "frequency": "0.0075",
+        "octaves": "3"
+      },
+      "minHeight": "-8",
+      "maxHeight": "16",
+      "waterTile": "Water",
+      "underWaterTile": "Sand",
+      "aboveWaterTile": "Grass"
+    },
+    {
+      "id": "Desert",
+      "name": "Desert",
+      "targetElevation": "0.3",
+      "targetTemperature": "0.7",
+      "targetMoisture": "0.25",
+      "noise": {
+        "frequency": "0.0075",
+        "octaves": "2"
+      },
+      "minHeight": "-4",
+      "maxHeight": "8",
+      "waterTile": "Water",
+      "underWaterTile": "Sand",
+      "aboveWaterTile": "Sand"
+    },
+    {
+      "id": "Ocean",
+      "name": "Ocean",
+      "targetElevation": "0.3",
+      "targetTemperature": "0.4",
+      "targetMoisture": "0.5",
+      "noise": {
+        "frequency": "0.00375",
+        "octaves": "3"
+      },
+      "minHeight": "-16",
+      "maxHeight": "0",
+      "waterTile": "Water",
+      "underWaterTile": "Sand"
+    }
+  ]
+}

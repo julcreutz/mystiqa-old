@@ -14,8 +14,7 @@ import mystiqa.entity.being.humanoid.race.HumanoidRace;
 import mystiqa.entity.being.slime.Slime;
 import mystiqa.entity.tile.Tile;
 import mystiqa.entity.tile.TileType;
-import mystiqa.world.Climate;
-import mystiqa.world.Terrain;
+import mystiqa.world.Biome;
 
 import java.util.HashMap;
 
@@ -30,8 +29,7 @@ public class Assets {
 
     private HashMap<String, Color> colors;
 
-    private HashMap<String, Terrain> terrains;
-    private HashMap<String, Climate> climates;
+    private HashMap<String, Biome> biomes;
 
     private HashMap<String, HumanoidRace> humanoidRaces;
 
@@ -100,34 +98,19 @@ public class Assets {
         return colors.get(id);
     }
 
-    public Terrain getTerrain(String id) {
-        if (terrains == null) {
-            terrains = new HashMap<String, Terrain>();
+    public Biome getBiome(String id) {
+        if (biomes == null) {
+            biomes = new HashMap<String, Biome>();
 
-            for (JsonValue terrain : new JsonReader().parse(Gdx.files.internal("data/terrains.json")).get("terrains")) {
-                Terrain t = new Terrain();
-                t.deserialize(terrain);
+            for (JsonValue biome : new JsonReader().parse(Gdx.files.internal("data/biomes.json")).get("biomes")) {
+                Biome b = new Biome();
+                b.deserialize(biome);
 
-                this.terrains.put(terrain.getString("id"), t);
+                this.biomes.put(biome.getString("id"), b);
             }
         }
 
-        return terrains.get(id);
-    }
-
-    public Climate getClimate(String id) {
-        if (climates == null) {
-            climates = new HashMap<String, Climate>();
-
-            for (JsonValue climate : new JsonReader().parse(Gdx.files.internal("data/climates.json")).get("climates")) {
-                Climate c = new Climate();
-                c.deserialize(climate);
-
-                this.climates.put(climate.getString("id"), c);
-            }
-        }
-
-        return climates.get(id);
+        return biomes.get(id);
     }
 
     public HumanoidRace getHumanoidRace(String name) {

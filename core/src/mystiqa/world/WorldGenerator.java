@@ -8,18 +8,18 @@ import mystiqa.entity.tile.Tile;
 public class WorldGenerator {
     public int waterLevel;
 
-    public Array<Terrain> possibleTerrains;
-    public Array<Climate> possibleClimates;
+    public Array<Biome> possibleBiomes;
 
     public Perlin elevationNoise;
     public Perlin temperatureNoise;
+    public Perlin moistureNoise;
 
     public WorldGenerator() {
-        possibleTerrains = new Array<Terrain>();
-        possibleClimates = new Array<Climate>();
+        possibleBiomes = new Array<Biome>();
 
         elevationNoise = new Perlin(.0075f, 4);
         temperatureNoise = new Perlin(.00375f, 2);
+        moistureNoise = new Perlin(.00375f, 2);
     }
 
     public void generateChunk(Chunk c) {
@@ -37,18 +37,18 @@ public class WorldGenerator {
     }
 
     public Tile get(int x, int y, int z) {
-        Climate climate = getClimate(x, y);
+        Biome biome = getBiome(x, y);
         int height = getHeight(x, y);
 
         if (z <= waterLevel) {
             if (z <= height) {
-                return Assets.getInstance().getTile(climate.underWaterTile);
+                return Assets.getInstance().getTile(biome.underWaterTile);
             } else {
-                return Assets.getInstance().getTile(climate.waterTile);
+                return Assets.getInstance().getTile(biome.waterTile);
             }
         } else {
             if (z <= height) {
-                return Assets.getInstance().getTile(climate.aboveWaterTile);
+                return Assets.getInstance().getTile(biome.aboveWaterTile);
             }
         }
 
@@ -56,42 +56,30 @@ public class WorldGenerator {
     }
 
     public int getHeight(int x, int y) {
-        return waterLevel + getTerrain(x, y).getHeight(x, y);
+        return waterLevel + getBiome(x, y).getHeight(x, y);
     }
 
-    public Terrain getTerrain(int x, int y) {
+    public Biome getBiome(int x, int y) {
         float elevation = elevationNoise.get(x, y);
-
-        Terrain terrain = null;
-        float best = 1;
-
-        for (Terrain _terrain : possibleTerrains) {
-            float _elevation = Math.abs(_terrain.targetElevation - elevation);
-
-            if (_elevation <= best) {
-                terrain = _terrain;
-                best = _elevation;
-            }
-        }
-
-        return terrain;
-    }
-
-    public Climate getClimate(int x, int y) {
         float temperature = temperatureNoise.get(x, y);
+        float moisture = moistureNoise.get(x, y);
 
-        Climate climate = null;
-        float best = 1;
+        Biome biome = null;
+        float best = 0;
 
-        for (Climate _climate : possibleClimates) {
-            float _temperature = Math.abs(_climate.targetTemperature - temperature);
+        for (Biome _biome : possibleBiomes) {
+            float _elevation = 1 - Math.abs(_biome.targetElevation - elevation);
+            float _temperature = 1 - Math.abs(_biome.targetTemperature - temperature);
+            float _moisture = 1 - Math.abs(_biome.targetMoisture - moisture);
 
-            if (_temperature <= best) {
-                climate = _climate;
-                best = _temperature;
+            float result = _elevation * _temperature * _moisture;
+
+            if (result >= best) {
+                biome = _biome;
+                best = result;
             }
         }
 
-        return climate;
+        return biome;
     }
 }
