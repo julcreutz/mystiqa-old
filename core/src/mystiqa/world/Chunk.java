@@ -2,6 +2,8 @@ package mystiqa.world;
 
 import mystiqa.entity.tile.Tile;
 
+import java.util.Random;
+
 public class Chunk {
     public static final int WIDTH = 8;
     public static final int HEIGHT = 8;
@@ -12,6 +14,8 @@ public class Chunk {
     public int z;
 
     public Tile[][][] tiles;
+
+    public Random random;
 
     public Chunk() {
         tiles = new Tile[WIDTH][HEIGHT][DEPTH];
@@ -33,5 +37,17 @@ public class Chunk {
 
             tiles[x][y][z] = t;
         }
+    }
+
+    public long seed() {
+        return x + y + z + x * x + y * y + z * z;
+    }
+
+    public Random getRandom() {
+        if (random == null) {
+            random = new Random(seed());
+        }
+
+        return random;
     }
 }

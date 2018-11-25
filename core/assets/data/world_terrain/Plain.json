@@ -1,8 +1,0 @@
-{
-  "name": "Plains",
-  "targetElevation": 0.3,
-  "frequency": 1,
-  "octaves": 3,
-  "minHeight": -4,
-  "maxHeight": 8
-}

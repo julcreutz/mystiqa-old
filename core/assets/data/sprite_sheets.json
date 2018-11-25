@@ -61,6 +61,12 @@
       "splitY": 8
     },
     {
+      "id": "Leaves",
+      "path": "graphics/entities/tiles/leaves.png",
+      "splitX": 8,
+      "splitY": 8
+    },
+    {
       "id": "Water",
       "path": "graphics/entities/tiles/water.png",
       "splitX": 8,

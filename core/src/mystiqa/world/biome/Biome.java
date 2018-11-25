@@ -1,8 +1,10 @@
-package mystiqa.world;
+package mystiqa.world.biome;
 
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import mystiqa.Perlin;
+import mystiqa.main.screen.Play;
 
 public class Biome {
     public String name;
@@ -21,6 +23,12 @@ public class Biome {
     public String waterTile;
     public String underWaterTile;
     public String aboveWaterTile;
+
+    public Array<Vegetation> vegetations;
+
+    public Biome() {
+        vegetations = new Array<Vegetation>();
+    }
 
     public int getHeight(int x, int y) {
         return (int) MathUtils.lerp(minHeight, maxHeight, MathUtils.clamp(noise.get(x, y) + noiseOffset, 0, 1)) + heightOffset;
@@ -44,7 +52,7 @@ public class Biome {
         }
 
         if (json.has("noise")) {
-            noise = new Perlin();
+            noise = new Perlin(1, 1, 1, Play.getInstance().worldGenerator.seed());
             noise.deserialize(json.get("noise"));
         }
 
@@ -66,6 +74,15 @@ public class Biome {
 
         if (json.has("aboveWaterTile")) {
             aboveWaterTile = json.getString("aboveWaterTile");
+        }
+
+        if (json.has("vegetations")) {
+            for (JsonValue vegetation : json.get("vegetations")) {
+                Vegetation _vegetation = new Vegetation();
+                _vegetation.deserialize(vegetation);
+
+                vegetations.add(_vegetation);
+            }
         }
     }
 }

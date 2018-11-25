@@ -30,6 +30,22 @@
       "sideGraphics": "GrassSide",
       "topColor": "White",
       "sideColor": "Brown"
+    },
+    {
+      "id": "Log",
+      "name": "Log",
+      "topGraphics": "LogTop",
+      "sideGraphics": "LogSide",
+      "topColor": "Peach",
+      "sideColor": "Brown"
+    },
+    {
+      "id": "Leaves",
+      "name": "Leaves",
+      "topGraphics": "Leaves",
+      "sideGraphics": "Leaves",
+      "topColor": "DarkGreen",
+      "sideColor": "DarkGreen"
     }
   ]
 }

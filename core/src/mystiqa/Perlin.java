@@ -4,25 +4,23 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonValue;
 
+import java.util.Random;
+
 public class Perlin {
     private Vector2[][] gradients;
+
+    private Random random;
 
     public float frequency;
     public int octaves;
     public float persistence;
 
-    public Perlin(float frequency, int octaves, float persistence) {
+    public Perlin(float frequency, int octaves, float persistence, long seed) {
         this.frequency = frequency;
         this.octaves = octaves;
         this.persistence = persistence;
-    }
 
-    public Perlin(float frequency, int octaves) {
-        this(frequency,  octaves, 1);
-    }
-
-    public Perlin() {
-        this(1, 1);
+        random = new Random(seed);
     }
 
     private float noise(float x, float y) {
@@ -112,7 +110,7 @@ public class Perlin {
                 new Vector2(0, -1)
         };
 
-        return possible[MathUtils.random(possible.length - 1)];
+        return possible[random.nextInt(possible.length - 1)];
     }
 
     public void deserialize(JsonValue json) {

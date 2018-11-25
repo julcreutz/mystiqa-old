@@ -14,7 +14,10 @@
       "maxHeight": "16",
       "waterTile": "Water",
       "underWaterTile": "Sand",
-      "aboveWaterTile": "Grass"
+      "aboveWaterTile": "Grass",
+      "vegetations": [
+        {"chance": 0.01, "structure": "Tree"}
+      ]
     },
     {
       "id": "Desert",

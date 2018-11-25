@@ -59,7 +59,7 @@ public class Play extends Screen {
 
         Humanoid h = (Humanoid) Assets.getInstance().getBeing("Human");
         h.controlledByPlayer = true;
-        h.z = 64 * Chunk.DEPTH;
+        h.z = worldGenerator.waterLevel * 8f;
         player = h;
 
         addBeing(h);

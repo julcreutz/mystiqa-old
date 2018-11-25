@@ -14,7 +14,8 @@ import mystiqa.entity.being.humanoid.race.HumanoidRace;
 import mystiqa.entity.being.slime.Slime;
 import mystiqa.entity.tile.Tile;
 import mystiqa.entity.tile.TileType;
-import mystiqa.world.Biome;
+import mystiqa.world.biome.Biome;
+import mystiqa.world.structure.Structure;
 
 import java.util.HashMap;
 
@@ -30,6 +31,7 @@ public class Assets {
     private HashMap<String, Color> colors;
 
     private HashMap<String, Biome> biomes;
+    private HashMap<String, Structure> structures;
 
     private HashMap<String, HumanoidRace> humanoidRaces;
 
@@ -111,6 +113,21 @@ public class Assets {
         }
 
         return biomes.get(id);
+    }
+
+    public Structure getStructure(String id) {
+        if (structures == null) {
+            structures = new HashMap<String, Structure>();
+
+            for (JsonValue structure : new JsonReader().parse(Gdx.files.internal("data/structures.json")).get("structures")) {
+                Structure _structure = new Structure();
+                _structure.deserialize(structure);
+
+                this.structures.put(structure.getString("id"), _structure);
+            }
+        }
+
+        return structures.get(id);
     }
 
     public HumanoidRace getHumanoidRace(String name) {

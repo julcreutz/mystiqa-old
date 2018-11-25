@@ -1,9 +1,14 @@
 package mystiqa.world;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import mystiqa.Assets;
 import mystiqa.Perlin;
 import mystiqa.entity.tile.Tile;
+import mystiqa.world.biome.Biome;
+import mystiqa.world.biome.Vegetation;
+import mystiqa.world.structure.Structure;
+import mystiqa.world.structure.StructureComponent;
 
 public class WorldGenerator {
     public int waterLevel;
@@ -14,15 +19,47 @@ public class WorldGenerator {
     public Perlin temperatureNoise;
     public Perlin moistureNoise;
 
+    public Array<PlaceTile> placeTiles;
+
     public WorldGenerator() {
         possibleBiomes = new Array<Biome>();
 
-        elevationNoise = new Perlin(.0075f, 4);
-        temperatureNoise = new Perlin(.00375f, 2);
-        moistureNoise = new Perlin(.00375f, 2);
+        elevationNoise = new Perlin(.0075f, 4, 1, seed());
+        temperatureNoise = new Perlin(.00375f, 2, 1, seed());
+        moistureNoise = new Perlin(.00375f, 2, 1, seed());
+
+        placeTiles = new Array<PlaceTile>();
     }
 
     public void generateChunk(Chunk c) {
+        // Vegetation
+        for (int x = 0; x < c.tiles.length; x++) {
+            for (int y = 0; y < c.tiles[0].length; y++) {
+                Biome biome = getBiome(c.x + x, c.y + y);
+                int height = getHeight(c.x + x, c.y + y);
+
+                if (height > waterLevel) {
+                    for (Vegetation vegetation : biome.vegetations) {
+                        if (c.getRandom().nextFloat() <= vegetation.chance) {
+                            Structure structure = Assets.getInstance().getStructure(vegetation.structure);
+
+                            for (StructureComponent component : structure.components) {
+                                PlaceTile placeTile = new PlaceTile();
+
+                                placeTile.x = c.x + x + component.x;
+                                placeTile.y = c.y + y + component.y;
+                                placeTile.z = height + 1 + component.z;
+
+                                placeTile.tile = component.tile;
+
+                                placeTiles.add(placeTile);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         for (int x = 0; x < c.tiles.length; x++) {
             for (int y = 0; y < c.tiles[0].length; y++) {
                 for (int z = 0; z < c.tiles[0][0].length; z++) {
@@ -37,6 +74,14 @@ public class WorldGenerator {
     }
 
     public Tile get(int x, int y, int z) {
+        for (PlaceTile placeTile : placeTiles) {
+            if (x == placeTile.x && y == placeTile.y && z == placeTile.z) {
+                placeTiles.removeValue(placeTile, true);
+
+                return Assets.getInstance().getTile(placeTile.tile);
+            }
+        }
+
         Biome biome = getBiome(x, y);
         int height = getHeight(x, y);
 
@@ -81,5 +126,9 @@ public class WorldGenerator {
         }
 
         return biome;
+    }
+
+    public long seed() {
+        return 0;
     }
 }
