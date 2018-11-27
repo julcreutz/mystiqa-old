@@ -44,8 +44,8 @@
       "name": "Leaves",
       "topGraphics": "Leaves",
       "sideGraphics": "Leaves",
-      "topColor": "DarkGreen",
-      "sideColor": "DarkGreen"
+      "topColor": "Green",
+      "sideColor": "Green"
     }
   ]
 }

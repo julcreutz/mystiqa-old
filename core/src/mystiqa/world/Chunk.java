@@ -17,8 +17,11 @@ public class Chunk {
 
     public Random random;
 
+    public int lod;
+
     public Chunk() {
         tiles = new Tile[WIDTH][HEIGHT][DEPTH];
+        lod = -1;
     }
 
     public boolean inBounds(int x, int y, int z) {

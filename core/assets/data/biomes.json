@@ -16,7 +16,7 @@
       "underWaterTile": "Sand",
       "aboveWaterTile": "Grass",
       "vegetations": [
-        {"chance": 0.01, "structure": "Tree"}
+        {"chance": 0.025, "minDist": 1, "structure": "Tree"}
       ]
     },
     {

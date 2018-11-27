@@ -1,6 +1,6 @@
 package mystiqa.world;
 
-import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import mystiqa.Assets;
 import mystiqa.Perlin;
@@ -9,6 +9,7 @@ import mystiqa.world.biome.Biome;
 import mystiqa.world.biome.Vegetation;
 import mystiqa.world.structure.Structure;
 import mystiqa.world.structure.StructureComponent;
+import mystiqa.world.structure.StructureSave;
 
 public class WorldGenerator {
     public int waterLevel;
@@ -19,6 +20,7 @@ public class WorldGenerator {
     public Perlin temperatureNoise;
     public Perlin moistureNoise;
 
+    public Array<StructureSave> structureSaves;
     public Array<PlaceTile> placeTiles;
 
     public WorldGenerator() {
@@ -28,48 +30,76 @@ public class WorldGenerator {
         temperatureNoise = new Perlin(.00375f, 2, 1, seed());
         moistureNoise = new Perlin(.00375f, 2, 1, seed());
 
+        structureSaves = new Array<StructureSave>();
         placeTiles = new Array<PlaceTile>();
     }
 
-    public void generateChunk(Chunk c) {
-        // Vegetation
-        for (int x = 0; x < c.tiles.length; x++) {
-            for (int y = 0; y < c.tiles[0].length; y++) {
-                Biome biome = getBiome(c.x + x, c.y + y);
-                int height = getHeight(c.x + x, c.y + y);
+    public void generateChunk(Chunk c, int lod) {
+        switch (lod) {
+            case 1:
+                if (c.lod == -1) {
+                    c.lod = 1;
 
-                if (height > waterLevel) {
-                    for (Vegetation vegetation : biome.vegetations) {
-                        if (c.getRandom().nextFloat() <= vegetation.chance) {
-                            Structure structure = Assets.getInstance().getStructure(vegetation.structure);
+                    // Vegetation
+                    for (int x = 0; x < c.tiles.length; x++) {
+                        for (int y = 0; y < c.tiles[0].length; y++) {
+                            int xx = c.x + x;
+                            int yy = c.y + y;
 
-                            for (StructureComponent component : structure.components) {
-                                PlaceTile placeTile = new PlaceTile();
+                            Biome biome = getBiome(xx, yy);
+                            int height = getHeight(xx, yy);
 
-                                placeTile.x = c.x + x + component.x;
-                                placeTile.y = c.y + y + component.y;
-                                placeTile.z = height + 1 + component.z;
+                            if (height > waterLevel) {
+                                main: for (Vegetation vegetation : biome.vegetations) {
+                                    for (StructureSave save : structureSaves) {
+                                        if (save.structure.equals(vegetation.structure)) {
+                                            float dist = new Vector3(xx, yy, height).sub(save.x, save.y, save.z).len();
 
-                                placeTile.tile = component.tile;
+                                            if (dist < vegetation.minDist + 1) {
+                                                continue main;
+                                            }
+                                        }
+                                    }
 
-                                placeTiles.add(placeTile);
+                                    if (c.getRandom().nextFloat() <= vegetation.chance) {
+                                        Structure structure = Assets.getInstance().getStructure(vegetation.structure);
+                                        structureSaves.add(new StructureSave(vegetation.structure, xx, yy, height));
+
+                                        for (StructureComponent component : structure.components) {
+                                            PlaceTile placeTile = new PlaceTile();
+
+                                            placeTile.x = xx + component.x;
+                                            placeTile.y = yy + component.y;
+                                            placeTile.z = height + 1 + component.z;
+
+                                            placeTile.tile = component.tile;
+
+                                            placeTiles.add(placeTile);
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
                 }
-            }
-        }
+                break;
+            case 0:
+                if (c.lod == 1) {
+                    c.lod = 0;
 
-        for (int x = 0; x < c.tiles.length; x++) {
-            for (int y = 0; y < c.tiles[0].length; y++) {
-                for (int z = 0; z < c.tiles[0][0].length; z++) {
-                    Tile t = get(c.x + x, c.y + y, c.z + z);
+                    for (int x = 0; x < c.tiles.length; x++) {
+                        for (int y = 0; y < c.tiles[0].length; y++) {
+                            for (int z = 0; z < c.tiles[0][0].length; z++) {
+                                Tile t = get(c.x + x, c.y + y, c.z + z);
 
-                    if (t != null) {
-                        c.setTile(t, x, y, z);
+                                if (t != null) {
+                                    c.setTile(t, x, y, z);
+                                }
+                            }
+                        }
                     }
                 }
-            }
+                break;
         }
     }
 

@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import mystiqa.Assets;
+import mystiqa.ecs.EntityManager;
 import mystiqa.entity.Entity;
 import mystiqa.entity.being.Being;
 import mystiqa.entity.being.humanoid.Humanoid;
@@ -36,6 +37,8 @@ public class Play extends Screen {
     private int playerTileY;
     private int playerTileZ;
 
+    private EntityManager em;
+
     private Play() {
 
     }
@@ -63,6 +66,8 @@ public class Play extends Screen {
         player = h;
 
         addBeing(h);
+
+        em = new EntityManager();
     }
 
     @Override
@@ -71,22 +76,25 @@ public class Play extends Screen {
 
         if (player.getChunkX() != playerChunkX || player.getChunkY() != playerChunkY || player.getChunkZ() != playerChunkZ) {
             // Generate new chunks
-            for (int x = -1; x <= 1; x++) {
-                for (int y = -1; y <= 1; y++) {
-                    for (int z = -1; z <= 1; z++) {
-                        int cx = player.getChunkX() + x * Chunk.WIDTH;
-                        int cy = player.getChunkY() + y * Chunk.HEIGHT;
-                        int cz = player.getChunkZ() + z * Chunk.DEPTH;
+            for (int lod = 1; lod >= 0; lod--) {
+                for (int x = -1 - lod; x <= 1 + lod; x++) {
+                    for (int y = -1 - lod; y <= 1 + lod; y++) {
+                        for (int z = -1 - lod; z <= 1 + lod; z++) {
+                            int cx = player.getChunkX() + x * Chunk.WIDTH;
+                            int cy = player.getChunkY() + y * Chunk.HEIGHT;
+                            int cz = player.getChunkZ() + z * Chunk.DEPTH;
 
-                        if (getChunk(cx, cy, cz) == null) {
-                            Chunk c = new Chunk();
+                            if (getChunk(cx, cy, cz) == null) {
+                                Chunk c = new Chunk();
 
-                            c.x = cx;
-                            c.y = cy;
-                            c.z = cz;
+                                c.x = cx;
+                                c.y = cy;
+                                c.z = cz;
 
-                            worldGenerator.generateChunk(c);
-                            chunks.add(c);
+                                chunks.add(c);
+                            }
+
+                            worldGenerator.generateChunk(getChunk(cx, cy, cz), lod);
                         }
                     }
                 }
