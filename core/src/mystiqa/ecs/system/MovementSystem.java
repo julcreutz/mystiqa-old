@@ -1,7 +1,6 @@
 package mystiqa.ecs.system;
 
 import mystiqa.ecs.EntityManager;
-import mystiqa.ecs.component.GravityComponent;
 import mystiqa.ecs.component.PositionComponent;
 import mystiqa.ecs.component.VelocityComponent;
 import mystiqa.ecs.entity.Entity;
@@ -23,10 +22,6 @@ public class MovementSystem implements EntitySystem, Updateable {
 
             vel.x = 0;
             vel.y = 0;
-
-            if (e.getComponent(GravityComponent.class) == null) {
-                vel.z = 0;
-            }
         }
     }
 }

@@ -7,7 +7,6 @@ import mystiqa.ecs.component.PositionComponent;
 import mystiqa.ecs.component.VelocityComponent;
 import mystiqa.ecs.entity.Entity;
 import mystiqa.ecs.event.CollisionEvent;
-import mystiqa.ecs.event.GroundCollisionEvent;
 import mystiqa.main.Game;
 
 public class CollisionSystem implements EntitySystem, Updateable {
@@ -65,7 +64,6 @@ public class CollisionSystem implements EntitySystem, Updateable {
                                 pos.z = _pos.z + _collision.z - collision.depth - collision.z;
                             } else if (vel.z < 0) {
                                 pos.z = _pos.z + _collision.z + _collision.depth - collision.z;
-                                em.sendEvent(new GroundCollisionEvent(e));
                             }
 
                             vel.z = 0;
