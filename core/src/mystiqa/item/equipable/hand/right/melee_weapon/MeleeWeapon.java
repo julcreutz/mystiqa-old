@@ -3,7 +3,7 @@ package mystiqa.item.equipable.hand.right.melee_weapon;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
-import mystiqa.entity.being.humanoid.Humanoid;
+import mystiqa.entity.actor.humanoid.Humanoid;
 import mystiqa.item.equipable.hand.right.RightHand;
 import mystiqa.main.Game;
 

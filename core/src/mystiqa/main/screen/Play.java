@@ -5,8 +5,8 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import mystiqa.Assets;
 import mystiqa.entity.Entity;
-import mystiqa.entity.being.Being;
-import mystiqa.entity.being.humanoid.Humanoid;
+import mystiqa.entity.actor.Actor;
+import mystiqa.entity.actor.humanoid.Humanoid;
 import mystiqa.world.Chunk;
 import mystiqa.entity.tile.Tile;
 import mystiqa.main.Game;
@@ -17,14 +17,14 @@ import java.util.Comparator;
 public class Play extends Screen {
     private static Play instance;
 
-    public Array<Being> beings;
+    public Array<Actor> beings;
     public Array<Chunk> chunks;
 
     public Array<Entity> entities;
 
     public WorldGenerator worldGenerator;
 
-    public Being player;
+    public Actor player;
 
     public float screenShake;
 
@@ -44,7 +44,7 @@ public class Play extends Screen {
     public void create() {
         super.create();
 
-        beings = new Array<Being>();
+        beings = new Array<Actor>();
         chunks = new Array<Chunk>();
 
         entities = new Array<Entity>();
@@ -52,12 +52,12 @@ public class Play extends Screen {
         worldGenerator = new WorldGenerator();
         worldGenerator.waterLevel = 64;
         worldGenerator.possibleBiomes.addAll(
-                Assets.getInstance().getBiome("Forest"),
-                Assets.getInstance().getBiome("Desert"),
-                Assets.getInstance().getBiome("Ocean")
+                Assets.getBiome("Forest"),
+                Assets.getBiome("Desert"),
+                Assets.getBiome("Ocean")
         );
 
-        Humanoid h = (Humanoid) Assets.getInstance().getBeing("Human");
+        Humanoid h = (Humanoid) Assets.getActor("Human");
         h.controlledByPlayer = true;
         h.z = worldGenerator.waterLevel * 8f;
         player = h;
@@ -100,7 +100,7 @@ public class Play extends Screen {
         if (player.getTileX() != playerTileX || player.getTileY() != playerTileY || player.getTileZ() != playerTileZ) {
             entities.clear();
 
-            for (Being b : beings) {
+            for (Actor b : beings) {
                 entities.add(b);
             }
 
@@ -178,10 +178,10 @@ public class Play extends Screen {
             //e.hitbox.render(batch);
         }
 
-        batch.setColor(Assets.getInstance().getColor("White"));
+        batch.setColor(Assets.getColor("White"));
     }
 
-    public void addBeing(Being e) {
+    public void addBeing(Actor e) {
         beings.add(e);
         e.onAdded();
     }
@@ -210,12 +210,12 @@ public class Play extends Screen {
         return solid;
     }
 
-    public Array<Being> getBeings() {
-        Array<Being> beings = new Array<Being>();
+    public Array<Actor> getBeings() {
+        Array<Actor> beings = new Array<Actor>();
 
         for (Entity e : entities) {
-            if (e instanceof Being) {
-                beings.add((Being) e);
+            if (e instanceof Actor) {
+                beings.add((Actor) e);
             }
         }
 

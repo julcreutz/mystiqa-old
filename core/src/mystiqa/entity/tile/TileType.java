@@ -26,11 +26,11 @@ public class TileType {
         }
 
         if (json.has("topGraphics")) {
-            topGraphics = Assets.getInstance().getSpriteSheet(json.getString("topGraphics"));
+            topGraphics = Assets.getSpriteSheet(json.getString("topGraphics"));
         }
 
         if (json.has("sideGraphics")) {
-            sideGraphics = Assets.getInstance().getSpriteSheet(json.getString("sideGraphics"));
+            sideGraphics = Assets.getSpriteSheet(json.getString("sideGraphics"));
         }
 
         if (json.has("solid")) {
@@ -38,11 +38,11 @@ public class TileType {
         }
 
         if (json.has("topColor")) {
-            topColor = Assets.getInstance().getColor(json.getString("topColor"));
+            topColor = Assets.getColor(json.getString("topColor"));
         }
 
         if (json.has("sideColor")) {
-            sideColor = Assets.getInstance().getColor(json.getString("sideColor"));
+            sideColor = Assets.getColor(json.getString("sideColor"));
         }
     }
 }

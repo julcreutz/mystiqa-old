@@ -39,7 +39,7 @@ public class Game extends ApplicationAdapter {
 	@Override
 	public void dispose() {
 		screen.dispose();
-		Assets.getInstance().dispose();
+		Assets.dispose();
 	}
 
 	public static float getDelta() {

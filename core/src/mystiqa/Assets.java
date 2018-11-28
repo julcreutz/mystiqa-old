@@ -8,10 +8,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
-import mystiqa.entity.being.Being;
-import mystiqa.entity.being.humanoid.Humanoid;
-import mystiqa.entity.being.humanoid.race.HumanoidRace;
-import mystiqa.entity.being.slime.Slime;
+import mystiqa.entity.actor.Actor;
+import mystiqa.entity.actor.humanoid.Humanoid;
+import mystiqa.entity.actor.humanoid.race.HumanoidRace;
+import mystiqa.entity.actor.slime.Slime;
 import mystiqa.entity.tile.Tile;
 import mystiqa.entity.tile.TileType;
 import mystiqa.world.biome.Biome;
@@ -19,47 +19,29 @@ import mystiqa.world.structure.Structure;
 
 import java.util.HashMap;
 
-public class Assets {
+public final class Assets {
     public static final String HUMANOID_RACES = "data/humanoid_races/";
-    public static final String BEINGS = "data/entities/beings/";
+    public static final String BEINGS = "data/entities/actors/";
 
-    private static Assets instance;
+    private static Array<Texture> textures;
+    private static HashMap<String, TextureRegion[][]> spriteSheets;
 
-    private Array<Texture> textures;
-    private HashMap<String, TextureRegion[][]> spriteSheets;
+    private static HashMap<String, Color> colors;
 
-    private HashMap<String, Color> colors;
+    private static HashMap<String, Biome> biomes;
+    private static HashMap<String, Structure> structures;
 
-    private HashMap<String, Biome> biomes;
-    private HashMap<String, Structure> structures;
+    private static HashMap<String, HumanoidRace> humanoidRaces;
 
-    private HashMap<String, HumanoidRace> humanoidRaces;
+    private static HashMap<String, TileType> tiles;
 
-    private HashMap<String, TileType> tiles;
-
-    private HashMap<String, JsonValue> beings;
+    private static HashMap<String, JsonValue> actors;
 
     private Assets() {
 
     }
 
-    public Array<FileHandle> getFiles(FileHandle root) {
-        Array<FileHandle> files = new Array<FileHandle>();
-        getFiles(root, files);
-        return files;
-    }
-
-    public void getFiles(FileHandle root, Array<FileHandle> files) {
-        for (FileHandle file : root.list()) {
-            if (file.isDirectory()) {
-                getFiles(file, files);
-            } else {
-                files.add(file);
-            }
-        }
-    }
-
-    public TextureRegion[][] getSpriteSheet(String id) {
+    public static TextureRegion[][] getSpriteSheet(String id) {
         if (textures == null && spriteSheets == null) {
             textures = new Array<Texture>();
             spriteSheets = new HashMap<String, TextureRegion[][]>();
@@ -88,7 +70,7 @@ public class Assets {
         return spriteSheets.get(id);
     }
 
-    public Color getColor(String id) {
+    public static Color getColor(String id) {
         if (colors == null) {
             colors = new HashMap<String, Color>();
 
@@ -100,7 +82,7 @@ public class Assets {
         return colors.get(id);
     }
 
-    public Biome getBiome(String id) {
+    public static Biome getBiome(String id) {
         if (biomes == null) {
             biomes = new HashMap<String, Biome>();
 
@@ -108,14 +90,14 @@ public class Assets {
                 Biome b = new Biome();
                 b.deserialize(biome);
 
-                this.biomes.put(biome.getString("id"), b);
+                biomes.put(biome.getString("id"), b);
             }
         }
 
         return biomes.get(id);
     }
 
-    public Structure getStructure(String id) {
+    public static Structure getStructure(String id) {
         if (structures == null) {
             structures = new HashMap<String, Structure>();
 
@@ -123,35 +105,29 @@ public class Assets {
                 Structure _structure = new Structure();
                 _structure.deserialize(structure);
 
-                this.structures.put(structure.getString("id"), _structure);
+                structures.put(structure.getString("id"), _structure);
             }
         }
 
         return structures.get(id);
     }
 
-    public HumanoidRace getHumanoidRace(String name) {
+    public static HumanoidRace getHumanoidRace(String id) {
         if (humanoidRaces == null) {
             humanoidRaces = new HashMap<String, HumanoidRace>();
-        }
 
-        if (!humanoidRaces.containsKey(name)) {
-            for (FileHandle f : getFiles(Gdx.files.internal(HUMANOID_RACES))) {
-                if (f.nameWithoutExtension().equals(name)) {
-                    HumanoidRace race = new HumanoidRace();
-                    race.deserialize(new JsonReader().parse(f));
+            for (JsonValue humanoidRace : new JsonReader().parse(Gdx.files.internal("data/humanoid_races.json")).get("humanoid_races")) {
+                HumanoidRace _humanoidRace = new HumanoidRace();
+                _humanoidRace.deserialize(humanoidRace);
 
-                    humanoidRaces.put(name, race);
-
-                    break;
-                }
+                humanoidRaces.put(humanoidRace.getString("id"), _humanoidRace);
             }
         }
 
-        return humanoidRaces.get(name);
+        return humanoidRaces.get(id);
     }
 
-    public Tile getTile(String id) {
+    public static Tile getTile(String id) {
         if (tiles == null) {
             tiles = new HashMap<String, TileType>();
 
@@ -169,22 +145,17 @@ public class Assets {
         return t;
     }
 
-    public Being getBeing(String name) {
-        if (beings == null) {
-            beings = new HashMap<String, JsonValue>();
-        }
+    public static Actor getActor(String id) {
+        if (actors == null) {
+            actors = new HashMap<String, JsonValue>();
 
-        if (!beings.containsKey(name)) {
-            for (FileHandle f : getFiles(Gdx.files.internal(BEINGS))) {
-                if (f.nameWithoutExtension().equals(name)) {
-                    beings.put(name, new JsonReader().parse(f));
-                    break;
-                }
+            for (JsonValue actor : new JsonReader().parse(Gdx.files.internal("data/actors.json")).get("actors")) {
+                actors.put(actor.getString("id"), actor);
             }
         }
 
-        JsonValue json = beings.get(name);
-        Being b = null;
+        JsonValue json = actors.get(id);
+        Actor b = null;
 
         String inherit = json.getString("inherit");
 
@@ -201,17 +172,9 @@ public class Assets {
         return b;
     }
 
-    public void dispose() {
+    public static void dispose() {
         for (Texture t : textures) {
             t.dispose();
         }
-    }
-
-    public static Assets getInstance() {
-        if (instance == null) {
-            instance = new Assets();
-        }
-
-        return instance;
     }
 }

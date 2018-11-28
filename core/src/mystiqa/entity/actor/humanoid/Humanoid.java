@@ -1,4 +1,4 @@
-package mystiqa.entity.being.humanoid;
+package mystiqa.entity.actor.humanoid;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -8,8 +8,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import mystiqa.Assets;
-import mystiqa.entity.being.Being;
-import mystiqa.entity.being.humanoid.race.HumanoidRace;
+import mystiqa.entity.actor.Actor;
+import mystiqa.entity.actor.humanoid.race.HumanoidRace;
 import mystiqa.item.equipable.armor.body.BodyArmor;
 import mystiqa.item.equipable.armor.feet.FeetArmor;
 import mystiqa.item.equipable.armor.head.HeadArmor;
@@ -21,7 +21,7 @@ import mystiqa.item.equipable.hand.left.LeftHand;
 import mystiqa.item.equipable.hand.right.RightHand;
 import mystiqa.main.Game;
 
-public class Humanoid extends Being {
+public class Humanoid extends Actor {
     public HumanoidRace race;
 
     public FeetArmor feetArmor;
@@ -400,7 +400,7 @@ public class Humanoid extends Being {
         super.deserialize(json);
 
         if (json.has("race")) {
-            race = Assets.getInstance().getHumanoidRace(json.getString("race"));
+            race = Assets.getHumanoidRace(json.getString("race"));
         }
     }
 }

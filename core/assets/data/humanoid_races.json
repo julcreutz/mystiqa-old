@@ -1,0 +1,14 @@
+{
+  "humanoid_races": [
+    {
+      "id": "Human",
+      "feet": "HumanFeet",
+      "body": "HumanBody",
+      "head": "HumanHead",
+      "color": "Peach",
+      "stats": [
+        {"MaxHealth": 16}
+      ]
+    }
+  ]
+}

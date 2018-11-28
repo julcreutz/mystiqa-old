@@ -1,14 +1,14 @@
-package mystiqa.entity.being.slime;
+package mystiqa.entity.actor.slime;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import mystiqa.entity.being.Being;
+import mystiqa.entity.actor.Actor;
 import mystiqa.main.Game;
 
-public class Slime extends Being {
+public class Slime extends Actor {
     public SlimeState state;
 
     public TextureRegion[][] graphics;

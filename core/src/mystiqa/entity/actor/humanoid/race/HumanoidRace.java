@@ -1,4 +1,4 @@
-package mystiqa.entity.being.humanoid.race;
+package mystiqa.entity.actor.humanoid.race;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -21,19 +21,19 @@ public class HumanoidRace {
 
     public void deserialize(JsonValue json) {
         if (json.has("feet")) {
-            feet = Assets.getInstance().getSpriteSheet(json.getString("feet"));
+            feet = Assets.getSpriteSheet(json.getString("feet"));
         }
 
         if (json.has("body")) {
-            body = Assets.getInstance().getSpriteSheet(json.getString("body"));
+            body = Assets.getSpriteSheet(json.getString("body"));
         }
 
         if (json.has("head")) {
-            head = Assets.getInstance().getSpriteSheet(json.getString("head"));
+            head = Assets.getSpriteSheet(json.getString("head"));
         }
 
         if (json.has("color")) {
-            color = Assets.getInstance().getColor(json.getString("color"));
+            color = Assets.getColor(json.getString("color"));
         }
 
         if (json.has("stats")) {

@@ -1,9 +1,8 @@
 package mystiqa.item.equipable.hand;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import mystiqa.entity.being.humanoid.Humanoid;
+import mystiqa.entity.actor.humanoid.Humanoid;
 import mystiqa.item.equipable.Equipable;
-import mystiqa.main.Game;
 
 public abstract class Hand extends Equipable {
     public boolean behind;

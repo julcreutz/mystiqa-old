@@ -1,4 +1,4 @@
-package mystiqa.entity.being;
+package mystiqa.entity.actor;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
@@ -15,7 +15,7 @@ import mystiqa.stat.StatManager;
 import mystiqa.main.Game;
 import mystiqa.main.screen.Play;
 
-public abstract class Being extends Entity {
+public abstract class Actor extends Entity {
     public float velX;
     public float velY;
     public float velZ;
@@ -23,7 +23,7 @@ public abstract class Being extends Entity {
     public Hitbox attackHitbox;
     public Hitbox defendHitbox;
 
-    public Array<Being> hit;
+    public Array<Actor> hit;
     public float hitTime;
 
     public StatManager stats;
@@ -32,7 +32,7 @@ public abstract class Being extends Entity {
 
     public Alignment alignment;
 
-    public Being nearestHostile;
+    public Actor nearestHostile;
 
     public boolean attacking;
     public boolean defending;
@@ -44,13 +44,13 @@ public abstract class Being extends Entity {
     public boolean collisionDetection;
     public boolean onGround;
 
-    public Being() {
+    public Actor() {
         attackHitbox = new Hitbox();
         defendHitbox = new Hitbox();
 
         stats = new StatManager();
 
-        hit = new Array<Being>();
+        hit = new Array<Actor>();
 
         stats = new StatManager();
 
@@ -66,7 +66,7 @@ public abstract class Being extends Entity {
         if (alignment != null && nearestHostile == null) {
             float nearestDist = Float.MAX_VALUE;
 
-            for (Being other : Play.getInstance().beings) {
+            for (Actor other : Play.getInstance().beings) {
                 if (this != other) {
                     if (other.alignment != null && alignment.isHostile(other.alignment)) {
                         float dist = new Vector2(other.x, other.y).sub(x, y).len();
@@ -86,7 +86,7 @@ public abstract class Being extends Entity {
 
         // Attack collision detection
         if (attacking) {
-            for (Being e : Play.getInstance().beings) {
+            for (Actor e : Play.getInstance().beings) {
                 if (this != e) {
                     if (e.hitTime <= 0) {
                         boolean contains = hit.contains(e, true);
@@ -241,7 +241,7 @@ public abstract class Being extends Entity {
         super.render(batch);
 
         if (hitTime > 0) {
-            batch.setColor(Assets.getInstance().getColor("White"));
+            batch.setColor(Assets.getColor("White"));
         } else {
             batch.setShader(null);
         }
@@ -258,7 +258,7 @@ public abstract class Being extends Entity {
         hitbox.update(this);
     }
 
-    public void onHit(Being e) {
+    public void onHit(Actor e) {
         Play.getInstance().screenShake += isDead() ? 2 : 1;
         nearestHostile = e;
     }

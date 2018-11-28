@@ -1,6 +1,6 @@
 package mystiqa.item.equipable;
 
-import mystiqa.entity.being.humanoid.Humanoid;
+import mystiqa.entity.actor.humanoid.Humanoid;
 import mystiqa.item.equipable.material.MaterialType;
 import mystiqa.stat.IntegerStat;
 import mystiqa.stat.StatManager;

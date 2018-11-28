@@ -62,7 +62,7 @@ public class WorldGenerator {
                                     }
 
                                     if (c.getRandom().nextFloat() <= vegetation.chance) {
-                                        Structure structure = Assets.getInstance().getStructure(vegetation.structure);
+                                        Structure structure = Assets.getStructure(vegetation.structure);
                                         structureSaves.add(new StructureSave(vegetation.structure, xx, yy, height));
 
                                         for (StructureComponent component : structure.components) {
@@ -108,7 +108,7 @@ public class WorldGenerator {
             if (x == placeTile.x && y == placeTile.y && z == placeTile.z) {
                 placeTiles.removeValue(placeTile, true);
 
-                return Assets.getInstance().getTile(placeTile.tile);
+                return Assets.getTile(placeTile.tile);
             }
         }
 
@@ -117,13 +117,13 @@ public class WorldGenerator {
 
         if (z <= waterLevel) {
             if (z <= height) {
-                return Assets.getInstance().getTile(biome.underWaterTile);
+                return Assets.getTile(biome.underWaterTile);
             } else {
-                return Assets.getInstance().getTile(biome.waterTile);
+                return Assets.getTile(biome.waterTile);
             }
         } else {
             if (z <= height) {
-                return Assets.getInstance().getTile(biome.aboveWaterTile);
+                return Assets.getTile(biome.aboveWaterTile);
             }
         }
 
