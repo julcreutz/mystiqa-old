@@ -335,7 +335,7 @@ public class Humanoid extends Being {
                 }
             }
 
-            stateTime += Game.delta() * (new Vector2(velX, velY).len() / 24f);
+            stateTime += Game.getDelta() * (new Vector2(velX, velY).len() / 24f);
         } else {
             stateTime = 1 / 7.5f;
         }

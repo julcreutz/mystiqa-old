@@ -2,12 +2,13 @@ package mystiqa.ecs;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
+import mystiqa.ecs.component.EntityComponent;
+import mystiqa.ecs.entity.Entity;
 import mystiqa.ecs.event.EntityAddedEvent;
 import mystiqa.ecs.event.EntityEvent;
 import mystiqa.ecs.system.EntitySystem;
 import mystiqa.ecs.system.Renderable;
 import mystiqa.ecs.system.Updateable;
-import mystiqa.entity.Entity;
 
 public class EntityManager {
     public Array<EntitySystem> systems;
@@ -42,6 +43,32 @@ public class EntityManager {
         return systems;
     }
 
+    public Array<Entity> getEntities(Class<?>... c) {
+        Array<Entity> entities = new Array<Entity>();
+
+        main: for (Entity e : this.entities) {
+            boolean b;
+
+            for (Class<?> _c : c) {
+                b = false;
+
+                for (EntityComponent component : e.components) {
+                    if (_c.isInstance(component)) {
+                        b = true;
+                    }
+                }
+
+                if (!b) {
+                    continue main;
+                }
+            }
+
+            entities.add(e);
+        }
+
+        return entities;
+    }
+
     public void sendEvent(EntityEvent e) {
         e.sendEvent(this);
     }
@@ -49,5 +76,9 @@ public class EntityManager {
     public void addEntity(Entity e) {
         entities.add(e);
         sendEvent(new EntityAddedEvent(e));
+    }
+
+    public void addSystem(EntitySystem s) {
+        systems.add(s);
     }
 }

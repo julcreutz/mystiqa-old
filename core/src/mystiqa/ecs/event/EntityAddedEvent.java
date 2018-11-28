@@ -1,7 +1,7 @@
 package mystiqa.ecs.event;
 
 import mystiqa.ecs.EntityManager;
-import mystiqa.entity.Entity;
+import mystiqa.ecs.entity.Entity;
 
 public class EntityAddedEvent implements EntityEvent {
     public Entity e;
@@ -13,7 +13,7 @@ public class EntityAddedEvent implements EntityEvent {
     @Override
     public void sendEvent(EntityManager em) {
         for (EntityAddedListener l : em.getSystems(EntityAddedListener.class)) {
-            l.onAdded(e);
+            l.onAdded(this);
         }
     }
 }

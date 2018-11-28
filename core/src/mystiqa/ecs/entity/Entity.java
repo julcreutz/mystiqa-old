@@ -9,4 +9,14 @@ public class Entity {
     public Entity() {
         components = new Array<EntityComponent>();
     }
+
+    public <T> T getComponent(Class<T> c) {
+        for (EntityComponent component : components) {
+            if (c.isInstance(component)) {
+                return (T) component;
+            }
+        }
+
+        return null;
+    }
 }

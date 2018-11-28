@@ -1,10 +1,13 @@
 package mystiqa.main.screen;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import mystiqa.Assets;
 import mystiqa.ecs.EntityManager;
+import mystiqa.ecs.component.*;
+import mystiqa.ecs.system.*;
 import mystiqa.entity.Entity;
 import mystiqa.entity.being.Being;
 import mystiqa.entity.being.humanoid.Humanoid;
@@ -68,11 +71,75 @@ public class Play extends Screen {
         addBeing(h);
 
         em = new EntityManager();
+        em.addSystem(new GravitySystem());
+        em.addSystem(new CollisionSystem());
+        em.addSystem(new MovementSystem());
+        em.addSystem(new AnimationSystem());
+        em.addSystem(new RenderSystem());
+
+        for (int x = 0; x < 16; x++) {
+            for (int y = 0; y < 16; y++) {
+                mystiqa.ecs.entity.Entity e = new mystiqa.ecs.entity.Entity();
+
+                PositionComponent pos = new PositionComponent();
+                pos.x = x * 8;
+                pos.y = y * 8;
+                pos.z = -8;
+                e.components.add(pos);
+
+                CollisionComponent col = new CollisionComponent();
+                col.width = 8;
+                col.height = 8;
+                col.depth = 8;
+                e.components.add(col);
+
+                em.addEntity(e);
+            }
+        }
+
+        {
+            mystiqa.ecs.entity.Entity e = new mystiqa.ecs.entity.Entity();
+            e.components.add(new PositionComponent());
+            e.components.add(new VelocityComponent());
+            CollisionComponent collision = new CollisionComponent();
+            collision.width = 8;
+            collision.height = 8;
+            collision.depth = 8;
+            e.components.add(collision);
+            e.components.add(new RenderComponent());
+            e.components.add(new GravityComponent());
+            em.addEntity(e);
+        }
+
+        {
+            mystiqa.ecs.entity.Entity e = new mystiqa.ecs.entity.Entity();
+            e.components.add(new PositionComponent());
+            e.getComponent(PositionComponent.class).x = 64;
+            e.components.add(new VelocityComponent());
+            CollisionComponent collision = new CollisionComponent();
+            collision.width = 8;
+            collision.height = 8;
+            collision.depth = 8;
+            e.components.add(collision);
+            e.components.add(new RenderComponent());
+            e.components.add(new GravityComponent());
+            em.addEntity(e);
+        }
     }
 
     @Override
     public void update() {
         super.update();
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
+            em.entities.get(256).getComponent(VelocityComponent.class).z = 85;
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            em.entities.get(256).getComponent(VelocityComponent.class).x = 32;
+        }
+
+        em.update();
 
         if (player.getChunkX() != playerChunkX || player.getChunkY() != playerChunkY || player.getChunkZ() != playerChunkZ) {
             // Generate new chunks
@@ -149,15 +216,15 @@ public class Play extends Screen {
                 entities.get(i).update();
             }
         } else {
-            screenShake -= Game.delta() * 10f;
+            screenShake -= Game.getDelta() * 10f;
             if (screenShake < 0) {
                 screenShake = 0;
             }
         }
 
         // Camera logic
-        cam.position.x = player.x + MathUtils.random(-screenShake, screenShake) + 4;
-        cam.position.y = player.y + player.z + MathUtils.random(-screenShake, screenShake) + 4;
+        //cam.position.x = player.x + MathUtils.random(-screenShake, screenShake) + 4;
+        //cam.position.y = player.y + player.z + MathUtils.random(-screenShake, screenShake) + 4;
 
         cam.update();
 
@@ -178,9 +245,11 @@ public class Play extends Screen {
         super.render(batch);
 
         for (Entity e : entities) {
-            e.render(batch);
+            //e.render(batch);
             //e.hitbox.render(batch);
         }
+
+        em.render(batch);
 
         batch.setColor(Assets.getInstance().getColor("White"));
     }

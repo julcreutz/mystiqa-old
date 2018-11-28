@@ -30,7 +30,7 @@ public class Game extends ApplicationAdapter {
 
 	@Override
 	public void render() {
-		time += delta();
+		time += getDelta();
 
 		screen.update();
 		screen.renderMaster();
@@ -42,7 +42,7 @@ public class Game extends ApplicationAdapter {
 		Assets.getInstance().dispose();
 	}
 
-	public static float delta() {
+	public static float getDelta() {
 		return Gdx.graphics.getDeltaTime();
 	}
 

@@ -43,7 +43,7 @@ public class Slime extends Being {
 
                 break;
             case ATTACK_HOSTILE:
-                attackTime -= Game.delta();
+                attackTime -= Game.getDelta();
 
                 if (attackTime < 0) {
                     Vector2 v = new Vector2(nearestHostile.x, nearestHostile.y).sub(x, y);
@@ -75,7 +75,7 @@ public class Slime extends Being {
         velY += MathUtils.sinDeg(jumpAngle) * jumpSpeed;
 
         if (velZ == 0) {
-            groundTime += Game.delta();
+            groundTime += Game.getDelta();
         } else {
             groundTime = 0;
         }

@@ -99,7 +99,7 @@ public class MeleeWeapon extends RightHand {
                 h.velX *= 0;
                 h.velY *= 0;
 
-                attackTime -= Game.delta() * 4f * speed;
+                attackTime -= Game.getDelta() * 4f * speed;
                 if (attackTime < 0) {
                     attackTime = 0;
                     h.blockDirectionChange = false;
