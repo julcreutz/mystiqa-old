@@ -107,7 +107,11 @@ public class Play extends Screen {
             collision.depth = 8;
             e.components.add(collision);
             e.components.add(new RenderComponent());
-            e.components.add(new GravityComponent());
+
+            ColorComponent color = new ColorComponent();
+            color.r = 1;
+            e.components.add(color);
+
             em.addEntity(e);
         }
 
@@ -122,7 +126,6 @@ public class Play extends Screen {
             collision.depth = 8;
             e.components.add(collision);
             e.components.add(new RenderComponent());
-            e.components.add(new GravityComponent());
             em.addEntity(e);
         }
     }

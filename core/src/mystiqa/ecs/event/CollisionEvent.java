@@ -1,21 +1,22 @@
 package mystiqa.ecs.event;
 
-import mystiqa.ecs.EntityManager;
 import mystiqa.ecs.entity.Entity;
 
-public class CollisionEvent implements EntityEvent {
-    public Entity e;
+public class CollisionEvent extends EntityEvent<CollisionListener> {
     public Entity _e;
 
     public CollisionEvent(Entity e, Entity _e) {
-        this.e = e;
+        super(e);
         this._e = _e;
     }
 
     @Override
-    public void sendEvent(EntityManager em) {
-        for (CollisionListener l : em.getSystems(CollisionListener.class)) {
-            l.onCollision(this);
-        }
+    public Class<CollisionListener> getListener() {
+        return CollisionListener.class;
+    }
+
+    @Override
+    public void call(CollisionListener listener) {
+        listener.onCollision(this);
     }
 }

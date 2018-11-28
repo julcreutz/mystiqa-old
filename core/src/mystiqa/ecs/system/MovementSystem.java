@@ -7,10 +7,11 @@ import mystiqa.ecs.entity.Entity;
 import mystiqa.ecs.event.MoveEvent;
 import mystiqa.main.Game;
 
+@RequireComponent({PositionComponent.class, VelocityComponent.class})
 public class MovementSystem implements EntitySystem, Updateable {
     @Override
     public void update(EntityManager em) {
-        for (Entity e : em.getEntities(PositionComponent.class, VelocityComponent.class)) {
+        for (Entity e : em.getEntities(getClass())) {
             PositionComponent pos = e.getComponent(PositionComponent.class);
             VelocityComponent vel = e.getComponent(VelocityComponent.class);
 

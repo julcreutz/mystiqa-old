@@ -3,16 +3,18 @@ package mystiqa.ecs.system;
 import com.badlogic.gdx.utils.Array;
 import mystiqa.ecs.EntityManager;
 import mystiqa.ecs.component.CollisionComponent;
+import mystiqa.ecs.component.EntityComponent;
 import mystiqa.ecs.component.PositionComponent;
 import mystiqa.ecs.component.VelocityComponent;
 import mystiqa.ecs.entity.Entity;
 import mystiqa.ecs.event.CollisionEvent;
 import mystiqa.main.Game;
 
+@RequireComponent({PositionComponent.class, CollisionComponent.class})
 public class CollisionSystem implements EntitySystem, Updateable {
     @Override
     public void update(EntityManager em) {
-        Array<Entity> entities = em.getEntities(PositionComponent.class, CollisionComponent.class);
+        Array<Entity> entities = em.getEntities(getClass());
 
         for (int i = 0; i < entities.size; i++) {
             for (int j = 0; j < entities.size; j++) {

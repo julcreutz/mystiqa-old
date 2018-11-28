@@ -1,6 +1,6 @@
 package mystiqa.ecs.component;
 
-public class CollisionComponent implements EntityComponent  {
+public class CollisionComponent implements EntityComponent {
     public float x;
     public float y;
     public float z;

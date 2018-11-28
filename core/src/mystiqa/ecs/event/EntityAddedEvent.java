@@ -1,19 +1,19 @@
 package mystiqa.ecs.event;
 
-import mystiqa.ecs.EntityManager;
 import mystiqa.ecs.entity.Entity;
 
-public class EntityAddedEvent implements EntityEvent {
-    public Entity e;
-
+public class EntityAddedEvent extends EntityEvent<EntityAddedListener> {
     public EntityAddedEvent(Entity e) {
-        this.e = e;
+        super(e);
     }
 
     @Override
-    public void sendEvent(EntityManager em) {
-        for (EntityAddedListener l : em.getSystems(EntityAddedListener.class)) {
-            l.onAdded(this);
-        }
+    public Class<EntityAddedListener> getListener() {
+        return EntityAddedListener.class;
+    }
+
+    @Override
+    public void call(EntityAddedListener listener) {
+        listener.onAdded(this);
     }
 }

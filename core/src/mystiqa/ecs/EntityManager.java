@@ -6,9 +6,13 @@ import mystiqa.ecs.component.EntityComponent;
 import mystiqa.ecs.entity.Entity;
 import mystiqa.ecs.event.EntityAddedEvent;
 import mystiqa.ecs.event.EntityEvent;
+import mystiqa.ecs.event.EntityListener;
 import mystiqa.ecs.system.EntitySystem;
 import mystiqa.ecs.system.Renderable;
+import mystiqa.ecs.system.RequireComponent;
 import mystiqa.ecs.system.Updateable;
+
+import java.lang.annotation.Annotation;
 
 public class EntityManager {
     public Array<EntitySystem> systems;
@@ -32,7 +36,7 @@ public class EntityManager {
     }
 
     public <T> Array<T> getSystems(Class<T> c) {
-        Array<T> systems = new Array<T>();
+            Array<T> systems = new Array<T>();
 
         for (EntitySystem system : this.systems) {
             if (c.isInstance(system)) {
@@ -43,30 +47,42 @@ public class EntityManager {
         return systems;
     }
 
-    public Array<Entity> getEntities(Class<?>... c) {
+    public <T extends EntitySystem> Array<Entity> getEntities(Class<T> c) {
         Array<Entity> entities = new Array<Entity>();
 
-        main: for (Entity e : this.entities) {
-            boolean b;
-
-            for (Class<?> _c : c) {
-                b = false;
-
-                for (EntityComponent component : e.components) {
-                    if (_c.isInstance(component)) {
-                        b = true;
-                    }
-                }
-
-                if (!b) {
-                    continue main;
-                }
+        for (Entity e : this.entities) {
+            if (isEntitySuitable(e, getRequiredComponents(c))) {
+                entities.add(e);
             }
-
-            entities.add(e);
         }
 
         return entities;
+    }
+
+    public Class<? extends EntityComponent>[] getRequiredComponents(Class<?> c) {
+        RequireComponent a = c.getAnnotation(RequireComponent.class);
+
+        return a != null ? a.value() : new Class[] {};
+    }
+
+    public boolean isEntitySuitable(Entity e, Class<? extends EntityComponent>... c) {
+        boolean b;
+
+        for (Class<? extends EntityComponent> _c : c) {
+            b = false;
+
+            for (EntityComponent component : e.components) {
+                if (_c.isInstance(component)) {
+                    b = true;
+                }
+            }
+
+            if (!b) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public void sendEvent(EntityEvent e) {
