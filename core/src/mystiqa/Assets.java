@@ -20,9 +20,6 @@ import mystiqa.world.structure.Structure;
 import java.util.HashMap;
 
 public final class Assets {
-    public static final String HUMANOID_RACES = "data/humanoid_races/";
-    public static final String BEINGS = "data/entities/actors/";
-
     private static Array<Texture> textures;
     private static HashMap<String, TextureRegion[][]> spriteSheets;
 

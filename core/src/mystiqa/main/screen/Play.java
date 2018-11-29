@@ -175,7 +175,6 @@ public class Play extends Screen {
 
         for (Entity e : entities) {
             e.render(batch);
-            //e.hitbox.render(batch);
         }
 
         batch.setColor(Assets.getColor("White"));
@@ -208,18 +207,6 @@ public class Play extends Screen {
         }
 
         return solid;
-    }
-
-    public Array<Actor> getBeings() {
-        Array<Actor> beings = new Array<Actor>();
-
-        for (Entity e : entities) {
-            if (e instanceof Actor) {
-                beings.add((Actor) e);
-            }
-        }
-
-        return beings;
     }
 
     public Chunk getChunk(int x, int y, int z) {
