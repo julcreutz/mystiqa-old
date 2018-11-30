@@ -66,8 +66,7 @@ public class Play extends Screen {
     }
 
     @Override
-    public
-    void update() {
+    public void update() {
         super.update();
 
         if (player.getChunkX() != playerChunkX || player.getChunkY() != playerChunkY || player.getChunkZ() != playerChunkZ) {

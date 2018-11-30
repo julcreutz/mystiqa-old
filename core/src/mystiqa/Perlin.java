@@ -70,14 +70,14 @@ public class Perlin {
         float v1 = new Vector2(x, y).sub(x0, y0).dot(gradients[gx0][gy0]);
         float v2 = new Vector2(x, y).sub(x1, y0).dot(gradients[gx1][gy0]);
 
-        float i1 = MathUtils.lerp(v1, v2, wx);
+        float i1 = interpolate(v1, v2, wx);
 
         v1 = new Vector2(x, y).sub(x0, y1).dot(gradients[gx0][gy1]);
         v2 = new Vector2(x, y).sub(x1, y1).dot(gradients[gx1][gy1]);
 
-        float i2 = MathUtils.lerp(v1, v2, wx);
+        float i2 = interpolate(v1, v2, wx);
 
-        return MathUtils.clamp(MathUtils.lerp(i1, i2, wy) + 0.5f, 0, 1);
+        return MathUtils.clamp(interpolate(i1, i2, wy) + 0.5f, 0, 1);
     }
 
     public float get(float x, float y) {
@@ -111,6 +111,10 @@ public class Perlin {
         };
 
         return possible[random.nextInt(possible.length - 1)];
+    }
+
+    private float interpolate(float from, float to, float t) {
+        return from + (to - from) * (6 * t * t * t * t * t - 15 * t * t * t * t + 10 * t * t * t);
     }
 
     public void deserialize(JsonValue json) {

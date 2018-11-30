@@ -2,8 +2,6 @@ package mystiqa.entity.tile;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.utils.JsonValue;
-import mystiqa.Assets;
 import mystiqa.entity.Entity;
 import mystiqa.main.screen.Play;
 

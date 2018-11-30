@@ -20,6 +20,8 @@ public class WorldGenerator {
     public Perlin temperatureNoise;
     public Perlin moistureNoise;
 
+    public Perlin random;
+
     public Array<StructureSave> structureSaves;
     public Array<PlaceTile> placeTiles;
 
@@ -29,6 +31,8 @@ public class WorldGenerator {
         elevationNoise = new Perlin(.0075f, 4, 1, seed());
         temperatureNoise = new Perlin(.00375f, 2, 1, seed());
         moistureNoise = new Perlin(.00375f, 2, 1, seed());
+
+        random = new Perlin(.05f, 8, 2, seed());
 
         structureSaves = new Array<StructureSave>();
         placeTiles = new Array<PlaceTile>();
@@ -61,7 +65,7 @@ public class WorldGenerator {
                                         }
                                     }
 
-                                    if (c.getRandom().nextFloat() <= vegetation.chance) {
+                                    if (random.get(x, y) <= vegetation.chance) {
                                         Structure structure = Assets.getStructure(vegetation.structure);
                                         structureSaves.add(new StructureSave(vegetation.structure, xx, yy, height));
 
