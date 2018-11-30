@@ -9,7 +9,12 @@ import mystiqa.entity.actor.Actor;
 import mystiqa.main.Game;
 
 public class Slime extends Actor {
-    public SlimeState state;
+    public enum State {
+        IDLE,
+        ATTACK_HOSTILE,
+        JUMP
+    }
+    public State state;
 
     public TextureRegion[][] graphics;
     public TextureRegion t;
@@ -29,7 +34,7 @@ public class Slime extends Actor {
         attackHitbox = hitbox;
         defendHitbox = hitbox;
 
-        state = SlimeState.IDLE;
+        state = State.IDLE;
     }
 
     @Override
@@ -37,7 +42,7 @@ public class Slime extends Actor {
         switch (state) {
             case IDLE:
                 if (nearestHostile != null) {
-                    state = SlimeState.ATTACK_HOSTILE;
+                    state = State.ATTACK_HOSTILE;
                     break;
                 }
 
@@ -55,7 +60,7 @@ public class Slime extends Actor {
 
                     attackTime = MathUtils.random(1f, 2f);
 
-                    state = SlimeState.JUMP;
+                    state = State.JUMP;
                     break;
                 }
 
@@ -65,7 +70,7 @@ public class Slime extends Actor {
                     jumpSpeed = 0;
                     jumpAngle = 0;
 
-                    state = SlimeState.IDLE;
+                    state = State.IDLE;
                     break;
                 }
                 break;

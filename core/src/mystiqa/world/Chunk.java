@@ -15,8 +15,6 @@ public class Chunk {
 
     public Tile[][][] tiles;
 
-    public Random random;
-
     public int lod;
 
     public Chunk() {
@@ -44,13 +42,5 @@ public class Chunk {
 
     public long seed() {
         return x + y + z + x * x + y * y + z * z;
-    }
-
-    public Random getRandom() {
-        if (random == null) {
-            random = new Random(seed());
-        }
-
-        return random;
     }
 }

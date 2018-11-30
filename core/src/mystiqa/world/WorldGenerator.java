@@ -1,14 +1,10 @@
 package mystiqa.world;
 
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import mystiqa.Assets;
 import mystiqa.Perlin;
 import mystiqa.entity.tile.Tile;
 import mystiqa.world.biome.Biome;
-import mystiqa.world.biome.Vegetation;
-import mystiqa.world.structure.Structure;
-import mystiqa.world.structure.StructureComponent;
 import mystiqa.world.structure.StructureSave;
 
 public class WorldGenerator {
@@ -20,8 +16,6 @@ public class WorldGenerator {
     public Perlin temperatureNoise;
     public Perlin moistureNoise;
 
-    public Perlin random;
-
     public Array<StructureSave> structureSaves;
     public Array<PlaceTile> placeTiles;
 
@@ -31,8 +25,6 @@ public class WorldGenerator {
         elevationNoise = new Perlin(.0075f, 4, 1, seed());
         temperatureNoise = new Perlin(.00375f, 2, 1, seed());
         moistureNoise = new Perlin(.00375f, 2, 1, seed());
-
-        random = new Perlin(.05f, 4, 4, seed());
 
         structureSaves = new Array<StructureSave>();
         placeTiles = new Array<PlaceTile>();
@@ -44,7 +36,7 @@ public class WorldGenerator {
                 if (c.lod == -1) {
                     c.lod = 1;
 
-                    // Vegetation
+                    // Trees
                     for (int x = 0; x < c.tiles.length; x++) {
                         for (int y = 0; y < c.tiles[0].length; y++) {
                             int xx = c.x + x;
@@ -53,39 +45,29 @@ public class WorldGenerator {
                             Biome biome = getBiome(xx, yy);
                             int height = getHeight(xx, yy);
 
-                            if (height > waterLevel) {
-                                main: for (Vegetation vegetation : biome.vegetations) {
-                                    for (StructureSave save : structureSaves) {
-                                        if (save.structure.equals(vegetation.structure)) {
-                                            float dist = new Vector3(xx, yy, height).sub(save.x, save.y, save.z).len();
+                            main: if (height > waterLevel) {
+                                // Find peak
+                                float curr = biome.treeNoise.get(xx, yy);
 
-                                            if (dist < vegetation.minDist + 1) {
-                                                continue main;
-                                            }
-                                        }
-                                    }
-
-                                    if (random.get(xx, yy) <= vegetation.chance) {
-                                        Structure structure = Assets.getStructure(vegetation.structure);
-                                        structureSaves.add(new StructureSave(vegetation.structure, xx, yy, height));
-
-                                        for (StructureComponent component : structure.components) {
-                                            PlaceTile placeTile = new PlaceTile();
-
-                                            placeTile.x = xx + component.x;
-                                            placeTile.y = yy + component.y;
-                                            placeTile.z = height + 1 + component.z;
-
-                                            placeTile.tile = component.tile;
-
-                                            placeTiles.add(placeTile);
+                                for (int _x = -1; _x <= 1; _x++) {
+                                    for (int _y = -1; _y <= 1; _y++) {
+                                        if (biome.treeNoise.get(xx + _x, yy + _y) > curr) {
+                                            break main;
                                         }
                                     }
                                 }
+
+                                PlaceTile placeTile = new PlaceTile();
+                                placeTile.tile = "Log";
+                                placeTile.x = xx;
+                                placeTile.y = yy;
+                                placeTile.z = height + 1;
+                                placeTiles.add(placeTile);
                             }
                         }
                     }
                 }
+
                 break;
             case 0:
                 if (c.lod == 1) {
@@ -103,6 +85,7 @@ public class WorldGenerator {
                         }
                     }
                 }
+
                 break;
         }
     }
@@ -139,27 +122,31 @@ public class WorldGenerator {
     }
 
     public Biome getBiome(int x, int y) {
-        float elevation = elevationNoise.get(x, y);
-        float temperature = temperatureNoise.get(x, y);
-        float moisture = moistureNoise.get(x, y);
+        float elev = elevationNoise.get(x, y);
+        float temp = temperatureNoise.get(x, y);
+        float moist = moistureNoise.get(x, y);
 
-        Biome biome = null;
+        Biome b = null;
         float best = 0;
 
-        for (Biome _biome : possibleBiomes) {
-            float _elevation = 1 - Math.abs(_biome.targetElevation - elevation);
-            float _temperature = 1 - Math.abs(_biome.targetTemperature - temperature);
-            float _moisture = 1 - Math.abs(_biome.targetMoisture - moisture);
+        for (Biome _b : possibleBiomes) {
+            float eval = getBiomeEvaluation(_b, elev, temp, moist);
 
-            float result = _elevation * _temperature * _moisture;
-
-            if (result >= best) {
-                biome = _biome;
-                best = result;
+            if (eval >= best) {
+                b = _b;
+                best = eval;
             }
         }
 
-        return biome;
+        return b;
+    }
+
+    public float getBiomeEvaluation(Biome b, float elevation, float temperature, float moisture) {
+        float _elevation = 1 - Math.abs(b.targetElevation - elevation);
+        float _temperature = 1 - Math.abs(b.targetTemperature - temperature);
+        float _moisture = 1 - Math.abs(b.targetMoisture - moisture);
+
+        return _elevation * _temperature * _moisture;
     }
 
     public long seed() {
