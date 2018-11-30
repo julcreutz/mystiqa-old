@@ -32,7 +32,7 @@ public class WorldGenerator {
         temperatureNoise = new Perlin(.00375f, 2, 1, seed());
         moistureNoise = new Perlin(.00375f, 2, 1, seed());
 
-        random = new Perlin(.05f, 4, 8, seed());
+        random = new Perlin(.05f, 4, 4, seed());
 
         structureSaves = new Array<StructureSave>();
         placeTiles = new Array<PlaceTile>();
