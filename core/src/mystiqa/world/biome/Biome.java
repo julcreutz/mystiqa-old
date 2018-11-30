@@ -1,10 +1,9 @@
 package mystiqa.world.biome;
 
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
-import mystiqa.Perlin;
-import mystiqa.main.screen.Play;
+import mystiqa.noise.Noise;
+import mystiqa.noise.NoiseParameters;
 import mystiqa.world.Tree;
 
 public class Biome {
@@ -14,7 +13,7 @@ public class Biome {
     public float targetTemperature;
     public float targetMoisture;
 
-    public Perlin noise;
+    public NoiseParameters elevation;
     public float noiseOffset;
 
     public int minHeight;
@@ -25,11 +24,12 @@ public class Biome {
     public String underWaterTile;
     public String aboveWaterTile;
 
-    public Perlin treeNoise;
+    public NoiseParameters treeDensity;
+    public NoiseParameters treeHeight;
     public Tree tree;
 
-    public int getHeight(int x, int y) {
-        return (int) MathUtils.lerp(minHeight, maxHeight, MathUtils.clamp(noise.get(x, y) + noiseOffset, 0, 1)) + heightOffset;
+    public int getHeight(Noise noise, int x, int y) {
+        return (int) MathUtils.lerp(minHeight, maxHeight, noise.get(x, y, elevation) + noiseOffset) + heightOffset;
     }
 
     public void deserialize(JsonValue json) {
@@ -49,9 +49,9 @@ public class Biome {
             targetMoisture = json.getFloat("targetMoisture");
         }
 
-        if (json.has("noise")) {
-            noise = new Perlin(1, 1, 1, Play.getInstance().worldGenerator.seed());
-            noise.deserialize(json.get("noise"));
+        if (json.has("elevation")) {
+            elevation = new NoiseParameters();
+            elevation.deserialize(json.get("elevation"));
         }
 
         if (json.has("minHeight")) {
@@ -74,9 +74,14 @@ public class Biome {
             aboveWaterTile = json.getString("aboveWaterTile");
         }
 
-        if (json.has("treeNoise")) {
-            treeNoise = new Perlin(1, 1, 1, Play.getInstance().worldGenerator.seed());
-            treeNoise.deserialize(json.get("treeNoise"));
+        if (json.has("treeDensity")) {
+            treeDensity = new NoiseParameters();
+            treeDensity.deserialize(json.get("treeDensity"));
+        }
+
+        if (json.has("treeHeight")) {
+            treeHeight = new NoiseParameters();
+            treeHeight.deserialize(json.get("treeHeight"));
         }
 
         if (json.has("tree")) {

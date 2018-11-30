@@ -6,7 +6,7 @@
       "targetElevation": 0.4,
       "targetTemperature": 0.4,
       "targetMoisture": 0.4,
-      "noise": {
+      "elevation": {
         "frequency": 0.0075,
         "octaves": 3
       },
@@ -15,10 +15,13 @@
       "waterTile": "Water",
       "underWaterTile": "Sand",
       "aboveWaterTile": "Grass",
-      "treeNoise": {
+      "treeDensity": {
         "frequency": 0.05,
         "octaves": 4,
-        "persistence": 4
+        "persistence": 2
+      },
+      "treeHeight": {
+        "frequency": 0.05
       },
       "tree": {
         "minHeight": 2,
@@ -31,7 +34,7 @@
       "targetElevation": 0.3,
       "targetTemperature": 0.7,
       "targetMoisture": 0.25,
-      "noise": {
+      "elevation": {
         "frequency": 0.0075,
         "octaves": 2
       },
@@ -47,7 +50,7 @@
       "targetElevation": 0.3,
       "targetTemperature": 0.4,
       "targetMoisture": 0.5,
-      "noise": {
+      "elevation": {
         "frequency": 0.00375,
         "octaves": 3
       },

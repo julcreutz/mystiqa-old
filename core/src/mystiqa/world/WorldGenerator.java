@@ -1,9 +1,11 @@
 package mystiqa.world;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import mystiqa.Assets;
-import mystiqa.Perlin;
+import mystiqa.noise.Noise;
 import mystiqa.entity.tile.Tile;
+import mystiqa.noise.NoiseParameters;
 import mystiqa.world.biome.Biome;
 import mystiqa.world.structure.StructureSave;
 
@@ -12,9 +14,11 @@ public class WorldGenerator {
 
     public Array<Biome> possibleBiomes;
 
-    public Perlin elevationNoise;
-    public Perlin temperatureNoise;
-    public Perlin moistureNoise;
+    public Noise noise;
+
+    public NoiseParameters elevationNoise;
+    public NoiseParameters temperatureNoise;
+    public NoiseParameters moistureNoise;
 
     public Array<StructureSave> structureSaves;
     public Array<PlaceTile> placeTiles;
@@ -22,9 +26,11 @@ public class WorldGenerator {
     public WorldGenerator() {
         possibleBiomes = new Array<Biome>();
 
-        elevationNoise = new Perlin(.0075f, 4, 1, seed());
-        temperatureNoise = new Perlin(.00375f, 2, 1, seed());
-        moistureNoise = new Perlin(.00375f, 2, 1, seed());
+        noise = new Noise(0);
+
+        elevationNoise = new NoiseParameters(4, .0075f, 1);
+        temperatureNoise = new NoiseParameters(2, .00375f, 1);
+        moistureNoise = new NoiseParameters(2, .00375f, 1);
 
         structureSaves = new Array<StructureSave>();
         placeTiles = new Array<PlaceTile>();
@@ -45,24 +51,15 @@ public class WorldGenerator {
                             Biome biome = getBiome(xx, yy);
                             int height = getHeight(xx, yy);
 
-                            main: if (height > waterLevel) {
-                                // Find peak
-                                float curr = biome.treeNoise.get(xx, yy);
-
-                                for (int _x = -1; _x <= 1; _x++) {
-                                    for (int _y = -1; _y <= 1; _y++) {
-                                        if (biome.treeNoise.get(xx + _x, yy + _y) > curr) {
-                                            break main;
-                                        }
-                                    }
+                            if (height > waterLevel && isPeak(biome.treeDensity, xx, yy, 1)) {
+                                for (int z = 0; z < MathUtils.round(MathUtils.lerp(biome.tree.minHeight, biome.tree.maxHeight, noise.get(xx, yy, biome.treeHeight))); z++) {
+                                    PlaceTile placeTile = new PlaceTile();
+                                    placeTile.tile = "Log";
+                                    placeTile.x = xx;
+                                    placeTile.y = yy;
+                                    placeTile.z = height + 1 + z;
+                                    placeTiles.add(placeTile);
                                 }
-
-                                PlaceTile placeTile = new PlaceTile();
-                                placeTile.tile = "Log";
-                                placeTile.x = xx;
-                                placeTile.y = yy;
-                                placeTile.z = height + 1;
-                                placeTiles.add(placeTile);
                             }
                         }
                     }
@@ -118,19 +115,19 @@ public class WorldGenerator {
     }
 
     public int getHeight(int x, int y) {
-        return waterLevel + getBiome(x, y).getHeight(x, y);
+        return waterLevel + getBiome(x, y).getHeight(noise, x, y);
     }
 
     public Biome getBiome(int x, int y) {
-        float elev = elevationNoise.get(x, y);
-        float temp = temperatureNoise.get(x, y);
-        float moist = moistureNoise.get(x, y);
+        float elev = noise.get(x, y, elevationNoise);
+        float temp = noise.get(x, y, temperatureNoise);
+        float moist = noise.get(x, y, moistureNoise);
 
         Biome b = null;
         float best = 0;
 
         for (Biome _b : possibleBiomes) {
-            float eval = getBiomeEvaluation(_b, elev, temp, moist);
+            float eval = evaluateBiome(_b, elev, temp, moist);
 
             if (eval >= best) {
                 b = _b;
@@ -141,12 +138,26 @@ public class WorldGenerator {
         return b;
     }
 
-    public float getBiomeEvaluation(Biome b, float elevation, float temperature, float moisture) {
+    public float evaluateBiome(Biome b, float elevation, float temperature, float moisture) {
         float _elevation = 1 - Math.abs(b.targetElevation - elevation);
         float _temperature = 1 - Math.abs(b.targetTemperature - temperature);
         float _moisture = 1 - Math.abs(b.targetMoisture - moisture);
 
         return _elevation * _temperature * _moisture;
+    }
+
+    public boolean isPeak(NoiseParameters params, int x, int y, int r) {
+        float curr = noise.get(x, y, params);
+
+        for (int xx = -r; xx <= r; xx++) {
+            for (int yy = -r; yy <= r; yy++) {
+                if ((xx != 0 || yy != 0) && noise.get(x + xx, y + yy, params) >= curr) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     public long seed() {
