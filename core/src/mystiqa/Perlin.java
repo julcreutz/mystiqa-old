@@ -25,7 +25,7 @@ public class Perlin {
 
     private float noise(float x, float y) {
         if (gradients == null) {
-            gradients = new Vector2[16][16];
+            gradients = new Vector2[256][256];
 
             for (int xx = 0; xx < gradients.length; xx++) {
                 for (int yy = 0; yy < gradients[0].length; yy++) {
