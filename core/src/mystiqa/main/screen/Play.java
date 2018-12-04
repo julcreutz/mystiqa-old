@@ -200,7 +200,7 @@ public class Play extends Screen {
         Array<Tile> solid = new Array<Tile>();
 
         for (Tile t : getTiles()) {
-            if (t.type.solid) {
+            if (t.type != null && t.type.solid) {
                 solid.add(t);
             }
         }

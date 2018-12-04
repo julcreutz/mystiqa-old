@@ -29,19 +29,19 @@ public class Tile extends Entity {
             Tile l = Play.getInstance().getTile(x - 1, y, z);
             Tile d = Play.getInstance().getTile(x, y - 1, z);
 
-            if (r != null && r.type.name.equals(type.name)) {
+            if (r != null && r.type != null && r.type.name.equals(type.name)) {
                 n += 1;
             }
 
-            if (u != null && u.type.name.equals(type.name)) {
+            if (u != null && u.type != null && u.type.name.equals(type.name)) {
                 n += 2;
             }
 
-            if (l != null && l.type.name.equals(type.name)) {
+            if (l != null && l.type != null && l.type.name.equals(type.name)) {
                 n += 4;
             }
 
-            if (d != null && d.type.name.equals(type.name)) {
+            if (d != null && d.type != null && d.type.name.equals(type.name)) {
                 n += 8;
             }
 
@@ -101,16 +101,16 @@ public class Tile extends Entity {
             Tile l = Play.getInstance().getTile(x - 1, y, z);
             Tile r = Play.getInstance().getTile(x + 1, y, z);
 
-            boolean hl = l != null && l.type.name.equals(type.name);
-            boolean hr = r != null && r.type.name.equals(type.name);
+            boolean hl = l != null && l.type != null && l.type.name.equals(type.name);
+            boolean hr = r != null && r.type != null && r.type.name.equals(type.name);
 
             int tx = hl && hr ? 1 : (hl && !hr ? 2 : (!hl && hr ? 0 : 3));
 
             Tile b = Play.getInstance().getTile(x, y, z - 1);
             Tile t = Play.getInstance().getTile(x, y, z + 1);
 
-            boolean hb = b != null && b.type.name.equals(type.name);
-            boolean ht = t != null && t.type.name.equals(type.name);
+            boolean hb = b != null && b.type != null && b.type.name.equals(type.name);
+            boolean ht = t != null && t.type != null && t.type.name.equals(type.name);
 
             int ty = hb && ht ? 1 : (hb && !ht ? 0 : (!hb && ht ? 2 : 3));
 
