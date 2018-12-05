@@ -40,7 +40,7 @@ public class Chunk {
         }
     }
 
-    public long seed() {
+    public long getUniqueNumber() {
         return x + y + z + x * x + y * y + z * z;
     }
 }

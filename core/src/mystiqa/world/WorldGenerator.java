@@ -1,5 +1,6 @@
 package mystiqa.world;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import mystiqa.Assets;
 import mystiqa.noise.Noise;
@@ -29,25 +30,24 @@ public class WorldGenerator {
         possibleBiomes = new Array<Biome>();
 
         elevationNoise = new Noise(0);
-        elevationNoiseParams = new NoiseParameters(4, .0075f, 1);
+        elevationNoiseParams = new NoiseParameters(4, .00075f, 1);
 
         temperatureNoise = new Noise(1);
-        temperatureNoiseParams = new NoiseParameters(2, .0075f, 1);
+        temperatureNoiseParams = new NoiseParameters(2, .00075f, 1);
 
         moistureNoise = new Noise(2);
-        moistureNoiseParams = new NoiseParameters(2, .0075f, 1);
+        moistureNoiseParams = new NoiseParameters(2, .00075f, 1);
 
         structureSaves = new Array<StructureSave>();
         placeTiles = new Array<PlaceTile>();
     }
 
-    public void generateChunk(Chunk c, int lod) {
+    public void generateChunk(final Chunk c, int lod) {
         switch (lod) {
             case 1:
                 if (c.lod == -1) {
                     c.lod = 1;
 
-                    /*
                     // Trees
                     for (int x = 0; x < c.tiles.length; x++) {
                         for (int y = 0; y < c.tiles[0].length; y++) {
@@ -58,7 +58,7 @@ public class WorldGenerator {
                             int height = getHeight(xx, yy);
 
                             if (biome.treeDensity != null && height > waterLevel && isPeak(biome.treeDensity, xx, yy, 1)) {
-                                for (int z = 0; z < MathUtils.round(MathUtils.lerp(biome.tree.minHeight, biome.tree.maxHeight, noise.get(xx, yy, biome.treeHeight))); z++) {
+                                for (int z = 0; z < MathUtils.round(MathUtils.lerp(biome.tree.minHeight, biome.tree.maxHeight, elevationNoise.get(xx, yy, biome.treeHeight))); z++) {
                                     PlaceTile placeTile = new PlaceTile();
                                     placeTile.tile = "Log";
                                     placeTile.x = xx;
@@ -69,7 +69,6 @@ public class WorldGenerator {
                             }
                         }
                     }
-                    */
                 }
 
                 break;
@@ -95,7 +94,6 @@ public class WorldGenerator {
     }
 
     public Tile get(int x, int y, int z) {
-        /*
         for (PlaceTile placeTile : placeTiles) {
             if (x == placeTile.x && y == placeTile.y && z == placeTile.z) {
                 placeTiles.removeValue(placeTile, true);
@@ -103,7 +101,6 @@ public class WorldGenerator {
                 return Assets.getTile(placeTile.tile);
             }
         }
-        */
 
         Biome biome = getBiome(x, y);
         int height = getHeight(x, y);

@@ -18,6 +18,7 @@ public class Play extends Screen {
     private static Play instance;
 
     public Array<Actor> beings;
+
     public Array<Chunk> chunks;
 
     public Array<Entity> entities;
@@ -45,6 +46,7 @@ public class Play extends Screen {
         super.create();
 
         beings = new Array<Actor>();
+
         chunks = new Array<Chunk>();
 
         entities = new Array<Entity>();
@@ -208,7 +210,7 @@ public class Play extends Screen {
         return solid;
     }
 
-    public Chunk getChunk(int x, int y, int z) {
+    public Chunk getChunk(Array<Chunk> chunks, int x, int y, int z) {
         for (Chunk c : chunks) {
             if (x >= c.x && x < c.x + c.tiles.length && y >= c.y && y < c.y + c.tiles[0].length && z >= c.z && z < c.z + c.tiles[0][0].length) {
                 return c;
@@ -216,6 +218,10 @@ public class Play extends Screen {
         }
 
         return null;
+    }
+
+    public Chunk getChunk(int x, int y, int z) {
+        return getChunk(chunks, x, y, z);
     }
 
     public Tile getTile(int x, int y, int z) {
