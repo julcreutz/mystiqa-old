@@ -24,11 +24,11 @@ public abstract class GameState {
         viewport.apply();
     }
 
-    void update(Game g) {
+    public void update(Game g) {
         cam.update();
     }
 
-    void render(Game g) {
+    public void render() {
         buffer.begin();
 
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -36,7 +36,7 @@ public abstract class GameState {
 
         batch.setProjectionMatrix(cam.combined);
         batch.begin();
-
+        renderToBuffer();
         batch.end();
 
         buffer.end();
@@ -51,7 +51,10 @@ public abstract class GameState {
         batch.end();
     }
 
-    void resize(int w, int h) {
+    public void renderToBuffer() {
+    }
+
+    public void resize(int w, int h) {
         viewport.update(w, h);
 
         buffer = new FrameBuffer(Pixmap.Format.RGBA8888, Game.WIDTH, Game.HEIGHT, false);
