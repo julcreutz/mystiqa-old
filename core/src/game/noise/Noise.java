@@ -1,27 +1,13 @@
-package engine.noise;
+package game.noise;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.Random;
 
-/**
- * Two dimensional noise implementation based on Ken Perlin's original implementation
- * from 1997.
- */
 public class Noise {
-    /**
-     * Holds the gradient vectors used for noise calculation.
-     *
-     * The gradient vectors are pre-computed in the constructor.
-     */
     private Vector2[][] gradients;
 
-    /**
-     * Constructor initializing gradient vectors based on the given seed.
-     *
-     * @param seed seed used for gradient vector calculation
-     */
     public Noise(long seed) {
         Random random = new Random(seed);
 
@@ -41,26 +27,14 @@ public class Noise {
         }
     }
 
-    /**
-     * Returns combined noise value at given coordinates.
-     *
-     * The noise value is calculated by overlapping multiple
-     * noise values given by params. This is used to create
-     * various types of noise maps, e.g. flat or rough noise.
-     *
-     * @param x x coordinate of noise
-     * @param y y coordinate of noise
-     * @param params noise paramaters determining octaves, frequency and persistence
-     * @return combined noise value at given coordinates
-     */
     public float get(float x, float y, NoiseParameters params) {
         float val = 0;
         float total = 0;
 
-        float freq = params.getFrequency();
+        float freq = params.frequency;
         float amp = 1;
 
-        for (int i = 0; i < params.getOctaves(); i++) {
+        for (int i = 0; i < params.octaves; i++) {
             val += get(x * freq, y * freq) * amp;
             total += amp;
 
@@ -69,26 +43,12 @@ public class Noise {
             freq *= scale;
 
             amp *= 1f / scale;
-            amp *= params.getPersistence();
+            amp *= params.persistence;
         }
 
         return MathUtils.clamp(val / total, 0, 1);
     }
 
-    /**
-     * Returns noise value at given coordinates.
-     *
-     * The algorithm is based on Ken Perlin's implementation of Perlin Noise.
-     * Pre-computed gradient vectors of the corners of the cell the given coordinates
-     * are calculated. The final noise value is computed by bilinearly interpolating
-     * the dot products of each corner gradient vector and the given coordinates.
-     *
-     * This implementation is adapted to return values from 0 to 1.
-     *
-     * @param x x coordinate of noise
-     * @param y y coordinate of noise
-     * @return noise value at given coordinates
-     */
     private float get(float x, float y) {
         int x0 = MathUtils.floor(x);
         int y0 = MathUtils.floor(y);
@@ -136,18 +96,6 @@ public class Noise {
         return MathUtils.clamp(interpolate(i1, i2, wy) + 0.5f, 0, 1);
     }
 
-    /**
-     * Smoothly interpolates between two values.
-     *
-     * This method interpolates between two values. The interpolation
-     * formula was originally proposed by Ken Perlin to improve
-     * continuity of noise.
-     *
-     * @param from value to interpolate from
-     * @param to value to interpolate to
-     * @param t interpolation position
-     * @return interpolated value
-     */
     private float interpolate(float from, float to, float t) {
         return from + (to - from) * (6 * t * t * t * t * t - 15 * t * t * t * t + 10 * t * t * t);
     }

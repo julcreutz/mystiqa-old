@@ -1,32 +1,65 @@
 package game.main;
 
-import engine.state.State;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 
-/**
- * State type used by {@Link Game}
- *
- * @see Game
- */
-public interface GameState extends State {
-    /**
-     * Used for updating. This is called every frame.
-     *
-     * @param g game instance
-     */
-    void update(Game g);
+public abstract class GameState {
+    public SpriteBatch batch;
+    public OrthographicCamera cam;
+    public FitViewport viewport;
 
-    /**
-     * Used for rendering purposes. This is called
-     * every frame.
-     *
-     * @param g game instance
-     */
-    void render(Game g);
+    public FrameBuffer buffer;
 
-    /**
-     * Called when window is resized.
-     * @param w new window width
-     * @param h new window height
-     */
-    void resize(int w, int h);
+    public void create() {
+        batch = new SpriteBatch();
+        cam = new OrthographicCamera();
+        cam.setToOrtho(false, Game.WIDTH, Game.HEIGHT);
+        viewport = new FitViewport(Game.WIDTH, Game.HEIGHT, cam);
+        viewport.apply();
+    }
+
+    void update(Game g) {
+        cam.update();
+    }
+
+    void render(Game g) {
+        buffer.begin();
+
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+
+        batch.setProjectionMatrix(cam.combined);
+        batch.begin();
+
+        batch.end();
+
+        buffer.end();
+
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+
+        batch.setProjectionMatrix(cam.combined);
+
+        batch.begin();
+        batch.draw(buffer.getColorBufferTexture(), cam.position.x - buffer.getWidth() * .5f, cam.position.y + buffer.getHeight() * .5f, buffer.getWidth(), -buffer.getHeight());
+        batch.end();
+    }
+
+    void resize(int w, int h) {
+        viewport.update(w, h);
+
+        buffer = new FrameBuffer(Pixmap.Format.RGBA8888, Game.WIDTH, Game.HEIGHT, false);
+        buffer.getColorBufferTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+    }
+
+    public void dispose() {
+        batch.dispose();
+        buffer.dispose();
+    }
 }
