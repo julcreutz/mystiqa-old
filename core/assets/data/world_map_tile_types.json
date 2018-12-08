@@ -1,0 +1,44 @@
+[
+  {
+    "id": "Grass",
+    "name": "Grass",
+    "connect": ["Tree"],
+    "sheet": "Grass",
+    "color": "Green"
+  },
+  {
+    "id": "Water",
+    "name": "Water",
+    "connect": [],
+    "sheet": "Water",
+    "color": "Blue"
+  },
+  {
+    "id": "Sand",
+    "name": "Sand",
+    "connect": [],
+    "sheet": "Sand",
+    "color": "Yellow"
+  },
+  {
+    "id": "Tree",
+    "name": "Tree",
+    "connect": [],
+    "sheet": "Tree",
+    "color": "Green"
+  },
+  {
+    "id": "Mountains",
+    "name": "Mountains",
+    "connect": [],
+    "sheet": "Mountains",
+    "color": "Gray"
+  },
+  {
+    "id": "Hills",
+    "name": "Hills",
+    "connect": [],
+    "sheet": "Hills",
+    "color": "Brown"
+  }
+]

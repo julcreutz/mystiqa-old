@@ -1,9 +1,0 @@
-{
-  "actors": [
-    {
-      "id": "Human",
-      "inherit": "Humanoid",
-      "race": "Human"
-    }
-  ]
-}

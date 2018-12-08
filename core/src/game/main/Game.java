@@ -2,6 +2,10 @@ package game.main;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import game.loader.ColorLoader;
+import game.loader.SheetLoader;
+import game.loader.WorldMapEntityTypeLoader;
+import game.loader.WorldMapTileTypeLoader;
 import game.main.world_map.WorldMap;
 
 public class Game extends ApplicationAdapter {
@@ -19,6 +23,11 @@ public class Game extends ApplicationAdapter {
 
 	@Override
 	public void create() {
+		SheetLoader.load();
+		ColorLoader.load();
+		WorldMapTileTypeLoader.load();
+		WorldMapEntityTypeLoader.load();
+
 		WORLD_MAP.create();
 		state = WORLD_MAP;
 	}
@@ -40,6 +49,8 @@ public class Game extends ApplicationAdapter {
 
 	@Override
 	public void dispose() {
+		SheetLoader.dispose();
+
 		WORLD_MAP.dispose();
 	}
 

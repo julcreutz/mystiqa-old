@@ -1,0 +1,44 @@
+[
+  {
+    "id": "Grass",
+    "path": "graphics/grass.png",
+    "splitW": 8,
+    "splitH": 8
+  },
+  {
+    "id": "Water",
+    "path": "graphics/water.png",
+    "splitW": 8,
+    "splitH": 8
+  },
+  {
+    "id": "Sand",
+    "path": "graphics/sand.png",
+    "splitW": 8,
+    "splitH": 8
+  },
+  {
+    "id": "Tree",
+    "path": "graphics/tree.png",
+    "splitW": 8,
+    "splitH": 8
+  },
+  {
+    "id": "Mountains",
+    "path": "graphics/mountains.png",
+    "splitW": 8,
+    "splitH": 8
+  },
+  {
+    "id": "Hills",
+    "path": "graphics/hills.png",
+    "splitW": 8,
+    "splitH": 8
+  },
+  {
+    "id": "Player",
+    "path": "graphics/player.png",
+    "splitW": 8,
+    "splitH": 8
+  }
+]
