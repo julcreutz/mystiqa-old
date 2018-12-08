@@ -3,7 +3,7 @@ package game.loader;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
-import game.main.world_map.WorldMapTileType;
+import game.main.world_map.tile.WorldMapTileType;
 
 import java.util.HashMap;
 
@@ -21,6 +21,8 @@ public class WorldMapTileTypeLoader {
 
             type.sheet = SheetLoader.load(json.getString("sheet"));
             type.color = ColorLoader.load(json.getString("color"));
+
+            type.traversalCost = json.getFloat("traversalCost");
 
             types.put(json.getString("id"), type);
         }

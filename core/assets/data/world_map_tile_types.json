@@ -4,41 +4,47 @@
     "name": "Grass",
     "connect": ["Tree"],
     "sheet": "Grass",
-    "color": "Green"
+    "color": "Green",
+    "traversalCost": 1
   },
   {
     "id": "Water",
     "name": "Water",
     "connect": [],
     "sheet": "Water",
-    "color": "Blue"
+    "color": "Blue",
+    "traversalCost": 16
   },
   {
     "id": "Sand",
     "name": "Sand",
-    "connect": [],
+    "connect": ["Grass"],
     "sheet": "Sand",
-    "color": "Yellow"
+    "color": "Yellow",
+    "traversalCost": 2
   },
   {
     "id": "Tree",
     "name": "Tree",
     "connect": [],
     "sheet": "Tree",
-    "color": "Green"
+    "color": "Green",
+    "traversalCost": 2
   },
   {
     "id": "Mountains",
     "name": "Mountains",
     "connect": [],
     "sheet": "Mountains",
-    "color": "Gray"
+    "color": "Gray",
+    "traversalCost": 8
   },
   {
     "id": "Hills",
     "name": "Hills",
     "connect": [],
     "sheet": "Hills",
-    "color": "Brown"
+    "color": "Brown",
+    "traversalCost": 4
   }
 ]

@@ -1,7 +1,8 @@
-package game.main.world_map;
+package game.main.world_map.tile;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import game.main.world_map.WorldMap;
 
 public class WorldMapTile {
     public WorldMapTileType type;
@@ -92,6 +93,7 @@ public class WorldMapTile {
         batch.setColor(type.color);
         batch.draw(image, x * 8, y * 8);
         batch.setColor(1, 1, 1, 1);
+        batch.setShader(null);
     }
 
     public boolean connect(WorldMap map, int x, int y) {

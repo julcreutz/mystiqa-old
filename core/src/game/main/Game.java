@@ -2,11 +2,14 @@ package game.main;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import game.loader.ColorLoader;
 import game.loader.SheetLoader;
-import game.loader.WorldMapEntityTypeLoader;
+import game.loader.WorldMapPlayerTypeLoader;
 import game.loader.WorldMapTileTypeLoader;
 import game.main.world_map.WorldMap;
+
+import java.util.HashMap;
 
 public class Game extends ApplicationAdapter {
 	public static final String TITLE = "Mystiqa";
@@ -23,10 +26,12 @@ public class Game extends ApplicationAdapter {
 
 	@Override
 	public void create() {
+		ShaderProgram.pedantic = false;
+
 		SheetLoader.load();
 		ColorLoader.load();
 		WorldMapTileTypeLoader.load();
-		WorldMapEntityTypeLoader.load();
+		WorldMapPlayerTypeLoader.load();
 
 		WORLD_MAP.create();
 		state = WORLD_MAP;
