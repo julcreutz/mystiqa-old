@@ -81,7 +81,7 @@ public class WorldMap extends GameState {
                 player.x = MathUtils.lerp(lastNode.x * 8f, nextNode.x * 8f, 1 - moveTime);
                 player.y = MathUtils.lerp(lastNode.y * 8f, nextNode.y * 8f, 1 - moveTime);
 
-                WorldMapTile tile = tiles[MathUtils.floor(player.x / 8f)][MathUtils.floor(player.y / 8f)];
+                WorldMapTile tile = tiles[lastNode.x][lastNode.y];
                 float delta = Game.getDelta() / (tile != null ? tile.type.traversalCost : 1);
 
                 moveTime -= delta * 2f;
