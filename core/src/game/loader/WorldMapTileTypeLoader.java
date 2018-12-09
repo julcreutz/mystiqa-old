@@ -22,6 +22,7 @@ public class WorldMapTileTypeLoader {
             type.sheet = SheetLoader.load(json.getString("sheet"));
             type.color = ColorLoader.load(json.getString("color"));
 
+            type.traversable = json.getBoolean("traversable");
             type.traversalCost = json.getFloat("traversalCost");
 
             types.put(json.getString("id"), type);

@@ -10,6 +10,7 @@ public class WorldMapTileType {
     public TextureRegion[][] sheet;
     public Color color;
 
+    public boolean traversable;
     public float traversalCost;
 
     public boolean connect(WorldMapTileType type) {

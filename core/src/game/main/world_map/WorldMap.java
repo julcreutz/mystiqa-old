@@ -12,6 +12,7 @@ import game.main.GameState;
 import game.main.world_map.entity.WorldMapEntity;
 import game.main.world_map.entity.WorldMapPlayer;
 import game.main.world_map.tile.WorldMapTile;
+import game.main.world_map.tile.WorldMapTileType;
 
 public class WorldMap extends GameState {
     public static final float CAM_SPEED = 5f;
@@ -44,8 +45,12 @@ public class WorldMap extends GameState {
     public void update(Game g) {
         super.update(g);
 
-        float camX = 0;
-        float camY = 0;
+        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+            WorldMapGenerator.generate(this);
+        }
+
+        float camX;
+        float camY;
 
         if (!moving) {
             if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
@@ -66,7 +71,7 @@ public class WorldMap extends GameState {
 
             path = findPath(MathUtils.floor(player.x / 8f), MathUtils.floor(player.y / 8f), cursorX, cursorY);
 
-            if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.F) && path != null) {
                 moving = true;
 
                 lastNode = path.get(0);
@@ -76,7 +81,6 @@ public class WorldMap extends GameState {
             camX = cursorX * 8 + 4;
             camY = cursorY * 8 + 4;
         } else {
-
             if (moveTime > 0) {
                 player.x = MathUtils.lerp(lastNode.x * 8f, nextNode.x * 8f, 1 - moveTime);
                 player.y = MathUtils.lerp(lastNode.y * 8f, nextNode.y * 8f, 1 - moveTime);
@@ -224,7 +228,7 @@ public class WorldMap extends GameState {
                         int xx = curr.x + x;
                         int yy = curr.y + y;
 
-                        if (xx >= 0 && xx < tiles.length && yy >= 0 && yy < tiles[0].length && tiles[xx][yy] != null) {
+                        if (xx >= 0 && xx < tiles.length && yy >= 0 && yy < tiles[0].length && tiles[xx][yy] != null && tiles[xx][yy].type.traversable) {
                             WorldMapNode node = new WorldMapNode(xx, yy);
 
                             // Ignore if node is in closed list
