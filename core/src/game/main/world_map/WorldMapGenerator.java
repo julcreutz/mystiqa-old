@@ -3,13 +3,13 @@ package game.main.world_map;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import game.loader.WorldMapBiomeLoader;
-import game.loader.WorldMapPlayerTypeLoader;
-import game.loader.WorldMapTileTypeLoader;
+import game.loader.*;
 import game.main.world_map.biome.WorldMapBiome;
 import game.main.world_map.biome.WorldMapBiomeTile;
 import game.main.world_map.entity.WorldMapEntity;
 import game.main.world_map.entity.WorldMapPlayer;
+import game.main.world_map.site.WorldMapSite;
+import game.main.world_map.site.WorldMapSiteType;
 import game.main.world_map.tile.WorldMapTile;
 import game.main.world_map.tile.WorldMapTileType;
 import game.noise.Noise;
@@ -101,6 +101,25 @@ public class WorldMapGenerator {
                 x = _x;
                 y = _y;
             }
+        }
+
+        map.sites = new WorldMapSite[map.tiles.length][map.tiles[0].length];
+
+        for (int i = 0; i < 1; i++) {
+            int x;
+            int y;
+
+            do {
+                x = rand.nextInt(map.tiles.length);
+                y = rand.nextInt(map.tiles[0].length);
+            } while (map.tiles[x][y] != null && !map.tiles[x][y].type.name.equals("Grass"));
+
+            WorldMapSiteType type = new WorldMapSiteType();
+            type.sheet = SheetLoader.load("House");
+            type.color = ColorLoader.load("Brown");
+            WorldMapSite site = new WorldMapSite(type, x, y);
+
+            map.sites[x][y] = site;
         }
 
         map.entities = new Array<WorldMapEntity>();

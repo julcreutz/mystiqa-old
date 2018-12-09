@@ -70,5 +70,17 @@
     "path": "graphics/river.png",
     "splitW": 8,
     "splitH": 8
+  },
+  {
+    "id": "House",
+    "path": "graphics/house.png",
+    "splitW": 8,
+    "splitH": 8
+  },
+  {
+    "id": "Font",
+    "path": "graphics/font.png",
+    "splitW": 4,
+    "splitH": 4
   }
 ]

@@ -11,6 +11,7 @@ import game.main.Game;
 import game.main.GameState;
 import game.main.world_map.entity.WorldMapEntity;
 import game.main.world_map.entity.WorldMapPlayer;
+import game.main.world_map.site.WorldMapSite;
 import game.main.world_map.tile.WorldMapTile;
 import game.main.world_map.tile.WorldMapTileType;
 
@@ -19,6 +20,8 @@ public class WorldMap extends GameState {
     public static final float CURSOR_ANIMATION_SPEED = 2.5f;
 
     public WorldMapTile[][] tiles;
+    public WorldMapSite[][] sites;
+
     public Array<WorldMapEntity> entities;
 
     public WorldMapPlayer player;
@@ -43,8 +46,6 @@ public class WorldMap extends GameState {
 
     @Override
     public void update(Game g) {
-        super.update(g);
-
         if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
             WorldMapGenerator.generate(this);
         }
@@ -125,9 +126,21 @@ public class WorldMap extends GameState {
             }
         }
 
+        for (int x = 0; x < sites.length; x++) {
+            for (int y = 0; y < sites[0].length; y++) {
+                WorldMapSite site = sites[x][y];
+
+                if (site != null) {
+                    site.update(this);
+                }
+            }
+        }
+
         for (WorldMapEntity e : entities) {
             e.update(this);
         }
+
+        super.update(g);
     }
 
     @Override
@@ -138,6 +151,16 @@ public class WorldMap extends GameState {
 
                 if (tile != null) {
                     tile.render(batch);
+                }
+            }
+        }
+
+        for (int x = 0; x < sites.length; x++) {
+            for (int y = 0; y < sites[0].length; y++) {
+                WorldMapSite site = sites[x][y];
+
+                if (site != null) {
+                    site.render(batch);
                 }
             }
         }
@@ -170,13 +193,21 @@ public class WorldMap extends GameState {
             e.render(batch);
         }
 
-        TextureRegion[][] cursorSheet = SheetLoader.load("Cursor");
-        TextureRegion cursor = cursorSheet[MathUtils.floor(Game.time * CURSOR_ANIMATION_SPEED) % cursorSheet.length][0];
+        if (!moving && ((cursorX != MathUtils.floor(player.x / 8f) || cursorY != MathUtils.floor(player.y / 8f)) || sites[MathUtils.floor(player.x / 8f)][MathUtils.floor(player.y / 8f)] != null)) {
+            TextureRegion[][] cursorSheet = SheetLoader.load("Cursor");
+            TextureRegion cursor = cursorSheet[MathUtils.floor(Game.time * CURSOR_ANIMATION_SPEED) % cursorSheet.length][0];
 
-        batch.draw(cursor, cursorX * 8 - 8, cursorY * 8 + 8, 4, 4, 8, 8, 1, 1, 0);
-        batch.draw(cursor, cursorX * 8 + 8, cursorY * 8 + 8, 4, 4, 8, 8, 1, 1, 270);
-        batch.draw(cursor, cursorX * 8 + 8, cursorY * 8 - 8, 4, 4, 8, 8, 1, 1, 180);
-        batch.draw(cursor, cursorX * 8 - 8, cursorY * 8 - 8, 4, 4, 8, 8, 1, 1, 90);
+            batch.draw(cursor, cursorX * 8 - 8, cursorY * 8 + 8, 4, 4, 8, 8, 1, 1, 0);
+            batch.draw(cursor, cursorX * 8 + 8, cursorY * 8 + 8, 4, 4, 8, 8, 1, 1, 270);
+            batch.draw(cursor, cursorX * 8 + 8, cursorY * 8 - 8, 4, 4, 8, 8, 1, 1, 180);
+            batch.draw(cursor, cursorX * 8 - 8, cursorY * 8 - 8, 4, 4, 8, 8, 1, 1, 90);
+        }
+
+        WorldMapSite site = sites[cursorX][cursorY];
+
+        if (site != null) {
+            Game.write(batch, "Hateno Village", site.x * 8f + 4, site.y * 8f + 16, true);
+        }
     }
 
     public Array<WorldMapNode> findPath(int x1, int y1, int x2, int y2) {
