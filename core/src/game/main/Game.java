@@ -3,10 +3,7 @@ package game.main;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import game.loader.ColorLoader;
-import game.loader.SheetLoader;
-import game.loader.WorldMapPlayerTypeLoader;
-import game.loader.WorldMapTileTypeLoader;
+import game.loader.*;
 import game.main.world_map.WorldMap;
 
 import java.util.HashMap;
@@ -32,6 +29,7 @@ public class Game extends ApplicationAdapter {
 		ColorLoader.load();
 		WorldMapTileTypeLoader.load();
 		WorldMapPlayerTypeLoader.load();
+		WorldMapBiomeLoader.load();
 
 		WORLD_MAP.create();
 		state = WORLD_MAP;

@@ -3,8 +3,11 @@ package game.main.world_map;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import game.loader.WorldMapBiomeLoader;
 import game.loader.WorldMapPlayerTypeLoader;
 import game.loader.WorldMapTileTypeLoader;
+import game.main.world_map.biome.WorldMapBiome;
+import game.main.world_map.biome.WorldMapBiomeTile;
 import game.main.world_map.entity.WorldMapEntity;
 import game.main.world_map.entity.WorldMapPlayer;
 import game.main.world_map.tile.WorldMapTile;
@@ -39,26 +42,20 @@ public class WorldMapGenerator {
                 float e = getElevation(elevation, ELEVATION, map, x, y);
                 float t = temperature.get(x, y, TEMPERATURE);
 
-                WorldMapTileType type;
+                WorldMapBiome biome = null;
 
-                if (e > .325f) {
-                    if (t > .6f) {
-                        type = WorldMapTileTypeLoader.load("Sand");
-                    } else {
-                        if (e > .55f) {
-                            type = WorldMapTileTypeLoader.load("Mountains");
-                        } else if (e > .475f) {
-                            type = WorldMapTileTypeLoader.load("Hills");
-                        } else if (e > .4f) {
-                            type = WorldMapTileTypeLoader.load("Tree");
-                        } else if (e > .35f) {
-                            type = WorldMapTileTypeLoader.load("Grass");
-                        } else {
-                            type = WorldMapTileTypeLoader.load("Sand");
-                        }
+                for (WorldMapBiome _biome : WorldMapBiomeLoader.loadAll()) {
+                    if (e >= _biome.minElevation && e <= _biome.maxElevation) {
+                        biome = _biome;
                     }
-                } else {
-                    type = WorldMapTileTypeLoader.load("Water");
+                }
+
+                WorldMapTileType type = null;
+
+                for (WorldMapBiomeTile tile : biome.tiles) {
+                    if (e >= tile.minElevation && e <= tile.maxElevation) {
+                        type = tile.type;
+                    }
                 }
 
                 map.tiles[x][y] = new WorldMapTile(type, x, y);
