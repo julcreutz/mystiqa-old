@@ -2,6 +2,7 @@ package game.main.world_map.tile;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import game.loader.palette.PaletteShaderLoader;
 import game.main.world_map.WorldMap;
 
 public class WorldMapTile {
@@ -90,7 +91,8 @@ public class WorldMapTile {
     }
 
     public void render(SpriteBatch batch) {
-        batch.setColor(type.color);
+        //batch.setColor(type.color);
+        batch.setShader(PaletteShaderLoader.load(new String[] {"Brown", "Brown", "Brown", "Brown", "Green"}));
         batch.draw(image, x * 8, y * 8);
         batch.setColor(1, 1, 1, 1);
         batch.setShader(null);
