@@ -1,6 +1,5 @@
 package game.main.world_map.tile;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class WorldMapTileType {
@@ -8,7 +7,7 @@ public class WorldMapTileType {
     public String[] connect;
 
     public TextureRegion[][] sheet;
-    public Color color;
+    public String[] colors;
 
     public boolean traversable;
     public float traversalCost;

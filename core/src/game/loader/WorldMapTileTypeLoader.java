@@ -20,7 +20,7 @@ public class WorldMapTileTypeLoader {
             type.connect = json.get("connect").asStringArray();
 
             type.sheet = SheetLoader.load(json.getString("sheet"));
-            type.color = ColorLoader.load(json.getString("color"));
+            type.colors = json.get("colors").asStringArray();
 
             type.traversable = json.getBoolean("traversable");
             type.traversalCost = json.getFloat("traversalCost");

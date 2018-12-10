@@ -2,9 +2,9 @@
   {
     "id": "Grass",
     "name": "Grass",
-    "connect": ["Tree"],
+    "connect": ["Tree", "River"],
     "sheet": "Grass",
-    "color": "Green",
+    "colors": ["Black", "Green"],
     "traversable": true,
     "traversalCost": 1
   },
@@ -13,7 +13,7 @@
     "name": "Water",
     "connect": [],
     "sheet": "Water",
-    "color": "Blue",
+    "colors": ["Black", "Blue"],
     "traversable": false,
     "traversalCost": 16
   },
@@ -22,7 +22,7 @@
     "name": "Sand",
     "connect": ["Grass"],
     "sheet": "Sand",
-    "color": "Yellow",
+    "colors": ["Black", "Yellow"],
     "traversable": true,
     "traversalCost": 2
   },
@@ -31,7 +31,7 @@
     "name": "Tree",
     "connect": [],
     "sheet": "Tree",
-    "color": "Green",
+    "colors": ["Black", "Green"],
     "traversable": true,
     "traversalCost": 2
   },
@@ -40,7 +40,7 @@
     "name": "Mountains",
     "connect": [],
     "sheet": "Mountains",
-    "color": "Gray",
+    "colors": ["Black", "Green", "Gray"],
     "traversable": true,
     "traversalCost": 8
   },
@@ -49,7 +49,7 @@
     "name": "Hills",
     "connect": [],
     "sheet": "Hills",
-    "color": "Brown",
+    "colors": ["Black", "Green", "Brown"],
     "traversable": true,
     "traversalCost": 4
   },
@@ -58,7 +58,7 @@
     "name": "River",
     "connect": ["Water"],
     "sheet": "River",
-    "color": "Blue",
+    "colors": ["Black", "Green", "Blue"],
     "traversable": true,
     "traversalCost": 4
   }

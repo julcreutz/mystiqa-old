@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
 import game.loader.ColorLoader;
 
+import java.util.Arrays;
+
 public class PaletteShaderLoader {
     private static Array<PaletteShader> shaders;
 
@@ -42,13 +44,17 @@ public class PaletteShaderLoader {
                     "void main() {\n" +
                     "    vec4 c = v_color * texture2D(u_texture, v_texCoords);\n" +
                     "\n" +
+                    "    float r = floor(c.r * 255.0);\n" +
+                    "    float g = floor(c.g * 255.0);\n" +
+                    "    float b = floor(c.b * 255.0);\n" +
+                    "\n" +
                     "    if (c.w > 0) {\n" +
-                    "        if (c.r == 0.0 && c.g == 0.0 && c.b == 0.0) {\n" +
+                    "        if (r == 0.0 && g == 0.0 && b == 0.0) {\n" +
                     "            c.r = " + _colors[0].r + ";\n" +
                     "            c.g = " + _colors[0].g + ";\n" +
                     "            c.b = " + _colors[0].b + ";\n" +
                     "        }\n" +
-                    "        if (c.r == 1.0 && c.g == 1.0 && c.b == 1.0) {\n" +
+                    "        if (r == 255.0 && g == 255.0 && b == 255.0) {\n" +
                     "            c.r = " + _colors[1].r + ";\n" +
                     "            c.g = " + _colors[1].g + ";\n" +
                     "            c.b = " + _colors[1].b + ";\n" +
@@ -69,18 +75,22 @@ public class PaletteShaderLoader {
                     "void main() {\n" +
                     "    vec4 c = v_color * texture2D(u_texture, v_texCoords);\n" +
                     "\n" +
+                    "    float r = floor(c.r * 255.0);\n" +
+                    "    float g = floor(c.g * 255.0);\n" +
+                    "    float b = floor(c.b * 255.0);\n" +
+                    "\n" +
                     "    if (c.w > 0) {\n" +
-                    "        if (c.r == 0.0 && c.g == 0.0 && c.b == 0.0) {\n" +
+                    "        if (r == 0.0 && g == 0.0 && b == 0.0) {\n" +
                     "            c.r = " + _colors[0].r + ";\n" +
                     "            c.g = " + _colors[0].g + ";\n" +
                     "            c.b = " + _colors[0].b + ";\n" +
                     "        }\n" +
-                    "        if (c.r == 0.5 && c.g == 0.5 && c.b == 0.5) {\n" +
+                    "        if (r == 127.0 && g == 127.0 && b == 127.0) {\n" +
                     "            c.r = " + _colors[1].r + ";\n" +
                     "            c.g = " + _colors[1].g + ";\n" +
                     "            c.b = " + _colors[1].b + ";\n" +
                     "        }\n" +
-                    "        if (c.r == 1.0 && c.g == 1.0 && c.b == 1.0) {\n" +
+                    "        if (r == 255.0 && g == 255.0 && b == 255.0) {\n" +
                     "            c.r = " + _colors[2].r + ";\n" +
                     "            c.g = " + _colors[2].g + ";\n" +
                     "            c.b = " + _colors[2].b + ";\n" +
@@ -101,28 +111,32 @@ public class PaletteShaderLoader {
                     "void main() {\n" +
                     "    vec4 c = v_color * texture2D(u_texture, v_texCoords);\n" +
                     "\n" +
+                    "    float r = floor(c.r * 255.0);\n" +
+                    "    float g = floor(c.g * 255.0);\n" +
+                    "    float b = floor(c.b * 255.0);\n" +
+                    "\n" +
                     "    if (c.w > 0) {\n" +
-                    "        if (c.r == 0.0 && c.g == 0.0 && c.b == 0.0) {\n" +
+                    "        if (r == 0.0 && g == 0.0 && b == 0.0) {\n" +
                     "            c.r = " + _colors[0].r + ";\n" +
                     "            c.g = " + _colors[0].g + ";\n" +
                     "            c.b = " + _colors[0].b + ";\n" +
                     "        }\n" +
-                    "        if (c.r == 0.25 && c.g == 0.25 && c.b == 0.25) {\n" +
+                    "        if (r == 63.0 && g == 63.0 && b == 63.0) {\n" +
                     "            c.r = " + _colors[1].r + ";\n" +
                     "            c.g = " + _colors[1].g + ";\n" +
                     "            c.b = " + _colors[1].b + ";\n" +
                     "        }\n" +
-                    "        if (c.r == 0.5 && c.g == 0.5 && c.b == 0.5) {\n" +
+                    "        if (r == 127.0 && g == 127.0 && b == 127.0) {\n" +
                     "            c.r = " + _colors[2].r + ";\n" +
                     "            c.g = " + _colors[2].g + ";\n" +
                     "            c.b = " + _colors[2].b + ";\n" +
                     "        }\n" +
-                    "        if (c.r == 0.75 && c.g == 0.75 && c.b == 0.75) {\n" +
+                    "        if (r == 191.0 && g == 191.0 && b == 191.0) {\n" +
                     "            c.r = " + _colors[3].r + ";\n" +
                     "            c.g = " + _colors[3].g + ";\n" +
                     "            c.b = " + _colors[3].b + ";\n" +
                     "        }\n" +
-                    "        if (c.r == 1.0 && c.g == 1.0 && c.b == 1.0) {\n" +
+                    "        if (r == 255.0 && g == 255.0 && b == 255.0) {\n" +
                     "            c.r = " + _colors[4].r + ";\n" +
                     "            c.g = " + _colors[4].g + ";\n" +
                     "            c.b = " + _colors[4].b + ";\n" +
