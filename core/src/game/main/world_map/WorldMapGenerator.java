@@ -39,7 +39,7 @@ public class WorldMapGenerator {
                 WorldMapBiome biome = getBiome(map, elevation, temperature, x, y);
 
                 float e = getElevation(elevation, ELEVATION, map, x, y);
-                float t = temperature.get(x, y, TEMPERATURE);
+                float t = getTemperature(temperature, TEMPERATURE, map, x, y);
 
                 WorldMapTileType type = null;
 
@@ -133,9 +133,13 @@ public class WorldMapGenerator {
         return noise.get(x, y, elevation) * (float) Math.pow((1 - (new Vector2(x, y).sub(map.tiles.length * .5f, map.tiles[0].length * .5f).len() / (float) (Math.sqrt(map.tiles.length * map.tiles.length + map.tiles[0].length * map.tiles[0].length) * .5f))), FALL_OFF);
     }
 
+    public static float getTemperature(Noise noise, NoiseParameters temperature, WorldMap map, int x, int y) {
+        return (1 - (float) Math.pow(Math.abs(y - map.tiles[0].length / 2) / (map.tiles[0].length * .5f), .25f) * noise.get(x, y, temperature));
+    }
+
     public static WorldMapBiome getBiome(WorldMap map, Noise elevation, Noise temperature, int x, int y) {
         float e = getElevation(elevation, ELEVATION, map, x, y);
-        float t = temperature.get(x, y, TEMPERATURE);
+        float t = getTemperature(temperature, TEMPERATURE, map, x, y);
 
         WorldMapBiome biome = null;
 

@@ -55,21 +55,21 @@
     "minElevation": 0.475,
     "maxElevation": 1,
     "minTemperature": 0,
-    "maxTemperature": 0.7,
-    "riverDensity": 0.05,
+    "maxTemperature": 1,
+    "riverDensity": 0.025,
     "tiles": [
       {
         "minElevation": 0.475,
         "maxElevation": 0.55,
         "minTemperature": 0,
-        "maxTemperature": 0.7,
+        "maxTemperature": 1,
         "type": "Hills"
       },
       {
         "minElevation": 0.55,
         "maxElevation": 1,
         "minTemperature": 0,
-        "maxTemperature": 0.7,
+        "maxTemperature": 1,
         "type": "Mountains"
       }
     ]
@@ -77,14 +77,14 @@
   {
     "id": "Desert",
     "minElevation": 0.325,
-    "maxElevation": 1,
+    "maxElevation": 0.475,
     "minTemperature": 0.7,
     "maxTemperature": 1,
     "riverDensity": 0,
     "tiles": [
       {
         "minElevation": 0.325,
-        "maxElevation": 1,
+        "maxElevation": 0.475,
         "minTemperature": 0.7,
         "maxTemperature": 1,
         "type": "Sand"
