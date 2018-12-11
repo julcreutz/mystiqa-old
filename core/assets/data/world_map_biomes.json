@@ -3,34 +3,32 @@
     "id": "Ocean",
     "minElevation": 0,
     "maxElevation": 0.325,
+    "minTemperature": 0,
+    "maxTemperature": 1,
+    "riverDensity": 0,
     "tiles": [
       {
         "minElevation": 0,
         "maxElevation": 0.325,
+        "minTemperature": 0,
+        "maxTemperature": 1,
         "type": "Water"
       }
     ]
   },
   {
-    "id": "Beach",
+    "id": "Plains",
     "minElevation": 0.325,
-    "maxElevation": 0.35,
+    "maxElevation": 0.4,
+    "minTemperature": 0,
+    "maxTemperature": 0.7,
+    "riverDensity": 0,
     "tiles": [
       {
         "minElevation": 0.325,
-        "maxElevation": 0.35,
-        "type": "Sand"
-      }
-    ]
-  },
-  {
-    "id": "Plains",
-    "minElevation": 0.35,
-    "maxElevation": 0.4,
-    "tiles": [
-      {
-        "minElevation": 0.35,
         "maxElevation": 0.4,
+        "minTemperature": 0,
+        "maxTemperature": 0.7,
         "type": "Grass"
       }
     ]
@@ -39,10 +37,15 @@
     "id": "Forest",
     "minElevation": 0.4,
     "maxElevation": 0.475,
+    "minTemperature": 0,
+    "maxTemperature": 0.7,
+    "riverDensity": 0.01,
     "tiles": [
       {
         "minElevation": 0.4,
         "maxElevation": 0.475,
+        "minTemperature": 0,
+        "maxTemperature": 0.7,
         "type": "Tree"
       }
     ]
@@ -51,16 +54,40 @@
     "id": "Mountains",
     "minElevation": 0.475,
     "maxElevation": 1,
+    "minTemperature": 0,
+    "maxTemperature": 0.7,
+    "riverDensity": 0.05,
     "tiles": [
       {
         "minElevation": 0.475,
         "maxElevation": 0.55,
+        "minTemperature": 0,
+        "maxTemperature": 0.7,
         "type": "Hills"
       },
       {
         "minElevation": 0.55,
         "maxElevation": 1,
+        "minTemperature": 0,
+        "maxTemperature": 0.7,
         "type": "Mountains"
+      }
+    ]
+  },
+  {
+    "id": "Desert",
+    "minElevation": 0.325,
+    "maxElevation": 1,
+    "minTemperature": 0.7,
+    "maxTemperature": 1,
+    "riverDensity": 0,
+    "tiles": [
+      {
+        "minElevation": 0.325,
+        "maxElevation": 1,
+        "minTemperature": 0.7,
+        "maxTemperature": 1,
+        "type": "Sand"
       }
     ]
   }

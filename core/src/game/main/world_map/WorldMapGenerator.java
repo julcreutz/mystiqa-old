@@ -23,9 +23,6 @@ public class WorldMapGenerator {
 
     public static final float FALL_OFF = .75f;
 
-    public static final int MIN_RIVERS = 3;
-    public static final int MAX_RIVERS = 7;
-
     public static final NoiseParameters ELEVATION = new NoiseParameters(3, .05f, 1);
     public static final NoiseParameters TEMPERATURE = new NoiseParameters(6, .05f, 1);
 
@@ -39,21 +36,15 @@ public class WorldMapGenerator {
 
         for (int x = 0; x < map.tiles.length; x++) {
             for (int y = 0; y < map.tiles[0].length; y++) {
+                WorldMapBiome biome = getBiome(map, elevation, temperature, x, y);
+
                 float e = getElevation(elevation, ELEVATION, map, x, y);
                 float t = temperature.get(x, y, TEMPERATURE);
-
-                WorldMapBiome biome = null;
-
-                for (WorldMapBiome _biome : WorldMapBiomeLoader.loadAll()) {
-                    if (e >= _biome.minElevation && e <= _biome.maxElevation) {
-                        biome = _biome;
-                    }
-                }
 
                 WorldMapTileType type = null;
 
                 for (WorldMapBiomeTile tile : biome.tiles) {
-                    if (e >= tile.minElevation && e <= tile.maxElevation) {
+                    if (e >= tile.minElevation && e <= tile.maxElevation && t >= tile.minTemperature && t <= tile.maxTemperature) {
                         type = tile.type;
                     }
                 }
@@ -62,44 +53,39 @@ public class WorldMapGenerator {
             }
         }
 
-        for (int i = 0; i < MIN_RIVERS + rand.nextInt(MAX_RIVERS - MIN_RIVERS + 1); i++) {
-            int x;
-            int y;
+        for (int x = 0; x < map.tiles.length; x++) {
+            for (int y = 0; y < map.tiles[0].length; y++) {
+                if (rand.nextFloat() <= getBiome(map, elevation, temperature, x, y).riverDensity) {
+                    int rx = x;
+                    int ry = y;
 
-            int steps = 0;
+                    while (map.tiles[rx][ry] != null && !map.tiles[rx][ry].type.name.equals("Water")) {
+                        map.tiles[rx][ry].type = WorldMapTileTypeLoader.load("River");
 
-            do {
-                x = rand.nextInt(map.tiles.length);
-                y = rand.nextInt(map.tiles[0].length);
+                        float low = getElevation(elevation, ELEVATION, map, rx, ry);
 
-                steps++;
-            } while (map.tiles[x][y] != null && !map.tiles[x][y].type.name.equals(steps > 150 ? "Grass" : steps > 100 ? "Tree" : (steps > 50 ? "Hills" : "Mountains")));
+                        int _x = 0;
+                        int _y = 0;
 
-            while (map.tiles[x][y] != null && !map.tiles[x][y].type.name.equals("Water")) {
-                map.tiles[x][y].type = WorldMapTileTypeLoader.load("River");
+                        for (int xx = -1; xx <= 1; xx++) {
+                            for (int yy = -1; yy <= 1; yy++) {
+                                if ((xx != 0 || yy != 0) && xx * yy == 0 && map.tiles[rx][ry] != null) {
+                                    float e = getElevation(elevation, ELEVATION, map, rx + xx, ry + yy);
 
-                float low = getElevation(elevation, ELEVATION, map, x, y);
+                                    if (e < low) {
+                                        low = e;
 
-                int _x = 0;
-                int _y = 0;
-
-                for (int xx = -1; xx <= 1; xx++) {
-                    for (int yy = -1; yy <= 1; yy++) {
-                        if ((xx != 0 || yy != 0) && xx * yy == 0 && map.tiles[x][y] != null) {
-                            float e = getElevation(elevation, ELEVATION, map, x + xx, y + yy);
-
-                            if (e < low) {
-                                low = e;
-
-                                _x = x + xx;
-                                _y = y + yy;
+                                        _x = rx + xx;
+                                        _y = ry + yy;
+                                    }
+                                }
                             }
                         }
+
+                        rx = _x;
+                        ry = _y;
                     }
                 }
-
-                x = _x;
-                y = _y;
             }
         }
 
@@ -145,5 +131,20 @@ public class WorldMapGenerator {
 
     public static float getElevation(Noise noise, NoiseParameters elevation, WorldMap map, int x, int y) {
         return noise.get(x, y, elevation) * (float) Math.pow((1 - (new Vector2(x, y).sub(map.tiles.length * .5f, map.tiles[0].length * .5f).len() / (float) (Math.sqrt(map.tiles.length * map.tiles.length + map.tiles[0].length * map.tiles[0].length) * .5f))), FALL_OFF);
+    }
+
+    public static WorldMapBiome getBiome(WorldMap map, Noise elevation, Noise temperature, int x, int y) {
+        float e = getElevation(elevation, ELEVATION, map, x, y);
+        float t = temperature.get(x, y, TEMPERATURE);
+
+        WorldMapBiome biome = null;
+
+        for (WorldMapBiome _biome : WorldMapBiomeLoader.loadAll()) {
+            if (e >= _biome.minElevation && e <= _biome.maxElevation && t >= _biome.minTemperature && t <= _biome.maxTemperature) {
+                biome = _biome;
+            }
+        }
+
+        return biome;
     }
 }

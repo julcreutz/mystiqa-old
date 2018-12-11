@@ -85,7 +85,7 @@ public class PaletteShaderLoader {
                     "            c.g = " + _colors[0].g + ";\n" +
                     "            c.b = " + _colors[0].b + ";\n" +
                     "        }\n" +
-                    "        if (r == 127.0 && g == 127.0 && b == 127.0) {\n" +
+                    "        if (r == 128.0 && g == 128.0 && b == 128.0) {\n" +
                     "            c.r = " + _colors[1].r + ";\n" +
                     "            c.g = " + _colors[1].g + ";\n" +
                     "            c.b = " + _colors[1].b + ";\n" +
@@ -121,17 +121,17 @@ public class PaletteShaderLoader {
                     "            c.g = " + _colors[0].g + ";\n" +
                     "            c.b = " + _colors[0].b + ";\n" +
                     "        }\n" +
-                    "        if (r == 63.0 && g == 63.0 && b == 63.0) {\n" +
+                    "        if (r == 64.0 && g == 64.0 && b == 64.0) {\n" +
                     "            c.r = " + _colors[1].r + ";\n" +
                     "            c.g = " + _colors[1].g + ";\n" +
                     "            c.b = " + _colors[1].b + ";\n" +
                     "        }\n" +
-                    "        if (r == 127.0 && g == 127.0 && b == 127.0) {\n" +
+                    "        if (r == 128.0 && g == 128.0 && b == 128.0) {\n" +
                     "            c.r = " + _colors[2].r + ";\n" +
                     "            c.g = " + _colors[2].g + ";\n" +
                     "            c.b = " + _colors[2].b + ";\n" +
                     "        }\n" +
-                    "        if (r == 191.0 && g == 191.0 && b == 191.0) {\n" +
+                    "        if (r == 192.0 && g == 192.0 && b == 192.0) {\n" +
                     "            c.r = " + _colors[3].r + ";\n" +
                     "            c.g = " + _colors[3].g + ";\n" +
                     "            c.b = " + _colors[3].b + ";\n" +

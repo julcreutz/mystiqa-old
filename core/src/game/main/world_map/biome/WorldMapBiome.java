@@ -6,6 +6,11 @@ public class WorldMapBiome {
     public float minElevation;
     public float maxElevation;
 
+    public float minTemperature;
+    public float maxTemperature;
+
+    public float riverDensity;
+
     public Array<WorldMapBiomeTile> tiles;
 
     public WorldMapBiome() {
