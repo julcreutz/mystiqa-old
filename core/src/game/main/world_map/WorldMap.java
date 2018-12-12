@@ -19,6 +19,8 @@ public class WorldMap extends GameState {
     public static final float CAM_SPEED = 5f;
     public static final float CURSOR_ANIMATION_SPEED = 2.5f;
 
+    public WorldMapGenerator generator;
+
     public WorldMapTile[][] tiles;
     public WorldMapSite[][] sites;
 
@@ -41,13 +43,14 @@ public class WorldMap extends GameState {
     public void create() {
         super.create();
 
-        WorldMapGenerator.generate(this);
+        generator = new WorldMapGenerator(this);
+        generator.generate();
     }
 
     @Override
     public void update(Game g) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
-            WorldMapGenerator.generate(this);
+            generator.generate();
         }
 
         float camX;
@@ -113,8 +116,8 @@ public class WorldMap extends GameState {
             camY = player.y + 4;
         }
 
-        cam.position.x = MathUtils.clamp(MathUtils.lerp(cam.position.x, camX, Game.getDelta() * CAM_SPEED), Game.WIDTH * .5f, tiles.length * 8 - Game.WIDTH * .5f);
-        cam.position.y = MathUtils.clamp(MathUtils.lerp(cam.position.y, camY, Game.getDelta() * CAM_SPEED), Game.HEIGHT * .5f, tiles[0].length * 8 - Game.HEIGHT * .5f);
+        cam.position.x = MathUtils.clamp(MathUtils.lerp(cam.position.x, camX, Game.getDelta() * CAM_SPEED), Game.WIDTH * .5f, (tiles.length - 1) * 8 - Game.WIDTH * .5f);
+        cam.position.y = MathUtils.clamp(MathUtils.lerp(cam.position.y, camY, Game.getDelta() * CAM_SPEED), Game.HEIGHT * .5f, (tiles[0].length - 1) * 8 - Game.HEIGHT * .5f);
 
         for (int x = 0; x < tiles.length; x++) {
             for (int y = 0; y < tiles[0].length; y++) {
@@ -145,8 +148,14 @@ public class WorldMap extends GameState {
 
     @Override
     public void renderToBuffer() {
-        for (int x = 0; x < tiles.length; x++) {
-            for (int y = 0; y < tiles[0].length; y++) {
+        int x0 = (int) MathUtils.clamp((cam.position.x - 72) / 8, 0, tiles.length - 1);
+        int x1 = (int) MathUtils.clamp((cam.position.x + 72) / 8 + 1, 0, tiles.length - 1);
+
+        int y0 = (int) MathUtils.clamp((cam.position.y - 36) / 8, 0, tiles[0].length - 1);
+        int y1 = (int) MathUtils.clamp((cam.position.y + 36) / 8 + 1, 0, tiles[0].length - 1);
+
+        for (int x = x0; x < x1; x++) {
+            for (int y = y0; y < y1; y++) {
                 WorldMapTile tile = tiles[x][y];
 
                 if (tile != null) {
@@ -155,8 +164,8 @@ public class WorldMap extends GameState {
             }
         }
 
-        for (int x = 0; x < sites.length; x++) {
-            for (int y = 0; y < sites[0].length; y++) {
+        for (int x = x0; x < x1; x++) {
+            for (int y = y0; y < y1; y++) {
                 WorldMapSite site = sites[x][y];
 
                 if (site != null) {

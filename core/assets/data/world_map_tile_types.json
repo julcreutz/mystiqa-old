@@ -2,11 +2,20 @@
   {
     "id": "Grass",
     "name": "Grass",
-    "connect": ["Tree", "River"],
+    "connect": ["Tree", "Hills", "Mountains", "River"],
     "sheet": "Grass",
     "colors": ["Black", "Green"],
     "traversable": true,
     "traversalCost": 1
+  },
+  {
+    "id": "SnowyGrass",
+    "name": "SnowyGrass",
+    "connect": ["Snowy Tree", "Snowy Hills", "Snowy Mountains", "River"],
+    "sheet": "Grass",
+    "colors": ["Black", "White"],
+    "traversable": true,
+    "traversalCost": 2
   },
   {
     "id": "Water",
@@ -36,6 +45,15 @@
     "traversalCost": 2
   },
   {
+    "id": "SnowySand",
+    "name": "Snowy Sand",
+    "connect": ["Grass"],
+    "sheet": "Sand",
+    "colors": ["Black", "White"],
+    "traversable": true,
+    "traversalCost": 4
+  },
+  {
     "id": "Tree",
     "name": "Tree",
     "connect": [],
@@ -43,6 +61,15 @@
     "colors": ["Black", "Green"],
     "traversable": true,
     "traversalCost": 2
+  },
+  {
+    "id": "SnowyTree",
+    "name": "Snowy Tree",
+    "connect": [],
+    "sheet": "Tree",
+    "colors": ["Black", "White"],
+    "traversable": true,
+    "traversalCost": 4
   },
   {
     "id": "Mountains",
@@ -54,6 +81,15 @@
     "traversalCost": 8
   },
   {
+    "id": "SnowyMountains",
+    "name": "Snowy Mountains",
+    "connect": [],
+    "sheet": "Mountains",
+    "colors": ["Black", "White", "Gray"],
+    "traversable": true,
+    "traversalCost": 16
+  },
+  {
     "id": "Hills",
     "name": "Hills",
     "connect": [],
@@ -61,6 +97,15 @@
     "colors": ["Black", "Green", "Brown"],
     "traversable": true,
     "traversalCost": 4
+  },
+  {
+    "id": "SnowyHills",
+    "name": "Snowy Hills",
+    "connect": [],
+    "sheet": "Hills",
+    "colors": ["Black", "White", "Brown"],
+    "traversable": true,
+    "traversalCost": 8
   },
   {
     "id": "River",
