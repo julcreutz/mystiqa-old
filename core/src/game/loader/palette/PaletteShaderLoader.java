@@ -24,7 +24,10 @@ public class PaletteShaderLoader {
         Color[] _colors = new Color[colors.length];
 
         for (int i = 0; i < colors.length; i++) {
+            System.out.print(colors[i]);
             _colors[i] = ColorLoader.load(colors[i]);
+            System.out.print(" " + _colors[i]);
+            System.out.println();
         }
 
         PaletteShader shader = new PaletteShader();
@@ -53,8 +56,7 @@ public class PaletteShaderLoader {
                     "            c.r = " + _colors[0].r + ";\n" +
                     "            c.g = " + _colors[0].g + ";\n" +
                     "            c.b = " + _colors[0].b + ";\n" +
-                    "        }\n" +
-                    "        if (r == 255.0 && g == 255.0 && b == 255.0) {\n" +
+                    "        } else if (r == 255.0 && g == 255.0 && b == 255.0) {\n" +
                     "            c.r = " + _colors[1].r + ";\n" +
                     "            c.g = " + _colors[1].g + ";\n" +
                     "            c.b = " + _colors[1].b + ";\n" +
@@ -84,13 +86,11 @@ public class PaletteShaderLoader {
                     "            c.r = " + _colors[0].r + ";\n" +
                     "            c.g = " + _colors[0].g + ";\n" +
                     "            c.b = " + _colors[0].b + ";\n" +
-                    "        }\n" +
-                    "        if (r == 128.0 && g == 128.0 && b == 128.0) {\n" +
+                    "        } else if (r == 128.0 && g == 128.0 && b == 128.0) {\n" +
                     "            c.r = " + _colors[1].r + ";\n" +
                     "            c.g = " + _colors[1].g + ";\n" +
                     "            c.b = " + _colors[1].b + ";\n" +
-                    "        }\n" +
-                    "        if (r == 255.0 && g == 255.0 && b == 255.0) {\n" +
+                    "        } else if (r == 255.0 && g == 255.0 && b == 255.0) {\n" +
                     "            c.r = " + _colors[2].r + ";\n" +
                     "            c.g = " + _colors[2].g + ";\n" +
                     "            c.b = " + _colors[2].b + ";\n" +
@@ -99,7 +99,7 @@ public class PaletteShaderLoader {
                     "\n" +
                     "    gl_FragColor = c;\n" +
                     "}";
-        } else if (colors.length == 5) {
+        } else if (colors.length == 4) {
             frag = "#ifdef GL_ES\n" +
                     "    precision mediump float;\n" +
                     "#endif\n" +
@@ -120,26 +120,18 @@ public class PaletteShaderLoader {
                     "            c.r = " + _colors[0].r + ";\n" +
                     "            c.g = " + _colors[0].g + ";\n" +
                     "            c.b = " + _colors[0].b + ";\n" +
-                    "        }\n" +
-                    "        if (r == 64.0 && g == 64.0 && b == 64.0) {\n" +
+                    "        } else if (r == 64.0 && g == 64.0 && b == 64.0) {\n" +
                     "            c.r = " + _colors[1].r + ";\n" +
                     "            c.g = " + _colors[1].g + ";\n" +
                     "            c.b = " + _colors[1].b + ";\n" +
-                    "        }\n" +
-                    "        if (r == 128.0 && g == 128.0 && b == 128.0) {\n" +
+                    "        } else if (r == 128.0 && g == 128.0 && b == 128.0) {\n" +
                     "            c.r = " + _colors[2].r + ";\n" +
                     "            c.g = " + _colors[2].g + ";\n" +
                     "            c.b = " + _colors[2].b + ";\n" +
-                    "        }\n" +
-                    "        if (r == 192.0 && g == 192.0 && b == 192.0) {\n" +
+                    "        } else if (r == 255.0 && g == 255.0 && b == 255.0) {\n" +
                     "            c.r = " + _colors[3].r + ";\n" +
                     "            c.g = " + _colors[3].g + ";\n" +
                     "            c.b = " + _colors[3].b + ";\n" +
-                    "        }\n" +
-                    "        if (r == 255.0 && g == 255.0 && b == 255.0) {\n" +
-                    "            c.r = " + _colors[4].r + ";\n" +
-                    "            c.g = " + _colors[4].g + ";\n" +
-                    "            c.b = " + _colors[4].b + ";\n" +
                     "        }\n" +
                     "    }\n" +
                     "\n" +

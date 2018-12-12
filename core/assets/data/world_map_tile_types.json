@@ -3,17 +3,17 @@
     "id": "Grass",
     "name": "Grass",
     "connect": ["Tree", "Hills", "Mountains", "River"],
-    "sheet": "Grass",
-    "colors": ["Black", "Green"],
+    "sheet": "Ice",
+    "colors": ["Black", "Blue", "Green", "Green"],
     "traversable": true,
     "traversalCost": 1
   },
   {
     "id": "SnowyGrass",
-    "name": "SnowyGrass",
-    "connect": ["Snowy Tree", "Snowy Hills", "Snowy Mountains", "River"],
-    "sheet": "Grass",
-    "colors": ["Black", "White"],
+    "name": "Snowy Grass",
+    "connect": ["Snowy Tree", "Snowy Hills", "Snowy Mountains", "River", "Ice"],
+    "sheet": "Ice",
+    "colors": ["Black", "Blue", "White", "White"],
     "traversable": true,
     "traversalCost": 2
   },
@@ -29,9 +29,9 @@
   {
     "id": "Ice",
     "name": "Ice",
-    "connect": [],
-    "sheet": "Water",
-    "colors": ["Black", "LightBlue"],
+    "connect": ["Snowy Grass", "Snowy Tree", "Snowy Hills", "Snowy Mountains"],
+    "sheet": "Ice",
+    "colors": ["Black", "Blue", "White", "LightBlue"],
     "traversable": true,
     "traversalCost": 2
   },
@@ -39,8 +39,8 @@
     "id": "Sand",
     "name": "Sand",
     "connect": ["Grass"],
-    "sheet": "Sand",
-    "colors": ["Black", "Yellow"],
+    "sheet": "Ice",
+    "colors": ["Black", "Blue", "Yellow", "Yellow"],
     "traversable": true,
     "traversalCost": 2
   },
@@ -111,8 +111,8 @@
     "id": "River",
     "name": "River",
     "connect": ["Water"],
-    "sheet": "River",
-    "colors": ["Black", "Green", "Blue"],
+    "sheet": "Ice",
+    "colors": ["Black", "Green", "Blue", "Blue"],
     "traversable": true,
     "traversalCost": 4
   }

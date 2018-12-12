@@ -37,6 +37,7 @@
         "riverDensity": 0,
         "type": "Water"
       },
+
       {
         "minElevation": 0.425,
         "maxElevation": 0.525,
@@ -302,13 +303,13 @@
         "minElevation": 0.4,
         "maxElevation": 0.45,
         "riverDensity": 0,
-        "type": "Ice"
+        "type": "Water"
       },
       {
         "minElevation": 0.45,
         "maxElevation": 1,
         "riverDensity": 0,
-        "type": "SnowySand"
+        "type": "Sand"
       }
     ]
   }

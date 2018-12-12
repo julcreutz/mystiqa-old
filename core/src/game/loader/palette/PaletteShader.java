@@ -11,16 +11,8 @@ public class PaletteShader {
             return false;
         }
 
-        for (String color : this.colors) {
-            boolean has = false;
-
-            for (String _color : colors) {
-                if (color.equals(_color)) {
-                    has = true;
-                }
-            }
-
-            if (!has) {
+        for (int i = 0; i < colors.length; i++) {
+            if (!colors[i].equals(this.colors[i])) {
                 return false;
             }
         }

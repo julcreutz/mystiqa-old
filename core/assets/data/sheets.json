@@ -82,5 +82,11 @@
     "path": "graphics/font.png",
     "splitW": 4,
     "splitH": 4
+  },
+  {
+    "id": "Ice",
+    "path": "graphics/ice.png",
+    "splitW": 8,
+    "splitH": 8
   }
 ]
