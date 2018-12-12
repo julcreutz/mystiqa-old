@@ -18,22 +18,13 @@ public class WorldMapBiomeLoader {
         for (JsonValue json : new JsonReader().parse(Gdx.files.internal("data/world_map_biomes.json"))) {
             WorldMapBiome biome = new WorldMapBiome();
 
-            biome.minElevation = json.getFloat("minElevation");
-            biome.maxElevation = json.getFloat("maxElevation");
-
-            biome.minTemperature = json.getFloat("minTemperature");
-            biome.maxTemperature = json.getFloat("maxTemperature");
-
-            biome.riverDensity = json.getFloat("riverDensity");
-
             for (JsonValue tile : json.get("tiles")) {
                 WorldMapBiomeTile _tile = new WorldMapBiomeTile();
 
                 _tile.minElevation = tile.getFloat("minElevation");
                 _tile.maxElevation = tile.getFloat("maxElevation");
 
-                _tile.minTemperature = tile.getFloat("minTemperature");
-                _tile.maxTemperature = tile.getFloat("maxTemperature");
+                _tile.riverDensity = tile.getFloat("riverDensity");
 
                 _tile.type = WorldMapTileTypeLoader.load(tile.getString("type"));
 

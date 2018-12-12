@@ -6,8 +6,7 @@ public class WorldMapBiomeTile {
     public float minElevation;
     public float maxElevation;
 
-    public float minTemperature;
-    public float maxTemperature;
+    public float riverDensity;
 
     public WorldMapTileType type;
 }

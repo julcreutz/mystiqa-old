@@ -18,6 +18,15 @@
     "traversalCost": 16
   },
   {
+    "id": "Ice",
+    "name": "Ice",
+    "connect": [],
+    "sheet": "Water",
+    "colors": ["Black", "LightBlue"],
+    "traversable": true,
+    "traversalCost": 2
+  },
+  {
     "id": "Sand",
     "name": "Sand",
     "connect": ["Grass"],
