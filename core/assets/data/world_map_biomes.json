@@ -11,24 +11,6 @@
     ]
   },
   {
-    "id": "Frozen Ocean",
-    "riverDensity": 0,
-    "tiles": [
-      {
-        "minElevation": 0,
-        "maxElevation": 0.25,
-        "riverDensity": 0,
-        "type": "Water"
-      },
-      {
-        "minElevation": 0.25,
-        "maxElevation": 1,
-        "riverDensity": 0,
-        "type": "Ice"
-      }
-    ]
-  },
-  {
     "id": "Plains",
     "tiles": [
       {
@@ -128,13 +110,13 @@
       {
         "minElevation": 0.525,
         "maxElevation": 0.55,
-        "riverDensity": 0.05,
+        "riverDensity": 0.025,
         "type": "Hills"
       },
       {
         "minElevation": 0.55,
         "maxElevation": 1,
-        "riverDensity": 0.1,
+        "riverDensity": 0.05,
         "type": "Mountains"
       }
     ]

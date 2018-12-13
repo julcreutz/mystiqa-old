@@ -148,11 +148,11 @@ public class WorldMap extends GameState {
 
     @Override
     public void renderToBuffer() {
-        int x0 = (int) MathUtils.clamp((cam.position.x - 72) / 8, 0, tiles.length - 1);
-        int x1 = (int) MathUtils.clamp((cam.position.x + 72) / 8 + 1, 0, tiles.length - 1);
+        int x0 = (int) MathUtils.clamp((cam.position.x - 72) / 8 - 1000, 0, tiles.length - 1);
+        int x1 = (int) MathUtils.clamp((cam.position.x + 72) / 8 + 1000, 0, tiles.length - 1);
 
-        int y0 = (int) MathUtils.clamp((cam.position.y - 36) / 8, 0, tiles[0].length - 1);
-        int y1 = (int) MathUtils.clamp((cam.position.y + 36) / 8 + 1, 0, tiles[0].length - 1);
+        int y0 = (int) MathUtils.clamp((cam.position.y - 36) / 8 - 1000, 0, tiles[0].length - 1);
+        int y1 = (int) MathUtils.clamp((cam.position.y + 36) / 8 + 1000, 0, tiles[0].length - 1);
 
         for (int x = x0; x < x1; x++) {
             for (int y = y0; y < y1; y++) {

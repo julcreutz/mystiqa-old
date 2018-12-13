@@ -2,7 +2,7 @@
   {
     "id": "Grass",
     "name": "Grass",
-    "connect": ["Tree", "Hills", "Mountains", "River"],
+    "connect": ["Tree", "Hills", "Mountains", "River", "Sand"],
     "sheet": "Ice",
     "colors": ["Black", "Blue", "Green", "Green"],
     "traversable": true,

@@ -24,10 +24,7 @@ public class PaletteShaderLoader {
         Color[] _colors = new Color[colors.length];
 
         for (int i = 0; i < colors.length; i++) {
-            System.out.print(colors[i]);
             _colors[i] = ColorLoader.load(colors[i]);
-            System.out.print(" " + _colors[i]);
-            System.out.println();
         }
 
         PaletteShader shader = new PaletteShader();
