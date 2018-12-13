@@ -1,298 +1,32 @@
 [
   {
     "id": "Ocean",
-    "tiles": [
-      {
-        "minElevation": 0,
-        "maxElevation": 1,
-        "riverDensity": 0,
-        "type": "Water"
-      }
-    ]
+    "type": "Water",
+    "minElevation": 0,
+    "maxElevation": 0.4375
+  },
+  {
+    "id": "Beach",
+    "type": "Sand",
+    "minElevation": 0.4375,
+    "maxElevation": 0.45
   },
   {
     "id": "Plains",
-    "tiles": [
-      {
-        "minElevation": 0,
-        "maxElevation": 0.425,
-        "riverDensity": 0,
-        "type": "Water"
-      },
-
-      {
-        "minElevation": 0.425,
-        "maxElevation": 0.525,
-        "riverDensity": 0,
-        "type": "Grass"
-      },
-      {
-        "minElevation": 0.525,
-        "maxElevation": 1,
-        "riverDensity": 0,
-        "type": "Tree"
-      }
-    ]
+    "type": "Grass",
+    "minElevation": 0.45,
+    "maxElevation": 0.5
+  },
+  {
+    "id": "Forest",
+    "type": "Tree",
+    "minElevation": 0.5,
+    "maxElevation": 0.6
   },
   {
     "id": "Mountains",
-    "tiles": [
-      {
-        "minElevation": 0,
-        "maxElevation": 0.425,
-        "riverDensity": 0,
-        "type": "Water"
-      },
-      {
-        "minElevation": 0.425,
-        "maxElevation": 0.475,
-        "riverDensity": 0,
-        "type": "Grass"
-      },
-      {
-        "minElevation": 0.475,
-        "maxElevation": 0.55,
-        "riverDensity": 0.05,
-        "type": "Hills"
-      },
-      {
-        "minElevation": 0.55,
-        "maxElevation": 1,
-        "riverDensity": 0.1,
-        "type": "Mountains"
-      }
-    ]
-  },
-  {
-    "id": "Forested Plains",
-    "tiles": [
-      {
-        "minElevation": 0,
-        "maxElevation": 0.425,
-        "riverDensity": 0,
-        "type": "Water"
-      },
-      {
-        "minElevation": 0.425,
-        "maxElevation": 0.475,
-        "riverDensity": 0,
-        "type": "Grass"
-      },
-      {
-        "minElevation": 0.475,
-        "maxElevation": 1,
-        "riverDensity": 0.05,
-        "type": "Tree"
-      }
-    ]
-  },
-  {
-    "id": "Forested Mountains",
-    "tiles": [
-      {
-        "minElevation": 0,
-        "maxElevation": 0.425,
-        "riverDensity": 0,
-        "type": "Water"
-      },
-      {
-        "minElevation": 0.425,
-        "maxElevation": 0.475,
-        "riverDensity": 0,
-        "type": "Grass"
-      },
-      {
-        "minElevation": 0.475,
-        "maxElevation": 0.525,
-        "riverDensity": 0,
-        "type": "Tree"
-      },
-      {
-        "minElevation": 0.525,
-        "maxElevation": 0.55,
-        "riverDensity": 0.025,
-        "type": "Hills"
-      },
-      {
-        "minElevation": 0.55,
-        "maxElevation": 1,
-        "riverDensity": 0.05,
-        "type": "Mountains"
-      }
-    ]
-  },
-  {
-    "id": "SnowyPlains",
-    "tiles": [
-      {
-        "minElevation": 0,
-        "maxElevation": 0.4,
-        "riverDensity": 0,
-        "type": "Water"
-      },
-      {
-        "minElevation": 0.4,
-        "maxElevation": 0.425,
-        "riverDensity": 0,
-        "type": "Ice"
-      },
-      {
-        "minElevation": 0.425,
-        "maxElevation": 0.525,
-        "riverDensity": 0,
-        "type": "SnowyGrass"
-      },
-      {
-        "minElevation": 0.525,
-        "maxElevation": 1,
-        "riverDensity": 0,
-        "type": "SnowyTree"
-      }
-    ]
-  },
-  {
-    "id": "SnowyMountains",
-    "tiles": [
-      {
-        "minElevation": 0,
-        "maxElevation": 0.4,
-        "riverDensity": 0,
-        "type": "Water"
-      },
-      {
-        "minElevation": 0.4,
-        "maxElevation": 0.425,
-        "riverDensity": 0,
-        "type": "Ice"
-      },
-      {
-        "minElevation": 0.425,
-        "maxElevation": 0.475,
-        "riverDensity": 0,
-        "type": "SnowyGrass"
-      },
-      {
-        "minElevation": 0.475,
-        "maxElevation": 0.55,
-        "riverDensity": 0,
-        "type": "SnowyHills"
-      },
-      {
-        "minElevation": 0.55,
-        "maxElevation": 1,
-        "riverDensity": 0,
-        "type": "SnowyMountains"
-      }
-    ]
-  },
-  {
-    "id": "Snowy Forested Plains",
-    "tiles": [
-      {
-        "minElevation": 0,
-        "maxElevation": 0.4,
-        "riverDensity": 0,
-        "type": "Water"
-      },
-      {
-        "minElevation": 0.4,
-        "maxElevation": 0.425,
-        "riverDensity": 0,
-        "type": "Ice"
-      },
-      {
-        "minElevation": 0.425,
-        "maxElevation": 0.475,
-        "riverDensity": 0,
-        "type": "SnowyGrass"
-      },
-      {
-        "minElevation": 0.475,
-        "maxElevation": 1,
-        "riverDensity": 0,
-        "type": "SnowyTree"
-      }
-    ]
-  },
-  {
-    "id": "Snowy Forested Mountains",
-    "tiles": [
-      {
-        "minElevation": 0,
-        "maxElevation": 0.4,
-        "riverDensity": 0,
-        "type": "Water"
-      },
-      {
-        "minElevation": 0.4,
-        "maxElevation": 0.425,
-        "riverDensity": 0,
-        "type": "Ice"
-      },
-      {
-        "minElevation": 0.425,
-        "maxElevation": 0.475,
-        "riverDensity": 0,
-        "type": "SnowyGrass"
-      },
-      {
-        "minElevation": 0.475,
-        "maxElevation": 0.525,
-        "riverDensity": 0,
-        "type": "SnowyTree"
-      },
-      {
-        "minElevation": 0.525,
-        "maxElevation": 0.55,
-        "riverDensity": 0,
-        "type": "SnowyHills"
-      },
-      {
-        "minElevation": 0.55,
-        "maxElevation": 1,
-        "riverDensity": 0,
-        "type": "SnowyMountains"
-      }
-    ]
-  },
-  {
-    "id": "Desert",
-    "tiles": [
-      {
-        "minElevation": 0,
-        "maxElevation": 0.45,
-        "riverDensity": 0,
-        "type": "Water"
-      },
-      {
-        "minElevation": 0.45,
-        "maxElevation": 1,
-        "riverDensity": 0,
-        "type": "Sand"
-      }
-    ]
-  },
-  {
-    "id": "SnowyDesert",
-    "tiles": [
-      {
-        "minElevation": 0,
-        "maxElevation": 0.4,
-        "riverDensity": 0,
-        "type": "Water"
-      },
-      {
-        "minElevation": 0.4,
-        "maxElevation": 0.45,
-        "riverDensity": 0,
-        "type": "Water"
-      },
-      {
-        "minElevation": 0.45,
-        "maxElevation": 1,
-        "riverDensity": 0,
-        "type": "Sand"
-      }
-    ]
+    "type": "Mountains",
+    "minElevation": 0.6,
+    "maxElevation": 1
   }
 ]

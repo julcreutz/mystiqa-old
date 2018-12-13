@@ -1,11 +1,10 @@
 package game.main.world_map.biome;
 
-import com.badlogic.gdx.utils.Array;
+import game.main.world_map.tile.WorldMapTileType;
 
 public class WorldMapBiome {
-    public Array<WorldMapBiomeTile> tiles;
+    public WorldMapTileType type;
 
-    public WorldMapBiome() {
-        tiles = new Array<WorldMapBiomeTile>();
-    }
+    public float minElevation;
+    public float maxElevation;
 }

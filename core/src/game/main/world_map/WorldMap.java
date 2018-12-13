@@ -28,13 +28,14 @@ public class WorldMap extends GameState {
 
     public WorldMapPlayer player;
 
+    public int lastX;
+    public int lastY;
+
+    public int nextX;
+    public int nextY;
+
     public int cursorX;
     public int cursorY;
-
-    public Array<WorldMapNode> path;
-
-    public WorldMapNode lastNode;
-    public WorldMapNode nextNode;
 
     public boolean moving;
     public float moveTime;
@@ -53,71 +54,46 @@ public class WorldMap extends GameState {
             generator.generate();
         }
 
-        float camX;
-        float camY;
-
-        if (!moving) {
-            if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
-                cursorX--;
+        if (nextX != lastX || nextY != lastY) {
+            if (moveTime == 0) {
+                moveTime = 1;
             }
 
-            if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
-                cursorX++;
+            float speed = Game.getDelta() * (2f / tiles[lastX][lastY].type.traversalCost);
+
+            moveTime -= speed;
+            player.time += speed * .5f;
+
+            player.dir = MathUtils.round((MathUtils.atan2(nextY - lastY, nextX - lastX) * MathUtils.radDeg + 360f) / 90f) % 4;
+
+            if (moveTime < 0) {
+                lastX = nextX;
+                lastY = nextY;
+                moveTime = 0;
             }
 
-            if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
-                cursorY--;
-            }
-
-            if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-                cursorY++;
-            }
-
-            path = findPath(MathUtils.floor(player.x / 8f), MathUtils.floor(player.y / 8f), cursorX, cursorY);
-
-            if (Gdx.input.isKeyJustPressed(Input.Keys.F) && path != null) {
-                moving = true;
-
-                lastNode = path.get(0);
-                nextNode = path.get(0);
-            }
-
-            camX = cursorX * 8 + 4;
-            camY = cursorY * 8 + 4;
+            player.x = MathUtils.lerp(lastX, nextX, 1 - moveTime) * 8f;
+            player.y = MathUtils.lerp(lastY, nextY, 1 - moveTime) * 8f;
         } else {
-            if (moveTime > 0) {
-                player.x = MathUtils.lerp(lastNode.x * 8f, nextNode.x * 8f, 1 - moveTime);
-                player.y = MathUtils.lerp(lastNode.y * 8f, nextNode.y * 8f, 1 - moveTime);
-
-                WorldMapTile tile = tiles[lastNode.x][lastNode.y];
-                float delta = Game.getDelta() / (tile != null ? tile.type.traversalCost : 1);
-
-                moveTime -= delta * 2f;
-
-                player.time += delta;
-                player.dir = MathUtils.round((new Vector2(nextNode.x, nextNode.y).sub(lastNode.x, lastNode.y).angle() + 360) / 90f) % 4;
-            } else {
-                path.removeIndex(0);
-
-                if (path.size > 0) {
-                    lastNode = nextNode;
-                    nextNode = path.get(0);
-
-                    moveTime = 1;
-                } else {
-                    moving = false;
-
-                    player.x = MathUtils.round(player.x / 8f) * 8;
-                    player.y = MathUtils.round(player.y / 8f) * 8;
-                }
+            if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+                nextX--;
             }
 
-            camX = player.x + 4;
-            camY = player.y + 4;
+            if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+                nextX++;
+            }
+
+            if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+                nextY--;
+            }
+
+            if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+                nextY++;
+            }
         }
 
-        cam.position.x = MathUtils.clamp(MathUtils.lerp(cam.position.x, camX, Game.getDelta() * CAM_SPEED), Game.WIDTH * .5f, (tiles.length - 1) * 8 - Game.WIDTH * .5f);
-        cam.position.y = MathUtils.clamp(MathUtils.lerp(cam.position.y, camY, Game.getDelta() * CAM_SPEED), Game.HEIGHT * .5f, (tiles[0].length - 1) * 8 - Game.HEIGHT * .5f);
+        cam.position.x = MathUtils.clamp(MathUtils.lerp(cam.position.x, player.x + 4, Game.getDelta() * CAM_SPEED), Game.WIDTH * .5f, (tiles.length - 1) * 8 - Game.WIDTH * .5f);
+        cam.position.y = MathUtils.clamp(MathUtils.lerp(cam.position.y, player.y + 4, Game.getDelta() * CAM_SPEED), Game.HEIGHT * .5f, (tiles[0].length - 1) * 8 - Game.HEIGHT * .5f);
 
         for (int x = 0; x < tiles.length; x++) {
             for (int y = 0; y < tiles[0].length; y++) {
@@ -148,11 +124,11 @@ public class WorldMap extends GameState {
 
     @Override
     public void renderToBuffer() {
-        int x0 = (int) MathUtils.clamp((cam.position.x - 72) / 8 - 1000, 0, tiles.length - 1);
-        int x1 = (int) MathUtils.clamp((cam.position.x + 72) / 8 + 1000, 0, tiles.length - 1);
+        int x0 = (int) MathUtils.clamp((cam.position.x - 72) / 8, 0, tiles.length - 1);
+        int x1 = (int) MathUtils.clamp((cam.position.x + 72) / 8 + 1, 0, tiles.length - 1);
 
-        int y0 = (int) MathUtils.clamp((cam.position.y - 36) / 8 - 1000, 0, tiles[0].length - 1);
-        int y1 = (int) MathUtils.clamp((cam.position.y + 36) / 8 + 1000, 0, tiles[0].length - 1);
+        int y0 = (int) MathUtils.clamp((cam.position.y - 36) / 8, 0, tiles[0].length - 1);
+        int y1 = (int) MathUtils.clamp((cam.position.y + 36) / 8 + 1, 0, tiles[0].length - 1);
 
         for (int x = x0; x < x1; x++) {
             for (int y = y0; y < y1; y++) {
@@ -174,6 +150,7 @@ public class WorldMap extends GameState {
             }
         }
 
+        /*
         TextureRegion[][] pathSheet = SheetLoader.load("Path");
 
         if (path != null && path.size > 1) {
@@ -197,11 +174,13 @@ public class WorldMap extends GameState {
                 }
             }
         }
+        */
 
         for (WorldMapEntity e : entities) {
             e.render(batch);
         }
 
+        /*
         if (!moving && ((cursorX != MathUtils.floor(player.x / 8f) || cursorY != MathUtils.floor(player.y / 8f)) || sites[MathUtils.floor(player.x / 8f)][MathUtils.floor(player.y / 8f)] != null)) {
             TextureRegion[][] cursorSheet = SheetLoader.load("Cursor");
             TextureRegion cursor = cursorSheet[MathUtils.floor(Game.time * CURSOR_ANIMATION_SPEED) % cursorSheet.length][0];
@@ -211,6 +190,7 @@ public class WorldMap extends GameState {
             batch.draw(cursor, cursorX * 8 + 8, cursorY * 8 - 8, 4, 4, 8, 8, 1, 1, 180);
             batch.draw(cursor, cursorX * 8 - 8, cursorY * 8 - 8, 4, 4, 8, 8, 1, 1, 90);
         }
+        */
 
         WorldMapSite site = sites[cursorX][cursorY];
 

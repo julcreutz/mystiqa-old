@@ -5,7 +5,6 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import game.main.world_map.biome.WorldMapBiome;
-import game.main.world_map.biome.WorldMapBiomeTile;
 
 import java.util.HashMap;
 
@@ -18,18 +17,10 @@ public class WorldMapBiomeLoader {
         for (JsonValue json : new JsonReader().parse(Gdx.files.internal("data/world_map_biomes.json"))) {
             WorldMapBiome biome = new WorldMapBiome();
 
-            for (JsonValue tile : json.get("tiles")) {
-                WorldMapBiomeTile _tile = new WorldMapBiomeTile();
+            biome.type = WorldMapTileTypeLoader.load(json.getString("type"));
 
-                _tile.minElevation = tile.getFloat("minElevation");
-                _tile.maxElevation = tile.getFloat("maxElevation");
-
-                _tile.riverDensity = tile.getFloat("riverDensity");
-
-                _tile.type = WorldMapTileTypeLoader.load(tile.getString("type"));
-
-                biome.tiles.add(_tile);
-            }
+            biome.minElevation = json.getFloat("minElevation");
+            biome.maxElevation = json.getFloat("maxElevation");
 
             biomes.put(json.getString("id"), biome);
         }

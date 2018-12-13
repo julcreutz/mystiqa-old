@@ -1,12 +1,10 @@
 package game.main.world_map;
 
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import game.loader.*;
 import game.main.world_map.biome.WorldMapBiome;
-import game.main.world_map.biome.WorldMapBiomeTile;
 import game.main.world_map.entity.WorldMapEntity;
 import game.main.world_map.entity.WorldMapPlayer;
 import game.main.world_map.site.WorldMapSite;
@@ -16,12 +14,13 @@ import game.main.world_map.tile.WorldMapTileType;
 import game.noise.Noise;
 import game.noise.NoiseParameters;
 
-import java.util.HashMap;
 import java.util.Random;
 
 public class WorldMapGenerator {
     public static final int WIDTH = 128;
     public static final int HEIGHT = 128;
+
+    public static final NoiseParameters ELEVATION = new NoiseParameters(6, 0.03125f, 1);
 
     public WorldMap map;
 
@@ -134,6 +133,9 @@ public class WorldMapGenerator {
         map.player = player;
         map.entities.add(player);
 
+        map.lastX = map.nextX = x;
+        map.lastY = map.nextY = y;
+
         map.cursorX = x;
         map.cursorY = y;
 
@@ -141,34 +143,24 @@ public class WorldMapGenerator {
         map.cam.position.y = y * 8 + 4;
     }
 
-    public WorldMapTileType tileAt(int x, int y) {
+    public WorldMapBiome biomeAt(int x, int y) {
         float e = elevationAt(x, y);
 
-        if (e > .6f) {
-            return WorldMapTileTypeLoader.load("Mountains");
-        } if (e > .5f) {
-            return WorldMapTileTypeLoader.load("Tree");
-        } else if (e > .45f) {
-            return WorldMapTileTypeLoader.load("Grass");
-        } else if (e > .4375f) {
-            return WorldMapTileTypeLoader.load("Sand");
-        } else {
-            return WorldMapTileTypeLoader.load("Water");
-        }
-
-        /*
-        for (WorldMapBiomeTile tile : biomes.get(islandAt(x / ISLAND_WIDTH, y / ISLAND_HEIGHT)).tiles) {
-            if (e >= tile.minElevation && e <= tile.maxElevation) {
-                return tile;
+        for (WorldMapBiome biome : WorldMapBiomeLoader.loadAll()) {
+            if (e >= biome.minElevation && e <= biome.maxElevation) {
+                return biome;
             }
         }
 
-        return null;*/
+        return null;
+    }
+
+    public WorldMapTileType tileAt(int x, int y) {
+        return biomeAt(x, y).type;
     }
 
     public float elevationAt(int x, int y) {
-        return elevation.get(x, y, new NoiseParameters(6, 0.03125f, 1))
-                * MathUtils.clamp((1 - new Vector2(map.tiles.length * .5f, map.tiles[0].length * .5f)
+        return elevation.get(x, y, ELEVATION) * MathUtils.clamp((1 - new Vector2(map.tiles.length * .5f, map.tiles[0].length * .5f)
                 .sub(x, y).len() / ((float) Math.sqrt(map.tiles.length * map.tiles.length + map.tiles[0].length * map.tiles[0].length) * .5f)) + .25f, 0, 1);
     }
 }
