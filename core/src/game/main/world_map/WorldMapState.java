@@ -9,13 +9,16 @@ import com.badlogic.gdx.utils.Array;
 import game.loader.SheetLoader;
 import game.main.Game;
 import game.main.GameState;
+import game.main.site.SiteData;
+import game.main.site.tile.SiteTile;
+import game.main.site.tile.SiteTileType;
 import game.main.world_map.entity.WorldMapEntity;
 import game.main.world_map.entity.WorldMapPlayer;
 import game.main.world_map.site.WorldMapSite;
 import game.main.world_map.tile.WorldMapTile;
 import game.main.world_map.tile.WorldMapTileType;
 
-public class WorldMap extends GameState {
+public class WorldMapState extends GameState {
     public static final float CAM_SPEED = 5f;
     public static final float CURSOR_ANIMATION_SPEED = 2.5f;
 
@@ -37,7 +40,6 @@ public class WorldMap extends GameState {
     public int cursorX;
     public int cursorY;
 
-    public boolean moving;
     public float moveTime;
 
     @Override
@@ -75,6 +77,35 @@ public class WorldMap extends GameState {
             player.x = MathUtils.lerp(lastX, nextX, 1 - moveTime) * 8f;
             player.y = MathUtils.lerp(lastY, nextY, 1 - moveTime) * 8f;
         } else {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
+                SiteData site = new SiteData();
+
+                SiteTileType type = new SiteTileType();
+                type.name = "Name";
+                type.connect = new String[] {};
+                type.sideSheet = SheetLoader.load("GrassSide");
+                type.sideColors = new String[] {"Black", "Brown"};
+                type.topSheet = SheetLoader.load("GrassTop");
+                type.topColors = new String[] {"Black", "Green"};
+
+                for (int x = 0; x < site.tiles.length; x++) {
+                    for (int y = 0; y < site.tiles[0].length; y++) {
+                        for (int z = 0; z < 3; z++) {
+                            SiteTile tile = new SiteTile();
+                            tile.type = type;
+                            tile.x = x;
+                            tile.y = y;
+                            tile.z = z;
+
+                            site.tiles[tile.x][tile.y][tile.z] = tile;
+                        }
+                    }
+                }
+
+                g.SITE.data = site;
+                g.nextState = g.SITE;
+            }
+
             if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
                 nextX--;
             }

@@ -6,9 +6,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
 import game.loader.*;
-import game.main.world_map.WorldMap;
-
-import java.util.HashMap;
+import game.main.site.SiteState;
+import game.main.world_map.WorldMapState;
 
 public class Game extends ApplicationAdapter {
 	public static final String TITLE = "Mystiqa";
@@ -17,11 +16,15 @@ public class Game extends ApplicationAdapter {
 	public static final int HEIGHT = 72;
 	public static final int SCALE = 12;
 
+    public final WorldMapState WORLD_MAP = new WorldMapState();
+    public final SiteState SITE = new SiteState();
+
+    public final GameState[] STATES = new GameState[] {WORLD_MAP, SITE};
+
 	public static float time;
 
-	public final WorldMap WORLD_MAP = new WorldMap();
-
 	public GameState state;
+	public GameState nextState;
 
 	@Override
 	public void create() {
@@ -34,16 +37,24 @@ public class Game extends ApplicationAdapter {
 		WorldMapBiomeLoader.load();
 
 		WORLD_MAP.create();
+		SITE.create();
 		state = WORLD_MAP;
 	}
 
 	@Override
 	public void resize(int width, int height) {
-		WORLD_MAP.resize(width, height);
+		for (GameState state : STATES) {
+			state.resize(width, height);
+		}
 	}
 
 	@Override
 	public void render() {
+		if (nextState != null) {
+			state = nextState;
+			nextState = null;
+		}
+
 		time += getDelta();
 
 		if (state != null) {
@@ -56,7 +67,9 @@ public class Game extends ApplicationAdapter {
 	public void dispose() {
 		SheetLoader.dispose();
 
-		WORLD_MAP.dispose();
+		for (GameState state : STATES) {
+			state.dispose();
+		}
 	}
 
 	public static float getDelta() {

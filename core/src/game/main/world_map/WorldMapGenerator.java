@@ -22,13 +22,13 @@ public class WorldMapGenerator {
 
     public static final NoiseParameters ELEVATION = new NoiseParameters(6, 0.03125f, 1);
 
-    public WorldMap map;
+    public WorldMapState map;
 
     public Random rand;
 
     public Noise elevation;
 
-    public WorldMapGenerator(WorldMap map) {
+    public WorldMapGenerator(WorldMapState map) {
         this.map = map;
     }
 

@@ -1,7 +1,7 @@
 package game.main.world_map.site;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import game.main.world_map.WorldMap;
+import game.main.world_map.WorldMapState;
 
 public class WorldMapSite {
     public WorldMapSiteType type;
@@ -15,7 +15,7 @@ public class WorldMapSite {
         this.y = y;
     }
 
-    public void update(WorldMap map) {
+    public void update(WorldMapState map) {
 
     }
 
