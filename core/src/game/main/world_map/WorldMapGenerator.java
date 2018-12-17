@@ -4,13 +4,12 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import game.loader.*;
-import game.main.world_map.biome.WorldMapBiome;
+import game.main.world_map.biome.Biome;
 import game.main.world_map.entity.WorldMapEntity;
 import game.main.world_map.entity.WorldMapPlayer;
-import game.main.world_map.site.WorldMapSite;
-import game.main.world_map.site.WorldMapSiteType;
-import game.main.world_map.tile.WorldMapTile;
-import game.main.world_map.tile.WorldMapTileType;
+import game.main.world_map.site.Site;
+import game.main.world_map.site.SiteType;
+import game.main.world_map.biome.BiomeType;
 import game.noise.Noise;
 import game.noise.NoiseParameters;
 
@@ -37,17 +36,17 @@ public class WorldMapGenerator {
 
         elevation = new Noise(rand.nextLong());
 
-        map.tiles = new WorldMapTile[WIDTH][HEIGHT];
+        map.biomes = new Biome[WIDTH][HEIGHT];
 
-        for (int x = 0; x < map.tiles.length; x++) {
-            for (int y = 0; y < map.tiles[0].length; y++) {
-                map.tiles[x][y] = new WorldMapTile(tileAt(x, y), x, y);
+        for (int x = 0; x < map.biomes.length; x++) {
+            for (int y = 0; y < map.biomes[0].length; y++) {
+                map.biomes[x][y] = new Biome(biomeAt(x, y), x, y);
             }
         }
 
-        for (int x = 0; x < map.tiles.length; x++) {
-            for (int y = 0; y < map.tiles[0].length; y++) {
-                if (!tileAt(x, y).name.equals("Mountains")) continue;
+        for (int x = 0; x < map.biomes.length; x++) {
+            for (int y = 0; y < map.biomes[0].length; y++) {
+                if (!biomeAt(x, y).name.equals("Mountains")) continue;
 
                 boolean highest = true;
 
@@ -57,7 +56,7 @@ public class WorldMapGenerator {
                             int xxx = x + xx;
                             int yyy = y + yy;
 
-                            if (xxx >= 0 && xxx < map.tiles.length && yyy >= 0 && yyy < map.tiles[0].length) {
+                            if (xxx >= 0 && xxx < map.biomes.length && yyy >= 0 && yyy < map.biomes[0].length) {
                                 if (elevationAt(xxx, yyy) > elevationAt(x, y)) {
                                     highest = false;
                                 }
@@ -70,8 +69,8 @@ public class WorldMapGenerator {
                     int rx = x;
                     int ry = y;
 
-                    while (rx >= 0 && rx < map.tiles.length && ry >= 0 && ry < map.tiles[0].length && map.tiles[rx][ry] != null && !map.tiles[rx][ry].type.name.equals("Water")) {
-                        map.tiles[rx][ry].type = WorldMapTileTypeLoader.load("River");
+                    while (rx >= 0 && rx < map.biomes.length && ry >= 0 && ry < map.biomes[0].length && map.biomes[rx][ry] != null && !map.biomes[rx][ry].type.name.equals("Water")) {
+                        map.biomes[rx][ry].type = BiomeLoader.load("River");
 
                         float low = elevationAt(rx, ry);
 
@@ -80,7 +79,7 @@ public class WorldMapGenerator {
 
                         for (int xx = -1; xx <= 1; xx++) {
                             for (int yy = -1; yy <= 1; yy++) {
-                                if ((xx != 0 || yy != 0) && xx * yy == 0 && map.tiles[rx][ry] != null) {
+                                if ((xx != 0 || yy != 0) && xx * yy == 0 && map.biomes[rx][ry] != null) {
                                     float e = elevationAt(rx + xx, ry + yy);
 
                                     if (e < low) {
@@ -100,21 +99,21 @@ public class WorldMapGenerator {
             }
         }
 
-        map.sites = new WorldMapSite[map.tiles.length][map.tiles[0].length];
+        map.sites = new Site[map.biomes.length][map.biomes[0].length];
 
         for (int i = 0; i < 1; i++) {
             int x;
             int y;
 
             do {
-                x = rand.nextInt(map.tiles.length);
-                y = rand.nextInt(map.tiles[0].length);
-            } while (map.tiles[x][y] != null && !map.tiles[x][y].type.name.equals("Grass"));
+                x = rand.nextInt(map.biomes.length);
+                y = rand.nextInt(map.biomes[0].length);
+            } while (map.biomes[x][y] != null && !map.biomes[x][y].type.name.equals("Grass"));
 
-            WorldMapSiteType type = new WorldMapSiteType();
+            SiteType type = new SiteType();
             type.sheet = SheetLoader.load("House");
             type.color = ColorLoader.load("Brown");
-            WorldMapSite site = new WorldMapSite(type, x, y);
+            Site site = new Site(type, x, y);
 
             map.sites[x][y] = site;
         }
@@ -125,9 +124,9 @@ public class WorldMapGenerator {
         int y;
 
         do {
-            x = rand.nextInt(map.tiles.length);
-            y = rand.nextInt(map.tiles[0].length);
-        } while (map.tiles[x][y] != null && !map.tiles[x][y].type.name.equals("Grass"));
+            x = rand.nextInt(map.biomes.length);
+            y = rand.nextInt(map.biomes[0].length);
+        } while (map.biomes[x][y] != null && !map.biomes[x][y].type.name.equals("Grass"));
 
         WorldMapPlayer player = new WorldMapPlayer(WorldMapPlayerTypeLoader.load("Human"), x * 8, y * 8);
         map.player = player;
@@ -143,10 +142,10 @@ public class WorldMapGenerator {
         map.cam.position.y = y * 8 + 4;
     }
 
-    public WorldMapBiome biomeAt(int x, int y) {
+    public BiomeType biomeAt(int x, int y) {
         float e = elevationAt(x, y);
 
-        for (WorldMapBiome biome : WorldMapBiomeLoader.loadAll()) {
+        for (BiomeType biome : BiomeLoader.loadAll()) {
             if (e >= biome.minElevation && e <= biome.maxElevation) {
                 return biome;
             }
@@ -155,12 +154,8 @@ public class WorldMapGenerator {
         return null;
     }
 
-    public WorldMapTileType tileAt(int x, int y) {
-        return biomeAt(x, y).type;
-    }
-
     public float elevationAt(int x, int y) {
-        return elevation.noiseAt(x, y, ELEVATION) * MathUtils.clamp((1 - new Vector2(map.tiles.length * .5f, map.tiles[0].length * .5f)
-                .sub(x, y).len() / ((float) Math.sqrt(map.tiles.length * map.tiles.length + map.tiles[0].length * map.tiles[0].length) * .5f)) + .25f, 0, 1);
+        return elevation.noiseAt(x, y, ELEVATION) * MathUtils.clamp((1 - new Vector2(map.biomes.length * .5f, map.biomes[0].length * .5f)
+                .sub(x, y).len() / ((float) Math.sqrt(map.biomes.length * map.biomes.length + map.biomes[0].length * map.biomes[0].length) * .5f)) + .25f, 0, 1);
     }
 }

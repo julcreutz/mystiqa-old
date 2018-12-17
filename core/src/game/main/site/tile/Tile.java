@@ -5,8 +5,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import game.loader.palette.PaletteShaderLoader;
 import game.main.site.SiteData;
 
-public class SiteTile {
-    public SiteTileType type;
+public class Tile {
+    public TileType type;
 
     public TextureRegion image;
 
@@ -14,7 +14,7 @@ public class SiteTile {
     public int y;
     public int z;
 
-    public SiteTile(SiteTileType type) {
+    public Tile(TileType type) {
         this.type = type;
     }
 
@@ -101,7 +101,7 @@ public class SiteTile {
     }
 
     public boolean connect(SiteData site, int x, int y, int z) {
-        SiteTile tile = site.tileAt(x, y, z);
+        Tile tile = site.tileAt(x, y, z);
         return tile != null && type.connect(tile.type);
     }
 }

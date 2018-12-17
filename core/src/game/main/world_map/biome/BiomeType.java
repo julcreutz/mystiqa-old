@@ -1,18 +1,21 @@
-package game.main.world_map.tile;
+package game.main.world_map.biome;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-public class WorldMapTileType {
+public class BiomeType {
     public String name;
     public String[] connect;
 
     public TextureRegion[][] sheet;
     public String[] colors;
 
+    public float minElevation;
+    public float maxElevation;
+
     public boolean traversable;
     public float traversalCost;
 
-    public boolean connect(WorldMapTileType type) {
+    public boolean connect(BiomeType type) {
         for (String _connect : connect) {
             if (_connect.equals(type.name)) {
                 return true;

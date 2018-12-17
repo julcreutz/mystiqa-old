@@ -1,19 +1,19 @@
-package game.main.world_map.tile;
+package game.main.world_map.biome;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import game.loader.palette.PaletteShaderLoader;
 import game.main.world_map.WorldMapState;
 
-public class WorldMapTile {
-    public WorldMapTileType type;
+public class Biome {
+    public BiomeType type;
 
     public TextureRegion image;
 
     public int x;
     public int y;
 
-    public WorldMapTile(WorldMapTileType type, int x, int y) {
+    public Biome(BiomeType type, int x, int y) {
         this.type = type;
         this.x = x;
         this.y = y;
@@ -98,6 +98,6 @@ public class WorldMapTile {
     }
 
     public boolean connect(WorldMapState map, int x, int y) {
-        return x >= 0 && x < map.tiles.length && y >= 0 && y < map.tiles[0].length && map.tiles[x][y] != null && type.connect(map.tiles[x][y].type);
+        return x >= 0 && x < map.biomes.length && y >= 0 && y < map.biomes[0].length && map.biomes[x][y] != null && type.connect(map.biomes[x][y].type);
     }
 }

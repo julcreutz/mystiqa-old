@@ -1,0 +1,40 @@
+{
+  "Grass": {
+    "name": "Grass",
+    "sheet": "Grass",
+    "colors": [
+      "Black",
+      "Green"
+    ],
+    "autoTile": true,
+    "connect": [
+      "TreeBottom"
+    ]
+  },
+  "TreeBottom": {
+    "name": "TreeBottom",
+    "sheet": "TreeBottom",
+    "colors": [
+      "Black",
+      "Green",
+      "Brown",
+      "Green"
+    ]
+  },
+  "TreeMiddle": {
+    "name": "TreeMiddle",
+    "sheet": "TreeMiddle",
+    "colors": [
+      "Black",
+      "Green"
+    ]
+  },
+  "TreeTop": {
+    "name": "TreeTop",
+    "sheet": "TreeTop",
+    "colors": [
+      "Black",
+      "Green"
+    ]
+  }
+}

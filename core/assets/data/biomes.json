@@ -1,65 +1,62 @@
-[
-  {
-    "id": "Grass",
-    "name": "Grass",
-    "connect": ["Tree", "Hills", "Mountains", "River", "Sand"],
-    "sheet": "Ice",
-    "colors": ["Black", "Blue", "Green", "Green"],
-    "traversable": true,
-    "traversalCost": 1
-  },
-  {
-    "id": "Water",
+{
+  "Ocean": {
     "name": "Water",
     "connect": [],
     "sheet": "Water",
     "colors": ["Black", "Blue"],
+    "minElevation": 0,
+    "maxElevation": 0.4375,
     "traversable": false,
     "traversalCost": 16
   },
-  {
-    "id": "Sand",
+  "Beach": {
     "name": "Sand",
     "connect": ["Grass", "Tree"],
     "sheet": "Ice",
     "colors": ["Black", "Blue", "Yellow", "Yellow"],
+    "minElevation": 0.4375,
+    "maxElevation": 0.45,
     "traversable": true,
     "traversalCost": 2
   },
-  {
-    "id": "Tree",
+  "Plains": {
+    "name": "Grass",
+    "connect": ["Tree", "Hills", "Mountains", "River", "Sand"],
+    "sheet": "Ice",
+    "colors": ["Black", "Blue", "Green", "Green"],
+    "minElevation": 0.45,
+    "maxElevation": 0.5,
+    "traversable": true,
+    "traversalCost": 1
+  },
+  "Forest": {
     "name": "Tree",
     "connect": [],
     "sheet": "Tree",
     "colors": ["Black", "Green"],
+    "minElevation": 0.5,
+    "maxElevation": 0.6,
     "traversable": true,
     "traversalCost": 2
   },
-  {
-    "id": "Mountains",
+  "Mountains": {
     "name": "Mountains",
     "connect": [],
     "sheet": "Mountains",
     "colors": ["Black", "Green", "Gray"],
+    "minElevation": 0.6,
+    "maxElevation": 1,
     "traversable": true,
     "traversalCost": 8
   },
-  {
-    "id": "Hills",
-    "name": "Hills",
-    "connect": [],
-    "sheet": "Hills",
-    "colors": ["Black", "Green", "Brown"],
-    "traversable": true,
-    "traversalCost": 4
-  },
-  {
-    "id": "River",
+  "River": {
     "name": "River",
     "connect": ["Water"],
     "sheet": "Ice",
     "colors": ["Black", "Green", "Blue", "Blue"],
+    "minElevation": 0,
+    "maxElevation": 0,
     "traversable": true,
     "traversalCost": 4
   }
-]
+}

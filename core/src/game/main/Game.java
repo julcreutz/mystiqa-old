@@ -32,9 +32,9 @@ public class Game extends ApplicationAdapter {
 
 		SheetLoader.load();
 		ColorLoader.load();
-		WorldMapTileTypeLoader.load();
+		BiomeLoader.load();
 		WorldMapPlayerTypeLoader.load();
-		WorldMapBiomeLoader.load();
+		BiomeLoader.load();
 		SiteTileTypeLoader.load();
 
 		WORLD_MAP.create();

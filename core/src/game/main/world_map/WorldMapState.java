@@ -5,19 +5,14 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import game.loader.SheetLoader;
 import game.loader.SiteTileTypeLoader;
 import game.main.Game;
 import game.main.GameState;
 import game.main.site.SiteData;
-import game.main.site.tile.SiteTile;
-import game.main.site.tile.SiteTileType;
 import game.main.world_map.entity.WorldMapEntity;
 import game.main.world_map.entity.WorldMapPlayer;
-import game.main.world_map.site.WorldMapSite;
-import game.main.world_map.tile.WorldMapTile;
-import game.noise.Noise;
-import game.noise.NoiseParameters;
+import game.main.world_map.site.Site;
+import game.main.world_map.biome.Biome;
 
 public class WorldMapState extends GameState {
     public static final float CAM_SPEED = 5f;
@@ -25,8 +20,8 @@ public class WorldMapState extends GameState {
 
     public WorldMapGenerator generator;
 
-    public WorldMapTile[][] tiles;
-    public WorldMapSite[][] sites;
+    public Biome[][] biomes;
+    public Site[][] sites;
 
     public Array<WorldMapEntity> entities;
 
@@ -62,7 +57,7 @@ public class WorldMapState extends GameState {
                 moveTime = 1;
             }
 
-            float speed = Game.delta() * (2f / tiles[lastX][lastY].type.traversalCost);
+            float speed = Game.delta() * (2f / biomes[lastX][lastY].type.traversalCost);
 
             moveTime -= speed;
             player.time += speed * .5f;
@@ -120,12 +115,12 @@ public class WorldMapState extends GameState {
             }
         }
 
-        cam.position.x = MathUtils.clamp(MathUtils.lerp(cam.position.x, player.x + 4, Game.delta() * CAM_SPEED), Game.WIDTH * .5f, (tiles.length - 1) * 8 - Game.WIDTH * .5f);
-        cam.position.y = MathUtils.clamp(MathUtils.lerp(cam.position.y, player.y + 4, Game.delta() * CAM_SPEED), Game.HEIGHT * .5f, (tiles[0].length - 1) * 8 - Game.HEIGHT * .5f);
+        cam.position.x = MathUtils.clamp(MathUtils.lerp(cam.position.x, player.x + 4, Game.delta() * CAM_SPEED), Game.WIDTH * .5f, (biomes.length - 1) * 8 - Game.WIDTH * .5f);
+        cam.position.y = MathUtils.clamp(MathUtils.lerp(cam.position.y, player.y + 4, Game.delta() * CAM_SPEED), Game.HEIGHT * .5f, (biomes[0].length - 1) * 8 - Game.HEIGHT * .5f);
 
-        for (int x = 0; x < tiles.length; x++) {
-            for (int y = 0; y < tiles[0].length; y++) {
-                WorldMapTile tile = tiles[x][y];
+        for (int x = 0; x < biomes.length; x++) {
+            for (int y = 0; y < biomes[0].length; y++) {
+                Biome tile = biomes[x][y];
 
                 if (tile != null) {
                     tile.update(this);
@@ -135,7 +130,7 @@ public class WorldMapState extends GameState {
 
         for (int x = 0; x < sites.length; x++) {
             for (int y = 0; y < sites[0].length; y++) {
-                WorldMapSite site = sites[x][y];
+                Site site = sites[x][y];
 
                 if (site != null) {
                     site.update(this);
@@ -152,15 +147,15 @@ public class WorldMapState extends GameState {
 
     @Override
     public void renderToBuffer() {
-        int x0 = (int) MathUtils.clamp((cam.position.x - 72) / 8, 0, tiles.length - 1);
-        int x1 = (int) MathUtils.clamp((cam.position.x + 72) / 8 + 1, 0, tiles.length - 1);
+        int x0 = (int) MathUtils.clamp((cam.position.x - 72) / 8, 0, biomes.length - 1);
+        int x1 = (int) MathUtils.clamp((cam.position.x + 72) / 8 + 1, 0, biomes.length - 1);
 
-        int y0 = (int) MathUtils.clamp((cam.position.y - 36) / 8, 0, tiles[0].length - 1);
-        int y1 = (int) MathUtils.clamp((cam.position.y + 36) / 8 + 1, 0, tiles[0].length - 1);
+        int y0 = (int) MathUtils.clamp((cam.position.y - 36) / 8, 0, biomes[0].length - 1);
+        int y1 = (int) MathUtils.clamp((cam.position.y + 36) / 8 + 1, 0, biomes[0].length - 1);
 
         for (int x = x0; x < x1; x++) {
             for (int y = y0; y < y1; y++) {
-                WorldMapTile tile = tiles[x][y];
+                Biome tile = biomes[x][y];
 
                 if (tile != null) {
                     tile.render(batch);
@@ -170,7 +165,7 @@ public class WorldMapState extends GameState {
 
         for (int x = x0; x < x1; x++) {
             for (int y = y0; y < y1; y++) {
-                WorldMapSite site = sites[x][y];
+                Site site = sites[x][y];
 
                 if (site != null) {
                     site.render(batch);
@@ -220,7 +215,7 @@ public class WorldMapState extends GameState {
         }
         */
 
-        WorldMapSite site = sites[cursorX][cursorY];
+        Site site = sites[cursorX][cursorY];
 
         if (site != null) {
             Game.write(batch, "Hateno Village", site.x * 8f + 4, site.y * 8f + 16, true);
@@ -276,7 +271,7 @@ public class WorldMapState extends GameState {
                         int xx = curr.x + x;
                         int yy = curr.y + y;
 
-                        if (xx >= 0 && xx < tiles.length && yy >= 0 && yy < tiles[0].length && tiles[xx][yy] != null && tiles[xx][yy].type.traversable) {
+                        if (xx >= 0 && xx < biomes.length && yy >= 0 && yy < biomes[0].length && biomes[xx][yy] != null && biomes[xx][yy].type.traversable) {
                             WorldMapNode node = new WorldMapNode(xx, yy);
 
                             // Ignore if node is in closed list
@@ -285,7 +280,7 @@ public class WorldMapState extends GameState {
                             }
 
                             // Traversal cost of new node + old one
-                            float g = curr.g + tiles[xx][yy].type.traversalCost;
+                            float g = curr.g + biomes[xx][yy].type.traversalCost;
 
                             // Ignore if new path is slower
                             if (inList(openList, node) && g >= getNode(openList, xx, yy).g) {
