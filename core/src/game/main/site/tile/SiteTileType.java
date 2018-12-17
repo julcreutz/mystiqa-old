@@ -5,18 +5,19 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class SiteTileType {
     public String name;
 
-    public TextureRegion[][] sideSheet;
-    public String[] sideColors;
+    public TextureRegion[][] sheet;
+    public String[] colors;
 
-    public TextureRegion[][] topSheet;
-    public String[] topColors;
+    public boolean autoTile;
 
     public String[] connect;
 
     public boolean connect(SiteTileType type) {
-        for (String _connect : connect) {
-            if (_connect.equals(type.name)) {
-                return true;
+        if (connect != null) {
+            for (String _connect : connect) {
+                if (_connect.equals(type.name)) {
+                    return true;
+                }
             }
         }
 

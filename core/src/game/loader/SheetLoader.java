@@ -17,12 +17,10 @@ public class SheetLoader {
         sheets = new HashMap<String, TextureRegion[][]>();
 
         for (JsonValue json : new JsonReader().parse(Gdx.files.internal("data/sheets.json"))) {
-            String id = json.getString("id");
-
             Texture t = new Texture(Gdx.files.internal(json.getString("path")));
-            textures.put(id, t);
+            textures.put(json.name, t);
 
-            sheets.put(id, split(t, json.getInt("splitW"), json.getInt("splitH")));
+            sheets.put(json.name, split(t, json.getInt("splitW"), json.getInt("splitH")));
         }
     }
 

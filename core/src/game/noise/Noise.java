@@ -27,7 +27,7 @@ public class Noise {
         }
     }
 
-    public float get(float x, float y, NoiseParameters params) {
+    public float noiseAt(float x, float y, NoiseParameters params) {
         float val = 0;
         float total = 0;
 
@@ -35,7 +35,7 @@ public class Noise {
         float amp = 1;
 
         for (int i = 0; i < params.octaves; i++) {
-            val += get(x * freq, y * freq) * amp;
+            val += noiseAt(x * freq, y * freq) * amp;
             total += amp;
 
             float scale = 2;
@@ -49,7 +49,7 @@ public class Noise {
         return MathUtils.clamp(val / total, 0, 1);
     }
 
-    private float get(float x, float y) {
+    private float noiseAt(float x, float y) {
         int x0 = MathUtils.floor(x);
         int y0 = MathUtils.floor(y);
 

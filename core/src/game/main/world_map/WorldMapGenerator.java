@@ -160,7 +160,7 @@ public class WorldMapGenerator {
     }
 
     public float elevationAt(int x, int y) {
-        return elevation.get(x, y, ELEVATION) * MathUtils.clamp((1 - new Vector2(map.tiles.length * .5f, map.tiles[0].length * .5f)
+        return elevation.noiseAt(x, y, ELEVATION) * MathUtils.clamp((1 - new Vector2(map.tiles.length * .5f, map.tiles[0].length * .5f)
                 .sub(x, y).len() / ((float) Math.sqrt(map.tiles.length * map.tiles.length + map.tiles[0].length * map.tiles[0].length) * .5f)) + .25f, 0, 1);
     }
 }

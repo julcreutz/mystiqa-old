@@ -21,7 +21,7 @@ public class ColorLoader {
             c.b = json.getInt("b") / 255f;
             c.a = 1;
 
-            colors.put(json.getString("id"), c);
+            colors.put(json.name, c);
         }
     }
 

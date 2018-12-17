@@ -2,11 +2,11 @@ package game.main.world_map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import game.loader.SheetLoader;
+import game.loader.SiteTileTypeLoader;
 import game.main.Game;
 import game.main.GameState;
 import game.main.site.SiteData;
@@ -16,7 +16,8 @@ import game.main.world_map.entity.WorldMapEntity;
 import game.main.world_map.entity.WorldMapPlayer;
 import game.main.world_map.site.WorldMapSite;
 import game.main.world_map.tile.WorldMapTile;
-import game.main.world_map.tile.WorldMapTileType;
+import game.noise.Noise;
+import game.noise.NoiseParameters;
 
 public class WorldMapState extends GameState {
     public static final float CAM_SPEED = 5f;
@@ -61,7 +62,7 @@ public class WorldMapState extends GameState {
                 moveTime = 1;
             }
 
-            float speed = Game.getDelta() * (2f / tiles[lastX][lastY].type.traversalCost);
+            float speed = Game.delta() * (2f / tiles[lastX][lastY].type.traversalCost);
 
             moveTime -= speed;
             player.time += speed * .5f;
@@ -80,24 +81,20 @@ public class WorldMapState extends GameState {
             if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
                 SiteData site = new SiteData();
 
-                SiteTileType type = new SiteTileType();
-                type.name = "Name";
-                type.connect = new String[] {};
-                type.sideSheet = SheetLoader.load("GrassSide");
-                type.sideColors = new String[] {"Black", "Brown"};
-                type.topSheet = SheetLoader.load("GrassTop");
-                type.topColors = new String[] {"Black", "Green"};
-
                 for (int x = 0; x < site.tiles.length; x++) {
                     for (int y = 0; y < site.tiles[0].length; y++) {
-                        for (int z = 0; z < 3; z++) {
-                            SiteTile tile = new SiteTile();
-                            tile.type = type;
-                            tile.x = x;
-                            tile.y = y;
-                            tile.z = z;
+                        site.placeTile(SiteTileTypeLoader.load("Grass"), x, y, 0);
 
-                            site.tiles[tile.x][tile.y][tile.z] = tile;
+                        if (MathUtils.randomBoolean(.1f)) {
+                            site.placeTile(SiteTileTypeLoader.load("TreeBottom"), x, y, 0);
+
+                            int z = 1;
+                            for (int i = 0; i < MathUtils.random(0, 2); i++) {
+                                site.placeTile(SiteTileTypeLoader.load("TreeMiddle"), x, y, z);
+                                z++;
+                            }
+
+                            site.placeTile(SiteTileTypeLoader.load("TreeTop"), x, y, z);
                         }
                     }
                 }
@@ -123,8 +120,8 @@ public class WorldMapState extends GameState {
             }
         }
 
-        cam.position.x = MathUtils.clamp(MathUtils.lerp(cam.position.x, player.x + 4, Game.getDelta() * CAM_SPEED), Game.WIDTH * .5f, (tiles.length - 1) * 8 - Game.WIDTH * .5f);
-        cam.position.y = MathUtils.clamp(MathUtils.lerp(cam.position.y, player.y + 4, Game.getDelta() * CAM_SPEED), Game.HEIGHT * .5f, (tiles[0].length - 1) * 8 - Game.HEIGHT * .5f);
+        cam.position.x = MathUtils.clamp(MathUtils.lerp(cam.position.x, player.x + 4, Game.delta() * CAM_SPEED), Game.WIDTH * .5f, (tiles.length - 1) * 8 - Game.WIDTH * .5f);
+        cam.position.y = MathUtils.clamp(MathUtils.lerp(cam.position.y, player.y + 4, Game.delta() * CAM_SPEED), Game.HEIGHT * .5f, (tiles[0].length - 1) * 8 - Game.HEIGHT * .5f);
 
         for (int x = 0; x < tiles.length; x++) {
             for (int y = 0; y < tiles[0].length; y++) {
@@ -186,21 +183,21 @@ public class WorldMapState extends GameState {
 
         if (path != null && path.size > 1) {
             for (int i = 0; i < path.size; i++) {
-                WorldMapNode node = path.get(i);
+                WorldMapNode node = path.noiseAt(i);
                 batch.draw(pathSheet[0][0], node.x * 8, node.y * 8);
 
                 if (i > 0) {
-                    WorldMapNode _node = path.get(i - 1);
+                    WorldMapNode _node = path.noiseAt(i - 1);
                     batch.draw(pathSheet[1][0], node.x * 8, node.y * 8, 4, 4, 8, 8, 1, 1, new Vector2(_node.x, _node.y).sub(node.x, node.y).angle());
                 }
 
                 if (i < path.size - 1) {
-                    WorldMapNode _node = path.get(i + 1);
+                    WorldMapNode _node = path.noiseAt(i + 1);
                     batch.draw(pathSheet[1][0], node.x * 8, node.y * 8, 4, 4, 8, 8, 1, 1, new Vector2(_node.x, _node.y).sub(node.x, node.y).angle());
                 }
 
                 if (i == path.size - 1) {
-                    WorldMapNode _node = path.get(i - 1);
+                    WorldMapNode _node = path.noiseAt(i - 1);
                     batch.draw(pathSheet[2][0], node.x * 8, node.y * 8, 4, 4, 8, 8, 1, 1, new Vector2(node.x, node.y).sub(_node.x, _node.y).angle());
                 }
             }
