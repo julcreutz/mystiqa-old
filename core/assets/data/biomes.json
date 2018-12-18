@@ -16,7 +16,6 @@
     "colors": ["Black", "Blue", "Yellow", "Yellow"],
     "minElevation": 0.4375,
     "maxElevation": 0.45,
-    "traversable": true,
     "traversalCost": 2
   },
   "Plains": {
@@ -26,17 +25,15 @@
     "colors": ["Black", "Blue", "Green", "Green"],
     "minElevation": 0.45,
     "maxElevation": 0.5,
-    "traversable": true,
     "traversalCost": 1
   },
   "Forest": {
     "name": "Tree",
     "connect": [],
     "sheet": "Tree",
-    "colors": ["Black", "Green"],
+    "colors": ["Black", "Brown", "Green"],
     "minElevation": 0.5,
     "maxElevation": 0.6,
-    "traversable": true,
     "traversalCost": 2
   },
   "Mountains": {
@@ -46,7 +43,6 @@
     "colors": ["Black", "Green", "Gray"],
     "minElevation": 0.6,
     "maxElevation": 1,
-    "traversable": true,
     "traversalCost": 8
   },
   "River": {
@@ -54,9 +50,6 @@
     "connect": ["Water"],
     "sheet": "Ice",
     "colors": ["Black", "Green", "Blue", "Blue"],
-    "minElevation": 0,
-    "maxElevation": 0,
-    "traversable": true,
     "traversalCost": 4
   }
 }

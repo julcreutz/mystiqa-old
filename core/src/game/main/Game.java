@@ -35,7 +35,7 @@ public class Game extends ApplicationAdapter {
 		BiomeLoader.load();
 		WorldMapPlayerTypeLoader.load();
 		BiomeLoader.load();
-		SiteTileTypeLoader.load();
+		TileLoader.load();
 
 		WORLD_MAP.create();
 		SITE.create();

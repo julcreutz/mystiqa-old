@@ -19,7 +19,8 @@
       "Green",
       "Brown",
       "Green"
-    ]
+    ],
+    "solid": true
   },
   "TreeMiddle": {
     "name": "TreeMiddle",

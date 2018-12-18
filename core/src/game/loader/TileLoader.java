@@ -7,7 +7,7 @@ import game.main.site.tile.TileType;
 
 import java.util.HashMap;
 
-public class SiteTileTypeLoader {
+public class TileLoader {
     private static HashMap<String, TileType> types;
 
     public static void load() {
@@ -16,9 +16,7 @@ public class SiteTileTypeLoader {
         for (JsonValue json : new JsonReader().parse(Gdx.files.internal("data/tiles.json"))) {
             TileType type = new TileType();
 
-            if (json.has("name")) {
-                type.name = json.getString("name");
-            }
+            type.name = json.getString("name", "");
 
             if (json.has("sheet")) {
                 type.sheet = SheetLoader.load(json.getString("sheet"));
@@ -28,13 +26,13 @@ public class SiteTileTypeLoader {
                 type.colors = json.get("colors").asStringArray();
             }
 
-            if (json.has("autoTile")) {
-                type.autoTile = json.getBoolean("autoTile");
-            }
+            type.autoTile = json.getBoolean("autoTile", false);
 
             if (json.has("connect")) {
                 type.connect = json.get("connect").asStringArray();
             }
+
+            type.solid = json.getBoolean("solid", false);
 
             types.put(json.name, type);
         }

@@ -17,17 +17,25 @@ public class BiomeLoader {
         for (JsonValue json : new JsonReader().parse(Gdx.files.internal("data/biomes.json"))) {
             BiomeType type = new BiomeType();
 
-            type.name = json.getString("name");
-            type.connect = json.get("connect").asStringArray();
+            type.name = json.getString("name", "");
 
-            type.sheet = SheetLoader.load(json.getString("sheet"));
-            type.colors = json.get("colors").asStringArray();
+            if (json.has("connect")) {
+                type.connect = json.get("connect").asStringArray();
+            }
 
-            type.minElevation = json.getFloat("minElevation");
-            type.maxElevation = json.getFloat("maxElevation");
+            if (json.has("sheet")) {
+                type.sheet = SheetLoader.load(json.getString("sheet"));
+            }
 
-            type.traversable = json.getBoolean("traversable");
-            type.traversalCost = json.getFloat("traversalCost");
+            if (json.has("colors")) {
+                type.colors = json.get("colors").asStringArray();
+            }
+
+            type.minElevation = json.getFloat("minElevation", 0);
+            type.maxElevation = json.getFloat("maxElevation", 0);
+
+            type.traversable = json.getBoolean("traversable", true);
+            type.traversalCost = json.getFloat("traversalCost", 1);
 
             types.put(json.name, type);
         }

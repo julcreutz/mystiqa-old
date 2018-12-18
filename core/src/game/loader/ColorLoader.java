@@ -16,9 +16,9 @@ public class ColorLoader {
         for (JsonValue json : new JsonReader().parse(Gdx.files.internal("data/colors.json"))) {
             Color c = new Color();
 
-            c.r = json.getInt("r") / 255f;
-            c.g = json.getInt("g") / 255f;
-            c.b = json.getInt("b") / 255f;
+            c.r = json.getInt("r", 255) / 255f;
+            c.g = json.getInt("g", 255) / 255f;
+            c.b = json.getInt("b", 255) / 255f;
             c.a = 1;
 
             colors.put(json.name, c);

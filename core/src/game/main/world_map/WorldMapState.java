@@ -5,7 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import game.loader.SiteTileTypeLoader;
+import game.loader.TileLoader;
 import game.main.Game;
 import game.main.GameState;
 import game.main.site.SiteData;
@@ -13,10 +13,11 @@ import game.main.world_map.entity.WorldMapEntity;
 import game.main.world_map.entity.WorldMapPlayer;
 import game.main.world_map.site.Site;
 import game.main.world_map.biome.Biome;
+import game.noise.Noise;
+import game.noise.NoiseParameters;
 
 public class WorldMapState extends GameState {
     public static final float CAM_SPEED = 5f;
-    public static final float CURSOR_ANIMATION_SPEED = 2.5f;
 
     public WorldMapGenerator generator;
 
@@ -77,19 +78,19 @@ public class WorldMapState extends GameState {
                 SiteData site = new SiteData();
 
                 for (int x = 0; x < site.tiles.length; x++) {
-                    for (int y = 0; y < site.tiles[0].length; y++) {
-                        site.placeTile(SiteTileTypeLoader.load("Grass"), x, y, 0);
+                    for (int y = site.tiles[0].length - 1; y >= 0; y--) {
+                        site.placeTile(TileLoader.load("Grass"), x, y, 0);
 
-                        if (MathUtils.randomBoolean(.1f)) {
-                            site.placeTile(SiteTileTypeLoader.load("TreeBottom"), x, y, 0);
+                        if (MathUtils.randomBoolean(.05f)) {
+                            site.placeTile(TileLoader.load("TreeBottom"), x, y, 0);
 
                             int z = 1;
                             for (int i = 0; i < MathUtils.random(0, 2); i++) {
-                                site.placeTile(SiteTileTypeLoader.load("TreeMiddle"), x, y, z);
+                                site.placeTile(TileLoader.load("TreeMiddle"), x, y + z, 1);
                                 z++;
                             }
 
-                            site.placeTile(SiteTileTypeLoader.load("TreeTop"), x, y, z);
+                            site.placeTile(TileLoader.load("TreeTop"), x, y + z, 1);
                         }
                     }
                 }

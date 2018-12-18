@@ -12,6 +12,8 @@ public class TileType {
 
     public String[] connect;
 
+    public boolean solid;
+
     public boolean connect(TileType type) {
         if (connect != null) {
             for (String _connect : connect) {
