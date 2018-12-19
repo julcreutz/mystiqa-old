@@ -3,6 +3,7 @@ package game.loader;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
+import game.main.play.structure.SingleTile;
 import game.main.play.structure.Structure;
 import game.main.play.structure.Tree;
 
@@ -21,6 +22,8 @@ public class StructureLoader {
 
             if (type.equals("Tree")) {
                 struct = new Tree();
+            } else if (type.equals("SingleTile")) {
+                struct = new SingleTile();
             }
 
             if (struct != null) {

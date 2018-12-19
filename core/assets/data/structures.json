@@ -7,5 +7,10 @@
       "minHeight": 0,
       "maxHeight": 2
     }
+  },
+  "Stone": {
+    "SingleTile": {
+      "tile": "Stone"
+    }
   }
 }
