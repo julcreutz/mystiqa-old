@@ -1,11 +1,11 @@
-package game.main.region.entity;
+package game.main.play.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import game.main.Game;
-import game.main.region.RegionData;
+import game.main.play.Play;
 
-public class SiteEntity {
+public class Entity {
     public float x;
     public float y;
 
@@ -16,11 +16,11 @@ public class SiteEntity {
     public float hx;
     public float hy;
 
-    public SiteEntity() {
+    public Entity() {
         hitbox = new Rectangle();
     }
 
-    public void update(RegionData site) {
+    public void update(Play site) {
         positionHitbox(velX * Game.delta(), 0);
 
         for (int x = 0; x < site.solidTiles.length; x++) {

@@ -11,6 +11,22 @@
       "TreeBottom"
     ]
   },
+  "Water": {
+    "name": "Water",
+    "sheet": "Water",
+    "colors": [
+      "Black",
+      "Blue"
+    ]
+  },
+  "Sand": {
+    "name": "Sand",
+    "sheet": "Sand",
+    "colors": [
+      "Black",
+      "Yellow"
+    ]
+  },
   "TreeBottom": {
     "name": "TreeBottom",
     "sheet": "TreeBottom",

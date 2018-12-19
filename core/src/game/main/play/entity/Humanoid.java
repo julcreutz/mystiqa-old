@@ -1,4 +1,4 @@
-package game.main.region.entity;
+package game.main.play.entity;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -8,9 +8,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import game.main.Game;
-import game.main.region.RegionData;
+import game.main.play.Play;
 
-public class Humanoid extends SiteEntity {
+public class Humanoid extends Entity {
     public TextureRegion[][] feet;
     public TextureRegion[][] body;
     public TextureRegion[][] head;
@@ -29,7 +29,7 @@ public class Humanoid extends SiteEntity {
     }
 
     @Override
-    public void update(RegionData site) {
+    public void update(Play site) {
         Vector2 dir = new Vector2();
 
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {

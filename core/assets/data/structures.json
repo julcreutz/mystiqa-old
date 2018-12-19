@@ -4,8 +4,8 @@
       "bottomTile": "TreeBottom",
       "middleTile": "TreeMiddle",
       "topTile": "TreeTop",
-      "minHeight": 1,
-      "maxHeight": 3
+      "minHeight": 0,
+      "maxHeight": 2
     }
   }
 }

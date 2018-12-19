@@ -3,7 +3,7 @@ package game.loader;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
-import game.main.region.tile.TileType;
+import game.main.play.tile.TileType;
 
 import java.util.HashMap;
 

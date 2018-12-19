@@ -1,46 +1,69 @@
-package game.main.region;
+package game.main.play;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import game.loader.ColorLoader;
 import game.loader.SheetLoader;
+import game.loader.TileLoader;
 import game.main.Game;
-import game.main.region.entity.Humanoid;
-import game.main.region.entity.SiteEntity;
-import game.main.region.tile.Tile;
-import game.main.region.tile.TileType;
+import game.main.GameState;
+import game.main.play.entity.Entity;
+import game.main.play.entity.Humanoid;
+import game.main.play.tile.Tile;
+import game.main.play.tile.TileType;
 
-public class RegionData {
+public class Play extends GameState {
     public Tile[][][] tiles;
     public Rectangle[][] solidTiles;
 
-    public Array<SiteEntity> entities;
+    public Array<Entity> entities;
 
-    public SiteEntity player;
+    public Entity player;
 
     public int x0;
     public int x1;
     public int y0;
     public int y1;
 
-    public RegionData() {
+    @Override
+    public void create() {
+        super.create();
+
         tiles = new Tile[64][64][8];
         solidTiles = new Rectangle[tiles.length][tiles[0].length];
 
-        entities = new Array<SiteEntity>();
+        entities = new Array<Entity>();
+
+        for (int x = 0; x < tiles.length; x++) {
+            for (int y = 0; y < tiles[0].length; y++) {
+                placeTile(TileLoader.load("Grass"), x, y, 0);
+            }
+        }
+
+        Humanoid h = new Humanoid();
+        h.color = ColorLoader.load("Peach");
+        h.feet = SheetLoader.load("HumanFeet");
+        h.body = SheetLoader.load("HumanBody");
+        h.head = SheetLoader.load("HumanHead");
+        h.animSpeed = 7.5f;
+
+        player = h;
+        entities.add(player);
     }
 
-    public void update(Region state) {
-        state.cam.position.x = MathUtils.clamp(player.x + 4, Game.WIDTH * .5f, tiles.length * 8 - Game.WIDTH * .5f);
-        state.cam.position.y = MathUtils.clamp(player.y + 4, Game.HEIGHT * .5f, tiles[0].length * 8 - Game.HEIGHT * .5f);
-        state.cam.update();
+    @Override
+    public void update(Game g) {
+        super.update(g);
 
-        x0 = MathUtils.clamp(MathUtils.floor(state.cam.position.x / 8f) - 10, 0, tiles.length);
-        x1 = MathUtils.clamp(MathUtils.floor(state.cam.position.x / 8f) + 10, 0, tiles.length);
-        y0 = MathUtils.clamp(MathUtils.floor(state.cam.position.y / 8f) - 8, 0, tiles[0].length);
-        y1 = MathUtils.clamp(MathUtils.floor(state.cam.position.y / 8f) + 8, 0, tiles[0].length);
+        cam.position.x = Game.WIDTH * .5f + MathUtils.floor((player.x + 4) / Game.WIDTH) * Game.WIDTH;
+        cam.position.y = Game.HEIGHT * .5f + MathUtils.floor((player.y + 4) / Game.HEIGHT) * Game.HEIGHT;
+        cam.update();
+
+        x0 = MathUtils.clamp(MathUtils.floor(cam.position.x / 8f) - 10, 0, tiles.length);
+        x1 = MathUtils.clamp(MathUtils.floor(cam.position.x / 8f) + 10, 0, tiles.length);
+        y0 = MathUtils.clamp(MathUtils.floor(cam.position.y / 8f) - 8, 0, tiles[0].length);
+        y1 = MathUtils.clamp(MathUtils.floor(cam.position.y / 8f) + 8, 0, tiles[0].length);
 
         for (int x = 0; x < solidTiles.length; x++) {
             for (int y = 0; y < solidTiles[0].length; y++) {
@@ -68,12 +91,15 @@ public class RegionData {
             }
         }
 
-        for (SiteEntity entity : entities) {
+        for (Entity entity : entities) {
             entity.update(this);
         }
     }
 
-    public void render(SpriteBatch batch) {
+    @Override
+    public void renderToBuffer() {
+        super.renderToBuffer();
+
         for (int x = x0; x < x1; x++) {
             for (int y = y1 - 1; y >= y0; y--) {
                 Tile tile = tiles[x][y][0];
@@ -84,7 +110,7 @@ public class RegionData {
             }
         }
 
-        for (SiteEntity entity : entities) {
+        for (Entity entity : entities) {
             entity.render(batch);
         }
 

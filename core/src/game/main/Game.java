@@ -6,8 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
 import game.loader.*;
-import game.main.region.Region;
-import game.main.world_map.WorldMap;
+import game.main.play.Play;
 
 public class Game extends ApplicationAdapter {
 	public static final String TITLE = "Mystiqa";
@@ -16,10 +15,9 @@ public class Game extends ApplicationAdapter {
 	public static final int HEIGHT = 72;
 	public static final int SCALE = 12;
 
-    public final WorldMap WORLD_MAP = new WorldMap();
-    public final Region REGION = new Region();
+    public final Play PLAY = new Play();
 
-    public final GameState[] STATES = new GameState[] {WORLD_MAP, REGION};
+    public final GameState[] STATES = new GameState[] {PLAY};
 
 	public static float time;
 
@@ -32,14 +30,11 @@ public class Game extends ApplicationAdapter {
 
 		SheetLoader.load();
 		ColorLoader.load();
-		BiomeLoader.load();
-		WorldMapPlayerTypeLoader.load();
-		BiomeLoader.load();
 		TileLoader.load();
+		StructureLoader.load();
 
-		WORLD_MAP.create();
-		REGION.create();
-		state = WORLD_MAP;
+		PLAY.create();
+		state = PLAY;
 	}
 
 	@Override

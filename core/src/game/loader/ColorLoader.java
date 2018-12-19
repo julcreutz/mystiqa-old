@@ -25,7 +25,7 @@ public class ColorLoader {
         }
     }
 
-    public static Color load(String id) {
-        return colors.containsKey(id) ? colors.get(id) : null;
+    public static Color load(String name) {
+        return colors.containsKey(name) ? colors.get(name) : null;
     }
 }
