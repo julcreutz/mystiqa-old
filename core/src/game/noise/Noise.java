@@ -8,9 +8,7 @@ import java.util.Random;
 public class Noise {
     private Vector2[][] gradients;
 
-    public Noise(long seed) {
-        Random random = new Random(seed);
-
+    public Noise(Random rand) {
         gradients = new Vector2[256][256];
 
         Vector2[] possible = new Vector2[] {
@@ -22,7 +20,7 @@ public class Noise {
 
         for (int xx = 0; xx < gradients.length; xx++) {
             for (int yy = 0; yy < gradients[0].length; yy++) {
-                gradients[xx][yy] = possible[random.nextInt(possible.length - 1)];
+                gradients[xx][yy] = possible[rand.nextInt(possible.length - 1)];
             }
         }
     }

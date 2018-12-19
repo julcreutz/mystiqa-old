@@ -27,6 +27,14 @@
       "Yellow"
     ]
   },
+  "Stone": {
+    "name": "Stone",
+    "sheet": "Grass",
+    "colors": [
+      "Black",
+      "Gray"
+    ]
+  },
   "TreeBottom": {
     "name": "TreeBottom",
     "sheet": "TreeBottom",

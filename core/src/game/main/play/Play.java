@@ -1,15 +1,14 @@
 package game.main.play;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
-import game.loader.ColorLoader;
-import game.loader.SheetLoader;
-import game.loader.TileLoader;
 import game.main.Game;
 import game.main.GameState;
+import game.main.gen.WorldGenerator;
 import game.main.play.entity.Entity;
-import game.main.play.entity.Humanoid;
 import game.main.play.tile.Tile;
 import game.main.play.tile.TileType;
 
@@ -26,44 +25,48 @@ public class Play extends GameState {
     public int y0;
     public int y1;
 
+    public WorldGenerator worldGenerator;
+
     @Override
     public void create() {
         super.create();
 
-        tiles = new Tile[64][64][8];
-        solidTiles = new Rectangle[tiles.length][tiles[0].length];
-
-        entities = new Array<Entity>();
-
-        for (int x = 0; x < tiles.length; x++) {
-            for (int y = 0; y < tiles[0].length; y++) {
-                placeTile(TileLoader.load("Grass"), x, y, 0);
-            }
-        }
-
-        Humanoid h = new Humanoid();
-        h.color = ColorLoader.load("Peach");
-        h.feet = SheetLoader.load("HumanFeet");
-        h.body = SheetLoader.load("HumanBody");
-        h.head = SheetLoader.load("HumanHead");
-        h.animSpeed = 7.5f;
-
-        player = h;
-        entities.add(player);
+        worldGenerator = new WorldGenerator(this);
+        worldGenerator.generate();
     }
 
     @Override
     public void update(Game g) {
         super.update(g);
 
-        cam.position.x = Game.WIDTH * .5f + MathUtils.floor((player.x + 4) / Game.WIDTH) * Game.WIDTH;
-        cam.position.y = Game.HEIGHT * .5f + MathUtils.floor((player.y + 4) / Game.HEIGHT) * Game.HEIGHT;
+        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+            worldGenerator.generate();
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            cam.position.x -= 64 * Game.delta();
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            cam.position.x += 64 * Game.delta();
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            cam.position.y -= 64 * Game.delta();
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            cam.position.y += 64 * Game.delta();
+        }
+
+        //cam.position.x = Game.WIDTH * .5f + MathUtils.floor((player.x + 4) / Game.WIDTH) * Game.WIDTH;
+        //cam.position.y = Game.HEIGHT * .5f + MathUtils.floor((player.y + 4) / Game.HEIGHT) * Game.HEIGHT;
         cam.update();
 
-        x0 = MathUtils.clamp(MathUtils.floor(cam.position.x / 8f) - 10, 0, tiles.length);
-        x1 = MathUtils.clamp(MathUtils.floor(cam.position.x / 8f) + 10, 0, tiles.length);
-        y0 = MathUtils.clamp(MathUtils.floor(cam.position.y / 8f) - 8, 0, tiles[0].length);
-        y1 = MathUtils.clamp(MathUtils.floor(cam.position.y / 8f) + 8, 0, tiles[0].length);
+        x0 = MathUtils.clamp(MathUtils.floor(cam.position.x / 8f) - 1000, 0, tiles.length);
+        x1 = MathUtils.clamp(MathUtils.floor(cam.position.x / 8f) + 1000, 0, tiles.length);
+        y0 = MathUtils.clamp(MathUtils.floor(cam.position.y / 8f) - 800, 0, tiles[0].length);
+        y1 = MathUtils.clamp(MathUtils.floor(cam.position.y / 8f) + 800, 0, tiles[0].length);
 
         for (int x = 0; x < solidTiles.length; x++) {
             for (int y = 0; y < solidTiles[0].length; y++) {
