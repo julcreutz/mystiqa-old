@@ -4,11 +4,12 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import game.loader.*;
+import game.main.region.Region;
+import game.main.region.RegionData;
+import game.main.region.tile.Tile;
 import game.main.world_map.biome.Biome;
 import game.main.world_map.entity.WorldMapEntity;
 import game.main.world_map.entity.WorldMapPlayer;
-import game.main.world_map.site.Site;
-import game.main.world_map.site.SiteType;
 import game.main.world_map.biome.BiomeType;
 import game.noise.Noise;
 import game.noise.NoiseParameters;
@@ -21,13 +22,13 @@ public class WorldMapGenerator {
 
     public static final NoiseParameters ELEVATION = new NoiseParameters(6, 0.03125f, 1);
 
-    public WorldMapState map;
+    public WorldMap map;
 
     public Random rand;
 
     public Noise elevation;
 
-    public WorldMapGenerator(WorldMapState map) {
+    public WorldMapGenerator(WorldMap map) {
         this.map = map;
     }
 
@@ -99,23 +100,27 @@ public class WorldMapGenerator {
             }
         }
 
-        map.sites = new Site[map.biomes.length][map.biomes[0].length];
+        map.regions = new RegionData[map.biomes.length][map.biomes[0].length];
 
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 10; i++) {
             int x;
             int y;
 
             do {
                 x = rand.nextInt(map.biomes.length);
                 y = rand.nextInt(map.biomes[0].length);
-            } while (map.biomes[x][y] != null && !map.biomes[x][y].type.name.equals("Grass"));
+            } while (map.biomes[x][y] != null && !map.biomes[x][y].type.name.equals("Forest"));
 
-            SiteType type = new SiteType();
-            type.sheet = SheetLoader.load("House");
-            type.color = ColorLoader.load("Brown");
-            Site site = new Site(type, x, y);
+            RegionData region = new RegionData();
 
-            map.sites[x][y] = site;
+            for (int xx = 0; xx < region.tiles.length; xx++) {
+                for (int yy = 0; yy < region.tiles[0].length; yy++) {
+                    region.placeTile(TileLoader.load("Grass"), xx, yy, 0);
+                }
+            }
+
+            map.regions[x][y] = region;
+            map.biomes[x][y] = null;
         }
 
         map.entities = new Array<WorldMapEntity>();
@@ -126,7 +131,7 @@ public class WorldMapGenerator {
         do {
             x = rand.nextInt(map.biomes.length);
             y = rand.nextInt(map.biomes[0].length);
-        } while (map.biomes[x][y] != null && !map.biomes[x][y].type.name.equals("Grass"));
+        } while (map.biomes[x][y] != null && !map.biomes[x][y].type.name.equals("Forest"));
 
         WorldMapPlayer player = new WorldMapPlayer(WorldMapPlayerTypeLoader.load("Human"), x * 8, y * 8);
         map.player = player;
@@ -142,7 +147,7 @@ public class WorldMapGenerator {
         map.cam.position.y = y * 8 + 4;
     }
 
-    public BiomeType biomeAt(int x, int y) {
+    public BiomeType biomeAt(float x, float y) {
         float e = elevationAt(x, y);
 
         for (BiomeType biome : BiomeLoader.loadAll()) {
@@ -154,7 +159,7 @@ public class WorldMapGenerator {
         return null;
     }
 
-    public float elevationAt(int x, int y) {
+    public float elevationAt(float x, float y) {
         return elevation.noiseAt(x, y, ELEVATION) * MathUtils.clamp((1 - new Vector2(map.biomes.length * .5f, map.biomes[0].length * .5f)
                 .sub(x, y).len() / ((float) Math.sqrt(map.biomes.length * map.biomes.length + map.biomes[0].length * map.biomes[0].length) * .5f)) + .25f, 0, 1);
     }

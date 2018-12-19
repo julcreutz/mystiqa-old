@@ -1,10 +1,10 @@
-package game.main.site;
+package game.main.region;
 
 import game.main.Game;
 import game.main.GameState;
 
-public class SiteState extends GameState {
-    public SiteData data;
+public class Region extends GameState {
+    public RegionData data;
 
     @Override
     public void update(Game g) {

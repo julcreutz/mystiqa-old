@@ -1,6 +1,6 @@
 {
   "Ocean": {
-    "name": "Water",
+    "name": "Ocean",
     "connect": [],
     "sheet": "Water",
     "colors": ["Black", "Blue"],
@@ -10,8 +10,8 @@
     "traversalCost": 16
   },
   "Beach": {
-    "name": "Sand",
-    "connect": ["Grass", "Tree"],
+    "name": "Beach",
+    "connect": ["Plains", "Forest", "River"],
     "sheet": "Ice",
     "colors": ["Black", "Blue", "Yellow", "Yellow"],
     "minElevation": 0.4375,
@@ -19,8 +19,8 @@
     "traversalCost": 2
   },
   "Plains": {
-    "name": "Grass",
-    "connect": ["Tree", "Hills", "Mountains", "River", "Sand"],
+    "name": "Plains",
+    "connect": ["Forest", "Mountains", "River", "Beach"],
     "sheet": "Ice",
     "colors": ["Black", "Blue", "Green", "Green"],
     "minElevation": 0.45,
@@ -28,7 +28,7 @@
     "traversalCost": 1
   },
   "Forest": {
-    "name": "Tree",
+    "name": "Forest",
     "connect": [],
     "sheet": "Tree",
     "colors": ["Black", "Brown", "Green"],
@@ -38,7 +38,6 @@
   },
   "Mountains": {
     "name": "Mountains",
-    "connect": [],
     "sheet": "Mountains",
     "colors": ["Black", "Green", "Gray"],
     "minElevation": 0.6,
@@ -47,7 +46,7 @@
   },
   "River": {
     "name": "River",
-    "connect": ["Water"],
+    "connect": ["Ocean"],
     "sheet": "Ice",
     "colors": ["Black", "Green", "Blue", "Blue"],
     "traversalCost": 4

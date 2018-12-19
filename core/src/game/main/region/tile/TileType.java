@@ -1,4 +1,4 @@
-package game.main.site.tile;
+package game.main.region.tile;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 

@@ -3,7 +3,7 @@ package game.main.world_map.biome;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import game.loader.palette.PaletteShaderLoader;
-import game.main.world_map.WorldMapState;
+import game.main.world_map.WorldMap;
 
 public class Biome {
     public BiomeType type;
@@ -19,7 +19,7 @@ public class Biome {
         this.y = y;
     }
 
-    public void update(WorldMapState map) {
+    public void update(WorldMap map) {
         int n = 0;
 
         if (connect(map, x + 1, y)) {
@@ -97,7 +97,7 @@ public class Biome {
         batch.setShader(null);
     }
 
-    public boolean connect(WorldMapState map, int x, int y) {
+    public boolean connect(WorldMap map, int x, int y) {
         return x >= 0 && x < map.biomes.length && y >= 0 && y < map.biomes[0].length && map.biomes[x][y] != null && type.connect(map.biomes[x][y].type);
     }
 }

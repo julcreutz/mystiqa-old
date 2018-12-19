@@ -1,9 +1,9 @@
-package game.main.site.tile;
+package game.main.region.tile;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import game.loader.palette.PaletteShaderLoader;
-import game.main.site.SiteData;
+import game.main.region.RegionData;
 
 public class Tile {
     public TileType type;
@@ -18,7 +18,7 @@ public class Tile {
         this.type = type;
     }
 
-    public void update(SiteData site) {
+    public void update(RegionData site) {
         if (type.autoTile) {
             int n = 0;
 
@@ -95,12 +95,12 @@ public class Tile {
 
     public void render(SpriteBatch batch) {
         batch.setShader(PaletteShaderLoader.load(type.colors));
-        batch.draw(image, x * 8, y * 8);
+        batch.draw(image, x * 8, y * 8 + z * 8);
         batch.setColor(1, 1, 1, 1);
         batch.setShader(null);
     }
 
-    public boolean connect(SiteData site, int x, int y, int z) {
+    public boolean connect(RegionData site, int x, int y, int z) {
         Tile tile = site.tileAt(x, y, z);
         return tile != null && type.connect(tile.type);
     }

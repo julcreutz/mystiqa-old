@@ -5,24 +5,25 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import game.loader.ColorLoader;
+import game.loader.SheetLoader;
 import game.loader.TileLoader;
 import game.main.Game;
 import game.main.GameState;
-import game.main.site.SiteData;
+import game.main.region.Region;
+import game.main.region.RegionData;
+import game.main.region.entity.Humanoid;
 import game.main.world_map.entity.WorldMapEntity;
 import game.main.world_map.entity.WorldMapPlayer;
-import game.main.world_map.site.Site;
 import game.main.world_map.biome.Biome;
-import game.noise.Noise;
-import game.noise.NoiseParameters;
 
-public class WorldMapState extends GameState {
+public class WorldMap extends GameState {
     public static final float CAM_SPEED = 5f;
 
     public WorldMapGenerator generator;
 
     public Biome[][] biomes;
-    public Site[][] sites;
+    public RegionData[][] regions;
 
     public Array<WorldMapEntity> entities;
 
@@ -75,28 +76,40 @@ public class WorldMapState extends GameState {
             player.y = MathUtils.lerp(lastY, nextY, 1 - moveTime) * 8f;
         } else {
             if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
-                SiteData site = new SiteData();
+                g.REGION.data = regions[lastX][lastY];
 
-                for (int x = 0; x < site.tiles.length; x++) {
-                    for (int y = site.tiles[0].length - 1; y >= 0; y--) {
-                        site.placeTile(TileLoader.load("Grass"), x, y, 0);
+                g.REGION.data.player = new Humanoid();
 
-                        if (MathUtils.randomBoolean(.05f)) {
-                            site.placeTile(TileLoader.load("TreeBottom"), x, y, 0);
-
-                            int z = 1;
-                            for (int i = 0; i < MathUtils.random(0, 2); i++) {
-                                site.placeTile(TileLoader.load("TreeMiddle"), x, y + z, 1);
-                                z++;
-                            }
-
-                            site.placeTile(TileLoader.load("TreeTop"), x, y + z, 1);
-                        }
-                    }
+                switch (player.dir) {
+                    case 0:
+                        g.REGION.data.player.x = -4;
+                        g.REGION.data.player.y = g.REGION.data.tiles[0].length * 4f + 4;
+                        break;
+                    case 2:
+                        g.REGION.data.player.x = g.REGION.data.tiles.length * 8f - 4;
+                        g.REGION.data.player.y = g.REGION.data.tiles[0].length * 4f + 4;
+                        break;
+                    case 1:
+                        g.REGION.data.player.x = g.REGION.data.tiles.length * 4f + 4;
+                        g.REGION.data.player.y = -4;
+                        break;
+                    case 3:
+                        g.REGION.data.player.x = g.REGION.data.tiles.length * 4f + 4;
+                        g.REGION.data.player.y = g.REGION.data.tiles[0].length * 8f - 4;
+                        break;
                 }
 
-                g.SITE.data = site;
-                g.nextState = g.SITE;
+                ((Humanoid) g.REGION.data.player).dir = player.dir;
+
+                ((Humanoid) g.REGION.data.player).feet = SheetLoader.load("HumanFeet");
+                ((Humanoid) g.REGION.data.player).body = SheetLoader.load("HumanBody");
+                ((Humanoid) g.REGION.data.player).head = SheetLoader.load("HumanHead");
+                ((Humanoid) g.REGION.data.player).color = ColorLoader.load("Peach");
+                ((Humanoid) g.REGION.data.player).animSpeed = 7.5f;
+
+                g.REGION.data.entities.add(g.REGION.data.player);
+
+                g.nextState = g.REGION;
             }
 
             if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
@@ -129,16 +142,6 @@ public class WorldMapState extends GameState {
             }
         }
 
-        for (int x = 0; x < sites.length; x++) {
-            for (int y = 0; y < sites[0].length; y++) {
-                Site site = sites[x][y];
-
-                if (site != null) {
-                    site.update(this);
-                }
-            }
-        }
-
         for (WorldMapEntity e : entities) {
             e.update(this);
         }
@@ -160,16 +163,6 @@ public class WorldMapState extends GameState {
 
                 if (tile != null) {
                     tile.render(batch);
-                }
-            }
-        }
-
-        for (int x = x0; x < x1; x++) {
-            for (int y = y0; y < y1; y++) {
-                Site site = sites[x][y];
-
-                if (site != null) {
-                    site.render(batch);
                 }
             }
         }
@@ -215,12 +208,6 @@ public class WorldMapState extends GameState {
             batch.draw(cursor, cursorX * 8 - 8, cursorY * 8 - 8, 4, 4, 8, 8, 1, 1, 90);
         }
         */
-
-        Site site = sites[cursorX][cursorY];
-
-        if (site != null) {
-            Game.write(batch, "Hateno Village", site.x * 8f + 4, site.y * 8f + 16, true);
-        }
     }
 
     public Array<WorldMapNode> findPath(int x1, int y1, int x2, int y2) {

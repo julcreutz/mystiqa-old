@@ -1,7 +1,5 @@
-package game.main.site;
+package game.main.region;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
@@ -9,12 +7,12 @@ import com.badlogic.gdx.utils.Array;
 import game.loader.ColorLoader;
 import game.loader.SheetLoader;
 import game.main.Game;
-import game.main.site.entity.Humanoid;
-import game.main.site.entity.SiteEntity;
-import game.main.site.tile.Tile;
-import game.main.site.tile.TileType;
+import game.main.region.entity.Humanoid;
+import game.main.region.entity.SiteEntity;
+import game.main.region.tile.Tile;
+import game.main.region.tile.TileType;
 
-public class SiteData {
+public class RegionData {
     public Tile[][][] tiles;
     public Rectangle[][] solidTiles;
 
@@ -27,25 +25,14 @@ public class SiteData {
     public int y0;
     public int y1;
 
-    public SiteData() {
-        tiles = new Tile[64][64][2];
+    public RegionData() {
+        tiles = new Tile[64][64][8];
         solidTiles = new Rectangle[tiles.length][tiles[0].length];
 
         entities = new Array<SiteEntity>();
-
-        player = new Humanoid();
-        player.x = 16;
-        player.y = 16;
-        ((Humanoid) player).feet = SheetLoader.load("HumanFeet");
-        ((Humanoid) player).body = SheetLoader.load("HumanBody");
-        ((Humanoid) player).head = SheetLoader.load("HumanHead");
-        ((Humanoid) player).color = ColorLoader.load("Peach");
-        ((Humanoid) player).animSpeed = 7.5f;
-
-        entities.add(player);
     }
 
-    public void update(SiteState state) {
+    public void update(Region state) {
         state.cam.position.x = MathUtils.clamp(player.x + 4, Game.WIDTH * .5f, tiles.length * 8 - Game.WIDTH * .5f);
         state.cam.position.y = MathUtils.clamp(player.y + 4, Game.HEIGHT * .5f, tiles[0].length * 8 - Game.HEIGHT * .5f);
         state.cam.update();
@@ -103,10 +90,12 @@ public class SiteData {
 
         for (int x = x0; x < x1; x++) {
             for (int y = y1 - 1; y >= y0; y--) {
-                Tile tile = tiles[x][y][1];
+                for (int z = 1; z < tiles[0][0].length; z++) {
+                    Tile tile = tiles[x][y][z];
 
-                if (tile != null) {
-                    tile.render(batch);
+                    if (tile != null) {
+                        tile.render(batch);
+                    }
                 }
             }
         }

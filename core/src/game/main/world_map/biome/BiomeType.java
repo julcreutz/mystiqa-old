@@ -16,9 +16,11 @@ public class BiomeType {
     public float traversalCost;
 
     public boolean connect(BiomeType type) {
-        for (String _connect : connect) {
-            if (_connect.equals(type.name)) {
-                return true;
+        if (connect != null) {
+            for (String _connect : connect) {
+                if (_connect.equals(type.name)) {
+                    return true;
+                }
             }
         }
 
