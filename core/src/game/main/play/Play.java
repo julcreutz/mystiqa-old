@@ -27,6 +27,14 @@ public class Play extends GameState {
 
     public WorldGenerator worldGenerator;
 
+    public float camX;
+    public float camY;
+
+    public float toCamX;
+    public float toCamY;
+
+    public float camTime;
+
     @Override
     public void create() {
         super.create();
@@ -43,30 +51,35 @@ public class Play extends GameState {
             worldGenerator.generate();
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            cam.position.x -= 64 * Game.delta();
+        toCamX = Game.WIDTH * .5f + MathUtils.floor((player.x + 4) / Game.WIDTH) * Game.WIDTH;
+        toCamY = Game.HEIGHT * .5f + MathUtils.floor((player.y + 4) / Game.HEIGHT) * Game.HEIGHT;
+
+        if (camX != toCamX || camY != toCamY) {
+            if (camTime == 0) {
+                camTime = 1;
+            }
+
+            camTime -= Game.delta();
+
+            float p = MathUtils.clamp(1 - camTime, 0, 1);
+
+            cam.position.x = MathUtils.lerp(camX, toCamX, p);
+            cam.position.y = MathUtils.lerp(camY, toCamY, p);
+
+            if (camTime < 0) {
+                camX = toCamX;
+                camY = toCamY;
+
+                camTime = 0;
+            }
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            cam.position.x += 64 * Game.delta();
-        }
-
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            cam.position.y -= 64 * Game.delta();
-        }
-
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            cam.position.y += 64 * Game.delta();
-        }
-
-        //cam.position.x = Game.WIDTH * .5f + MathUtils.floor((player.x + 4) / Game.WIDTH) * Game.WIDTH;
-        //cam.position.y = Game.HEIGHT * .5f + MathUtils.floor((player.y + 4) / Game.HEIGHT) * Game.HEIGHT;
         cam.update();
 
-        x0 = MathUtils.clamp(MathUtils.floor(cam.position.x / 8f) - 10, 0, tiles.length);
-        x1 = MathUtils.clamp(MathUtils.floor(cam.position.x / 8f) + 10, 0, tiles.length);
-        y0 = MathUtils.clamp(MathUtils.floor(cam.position.y / 8f) - 8, 0, tiles[0].length);
-        y1 = MathUtils.clamp(MathUtils.floor(cam.position.y / 8f) + 8, 0, tiles[0].length);
+        x0 = MathUtils.clamp(MathUtils.floor(cam.position.x / 8f) - 16, 0, tiles.length);
+        x1 = MathUtils.clamp(MathUtils.floor(cam.position.x / 8f) + 16, 0, tiles.length);
+        y0 = MathUtils.clamp(MathUtils.floor(cam.position.y / 8f) - 16, 0, tiles[0].length);
+        y1 = MathUtils.clamp(MathUtils.floor(cam.position.y / 8f) + 16, 0, tiles[0].length);
 
         for (int x = 0; x < solidTiles.length; x++) {
             for (int y = 0; y < solidTiles[0].length; y++) {
@@ -82,20 +95,22 @@ public class Play extends GameState {
             }
         }
 
-        for (int x = x0; x < x1; x++) {
-            for (int y = y1 - 1; y >= y0; y--) {
-                for (int z = 0; z < tiles[0][0].length; z++) {
-                    Tile tile = tiles[x][y][z];
+        if (camX == toCamX && camY == toCamY) {
+            for (int x = x0; x < x1; x++) {
+                for (int y = y1 - 1; y >= y0; y--) {
+                    for (int z = 0; z < tiles[0][0].length; z++) {
+                        Tile tile = tiles[x][y][z];
 
-                    if (tile != null) {
-                        tile.update(this);
+                        if (tile != null) {
+                            tile.update(this);
+                        }
                     }
                 }
             }
-        }
 
-        for (Entity entity : entities) {
-            entity.update(this);
+            for (Entity entity : entities) {
+                entity.update(this);
+            }
         }
     }
 
@@ -145,5 +160,10 @@ public class Play extends GameState {
 
     public void placeTile(TileType type, int x, int y, int z) {
         placeTile(new Tile(type), x, y, z);
+    }
+
+    public void positionCam() {
+        camX = toCamX = Game.WIDTH * .5f + MathUtils.floor((player.x + 4) / Game.WIDTH) * Game.WIDTH;
+        camY = toCamY = Game.HEIGHT * .5f + MathUtils.floor((player.y + 4) / Game.HEIGHT) * Game.HEIGHT;
     }
 }

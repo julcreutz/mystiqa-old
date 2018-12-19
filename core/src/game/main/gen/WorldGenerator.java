@@ -3,10 +3,13 @@ package game.main.gen;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
+import game.loader.ColorLoader;
+import game.loader.SheetLoader;
 import game.loader.StructureLoader;
 import game.loader.TileLoader;
 import game.main.play.Play;
 import game.main.play.entity.Entity;
+import game.main.play.entity.Humanoid;
 import game.main.play.structure.Structure;
 import game.main.play.tile.Tile;
 import game.noise.Noise;
@@ -185,17 +188,28 @@ public class WorldGenerator {
             Array<Room> river = new Array<Room>();
             river.add(roomAt(x * 2, y));
 
+            boolean firstStep = false;
+            boolean goneHorizontal = false;
+
             do {
-                if (rand.nextFloat() < .75f) {
+                if (!firstStep) {
                     y--;
+                    firstStep = true;
                 } else {
-                    if (rand.nextFloat() < .5f) {
-                        if (x < biomes.length - 1) {
-                            x++;
-                        }
+                    if (rand.nextFloat() < .75f || goneHorizontal) {
+                        y--;
+                        goneHorizontal = false;
                     } else {
-                        if (x > 0) {
-                            x--;
+                        goneHorizontal = true;
+
+                        if (rand.nextFloat() < .5f) {
+                            if (x < biomes.length - 1) {
+                                x++;
+                            }
+                        } else {
+                            if (x > 0) {
+                                x--;
+                            }
                         }
                     }
                 }
@@ -402,9 +416,81 @@ public class WorldGenerator {
             }
         }
 
+        for (Room r0 : rooms) {
+            for (Room r1 : r0.children) {
+                if (!isRiver(r1.x / 2, r1.y)) {
+                    if (r1.y == r0.y) {
+                        int x0 = (int) ((r0.x + r0.w * .5f) * 8f);
+                        int x1 = (int) ((r1.x + r1.w * .5f) * 8f);
+
+                        int y = (int) ((r0.y + r0.h * .5f + r1.y + r1.h * .5f) * .5f * 9f);
+
+                        for (int x = Math.min(x0, x1); x < Math.max(x0, x1); x++) {
+                            for (int yy = -1; yy <= 1; yy++) {
+                                if (play.tiles[x][y + yy][0] != null && play.tiles[x][y + yy][0].type.name.equals("Water")) {
+                                    play.placeTile(TileLoader.load("Stone"), x, y + yy, 0);
+                                }
+                            }
+                        }
+                    } else {
+                        if (r0.w == 2 && r1.w == 1) {
+                            int x0 = (int) ((r0.x) * 8f);
+                            int x1 = (int) ((r1.x) * 8f);
+
+                            int y = (int) ((r0.y + r0.h * .5f) * 9f);
+
+                            for (int x = Math.min(x0, x1); x < Math.max(x0, x1); x++) {
+                                for (int yy = -1; yy <= 1; yy++) {
+                                    if (play.tiles[x][y + yy][0].type.name.equals("Water")) {
+                                        play.placeTile(TileLoader.load("Stone"), x, y + yy, 0);
+                                    }
+                                }
+                            }
+                        }
+
+                        int y0 = (int) ((r0.y + r0.h * .5f) * 9f);
+                        int y1 = (int) ((r1.y + r1.h * .5f) * 9f);
+
+                        int x = (int) ((r0.x + r0.w * .5f + r1.x + r1.w * .5f) * .5f * 8f);
+
+                        if (r1.w == 1) {
+                            x = (int) ((r1.x + r1.w * .5f) * 8f);
+                        }
+
+                        if (r0.w == 1) {
+                            x = (int) ((r0.x + r0.w * .5f) * 8f);
+                        }
+
+                        for (int y = Math.min(y0, y1); y < Math.max(y0, y1); y++) {
+                            for (int xx = -1; xx <= 0; xx++) {
+                                if (play.tiles[x + xx][y][0] != null && play.tiles[x + xx][y][0].type.name.equals("Water")) {
+                                    play.placeTile(TileLoader.load("Stone"), x + xx, y, 0);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         play.solidTiles = new Rectangle[play.tiles.length][play.tiles[0].length];
 
         play.entities = new Array<Entity>();
+
+        Humanoid h = new Humanoid();
+        h.feet = SheetLoader.load("HumanFeet");
+        h.body = SheetLoader.load("HumanBody");
+        h.head = SheetLoader.load("HumanHead");
+        h.color = ColorLoader.load("Peach");
+        h.animSpeed = 7.5f;
+
+        h.x = 64;
+        h.y = 36;
+
+        play.player = h;
+        play.entities.add(h);
+
+        play.positionCam();
     }
 
     public Room roomAt(int x, int y) {
@@ -419,5 +505,19 @@ public class WorldGenerator {
 
     public float elevationAt(int x, int y) {
         return MathUtils.clamp((y / (float) biomes[0].length) * noise.noiseAt(x, y, ELEVATION) + (y / (float) biomes[0].length) * .25f, 0, 1);
+    }
+
+    public boolean isRiver(int x, int y) {
+        for (Array<Room> river : rivers) {
+            for (int i = 1; i < river.size; i++) {
+                Room r = river.get(i);
+
+                if (x == r.x / 2 && y == r.y) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }
