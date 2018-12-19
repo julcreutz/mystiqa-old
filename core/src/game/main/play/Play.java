@@ -13,6 +13,8 @@ import game.main.play.tile.Tile;
 import game.main.play.tile.TileType;
 
 public class Play extends GameState {
+    public static final float CAM_SPEED = 1.5f;
+
     public Tile[][][] tiles;
     public Rectangle[][] solidTiles;
 
@@ -59,7 +61,7 @@ public class Play extends GameState {
                 camTime = 1;
             }
 
-            camTime -= Game.delta();
+            camTime -= Game.delta() * CAM_SPEED;
 
             float p = MathUtils.clamp(1 - camTime, 0, 1);
 
@@ -76,10 +78,10 @@ public class Play extends GameState {
 
         cam.update();
 
-        x0 = MathUtils.clamp(MathUtils.floor(cam.position.x / 8f) - 16, 0, tiles.length);
-        x1 = MathUtils.clamp(MathUtils.floor(cam.position.x / 8f) + 16, 0, tiles.length);
-        y0 = MathUtils.clamp(MathUtils.floor(cam.position.y / 8f) - 16, 0, tiles[0].length);
-        y1 = MathUtils.clamp(MathUtils.floor(cam.position.y / 8f) + 16, 0, tiles[0].length);
+        x0 = MathUtils.clamp(MathUtils.floor(cam.position.x / 8f) - 10, 0, tiles.length);
+        x1 = MathUtils.clamp(x0 + 20, 0, tiles.length);
+        y0 = MathUtils.clamp(MathUtils.floor(cam.position.y / 8f) - 8, 0, tiles[0].length);
+        y1 = MathUtils.clamp(y0 + 16, 0, tiles[0].length);
 
         for (int x = 0; x < solidTiles.length; x++) {
             for (int y = 0; y < solidTiles[0].length; y++) {
@@ -95,20 +97,28 @@ public class Play extends GameState {
             }
         }
 
-        if (camX == toCamX && camY == toCamY) {
-            for (int x = x0; x < x1; x++) {
-                for (int y = y1 - 1; y >= y0; y--) {
-                    for (int z = 0; z < tiles[0][0].length; z++) {
-                        Tile tile = tiles[x][y][z];
+        for (int x = x0; x < x1; x++) {
+            for (int y = y1 - 1; y >= y0; y--) {
+                for (int z = 0; z < tiles[0][0].length; z++) {
+                    Tile tile = tiles[x][y][z];
 
-                        if (tile != null) {
+                    if (tile != null) {
+                        if (!tile.updated) {
+                            tile.update(this);
+                            tile.updated = true;
+                        } else if (!isCamMoving()) {
                             tile.update(this);
                         }
                     }
                 }
             }
+        }
 
-            for (Entity entity : entities) {
+        for (Entity entity : entities) {
+            if (!entity.updated) {
+                entity.update(this);
+                entity.updated = true;
+            } else if (!isCamMoving()) {
                 entity.update(this);
             }
         }
@@ -163,7 +173,13 @@ public class Play extends GameState {
     }
 
     public void positionCam() {
-        camX = toCamX = Game.WIDTH * .5f + MathUtils.floor((player.x + 4) / Game.WIDTH) * Game.WIDTH;
-        camY = toCamY = Game.HEIGHT * .5f + MathUtils.floor((player.y + 4) / Game.HEIGHT) * Game.HEIGHT;
+        camX = toCamX = cam.position.x = Game.WIDTH * .5f + MathUtils.floor((player.x + 4) / Game.WIDTH) * Game.WIDTH;
+        camY = toCamY = cam.position.y = Game.HEIGHT * .5f + MathUtils.floor((player.y + 4) / Game.HEIGHT) * Game.HEIGHT;
+
+        cam.update();
+    }
+
+    public boolean isCamMoving() {
+        return camX != toCamX || camY != toCamY;
     }
 }

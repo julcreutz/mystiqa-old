@@ -51,8 +51,8 @@ public class Humanoid extends Entity {
         float angle = dir.angle();
 
         if (dir.x != 0 || dir.y != 0) {
-            velX = MathUtils.cosDeg(angle) * 16f;
-            velY = MathUtils.sinDeg(angle) * 16f;
+            velX = MathUtils.cosDeg(angle) * 24f;
+            velY = MathUtils.sinDeg(angle) * 24f;
 
             switch (MathUtils.floor((angle + 360f) / 45f) % 8) {
                 case 0:

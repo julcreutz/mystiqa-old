@@ -16,6 +16,8 @@ public class Entity {
     public float hx;
     public float hy;
 
+    public boolean updated;
+
     public Entity() {
         hitbox = new Rectangle();
     }

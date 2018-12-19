@@ -14,6 +14,8 @@ public class Tile {
     public int y;
     public int z;
 
+    public boolean updated;
+
     public Tile(TileType type) {
         this.type = type;
     }

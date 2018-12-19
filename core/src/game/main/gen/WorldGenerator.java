@@ -44,7 +44,7 @@ public class WorldGenerator {
 
         rooms = new Array<Room>();
 
-        rooms.add(new Room(0, 0, 2, 1));
+        rooms.add(new Room(0, 0, 1, 1));
 
         while (true) {
             int size = rooms.size;
@@ -53,7 +53,7 @@ public class WorldGenerator {
                 Room r = rooms.get(i);
 
                 Room room = new Room();
-                room.w = 2;
+                room.w = 1;
                 room.h = 1;
 
                 switch (rand.nextInt(4)) {
@@ -120,6 +120,7 @@ public class WorldGenerator {
             }
         }
 
+        /*
         for (int i = rooms.size - 1; i >= 0; i--) {
             Room r = rooms.get(i);
 
@@ -144,6 +145,17 @@ public class WorldGenerator {
                 rooms.removeValue(r, true);
             }
         }
+        */
+
+        for (int x = 0; x < WIDTH * 2; x += 2) {
+            for (int y = 0; y < HEIGHT; y++) {
+                if (rand.nextFloat() < .75f) {
+                    join(x, y, x + 2, y + 1);
+                }
+            }
+        }
+
+        //join(4, 2, 8, 4);
 
         biomes = new Biome[WIDTH][HEIGHT];
 
@@ -272,7 +284,7 @@ public class WorldGenerator {
 
                         for (int x = Math.min(x0, x1); x < Math.max(x0, x1); x++) {
                             for (int yy = -1; yy <= 1; yy++) {
-                                play.placeTile(TileLoader.load("Water"), x, y + yy, 0);
+                                play.placeTile(TileLoader.load("Grass"), x, y + yy, 0);
 
                                 for (int z = 1; z < play.tiles[0][0].length; z++) {
                                     if (play.tileAt(x, y + yy, z) != null) {
@@ -418,7 +430,7 @@ public class WorldGenerator {
 
         for (Room r0 : rooms) {
             for (Room r1 : r0.children) {
-                if (!isRiver(r1.x / 2, r1.y)) {
+                if (isRiver(r1.x / 2, r1.y)) {
                     if (r1.y == r0.y) {
                         int x0 = (int) ((r0.x + r0.w * .5f) * 8f);
                         int x1 = (int) ((r1.x + r1.w * .5f) * 8f);
@@ -484,8 +496,8 @@ public class WorldGenerator {
         h.color = ColorLoader.load("Peach");
         h.animSpeed = 7.5f;
 
-        h.x = 64;
-        h.y = 36;
+        h.x = 64 * 2;
+        h.y = 36 * 2;
 
         play.player = h;
         play.entities.add(h);
@@ -519,5 +531,54 @@ public class WorldGenerator {
         }
 
         return false;
+    }
+
+    public void join(int x0, int y0, int x1, int y1) {
+        Array<Room> join = new Array<Room>();
+
+        for (int x = x0; x < x1; x++) {
+            for (int y = y0; y < y1; y++) {
+                join.add(roomAt(x, y));
+            }
+        }
+
+        Array<Room> parents = new Array<Room>();
+
+        for (Room r : join) {
+            if (r.parent != null && !join.contains(r.parent, true)) {
+                parents.add(r.parent);
+            }
+        }
+
+        Array<Room> children = new Array<Room>();
+
+        for (Room r : join) {
+            for (Room child : r.children) {
+                if (!join.contains(child, true)) {
+                    children.addAll(r.children);
+                }
+            }
+        }
+
+        Room joined = new Room(x0, y0, x1 - x0, y1 - y0);
+
+        if (parents.size > 0) {
+            joined.parent = parents.first();
+        }
+        joined.children.addAll(children);
+        rooms.add(joined);
+
+        /*
+        for (Room r : parents) {
+            r.children.removeAll(join, true);
+            r.children.add(joined);
+        }
+
+        for (Room r : children) {
+            r.parent = joined;
+        }
+        */
+
+        rooms.removeAll(join, true);
     }
 }
