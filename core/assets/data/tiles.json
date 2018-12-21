@@ -16,8 +16,12 @@
     "sheet": "Water",
     "colors": [
       "Black",
-      "Blue"
-    ]
+      "Blue",
+      "Brown"
+    ],
+    "autoTile": true,
+    "connect": ["Stone"],
+    "solid": true
   },
   "Sand": {
     "name": "Sand",

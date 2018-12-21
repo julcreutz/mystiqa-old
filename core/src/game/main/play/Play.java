@@ -78,10 +78,10 @@ public class Play extends GameState {
 
         cam.update();
 
-        x0 = MathUtils.clamp(MathUtils.floor(cam.position.x / 8f) - 10, 0, tiles.length);
-        x1 = MathUtils.clamp(x0 + 20, 0, tiles.length);
-        y0 = MathUtils.clamp(MathUtils.floor(cam.position.y / 8f) - 8, 0, tiles[0].length);
-        y1 = MathUtils.clamp(y0 + 16, 0, tiles[0].length);
+        x0 = MathUtils.clamp(MathUtils.floor(cam.position.x / 8f) - 1000, 0, tiles.length);
+        x1 = MathUtils.clamp(x0 + 2000, 0, tiles.length);
+        y0 = MathUtils.clamp(MathUtils.floor(cam.position.y / 8f) - 800, 0, tiles[0].length);
+        y1 = MathUtils.clamp(y0 + 1600, 0, tiles[0].length);
 
         for (int x = 0; x < solidTiles.length; x++) {
             for (int y = 0; y < solidTiles[0].length; y++) {

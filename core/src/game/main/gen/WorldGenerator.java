@@ -44,7 +44,7 @@ public class WorldGenerator {
 
         rooms = new Array<Room>();
 
-        rooms.add(new Room(0, 0, 1, 1));
+        rooms.add(new Room(0, 0, 2, 1));
 
         while (true) {
             int size = rooms.size;
@@ -53,7 +53,7 @@ public class WorldGenerator {
                 Room r = rooms.get(i);
 
                 Room room = new Room();
-                room.w = 1;
+                room.w = 2;
                 room.h = 1;
 
                 switch (rand.nextInt(4)) {
@@ -121,41 +121,20 @@ public class WorldGenerator {
         }
 
         /*
-        for (int i = rooms.size - 1; i >= 0; i--) {
-            Room r = rooms.get(i);
+        for (int x = 0; x < WIDTH * 2; x += 2) {
+            for (int y = 0; y < HEIGHT; y++) {
+                join(roomAt(x, y), roomAt(x + 1, y));
+            }
+        }
 
-            if (r.parent != null && rand.nextFloat() < .2f) {
-                Room r0 = new Room(r.x, r.y, 1, r.h);
-                Room r1 = new Room(r.x + 1, r.y, 1, r.h);
-
-                r.parent.children.removeValue(r, true);
-
-                r.parent.children.add(r0);
-                r0.parent = r.parent;
-
-                r1.parent = r0;
-                r0.children.add(r1);
-
-                for (Room child : r.children) {
-                    child.parent = r1;
-                    r1.children.add(child);
-                }
-
-                rooms.addAll(r0, r1);
-                rooms.removeValue(r, true);
+        for (int x = 0; x < WIDTH * 2; x += 4) {
+            for (int y = 0; y < HEIGHT; y += 2) {
+                join(roomAt(x, y), roomAt(x + 2, y));
+                join(roomAt(x, y + 1), roomAt(x + 2, y + 1));
+                join(roomAt(x, y), roomAt(x, y + 1));
             }
         }
         */
-
-        for (int x = 0; x < WIDTH * 2; x += 2) {
-            for (int y = 0; y < HEIGHT; y++) {
-                if (rand.nextFloat() < .75f) {
-                    join(x, y, x + 2, y + 1);
-                }
-            }
-        }
-
-        //join(4, 2, 8, 4);
 
         biomes = new Biome[WIDTH][HEIGHT];
 
@@ -188,6 +167,8 @@ public class WorldGenerator {
 
         rivers = new Array<Array<Room>>();
 
+        int lastX = -1;
+
         for (int i = 0; i < 1 + rand.nextInt(3); i++) {
             int x;
             int y;
@@ -195,7 +176,9 @@ public class WorldGenerator {
             do {
                 x = rand.nextInt(biomes.length);
                 y = rand.nextInt(biomes[0].length);
-            } while (biomes[x][y] != mountains || (roomAt(x * 2, y) != null && roomAt(x * 2, y).w == 1));
+            } while (biomes[x][y] != mountains || (roomAt(x * 2, y) != null && roomAt(x * 2, y).w == 1) || x == lastX);
+
+            lastX = x;
 
             Array<Room> river = new Array<Room>();
             river.add(roomAt(x * 2, y));
@@ -229,6 +212,9 @@ public class WorldGenerator {
                 river.add(roomAt(x * 2, y));
             } while (biomes[x][y] != ocean);
 
+            /* Remove the last because it's already the ocean. */
+            river.removeIndex(river.size - 1);
+
             rivers.add(river);
         }
 
@@ -258,6 +244,22 @@ public class WorldGenerator {
 
         for (Room r0 : rooms) {
             for (Room r1 : r0.children) {
+                for (float p = 0; p < 1; p += .01f) {
+                    int x = (int) (MathUtils.lerp(r0.x + r0.w * .5f, r1.x + r1.w * .5f, p) * 8f);
+                    int y = (int) (MathUtils.lerp(r0.y + r0.h * .5f, r1.y + r1.h * .5f, p) * 9f);
+
+                    for (int xx = -1; xx <= 0; xx++) {
+                        for (int yy = -1; yy <= 1; yy++) {
+                            play.placeTile(TileLoader.load("Grass"), x + xx, y + yy, 0);
+
+                            for (int z = 1; z < play.tiles[0][0].length; z++) {
+                                play.tiles[x + xx][y + yy][z] = null;
+                            }
+                        }
+                    }
+                }
+
+                /*
                 if (r1.y == r0.y) {
                     int x0 = (int) ((r0.x + r0.w * .5f) * 8f);
                     int x1 = (int) ((r1.x + r1.w * .5f) * 8f);
@@ -320,11 +322,12 @@ public class WorldGenerator {
                         }
                     }
                 }
+                */
             }
         }
 
         for (Array<Room> river : rivers) {
-            Room source = river.get(0);
+            Room source = river.first();
 
             {
                 int x0 = source.x * 8;
@@ -496,8 +499,8 @@ public class WorldGenerator {
         h.color = ColorLoader.load("Peach");
         h.animSpeed = 7.5f;
 
-        h.x = 64 * 2;
-        h.y = 36 * 2;
+        h.x = 64;
+        h.y = 36;
 
         play.player = h;
         play.entities.add(h);
@@ -533,52 +536,79 @@ public class WorldGenerator {
         return false;
     }
 
-    public void join(int x0, int y0, int x1, int y1) {
-        Array<Room> join = new Array<Room>();
+    public Room smaller(Room r0, Room r1) {
+        int score = 0;
 
-        for (int x = x0; x < x1; x++) {
-            for (int y = y0; y < y1; y++) {
-                join.add(roomAt(x, y));
+        if (r0.w > r1.w) {
+            score--;
+        } else if (r0.w < r1.w) {
+            score++;
+        }
+
+        if (r0.h > r1.h) {
+            score--;
+        } else if (r0.h < r1.h) {
+            score++;
+        }
+
+        if (score > 0) {
+            return r0;
+        } else if (score < 0) {
+            return r1;
+        }
+
+        return null;
+    }
+
+    public Room larger(Room r0, Room r1) {
+        int score = 0;
+
+        if (r0.w > r1.w) {
+            score++;
+        } else if (r0.w < r1.w) {
+            score--;
+        }
+
+        if (r0.h > r1.h) {
+            score++;
+        } else if (r0.h < r1.h) {
+            score--;
+        }
+
+        if (score > 0) {
+            return r0;
+        } else if (score < 0) {
+            return r1;
+        }
+
+        return null;
+    }
+
+    public void join(Room r0, Room r1) {
+        if (r1.parent == r0) {
+            Room joined = new Room(r0.x, r0.y, 2, 1);
+
+            joined.parent = r0.parent;
+
+            if (joined.parent != null) {
+                joined.parent.children.removeValue(r0, true);
+                joined.parent.children.add(joined);
             }
-        }
 
-        Array<Room> parents = new Array<Room>();
-
-        for (Room r : join) {
-            if (r.parent != null && !join.contains(r.parent, true)) {
-                parents.add(r.parent);
+            for (Room child : r0.children) {
+                child.parent = joined;
+                joined.children.add(child);
             }
-        }
 
-        Array<Room> children = new Array<Room>();
-
-        for (Room r : join) {
-            for (Room child : r.children) {
-                if (!join.contains(child, true)) {
-                    children.addAll(r.children);
-                }
+            for (Room child : r1.children) {
+                child.parent = joined;
+                joined.children.add(child);
             }
+
+            rooms.add(joined);
+
+            rooms.removeValue(r0, true);
+            rooms.removeValue(r1, true);
         }
-
-        Room joined = new Room(x0, y0, x1 - x0, y1 - y0);
-
-        if (parents.size > 0) {
-            joined.parent = parents.first();
-        }
-        joined.children.addAll(children);
-        rooms.add(joined);
-
-        /*
-        for (Room r : parents) {
-            r.children.removeAll(join, true);
-            r.children.add(joined);
-        }
-
-        for (Room r : children) {
-            r.parent = joined;
-        }
-        */
-
-        rooms.removeAll(join, true);
     }
 }
