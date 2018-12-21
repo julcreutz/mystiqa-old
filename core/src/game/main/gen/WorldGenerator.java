@@ -3,10 +3,7 @@ package game.main.gen;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
-import game.loader.ColorLoader;
-import game.loader.SheetLoader;
-import game.loader.StructureLoader;
-import game.loader.TileLoader;
+import game.loader.*;
 import game.main.play.Play;
 import game.main.play.entity.Entity;
 import game.main.play.entity.Humanoid;
@@ -57,14 +54,14 @@ public class WorldGenerator {
                 room.w = 1;
                 room.h = 1;
 
-                if (rand.nextFloat() < .25f) {
+                if (rand.nextFloat() < .5f) {
                     if (rand.nextFloat() < .5f) {
                         room.w = 2;
                     } else {
                         room.h = 2;
                     }
 
-                    if (rand.nextFloat() < .25f) {
+                    if (rand.nextFloat() < .5f) {
                         room.w = 2;
                         room.h = 2;
                     }
@@ -134,32 +131,13 @@ public class WorldGenerator {
             }
         }
 
-        biomes = new Biome[WIDTH][HEIGHT];
-
         noise = new Noise(rand);
 
-        Biome mountains = new Biome();
-        mountains.ground = TileLoader.load("Grass");
-        mountains.wall = StructureLoader.load("Stone");
-
-        Biome forest = new Biome();
-        forest.ground = TileLoader.load("Grass");
-        forest.wall = StructureLoader.load("OakTree");
-
-        Biome ocean = new Biome();
-        ocean.ground = TileLoader.load("Water");
+        biomes = new Biome[WIDTH][HEIGHT];
 
         for (int x = 0; x < biomes.length; x++) {
             for (int y = 0; y < biomes[0].length; y++) {
-                float elev = elevationAt(x, y);
-
-                if (elev > .45f) {
-                    biomes[x][y] = mountains;
-                } else if (elev > .1f) {
-                    biomes[x][y] = forest;
-                } else {
-                    biomes[x][y] = ocean;
-                }
+                biomes[x][y] = biomeAt(x, y);
             }
         }
 
@@ -378,5 +356,17 @@ public class WorldGenerator {
 
     public float elevationAt(int x, int y) {
         return MathUtils.clamp((y / (float) biomes[0].length) * noise.noiseAt(x, y, ELEVATION) + (y / (float) biomes[0].length) * .25f, 0, 1);
+    }
+
+    public Biome biomeAt(int x, int y) {
+        float e = elevationAt(x, y);
+
+        for (Biome b : BiomeLoader.loadAll()) {
+            if (e >= b.minElevation && e <= b.maxElevation) {
+                return b;
+            }
+        }
+
+        return null;
     }
 }
