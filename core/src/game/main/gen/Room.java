@@ -9,6 +9,8 @@ public class Room {
     public int w;
     public int h;
 
+    public boolean riverSource;
+
     public Room parent;
     public Array<Room> children;
 

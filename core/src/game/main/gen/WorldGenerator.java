@@ -44,7 +44,7 @@ public class WorldGenerator {
 
         rooms = new Array<Room>();
 
-        rooms.add(new Room(0, 0, 2, 1));
+        rooms.add(new Room(0, 0, 1, 1));
 
         while (true) {
             int size = rooms.size;
@@ -53,8 +53,22 @@ public class WorldGenerator {
                 Room r = rooms.get(i);
 
                 Room room = new Room();
-                room.w = 2;
+
+                room.w = 1;
                 room.h = 1;
+
+                if (rand.nextFloat() < .25f) {
+                    if (rand.nextFloat() < .5f) {
+                        room.w = 2;
+                    } else {
+                        room.h = 2;
+                    }
+
+                    if (rand.nextFloat() < .25f) {
+                        room.w = 2;
+                        room.h = 2;
+                    }
+                }
 
                 switch (rand.nextInt(4)) {
                     case 0:
@@ -75,7 +89,7 @@ public class WorldGenerator {
                         break;
                 }
 
-                if (room.x >= 0 && room.y >= 0 && room.x + room.w <= WIDTH * 2 && room.y + room.h <= HEIGHT) {
+                if (room.x >= 0 && room.y >= 0 && room.x + room.w <= WIDTH * 2 && room.y + room.h <= HEIGHT * 2) {
                     boolean overlap = false;
 
                     for (int j = 0; j < this.rooms.size; j++) {
@@ -99,7 +113,7 @@ public class WorldGenerator {
             boolean full = true;
 
             for (float x = 0; x < WIDTH * 2; x++) {
-                for (float y = 0; y < HEIGHT; y++) {
+                for (float y = 0; y < HEIGHT * 2; y++) {
                     boolean hasRoom = false;
 
                     for (Room r : this.rooms) {
@@ -119,22 +133,6 @@ public class WorldGenerator {
                 break;
             }
         }
-
-        /*
-        for (int x = 0; x < WIDTH * 2; x += 2) {
-            for (int y = 0; y < HEIGHT; y++) {
-                join(roomAt(x, y), roomAt(x + 1, y));
-            }
-        }
-
-        for (int x = 0; x < WIDTH * 2; x += 4) {
-            for (int y = 0; y < HEIGHT; y += 2) {
-                join(roomAt(x, y), roomAt(x + 2, y));
-                join(roomAt(x, y + 1), roomAt(x + 2, y + 1));
-                join(roomAt(x, y), roomAt(x, y + 1));
-            }
-        }
-        */
 
         biomes = new Biome[WIDTH][HEIGHT];
 
@@ -165,6 +163,7 @@ public class WorldGenerator {
             }
         }
 
+        /*
         rivers = new Array<Array<Room>>();
 
         int lastX = -1;
@@ -212,24 +211,27 @@ public class WorldGenerator {
                 river.add(roomAt(x * 2, y));
             } while (biomes[x][y] != ocean);
 
-            /* Remove the last because it's already the ocean. */
+            // Remove the last because it's already the ocean
             river.removeIndex(river.size - 1);
+
+            roomAt(river.first().x, river.first().y).riverSource = true;
 
             rivers.add(river);
         }
+        */
 
-        play.tiles = new Tile[WIDTH * 16][HEIGHT * 9][8];
+        play.tiles = new Tile[WIDTH * 16][HEIGHT * 8][8];
 
         for (Room r : rooms) {
             int x0 = r.x * 8;
             int x1 = x0 + r.w * 8;
 
-            int y0 = r.y * 9;
-            int y1 = y0 + r.h * 9;
+            int y0 = r.y * 4;
+            int y1 = y0 + r.h * 4;
 
             for (int x = x0; x < x1; x++) {
                 for (int y = y0; y < y1; y++) {
-                    Biome b = biomes[r.x / 2][r.y];
+                    Biome b = biomes[r.x / 2][r.y / 2];
 
                     play.placeTile(b.ground, x, y, 0);
 
@@ -246,10 +248,10 @@ public class WorldGenerator {
             for (Room r1 : r0.children) {
                 for (float p = 0; p < 1; p += .01f) {
                     int x = (int) (MathUtils.lerp(r0.x + r0.w * .5f, r1.x + r1.w * .5f, p) * 8f);
-                    int y = (int) (MathUtils.lerp(r0.y + r0.h * .5f, r1.y + r1.h * .5f, p) * 9f);
+                    int y = (int) (MathUtils.lerp(r0.y + r0.h * .5f, r1.y + r1.h * .5f, p) * 4f);
 
                     for (int xx = -1; xx <= 0; xx++) {
-                        for (int yy = -1; yy <= 1; yy++) {
+                        for (int yy = -1; yy <= 0; yy++) {
                             play.placeTile(TileLoader.load("Grass"), x + xx, y + yy, 0);
 
                             for (int z = 1; z < play.tiles[0][0].length; z++) {
@@ -258,74 +260,10 @@ public class WorldGenerator {
                         }
                     }
                 }
-
-                /*
-                if (r1.y == r0.y) {
-                    int x0 = (int) ((r0.x + r0.w * .5f) * 8f);
-                    int x1 = (int) ((r1.x + r1.w * .5f) * 8f);
-
-                    int y = (int) ((r0.y + r0.h * .5f + r1.y + r1.h * .5f) * .5f * 9f);
-
-                    for (int x = Math.min(x0, x1); x < Math.max(x0, x1); x++) {
-                        for (int yy = -1; yy <= 1; yy++) {
-                            if (play.tiles[x][y + yy][0] != null) {
-                                play.placeTile(TileLoader.load("Grass"), x, y + yy, 0);
-
-                                for (int z = 1; z < play.tiles[0][0].length; z++) {
-                                    play.tiles[x][y + yy][z] = null;
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    if (r0.w == 2 && r1.w == 1) {
-                        int x0 = (int) ((r0.x) * 8f);
-                        int x1 = (int) ((r1.x) * 8f);
-
-                        int y = (int) ((r0.y + r0.h * .5f) * 9f);
-
-                        for (int x = Math.min(x0, x1); x < Math.max(x0, x1); x++) {
-                            for (int yy = -1; yy <= 1; yy++) {
-                                play.placeTile(TileLoader.load("Grass"), x, y + yy, 0);
-
-                                for (int z = 1; z < play.tiles[0][0].length; z++) {
-                                    if (play.tileAt(x, y + yy, z) != null) {
-                                        play.tiles[x][y + yy][z] = null;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    
-                    int y0 = (int) ((r0.y + r0.h * .5f) * 9f);
-                    int y1 = (int) ((r1.y + r1.h * .5f) * 9f);
-
-                    int x = (int) ((r0.x + r0.w * .5f + r1.x + r1.w * .5f) * .5f * 8f);
-
-                    if (r1.w == 1) {
-                        x = (int) ((r1.x + r1.w * .5f) * 8f);
-                    }
-
-                    if (r0.w == 1) {
-                        x = (int) ((r0.x + r0.w * .5f) * 8f);
-                    }
-
-                    for (int y = Math.min(y0, y1); y < Math.max(y0, y1); y++) {
-                        for (int xx = -1; xx <= 0; xx++) {
-                            if (play.tiles[x + xx][y][0] != null) {
-                                play.placeTile(TileLoader.load("Grass"), x + xx, y, 0);
-
-                                for (int z = 1; z < play.tiles[0][0].length; z++) {
-                                    play.tiles[x + xx][y][z] = null;
-                                }
-                            }
-                        }
-                    }
-                }
-                */
             }
         }
 
+        /*
         for (Array<Room> river : rivers) {
             Room source = river.first();
 
@@ -362,67 +300,18 @@ public class WorldGenerator {
                 Room r0 = river.get(i);
                 Room r1 = river.get(i + 1);
 
-                if (r1.y == r0.y) {
-                    int x0 = (int) ((r0.x) * 8f);
-                    int x1 = (int) ((r1.x) * 8f);
+                for (float p = 0; p < 1; p += .01f) {
+                    int x = (int) (MathUtils.lerp(r0.x, r1.x, p) * 8f);
+                    int y = (int) (MathUtils.lerp(r0.y, r1.y, p) * 9f);
 
-                    int y = (int) ((r0.y + r1.y) * .5f * 9f);
-
-                    for (int x = Math.min(x0, x1); x < Math.max(x0, x1); x++) {
+                    for (int xx = -1; xx <= 0; xx++) {
                         for (int yy = -1; yy <= 1; yy++) {
-                            if (play.tileAt(x, y + yy, 0) != null) {
-                                play.placeTile(TileLoader.load("Water"), x, y + yy, 0);
+                            play.placeTile(TileLoader.load("Water"), x + xx, y + yy, 0);
 
-                                for (int z = 1; z < play.tiles[0][0].length; z++) {
-                                    if (play.tileAt(x, y + yy, z) != null) {
-                                        play.tiles[x][y + yy][z] = null;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    if (r0.w == 2 && r1.w == 1) {
-                        int x0 = (int) ((r0.x) * 8f);
-                        int x1 = (int) ((r1.x) * 8f);
-
-                        int y = (int) ((r0.y + r0.h * .5f) * 9f);
-
-                        for (int x = Math.min(x0, x1); x < Math.max(x0, x1); x++) {
-                            for (int yy = -1; yy <= 1; yy++) {
-                                play.placeTile(TileLoader.load("Water"), x, y + yy, 0);
-
-                                for (int z = 1; z < play.tiles[0][0].length; z++) {
-                                    if (play.tileAt(x, y + yy, z) != null) {
-                                        play.tiles[x][y + yy][z] = null;
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    int y0 = (int) ((r0.y) * 9f);
-                    int y1 = (int) ((r1.y) * 9f);
-
-                    int x = (int) ((r0.x + r1.x) * .5f * 8f);
-
-                    if (r1.w == 1) {
-                        x = (int) ((r1.x) * 8f);
-                    }
-
-                    if (r0.w == 1) {
-                        x = (int) ((r0.x) * 8f);
-                    }
-
-                    for (int y = Math.min(y0, y1); y < Math.max(y0, y1); y++) {
-                        for (int xx = -1; xx <= 0; xx++) {
-                            if (play.tileAt(x + xx, y, 0) != null) {
-                                play.placeTile(TileLoader.load("Water"), x + xx, y, 0);
-
-                                for (int z = 1; z < play.tiles[0][0].length; z++) {
-                                    if (play.tileAt(x + xx, y, z) != null) {
-                                        play.tiles[x + xx][y][z] = null;
-                                    }
+                            for (int z = 1; z < play.tiles[0][0].length; z++) {
+                                try {
+                                    play.tiles[x + xx][y + yy][z] = null;
+                                } catch (IndexOutOfBoundsException e) {
                                 }
                             }
                         }
@@ -432,54 +321,22 @@ public class WorldGenerator {
         }
 
         for (Room r0 : rooms) {
-            for (Room r1 : r0.children) {
-                if (isRiver(r1.x / 2, r1.y)) {
-                    if (r1.y == r0.y) {
-                        int x0 = (int) ((r0.x + r0.w * .5f) * 8f);
-                        int x1 = (int) ((r1.x + r1.w * .5f) * 8f);
+            if (!r0.riverSource) {
+                for (Room r1 : r0.children) {
+                    if (!r1.riverSource) {
+                        for (float p = 0; p < 1; p += .01f) {
+                            int x = (int) (MathUtils.lerp(r0.x + r0.w * .5f, r1.x + r1.w * .5f, p) * 8f);
+                            int y = (int) (MathUtils.lerp(r0.y + r0.h * .5f, r1.y + r1.h * .5f, p) * 9f);
 
-                        int y = (int) ((r0.y + r0.h * .5f + r1.y + r1.h * .5f) * .5f * 9f);
-
-                        for (int x = Math.min(x0, x1); x < Math.max(x0, x1); x++) {
-                            for (int yy = -1; yy <= 1; yy++) {
-                                if (play.tiles[x][y + yy][0] != null && play.tiles[x][y + yy][0].type.name.equals("Water")) {
-                                    play.placeTile(TileLoader.load("Stone"), x, y + yy, 0);
-                                }
-                            }
-                        }
-                    } else {
-                        if (r0.w == 2 && r1.w == 1) {
-                            int x0 = (int) ((r0.x) * 8f);
-                            int x1 = (int) ((r1.x) * 8f);
-
-                            int y = (int) ((r0.y + r0.h * .5f) * 9f);
-
-                            for (int x = Math.min(x0, x1); x < Math.max(x0, x1); x++) {
-                                for (int yy = -1; yy <= 1; yy++) {
-                                    if (play.tiles[x][y + yy][0].type.name.equals("Water")) {
-                                        play.placeTile(TileLoader.load("Stone"), x, y + yy, 0);
-                                    }
-                                }
-                            }
-                        }
-
-                        int y0 = (int) ((r0.y + r0.h * .5f) * 9f);
-                        int y1 = (int) ((r1.y + r1.h * .5f) * 9f);
-
-                        int x = (int) ((r0.x + r0.w * .5f + r1.x + r1.w * .5f) * .5f * 8f);
-
-                        if (r1.w == 1) {
-                            x = (int) ((r1.x + r1.w * .5f) * 8f);
-                        }
-
-                        if (r0.w == 1) {
-                            x = (int) ((r0.x + r0.w * .5f) * 8f);
-                        }
-
-                        for (int y = Math.min(y0, y1); y < Math.max(y0, y1); y++) {
                             for (int xx = -1; xx <= 0; xx++) {
-                                if (play.tiles[x + xx][y][0] != null && play.tiles[x + xx][y][0].type.name.equals("Water")) {
-                                    play.placeTile(TileLoader.load("Stone"), x + xx, y, 0);
+                                for (int yy = -1; yy <= 1; yy++) {
+                                    if (play.tileAt(x + xx, y + yy, 0).type.name.equals("Water")) {
+                                        play.placeTile(TileLoader.load("Stone"), x + xx, y + yy, 0);
+
+                                        for (int z = 1; z < play.tiles[0][0].length; z++) {
+                                            play.tiles[x + xx][y + yy][z] = null;
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -487,6 +344,7 @@ public class WorldGenerator {
                 }
             }
         }
+        */
 
         play.solidTiles = new Rectangle[play.tiles.length][play.tiles[0].length];
 
@@ -520,95 +378,5 @@ public class WorldGenerator {
 
     public float elevationAt(int x, int y) {
         return MathUtils.clamp((y / (float) biomes[0].length) * noise.noiseAt(x, y, ELEVATION) + (y / (float) biomes[0].length) * .25f, 0, 1);
-    }
-
-    public boolean isRiver(int x, int y) {
-        for (Array<Room> river : rivers) {
-            for (int i = 1; i < river.size; i++) {
-                Room r = river.get(i);
-
-                if (x == r.x / 2 && y == r.y) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    public Room smaller(Room r0, Room r1) {
-        int score = 0;
-
-        if (r0.w > r1.w) {
-            score--;
-        } else if (r0.w < r1.w) {
-            score++;
-        }
-
-        if (r0.h > r1.h) {
-            score--;
-        } else if (r0.h < r1.h) {
-            score++;
-        }
-
-        if (score > 0) {
-            return r0;
-        } else if (score < 0) {
-            return r1;
-        }
-
-        return null;
-    }
-
-    public Room larger(Room r0, Room r1) {
-        int score = 0;
-
-        if (r0.w > r1.w) {
-            score++;
-        } else if (r0.w < r1.w) {
-            score--;
-        }
-
-        if (r0.h > r1.h) {
-            score++;
-        } else if (r0.h < r1.h) {
-            score--;
-        }
-
-        if (score > 0) {
-            return r0;
-        } else if (score < 0) {
-            return r1;
-        }
-
-        return null;
-    }
-
-    public void join(Room r0, Room r1) {
-        if (r1.parent == r0) {
-            Room joined = new Room(r0.x, r0.y, 2, 1);
-
-            joined.parent = r0.parent;
-
-            if (joined.parent != null) {
-                joined.parent.children.removeValue(r0, true);
-                joined.parent.children.add(joined);
-            }
-
-            for (Room child : r0.children) {
-                child.parent = joined;
-                joined.children.add(child);
-            }
-
-            for (Room child : r1.children) {
-                child.parent = joined;
-                joined.children.add(child);
-            }
-
-            rooms.add(joined);
-
-            rooms.removeValue(r0, true);
-            rooms.removeValue(r1, true);
-        }
     }
 }
