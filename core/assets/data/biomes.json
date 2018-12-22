@@ -2,17 +2,56 @@
   "Ocean": {
     "minElevation": 0,
     "maxElevation": 0.1,
+    "horizontalChance": 0.5,
+    "roomSizes": [
+      {
+        "chance": 0.5,
+        "width": 2,
+        "height": 2
+      }
+    ],
     "ground": "Water"
   },
   "Forest": {
     "minElevation": 0.1,
     "maxElevation": 0.45,
+    "horizontalChance": 0.5,
+    "roomSizes": [
+      {
+        "chance": 0.5,
+        "width": 2,
+        "height": 1
+      },
+      {
+        "chance": 0.5,
+        "width": 1,
+        "height": 2
+      },
+      {
+        "chance": 0.25,
+        "width": 2,
+        "height": 2
+      }
+    ],
     "ground": "Grass",
     "wall": "OakTree"
   },
   "Mountains": {
     "minElevation": 0.45,
     "maxElevation": 1,
+    "horizontalChance": 0.75,
+    "roomSizes": [
+      {
+        "chance": 0.5,
+        "width": 2,
+        "height": 1
+      },
+      {
+        "chance": 0.25,
+        "width": 2,
+        "height": 2
+      }
+    ],
     "ground": "Grass",
     "wall": "Stone"
   }

@@ -1,5 +1,6 @@
 package game.main.gen;
 
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import game.loader.StructureLoader;
 import game.loader.TileLoader;
@@ -9,6 +10,9 @@ import game.main.play.tile.TileType;
 public class Biome {
     public float minElevation;
     public float maxElevation;
+
+    public float horizontalChance;
+    public Array<RoomSize> roomSizes;
 
     public TileType ground;
     public Structure wall;
@@ -20,6 +24,20 @@ public class Biome {
 
         if (json.has("maxElevation")) {
             maxElevation = json.getFloat("maxElevation");
+        }
+
+        if (json.has("horizontalChance")) {
+            horizontalChance = json.getFloat("horizontalChance");
+        }
+
+        if (json.has("roomSizes")) {
+            roomSizes = new Array<RoomSize>();
+
+            for (JsonValue roomSize : json.get("roomSizes")) {
+                RoomSize _roomSize = new RoomSize();
+                _roomSize.deserialize(roomSize);
+                roomSizes.add(_roomSize);
+            }
         }
 
         if (json.has("ground")) {

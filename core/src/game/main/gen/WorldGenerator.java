@@ -26,9 +26,9 @@ public class WorldGenerator {
 
     public Noise noise;
 
-    public Array<Room> rooms;
-
     public Biome[][] biomes;
+
+    public Array<Room> rooms;
 
     public Array<Array<Room>> rivers;
 
@@ -39,35 +39,49 @@ public class WorldGenerator {
     public void generate() {
         rand = new Random(MathUtils.random(Long.MAX_VALUE));
 
+        noise = new Noise(rand);
+
+        biomes = new Biome[WIDTH][HEIGHT];
+
+        for (int x = 0; x < biomes.length; x++) {
+            for (int y = 0; y < biomes[0].length; y++) {
+                biomes[x][y] = biomeAt(x, y);
+            }
+        }
+
         rooms = new Array<Room>();
 
-        rooms.add(new Room(0, 0, 1, 1));
+        // This is where it starts
+        rooms.add(new Room(0, 0, 2, 2));
 
         while (true) {
             int size = rooms.size;
 
             for (int i = 0; i < size; i++) {
                 Room r = rooms.get(i);
+                Biome b = biomeAt(r.x / 2, r.y / 2);
 
                 Room room = new Room();
 
                 room.w = 1;
                 room.h = 1;
 
-                if (rand.nextFloat() < .5f) {
-                    if (rand.nextFloat() < .5f) {
-                        room.w = 2;
-                    } else {
-                        room.h = 2;
-                    }
-
-                    if (rand.nextFloat() < .5f) {
-                        room.w = 2;
-                        room.h = 2;
+                for (RoomSize roomSize : b.roomSizes) {
+                    if (rand.nextFloat() < roomSize.chance) {
+                        room.w = roomSize.width;
+                        room.h = roomSize.height;
                     }
                 }
 
-                switch (rand.nextInt(4)) {
+                int dir;
+
+                if (rand.nextFloat() < biomeAt(r.x / 2, r.y / 2).horizontalChance) {
+                    dir = rand.nextFloat() < .5f ? 0 : 2;
+                } else {
+                    dir = rand.nextFloat() < .5f ? 1 : 3;
+                }
+
+                switch (dir) {
                     case 0:
                         room.x = r.x + r.w;
                         room.y = r.y;
@@ -86,7 +100,18 @@ public class WorldGenerator {
                         break;
                 }
 
-                if (room.x >= 0 && room.y >= 0 && room.x + room.w <= WIDTH * 2 && room.y + room.h <= HEIGHT * 2) {
+                // Make sure the rooms don't overlap multiple screens
+                boolean position = true;
+
+                if (room.w > 1 && room.x % 2 != 0) {
+                    position = false;
+                }
+
+                if (room.h > 1 && room.y % 2 != 0) {
+                    position = false;
+                }
+
+                if (position && room.x >= 0 && room.y >= 0 && room.x + room.w <= WIDTH * 2 && room.y + room.h <= HEIGHT * 2) {
                     boolean overlap = false;
 
                     for (int j = 0; j < this.rooms.size; j++) {
@@ -131,16 +156,6 @@ public class WorldGenerator {
             }
         }
 
-        noise = new Noise(rand);
-
-        biomes = new Biome[WIDTH][HEIGHT];
-
-        for (int x = 0; x < biomes.length; x++) {
-            for (int y = 0; y < biomes[0].length; y++) {
-                biomes[x][y] = biomeAt(x, y);
-            }
-        }
-
         /*
         rivers = new Array<Array<Room>>();
 
@@ -153,7 +168,7 @@ public class WorldGenerator {
             do {
                 x = rand.nextInt(biomes.length);
                 y = rand.nextInt(biomes[0].length);
-            } while (biomes[x][y] != mountains || (roomAt(x * 2, y) != null && roomAt(x * 2, y).w == 1) || x == lastX);
+            } while (biomes[x][y] != mountains || (roomAt(x * 2, y) != null && roomAt(x * 2, y).width == 1) || x == lastX);
 
             lastX = x;
 
@@ -247,10 +262,10 @@ public class WorldGenerator {
 
             {
                 int x0 = source.x * 8;
-                int x1 = x0 + source.w * 8;
+                int x1 = x0 + source.width * 8;
 
                 int y0 = source.y * 9;
-                int y1 = y0 + source.h * 9;
+                int y1 = y0 + source.height * 9;
 
                 final int indent = 2;
 
@@ -303,8 +318,8 @@ public class WorldGenerator {
                 for (Room r1 : r0.children) {
                     if (!r1.riverSource) {
                         for (float p = 0; p < 1; p += .01f) {
-                            int x = (int) (MathUtils.lerp(r0.x + r0.w * .5f, r1.x + r1.w * .5f, p) * 8f);
-                            int y = (int) (MathUtils.lerp(r0.y + r0.h * .5f, r1.y + r1.h * .5f, p) * 9f);
+                            int x = (int) (MathUtils.lerp(r0.x + r0.width * .5f, r1.x + r1.width * .5f, p) * 8f);
+                            int y = (int) (MathUtils.lerp(r0.y + r0.height * .5f, r1.y + r1.height * .5f, p) * 9f);
 
                             for (int xx = -1; xx <= 0; xx++) {
                                 for (int yy = -1; yy <= 1; yy++) {
@@ -336,7 +351,7 @@ public class WorldGenerator {
         h.animSpeed = 7.5f;
 
         h.x = 64;
-        h.y = 36;
+        h.y = 72 * 6 + 36;
 
         play.player = h;
         play.entities.add(h);
