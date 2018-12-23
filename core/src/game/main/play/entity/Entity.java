@@ -12,18 +12,16 @@ public class Entity {
     public float velX;
     public float velY;
 
-    public Rectangle hitbox;
-    public float hx;
-    public float hy;
+    public Hitbox hitbox;
 
     public boolean updated;
 
     public Entity() {
-        hitbox = new Rectangle();
+        hitbox = new Hitbox();
     }
 
     public void update(Play site) {
-        positionHitbox(velX * Game.delta(), 0);
+        hitbox.position(this, velX * Game.delta(), 0);
 
         for (int x = 0; x < site.solidTiles.length; x++) {
             for (int y = 0; y < site.solidTiles[0].length; y++) {
@@ -31,9 +29,9 @@ public class Entity {
 
                 if (solidTile != null && hitbox.overlaps(solidTile)) {
                     if (velX > 0) {
-                        this.x = solidTile.x - hitbox.width - hx;
+                        this.x = solidTile.x - hitbox.width() - hitbox.offsetX;
                     } else if (velX < 0) {
-                        this.x = solidTile.x + solidTile.width - hx;
+                        this.x = solidTile.x + solidTile.width - hitbox.offsetX;
                     }
 
                     velX = 0;
@@ -43,7 +41,7 @@ public class Entity {
 
         x += velX * Game.delta();
 
-        positionHitbox(0, velY * Game.delta());
+        hitbox.position(this, 0, velY * Game.delta());
 
         for (int x = 0; x < site.solidTiles.length; x++) {
             for (int y = 0; y < site.solidTiles[0].length; y++) {
@@ -51,9 +49,9 @@ public class Entity {
 
                 if (solidTile != null && hitbox.overlaps(solidTile)) {
                     if (velY > 0) {
-                        this.y = solidTile.y - hitbox.height - hy;
+                        this.y = solidTile.y - hitbox.height() - hitbox.offsetY;
                     } else if (velY < 0) {
-                        this.y = solidTile.y + solidTile.height - hy;
+                        this.y = solidTile.y + solidTile.height - hitbox.offsetY;
                     }
 
                     velY = 0;
@@ -63,6 +61,10 @@ public class Entity {
 
         y += velY * Game.delta();
 
+        if (velX != 0 || velY != 0) {
+            onMove();
+        }
+
         velX = 0;
         velY = 0;
     }
@@ -71,7 +73,7 @@ public class Entity {
 
     }
 
-    public void positionHitbox(float x, float y) {
-        hitbox.setPosition(this.x + hx + x, this.y + hy + y);
+    public void onMove() {
+
     }
 }

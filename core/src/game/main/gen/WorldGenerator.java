@@ -4,10 +4,10 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import game.loader.*;
+import game.main.item.equipment.hand.main.MainHand;
 import game.main.play.Play;
 import game.main.play.entity.Entity;
-import game.main.play.entity.Humanoid;
-import game.main.play.structure.Structure;
+import game.main.play.entity.humanoid.Humanoid;
 import game.main.play.tile.Tile;
 import game.noise.Noise;
 import game.noise.NoiseParameters;
@@ -389,14 +389,12 @@ public class WorldGenerator {
         play.entities = new Array<Entity>();
 
         Humanoid h = new Humanoid();
-        h.feet = SheetLoader.load("HumanFeet");
-        h.body = SheetLoader.load("HumanBody");
-        h.head = SheetLoader.load("HumanHead");
-        h.color = ColorLoader.load("Peach");
-        h.animSpeed = 7.5f;
+        h.type = HumanoidLoader.load("Human");
+
+        h.mainHand = new MainHand();
 
         h.x = 64;
-        h.y = 36;
+        h.y = 72 * 4 + 36;
 
         play.player = h;
         play.entities.add(h);

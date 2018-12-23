@@ -33,6 +33,7 @@ public class Game extends ApplicationAdapter {
 		TileLoader.load();
 		StructureLoader.load();
 		BiomeLoader.load();
+		HumanoidLoader.load();
 
 		PLAY.create();
 		state = PLAY;

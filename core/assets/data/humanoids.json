@@ -1,10 +1,12 @@
-[
-  {
-    "id": "Human",
+{
+  "Human": {
     "feet": "HumanFeet",
     "body": "HumanBody",
     "head": "HumanHead",
     "animSpeed": 7.5,
-    "color": "Peach"
+    "colors": [
+      "Black",
+      "Peach"
+    ]
   }
-]
+}

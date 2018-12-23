@@ -10,7 +10,7 @@
         "height": 2
       }
     ],
-    "ground": "Water"
+    "ground": "Grass"
   },
   "Forest": {
     "minElevation": 0.1,
