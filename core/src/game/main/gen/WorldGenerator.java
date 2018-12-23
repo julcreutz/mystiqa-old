@@ -252,13 +252,16 @@ public class WorldGenerator {
                     int x1 = (int) (x0 + (smaller.w * diffX) * 8f);
 
                     for (int x = Math.min(x0, x1); x < Math.max(x0, x1); x++) {
-                        int y = (int) ((smaller.y + smaller.h * .5f) * 4f);
+                        int y0 = (int) ((smaller.y + smaller.h * .5f) * 4f) - 1;
+                        int y1 = y0 + 2;
 
-                        if (play.tileAt(x, y, 0) != null) {
-                            play.placeTile(TileLoader.load("Grass"), x, y, 0);
+                        for (int y = y0; y < y1; y++) {
+                            if (play.tileAt(x, y, 0) != null) {
+                                play.placeTile(TileLoader.load("Grass"), x, y, 0);
 
-                            for (int z = 1; z < play.tiles[0][0].length; z++) {
-                                play.tiles[x][y][z] = null;
+                                for (int z = 1; z < play.tiles[0][0].length; z++) {
+                                    play.tiles[x][y][z] = null;
+                                }
                             }
                         }
                     }
@@ -267,13 +270,16 @@ public class WorldGenerator {
                     int y1 = (int) (y0 + (smaller.h * diffY) * 4f);
 
                     for (int y = Math.min(y0, y1); y < Math.max(y0, y1); y++) {
-                        int x = (int) ((smaller.x + smaller.w * .5f) * 8f);
+                        int x0 = (int) ((smaller.x + smaller.w * .5f) * 8f) - 1;
+                        int x1 = x0 + 2;
 
-                        if (play.tileAt(x, y, 0) != null) {
-                            play.placeTile(TileLoader.load("Grass"), x, y, 0);
+                        for (int x = x0; x < x1; x++) {
+                            if (play.tileAt(x, y, 0) != null) {
+                                play.placeTile(TileLoader.load("Grass"), x, y, 0);
 
-                            for (int z = 1; z < play.tiles[0][0].length; z++) {
-                                play.tiles[x][y][z] = null;
+                                for (int z = 1; z < play.tiles[0][0].length; z++) {
+                                    play.tiles[x][y][z] = null;
+                                }
                             }
                         }
                     }
