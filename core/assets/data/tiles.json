@@ -39,6 +39,14 @@
       "Gray"
     ]
   },
+  "Bridge": {
+    "name": "Bridge",
+    "sheet": "Grass",
+    "colors": [
+      "Black",
+      "Brown"
+    ]
+  },
   "TreeBottom": {
     "name": "TreeBottom",
     "sheet": "TreeBottom",

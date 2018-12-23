@@ -156,62 +156,50 @@ public class WorldGenerator {
             }
         }
 
-        /*
         rivers = new Array<Array<Room>>();
-
-        int lastX = -1;
 
         for (int i = 0; i < 1 + rand.nextInt(3); i++) {
             int x;
             int y;
 
             do {
-                x = rand.nextInt(biomes.length);
-                y = rand.nextInt(biomes[0].length);
-            } while (biomes[x][y] != mountains || (roomAt(x * 2, y) != null && roomAt(x * 2, y).width == 1) || x == lastX);
-
-            lastX = x;
+                x = rand.nextInt(biomes.length * 2);
+                y = biomes[0].length * 2 - 1;
+            } while (biomes[x / 2][y / 2] != BiomeLoader.load("Mountains") || (roomAt(x, y) != null && (roomAt(x, y).w == 1 || roomAt(x, y).h == 1)));
 
             Array<Room> river = new Array<Room>();
-            river.add(roomAt(x * 2, y));
+            river.add(roomAt(x, y));
 
-            boolean firstStep = false;
             boolean goneHorizontal = false;
 
             do {
-                if (!firstStep) {
-                    y--;
-                    firstStep = true;
-                } else {
-                    if (rand.nextFloat() < .75f || goneHorizontal) {
-                        y--;
-                        goneHorizontal = false;
-                    } else {
-                        goneHorizontal = true;
+                if (rand.nextFloat() < .5f && !goneHorizontal) {
+                    goneHorizontal = true;
 
-                        if (rand.nextFloat() < .5f) {
-                            if (x < biomes.length - 1) {
-                                x++;
-                            }
-                        } else {
-                            if (x > 0) {
-                                x--;
-                            }
+                    if (rand.nextFloat() < .5f) {
+                        if (x > 0) {
+                            x--;
+                        }
+                    } else {
+                        if (x < biomes.length * 2 - 1) {
+                            x++;
                         }
                     }
+                } else {
+                    goneHorizontal = false;
+                    y--;
                 }
 
-                river.add(roomAt(x * 2, y));
-            } while (biomes[x][y] != ocean);
+                if (!river.contains(roomAt(x, y), true)) {
+                    river.add(roomAt(x, y));
+                }
+            } while (biomes[x / 2][y / 2] != BiomeLoader.load("Ocean"));
 
-            // Remove the last because it's already the ocean
+            // Remove last because it's the ocean
             river.removeIndex(river.size - 1);
-
-            roomAt(river.first().x, river.first().y).riverSource = true;
 
             rivers.add(river);
         }
-        */
 
         play.tiles = new Tile[WIDTH * 16][HEIGHT * 8][8];
 
@@ -239,7 +227,59 @@ public class WorldGenerator {
 
         for (Room r0 : rooms) {
             for (Room r1 : r0.children) {
-                for (float p = 0; p < 1; p += .01f) {
+                Room smaller = smaller(r0, r1);
+                Room larger = larger(r0, r1);
+
+                if (smaller == null && larger == null) {
+                    smaller = r0;
+                    larger = r1;
+                }
+
+                float diffX = larger.x - smaller.x;
+
+                if (diffX != 0) {
+                    diffX /= Math.abs(diffX);
+                }
+
+                float diffY = larger.y - smaller.y;
+
+                if (diffY != 0) {
+                    diffY /= Math.abs(diffY);
+                }
+
+                if (diffX != 0) {
+                    int x0 = (int) ((smaller.x + smaller.w * .5f) * 8f);
+                    int x1 = (int) (x0 + (smaller.w * diffX) * 8f);
+
+                    for (int x = Math.min(x0, x1); x < Math.max(x0, x1); x++) {
+                        int y = (int) ((smaller.y + smaller.h * .5f) * 4f);
+
+                        if (play.tileAt(x, y, 0) != null) {
+                            play.placeTile(TileLoader.load("Grass"), x, y, 0);
+
+                            for (int z = 1; z < play.tiles[0][0].length; z++) {
+                                play.tiles[x][y][z] = null;
+                            }
+                        }
+                    }
+                } else if (diffY != 0) {
+                    int y0 = (int) ((smaller.y + smaller.h * .5f) * 4f);
+                    int y1 = (int) (y0 + (smaller.h * diffY) * 4f);
+
+                    for (int y = Math.min(y0, y1); y < Math.max(y0, y1); y++) {
+                        int x = (int) ((smaller.x + smaller.w * .5f) * 8f);
+
+                        if (play.tileAt(x, y, 0) != null) {
+                            play.placeTile(TileLoader.load("Grass"), x, y, 0);
+
+                            for (int z = 1; z < play.tiles[0][0].length; z++) {
+                                play.tiles[x][y][z] = null;
+                            }
+                        }
+                    }
+                }
+
+                /*for (float p = 0; p < 1; p += .01f) {
                     int x = (int) (MathUtils.lerp(r0.x + r0.w * .5f, r1.x + r1.w * .5f, p) * 8f);
                     int y = (int) (MathUtils.lerp(r0.y + r0.h * .5f, r1.y + r1.h * .5f, p) * 4f);
 
@@ -252,59 +292,27 @@ public class WorldGenerator {
                             }
                         }
                     }
-                }
+                }*/
             }
         }
 
         /*
         for (Array<Room> river : rivers) {
-            Room source = river.first();
-
-            {
-                int x0 = source.x * 8;
-                int x1 = x0 + source.width * 8;
-
-                int y0 = source.y * 9;
-                int y1 = y0 + source.height * 9;
-
-                final int indent = 2;
-
-                for (int x = x0; x < x1; x++) {
-                    for (int y = y0; y < y1; y++) {
-                        if (x >= x0 + indent && x < x1 - indent && y >= y0 + indent && y < y1 - indent) {
-                            play.placeTile(TileLoader.load("Water"), x, y, 0);
-                        }
-                    }
-                }
-
-                for (float p = 0; p <= 1; p += .1f) {
-                    int x = x0 + (int) MathUtils.lerp(0, indent, p);
-                    int y = y0 + (int) MathUtils.lerp(0, indent, p);
-
-                    for (int xx = 0; xx < 2; xx++) {
-                        for (int yy = 0; yy < 2; yy++) {
-                            play.placeTile(TileLoader.load("Water"), x + xx, y + yy, 0);
-                        }
-                    }
-                }
-            }
-
             for (int i = 0; i < river.size - 1; i++) {
                 Room r0 = river.get(i);
                 Room r1 = river.get(i + 1);
 
                 for (float p = 0; p < 1; p += .01f) {
                     int x = (int) (MathUtils.lerp(r0.x, r1.x, p) * 8f);
-                    int y = (int) (MathUtils.lerp(r0.y, r1.y, p) * 9f);
+                    int y = (int) (MathUtils.lerp(r0.y, r1.y, p) * 4f);
 
                     for (int xx = -1; xx <= 0; xx++) {
-                        for (int yy = -1; yy <= 1; yy++) {
-                            play.placeTile(TileLoader.load("Water"), x + xx, y + yy, 0);
+                        for (int yy = -1; yy <= 0; yy++) {
+                            if (play.tileAt(x + xx, y + yy, 0) != null) {
+                                play.placeTile(TileLoader.load("Water"), x + xx, y + yy, 0);
 
-                            for (int z = 1; z < play.tiles[0][0].length; z++) {
-                                try {
+                                for (int z = 1; z < play.tiles[0][0].length; z++) {
                                     play.tiles[x + xx][y + yy][z] = null;
-                                } catch (IndexOutOfBoundsException e) {
                                 }
                             }
                         }
@@ -314,22 +322,18 @@ public class WorldGenerator {
         }
 
         for (Room r0 : rooms) {
-            if (!r0.riverSource) {
-                for (Room r1 : r0.children) {
-                    if (!r1.riverSource) {
-                        for (float p = 0; p < 1; p += .01f) {
-                            int x = (int) (MathUtils.lerp(r0.x + r0.width * .5f, r1.x + r1.width * .5f, p) * 8f);
-                            int y = (int) (MathUtils.lerp(r0.y + r0.height * .5f, r1.y + r1.height * .5f, p) * 9f);
+            for (Room r1 : r0.children) {
+                for (float p = 0; p < 1; p += .01f) {
+                    int x = (int) (MathUtils.lerp(r0.x + r0.w * .5f, r1.x + r1.w * .5f, p) * 8f);
+                    int y = (int) (MathUtils.lerp(r0.y + r0.h * .5f, r1.y + r1.h * .5f, p) * 4f);
 
-                            for (int xx = -1; xx <= 0; xx++) {
-                                for (int yy = -1; yy <= 1; yy++) {
-                                    if (play.tileAt(x + xx, y + yy, 0).type.name.equals("Water")) {
-                                        play.placeTile(TileLoader.load("Stone"), x + xx, y + yy, 0);
+                    for (int xx = -1; xx <= 0; xx++) {
+                        for (int yy = -1; yy <= 0; yy++) {
+                            if (play.tileAt(x + xx, y + yy, 0) != null && play.tileAt(x + xx, y + yy, 0).type.name.equals("Water")) {
+                                play.placeTile(TileLoader.load("Bridge"), x + xx, y + yy, 0);
 
-                                        for (int z = 1; z < play.tiles[0][0].length; z++) {
-                                            play.tiles[x + xx][y + yy][z] = null;
-                                        }
-                                    }
+                                for (int z = 1; z < play.tiles[0][0].length; z++) {
+                                    play.tiles[x + xx][y + yy][z] = null;
                                 }
                             }
                         }
@@ -337,7 +341,42 @@ public class WorldGenerator {
                 }
             }
         }
-        */
+
+        for (Array<Room> river : rivers) {
+            Room source = river.first();
+
+            int x0 = source.x * 8;
+            int x1 = x0 + source.w * 8;
+            int y0 = source.y * 4;
+            int y1 = y0 + source.h * 4;
+
+            for (int x = x0; x < x1; x++) {
+                for (int y = y0; y < y1; y++) {
+                    if (x > x0 + 1 && x < x1 - 2 && y > y0 + 1 && y < y1 - 2) {
+                        play.placeTile(TileLoader.load("Water"), x, y, 0);
+                    }
+                }
+            }
+
+            Room next = river.get(1);
+
+            for (float p = 0; p < 1; p += .01f) {
+                int x = (int) (MathUtils.lerp(source.x + source.w * .5f, next.x, p) * 8f);
+                int y = (int) (MathUtils.lerp(source.y + source.h * .5f, next.y, p) * 4f);
+
+                for (int xx = -1; xx <= 0; xx++) {
+                    for (int yy = -1; yy <= 0; yy++) {
+                        if (play.tileAt(x + xx, y + yy, 0) != null) {
+                            play.placeTile(TileLoader.load("Water"), x + xx, y + yy, 0);
+
+                            for (int z = 1; z < play.tiles[0][0].length; z++) {
+                                play.tiles[x + xx][y + yy][z] = null;
+                            }
+                        }
+                    }
+                }
+            }
+        }*/
 
         play.solidTiles = new Rectangle[play.tiles.length][play.tiles[0].length];
 
@@ -351,7 +390,7 @@ public class WorldGenerator {
         h.animSpeed = 7.5f;
 
         h.x = 64;
-        h.y = 72 * 6 + 36;
+        h.y = 36;
 
         play.player = h;
         play.entities.add(h);
@@ -380,6 +419,54 @@ public class WorldGenerator {
             if (e >= b.minElevation && e <= b.maxElevation) {
                 return b;
             }
+        }
+
+        return null;
+    }
+
+    public Room smaller(Room r0, Room r1) {
+        int score = 0;
+
+        if (r0.w < r1.w) {
+            score++;
+        } else if (r0.w > r1.w) {
+            score--;
+        }
+
+        if (r0.h < r1.h) {
+            score++;
+        } else if (r0.h > r1.h) {
+            score--;
+        }
+
+        if (score > 0) {
+            return r0;
+        } else if (score < 0) {
+            return r1;
+        }
+
+        return null;
+    }
+
+    public Room larger(Room r0, Room r1) {
+        int score = 0;
+
+        if (r0.w < r1.w) {
+            score--;
+        } else if (r0.w > r1.w) {
+            score++;
+        }
+
+        if (r0.h < r1.h) {
+            score--;
+        } else if (r0.h > r1.h) {
+            score++;
+        }
+
+        if (score > 0) {
+            return r0;
+        } else if (score < 0) {
+            return r1;
         }
 
         return null;
