@@ -1,14 +1,21 @@
 package game.main.gen;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import game.loader.*;
-import game.main.item.equipment.hand.main.MainHand;
+import game.loader.palette.PaletteShader;
+import game.loader.palette.PaletteShaderLoader;
+import game.main.item.equipment.armor.BodyArmor;
+import game.main.item.equipment.armor.FeetArmor;
+import game.main.item.equipment.hand.main.MeleeWeapon;
+import game.main.item.equipment.hand.off.Shield;
 import game.main.play.Play;
 import game.main.play.entity.Entity;
 import game.main.play.entity.humanoid.Humanoid;
 import game.main.play.tile.Tile;
+import game.main.stat.StatType;
 import game.noise.Noise;
 import game.noise.NoiseParameters;
 
@@ -257,7 +264,7 @@ public class WorldGenerator {
 
                         for (int y = y0; y < y1; y++) {
                             if (play.tileAt(x, y, 0) != null) {
-                                play.placeTile(TileLoader.load("Grass"), x, y, 0);
+                                play.placeTile(biomeAt(x / 16, y / 8).ground, x, y, 0);
 
                                 for (int z = 1; z < play.tiles[0][0].length; z++) {
                                     play.tiles[x][y][z] = null;
@@ -275,7 +282,7 @@ public class WorldGenerator {
 
                         for (int x = x0; x < x1; x++) {
                             if (play.tileAt(x, y, 0) != null) {
-                                play.placeTile(TileLoader.load("Grass"), x, y, 0);
+                                play.placeTile(biomeAt(x / 16, y / 8).ground, x, y, 0);
 
                                 for (int z = 1; z < play.tiles[0][0].length; z++) {
                                     play.tiles[x][y][z] = null;
@@ -284,21 +291,24 @@ public class WorldGenerator {
                         }
                     }
                 }
+            }
+        }
 
-                /*for (float p = 0; p < 1; p += .01f) {
-                    int x = (int) (MathUtils.lerp(r0.x + r0.w * .5f, r1.x + r1.w * .5f, p) * 8f);
-                    int y = (int) (MathUtils.lerp(r0.y + r0.h * .5f, r1.y + r1.h * .5f, p) * 4f);
+        for (Room r : rooms) {
+            if (biomeAt(r.x / 2, r.y / 2).minElevation == 0) continue;
 
-                    for (int xx = -1; xx <= 0; xx++) {
-                        for (int yy = -1; yy <= 0; yy++) {
-                            play.placeTile(TileLoader.load("Grass"), x + xx, y + yy, 0);
+            for (int i = 0; i < 10; i++) {
+                int x;
+                int y;
 
-                            for (int z = 1; z < play.tiles[0][0].length; z++) {
-                                play.tiles[x + xx][y + yy][z] = null;
-                            }
-                        }
-                    }
-                }*/
+                do {
+                    x = r.x * 8 + rand.nextInt(r.w * 8);
+                    y = r.y * 4 + rand.nextInt(r.h * 4);
+                } while (play.isFree(x, y, 0, 1));
+
+                if (play.tileAt(x, y, 0).type == biomeAt(r.x / 2, r.y / 2).ground && biomeAt(r.x / 2, r.y / 2).wall != null) {
+                    biomeAt(r.x / 2, r.y / 2).wall.generate(rand, play, x, y, 0);
+                }
             }
         }
 
@@ -391,7 +401,34 @@ public class WorldGenerator {
         Humanoid h = new Humanoid();
         h.type = HumanoidLoader.load("Human");
 
-        h.mainHand = new MainHand();
+        MeleeWeapon mw = new MeleeWeapon();
+        mw.image = SheetLoader.load("Sword")[0][0];
+        mw.palette = PaletteShaderLoader.load(new String[] {"Black", "Gray"});
+        mw.angle = 135;
+        mw.speed = 1;
+        h.mainHand = mw;
+
+        Shield shield = new Shield();
+        shield.images = new TextureRegion[] {
+                SheetLoader.load("Shield")[0][0],
+                SheetLoader.load("Shield")[0][1],
+                SheetLoader.load("Shield")[0][2],
+                SheetLoader.load("Shield")[0][3]
+        };
+        shield.palette = PaletteShaderLoader.load(new String[] {"Black", "Gray"});
+        h.offHand = shield;
+
+        BodyArmor bodyArmor = new BodyArmor();
+        bodyArmor.sheet = SheetLoader.load("BodyArmor");
+        bodyArmor.palette = PaletteShaderLoader.load(new String[] {"Black", "Gray"});
+        h.bodyArmor = bodyArmor;
+
+        FeetArmor feetArmor = new FeetArmor();
+        feetArmor.sheet = SheetLoader.load("FeetArmor");
+        feetArmor.palette = PaletteShaderLoader.load(new String[] {"Black", "Gray"});
+        h.feetArmor = feetArmor;
+
+        h.stats.addAbsolute(StatType.SPEED, 24);
 
         h.x = 64;
         h.y = 72 * 4 + 36;

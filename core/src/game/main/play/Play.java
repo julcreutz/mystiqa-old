@@ -182,4 +182,18 @@ public class Play extends GameState {
     public boolean isCamMoving() {
         return camX != toCamX || camY != toCamY;
     }
+
+    public boolean isFree(int x, int y, int z, int r) {
+        for (int xx = -r; xx <= r; xx++) {
+            for (int yy = -r; yy <= r; yy++) {
+                Tile t = tileAt(x + xx, y + yy, z);
+
+                if (t != null && t.type.solid) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
 }

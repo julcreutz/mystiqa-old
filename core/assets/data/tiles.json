@@ -8,7 +8,8 @@
     ],
     "autoTile": true,
     "connect": [
-      "TreeBottom"
+      "TreeBottom",
+      "Stone"
     ]
   },
   "Water": {
@@ -33,11 +34,26 @@
   },
   "Stone": {
     "name": "Stone",
+    "sheet": "Stone",
+    "colors": [
+      "Black",
+      "Brown",
+      "Brown"
+    ],
+    "autoTile": true,
+    "solid": true
+  },
+  "Dirt": {
+    "name": "Dirt",
     "sheet": "Grass",
     "colors": [
       "Black",
-      "Gray"
-    ]
+      "Brown"
+    ],
+    "connect": [
+      "Stone"
+    ],
+    "autoTile": true
   },
   "Bridge": {
     "name": "Bridge",

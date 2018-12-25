@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import game.main.Game;
 import game.main.play.Play;
+import game.main.stat.StatType;
+import game.main.stat.Stats;
 
 public class Entity {
     public float x;
@@ -16,8 +18,11 @@ public class Entity {
 
     public boolean updated;
 
+    public Stats stats;
+
     public Entity() {
         hitbox = new Hitbox();
+        stats = new Stats();
     }
 
     public void update(Play site) {

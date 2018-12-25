@@ -1,45 +1,59 @@
 package game.main.item.equipment.hand;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import game.main.Game;
 import game.main.item.equipment.Equipment;
+import game.main.play.entity.humanoid.Humanoid;
 
 public class Hand extends Equipment {
-    public float time;
+    public float useTime;
 
     public boolean started;
     public int state;
 
+    public int armIndex;
+
+    public boolean renderBehind;
+
     public void use() {
-        time += Game.delta();
+        useTime += Game.delta();
         state++;
     }
 
-    public void update() {
-        if (time > 0) {
+    public void update(Humanoid h) {
+        if (useTime > 0) {
             if (!started) {
-                onUseStart();
+                onStartUse(h);
                 started = true;
             }
 
-            onUse();
+            onUse(h);
 
             state--;
 
             if (state < 0) {
                 started = false;
-                onUseEnd();
+                onFinishUse(h);
                 state = 0;
-                time = 0;
+                useTime = 0;
             }
         }
     }
 
-    public void onUseStart() {
+    public void onStartUse(Humanoid h) {
     }
 
-    public void onUse() {
+    public void onUse(Humanoid h) {
     }
 
-    public void onUseEnd() {
+    public void onFinishUse(Humanoid h) {
+    }
+
+    public void render(SpriteBatch batch, Humanoid h) {
+        batch.setShader(palette);
+    }
+
+    public boolean using() {
+        return useTime > 0;
     }
 }
