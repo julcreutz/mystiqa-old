@@ -54,6 +54,9 @@ public class Entity {
                             if (!contains) {
                                 e.hitTime = .1f;
 
+                                e.hitAngle = new Vector2(e.x, e.y).sub(x, y).angle();
+                                e.hitSpeed = 48f;
+
                                 e.health -= stats.count(StatType.PHYSICAL_DAMAGE);
 
                                 e.onHit(play);
@@ -183,15 +186,21 @@ public class Entity {
     }
 
     public String[] reverseColors(String[] colors) {
-        for (int i = 0; i < colors.length / 2; i++) {
-            int j = colors.length - 1 - i;
+        String[] newColors = new String[colors.length];
 
-            String color = colors[j];
-            colors[j] = colors[i];
-            colors[i] = color;
+        for (int i = 0; i < colors.length; i++) {
+            newColors[i] = colors[i];
         }
 
-        return colors;
+        for (int i = 0; i < newColors.length / 2; i++) {
+            int j = newColors.length - 1 - i;
+
+            String color = newColors[j];
+            newColors[j] = newColors[i];
+            newColors[i] = color;
+        }
+
+        return newColors;
     }
 
     public String[] reverseColors() {

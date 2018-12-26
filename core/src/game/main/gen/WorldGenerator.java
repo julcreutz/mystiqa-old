@@ -5,7 +5,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import game.loader.*;
-import game.loader.palette.PaletteShader;
 import game.loader.palette.PaletteShaderLoader;
 import game.main.item.equipment.armor.BodyArmor;
 import game.main.item.equipment.armor.FeetArmor;
@@ -13,8 +12,9 @@ import game.main.item.equipment.hand.main.MeleeWeapon;
 import game.main.item.equipment.hand.off.Shield;
 import game.main.play.Play;
 import game.main.play.entity.Entity;
-import game.main.play.entity.Slime;
+import game.main.play.entity.slime.Slime;
 import game.main.play.entity.humanoid.Humanoid;
+import game.main.play.entity.slime.SlimeType;
 import game.main.play.tile.Tile;
 import game.main.stat.AbsoluteStat;
 import game.main.stat.StatType;
@@ -412,6 +412,9 @@ public class WorldGenerator {
                     s.stats.add(new AbsoluteStat(StatType.MAX_HEALTH, 3));
                     s.x = x * 8;
                     s.y = y * 8;
+                    s.type = new SlimeType();
+                    s.type.sheet = SheetLoader.load("Slime");
+                    s.type.colors = new String[] {"Black", "Green"};
                     play.add(s);
                 }
             }
