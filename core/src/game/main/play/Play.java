@@ -39,7 +39,7 @@ public class Play extends GameState {
 
     public float camTime;
 
-    public float screenShake;
+    public float stop;
 
     @Override
     public void create() {

@@ -13,7 +13,7 @@ public class HumanoidType {
 
     public float animSpeed;
 
-    public ShaderProgram palette;
+    public String[] colors;
 
     public void deserialize(JsonValue json) {
         if (json.has("feet")) {
@@ -33,7 +33,7 @@ public class HumanoidType {
         }
 
         if (json.has("colors")) {
-            palette = PaletteShaderLoader.load(json.get("colors").asStringArray());
+            colors = json.get("colors").asStringArray();
         }
     }
 }

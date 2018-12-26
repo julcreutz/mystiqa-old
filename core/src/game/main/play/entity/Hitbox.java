@@ -47,13 +47,13 @@ public class Hitbox {
 
     /**
      * Checks whether the specified rectangle overlaps.
-     * Only works if width and height are greater than zero.
+     * Only works if the both rectangle's width and height are greater than zero.
      *
      * @param rect rectangle to check overlap
      * @return whether the rectangle overlaps
      */
     public boolean overlaps(Rectangle rect) {
-        return width() > 0 && height() > 0 && this.rect.overlaps(rect);
+        return width() > 0 && height() > 0 && rect.width > 0 && rect.height > 0 && this.rect.overlaps(rect);
     }
 
     /**
