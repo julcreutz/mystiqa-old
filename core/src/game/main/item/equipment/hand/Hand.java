@@ -53,7 +53,7 @@ public class Hand extends Equipment {
         batch.setShader(palette);
     }
 
-    public boolean using() {
+    public boolean isUsing() {
         return useTime > 0;
     }
 }

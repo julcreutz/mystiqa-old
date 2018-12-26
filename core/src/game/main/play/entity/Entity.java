@@ -1,7 +1,10 @@
 package game.main.play.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import game.main.Game;
 import game.main.play.Play;
 import game.main.stat.StatType;
@@ -20,17 +23,86 @@ public class Entity {
 
     public Stats stats;
 
+    public Hitbox attackHitbox;
+    public Array<Entity> hit;
+
+    public float hitTime;
+    public float hitSpeed;
+    public float hitAngle;
+
+    public float health;
+
     public Entity() {
         hitbox = new Hitbox();
         stats = new Stats();
+        attackHitbox = new Hitbox();
+        hit = new Array<Entity>();
     }
 
-    public void update(Play site) {
+    public void update(Play play) {
+        attackHitbox.position(this);
+
+        if (isAttacking()) {
+            for (Entity e : play.entities) {
+                if (e != this) {
+                    if (!e.isHit()) {
+                        boolean contains = hit.contains(e, true);
+
+                        if (attackHitbox.overlaps(e)) {
+                            if (!contains) {
+                                e.hitTime = .1f;
+
+                                e.health -= stats.count(StatType.PHYSICAL_DAMAGE);
+
+                                play.screenShake += 1;
+
+                                e.onHit(play);
+
+                                hit.add(e);
+                            }
+                        } else {
+                            if (contains) {
+                                hit.removeValue(e, true);
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            hit.clear();
+        }
+
+        if (isHit()) {
+            hitTime -= Game.delta();
+
+            velX += MathUtils.cosDeg(hitAngle) * hitSpeed;
+            velY += MathUtils.sinDeg(hitAngle) * hitSpeed;
+
+            if (hitTime < 0) {
+                hitTime = 0;
+                hitSpeed = 0;
+            }
+        } else {
+            if (isDead()) {
+                onDeath(play);
+                play.entities.removeValue(this, true);
+            }
+        }
+
+        for (Entity e : play.entities) {
+            if (e != this && hitbox.overlaps(e)) {
+                float a = new Vector2(e.x, e.y).sub(x, y).angle();
+
+                velX += MathUtils.cosDeg(a + 180) * 16f;
+                velY += MathUtils.sinDeg(a + 180) * 16f;
+            }
+        }
+
         hitbox.position(this, velX * Game.delta(), 0);
 
-        for (int x = 0; x < site.solidTiles.length; x++) {
-            for (int y = 0; y < site.solidTiles[0].length; y++) {
-                Rectangle solidTile = site.solidTiles[x][y];
+        for (int x = 0; x < play.solidTiles.length; x++) {
+            for (int y = 0; y < play.solidTiles[0].length; y++) {
+                Rectangle solidTile = play.solidTiles[x][y];
 
                 if (solidTile != null && hitbox.overlaps(solidTile)) {
                     if (velX > 0) {
@@ -48,9 +120,9 @@ public class Entity {
 
         hitbox.position(this, 0, velY * Game.delta());
 
-        for (int x = 0; x < site.solidTiles.length; x++) {
-            for (int y = 0; y < site.solidTiles[0].length; y++) {
-                Rectangle solidTile = site.solidTiles[x][y];
+        for (int x = 0; x < play.solidTiles.length; x++) {
+            for (int y = 0; y < play.solidTiles[0].length; y++) {
+                Rectangle solidTile = play.solidTiles[x][y];
 
                 if (solidTile != null && hitbox.overlaps(solidTile)) {
                     if (velY > 0) {
@@ -67,7 +139,7 @@ public class Entity {
         y += velY * Game.delta();
 
         if (velX != 0 || velY != 0) {
-            onMove();
+            onMove(play);
         }
 
         velX = 0;
@@ -78,7 +150,31 @@ public class Entity {
 
     }
 
-    public void onMove() {
+    public void onAdded(Play play) {
+        health = stats.count(StatType.MAX_HEALTH);
+    }
 
+    public void onMove(Play play) {
+
+    }
+
+    public void onHit(Play play) {
+
+    }
+
+    public void onDeath(Play play) {
+
+    }
+
+    public boolean isAttacking() {
+        return false;
+    }
+
+    public boolean isHit() {
+        return hitTime > 0;
+    }
+
+    public boolean isDead() {
+        return health <= 0;
     }
 }

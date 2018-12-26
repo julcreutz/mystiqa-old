@@ -20,6 +20,7 @@ public class Play extends GameState {
     public Rectangle[][] solidTiles;
 
     public Array<Entity> entities;
+    public Array<Entity> invisibleEntities;
 
     public Entity player;
 
@@ -37,6 +38,8 @@ public class Play extends GameState {
     public float toCamY;
 
     public float camTime;
+
+    public float screenShake;
 
     @Override
     public void create() {
@@ -115,12 +118,29 @@ public class Play extends GameState {
             }
         }
 
-        for (Entity entity : entities) {
-            if (!entity.updated) {
-                entity.update(this);
-                entity.updated = true;
+        for (int i = invisibleEntities.size - 1; i >= 0; i--) {
+            Entity e = invisibleEntities.get(i);
+
+            if (isVisible(e)) {
+                entities.add(e);
+                invisibleEntities.removeIndex(i);
+            }
+        }
+
+        for (int i = entities.size - 1; i >= 0; i--) {
+            Entity e = entities.get(i);
+
+            if (!isVisible(e)) {
+                invisibleEntities.add(e);
+                entities.removeIndex(i);
+                continue;
+            }
+
+            if (!e.updated) {
+                e.update(this);
+                e.updated = true;
             } else if (!isCamMoving()) {
-                entity.update(this);
+                e.update(this);
             }
         }
     }
@@ -139,8 +159,8 @@ public class Play extends GameState {
             }
         }
 
-        for (Entity entity : entities) {
-            entity.render(batch);
+        for (Entity e : entities) {
+            e.render(batch);
         }
 
         for (int x = x0; x < x1; x++) {
@@ -198,5 +218,14 @@ public class Play extends GameState {
         }
 
         return true;
+    }
+
+    public void add(Entity e) {
+        invisibleEntities.add(e);
+        e.onAdded(this);
+    }
+
+    public boolean isVisible(Entity e) {
+        return e.x >= x0 * 8 && e.x < x1 * 8 && e.y >= y0 * 8 && e.y < y1 * 8;
     }
 }

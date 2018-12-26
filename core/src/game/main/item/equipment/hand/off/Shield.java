@@ -24,7 +24,7 @@ public class Shield extends OffHand {
     public void update(Humanoid h) {
         super.update(h);
 
-        if (using()) {
+        if (isUsing()) {
             imageIndex = h.dir;
 
             switch (imageIndex) {
@@ -85,8 +85,8 @@ public class Shield extends OffHand {
     public void onStartUse(Humanoid h) {
         super.onStartUse(h);
 
-        if (!h.stats.containsRelative(slowdown)) {
-            h.stats.addRelative(slowdown);
+        if (!h.stats.contains(slowdown)) {
+            h.stats.add(slowdown);
         }
     }
 
@@ -94,8 +94,8 @@ public class Shield extends OffHand {
     public void onFinishUse(Humanoid h) {
         super.onFinishUse(h);
 
-        if (h.stats.containsRelative(slowdown)) {
-            h.stats.removeRelative(slowdown);
+        if (h.stats.contains(slowdown)) {
+            h.stats.remove(slowdown);
         }
     }
 

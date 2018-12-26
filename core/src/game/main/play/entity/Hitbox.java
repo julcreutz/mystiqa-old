@@ -26,7 +26,7 @@ public class Hitbox {
     }
 
     /**
-     * Positions rectangle relative to specified entity using it's offsets and two additional offset values.
+     * Positions rectangle relative to specified entity isUsing it's offsets and two additional offset values.
      *
      * @param e Entity to position relative to
      * @param offsetX additional x offset
@@ -37,7 +37,7 @@ public class Hitbox {
     }
 
     /**
-     * Positions rectangle relative to specified entity using it's offsets.
+     * Positions rectangle relative to specified entity isUsing it's offsets.
      *
      * @param e Entity to position relative to
      */
@@ -47,22 +47,36 @@ public class Hitbox {
 
     /**
      * Checks whether the specified rectangle overlaps.
+     * Only works if width and height are greater than zero.
      *
      * @param rect rectangle to check overlap
      * @return whether the rectangle overlaps
      */
     public boolean overlaps(Rectangle rect) {
-        return this.rect.overlaps(rect);
+        return width() > 0 && height() > 0 && this.rect.overlaps(rect);
     }
 
     /**
-     * Checks whether the specified hitbox overlaps.
+     * Convenience method using to check whether the specified hitbox overlaps.
+     * {@link #overlaps(Rectangle)} for more details.
      *
      * @param hitbox hitbox to check overlap
      * @return whether the hitbox overlaps
      */
     public boolean overlaps(Hitbox hitbox) {
         return overlaps(hitbox.rect);
+    }
+
+    /**
+     * Convenience method using to check whether the specified entity,
+     * more specifically it's hitbox, overlaps.
+     * {@link #overlaps(Rectangle)} for more details.
+     *
+     * @param e entity to check overlap
+     * @return whether the hitbox overlaps
+     */
+    public boolean overlaps(Entity e) {
+        return overlaps(e.hitbox);
     }
 
     /** @return width of rectangle */

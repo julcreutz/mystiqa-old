@@ -36,7 +36,7 @@ public class Humanoid extends Entity {
     }
 
     @Override
-    public void update(Play site) {
+    public void update(Play play) {
         Vector2 dir = new Vector2();
 
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
@@ -87,7 +87,7 @@ public class Humanoid extends Entity {
             }
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.D) && (mainHand == null || !mainHand.using())) {
+        if (Gdx.input.isKeyPressed(Input.Keys.D) && (mainHand == null || !mainHand.isUsing())) {
             if (offHand != null) {
                 offHand.use();
             }
@@ -105,11 +105,11 @@ public class Humanoid extends Entity {
 
         lastUsed += Game.delta();
 
-        if ((mainHand != null && mainHand.using()) || (offHand != null && offHand.using())) {
+        if ((mainHand != null && mainHand.isUsing()) || (offHand != null && offHand.isUsing())) {
             lastUsed = 0;
         }
 
-        super.update(site);
+        super.update(play);
     }
 
     @Override
@@ -118,8 +118,8 @@ public class Humanoid extends Entity {
 
         float y = this.y + (step % 2 != 0 ? -1 : 0);
 
-        int rightArmIndex = mainHand != null && mainHand.using() ? mainHand.armIndex : step;
-        int leftArmIndex = offHand != null && offHand.using() ? offHand.armIndex : step;
+        int rightArmIndex = mainHand != null && mainHand.isUsing() ? mainHand.armIndex : step;
+        int leftArmIndex = offHand != null && offHand.isUsing() ? offHand.armIndex : step;
 
         if (mainHand != null && mainHand.renderBehind) {
             mainHand.render(batch, this);
@@ -368,8 +368,13 @@ public class Humanoid extends Entity {
     }
 
     @Override
-    public void onMove() {
-        super.onMove();
+    public void onMove(Play play) {
+        super.onMove(play);
         time += Game.delta() * (new Vector2(velX, velY).len() / 24f);
+    }
+
+    @Override
+    public boolean isAttacking() {
+        return mainHand.isUsing();
     }
 }

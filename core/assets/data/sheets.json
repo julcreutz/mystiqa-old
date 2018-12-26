@@ -123,5 +123,10 @@
     "path": "graphics/gui_layer.png",
     "splitW": 8,
     "splitH": 8
+  },
+  "Slime": {
+    "path": "graphics/slime.png",
+    "splitW": 8,
+    "splitH": 8
   }
 }

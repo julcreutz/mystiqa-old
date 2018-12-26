@@ -5,11 +5,31 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import game.main.Game;
 import game.main.play.entity.humanoid.Humanoid;
-import game.main.stat.AbsoluteStat;
 import game.main.stat.RelativeStat;
 import game.main.stat.StatType;
 
 public class MeleeWeapon extends MainHand {
+    public static final float[][] X = new float[][] {
+            {5, 6, 5, 3},
+            {3, 0, 3, 4},
+            {-5, -5, -5, -3},
+            {-3, 0, -3, -5}
+    };
+
+    public static final float[][] Y = new float[][] {
+            {-1, 1, -1, -3},
+            {3, 2, 3, 1},
+            {0, 1, 0, -2},
+            {-6, -6, -6, -5}
+    };
+
+    public static final float[][] ROT = new float[][] {
+            {0, 22.5f, 0, -22.5f},
+            {90, 90 + 22.5f, 90, 90 - 22.5f},
+            {180, 180 - 22.5f, 180, 180 + 22.5f},
+            {270, 270 + 22.5f, 270, 270 - 22.5f}
+    };
+
     public TextureRegion image;
 
     public float angle;
@@ -35,7 +55,7 @@ public class MeleeWeapon extends MainHand {
     public void update(Humanoid h) {
         super.update(h);
 
-        if (attacking()) {
+        if (isAttacking()) {
             attackTime -= Game.delta() * 4f * speed;
 
             float a = h.dir * 90 - 135 + (1 - attackTime) * angle;
@@ -48,11 +68,13 @@ public class MeleeWeapon extends MainHand {
 
             renderBehind = y > h.y + 4;
 
+            h.attackHitbox.set(8, 8, x - h.x, y - h.y);
+
             if (attackTime < 0) {
                 attackTime = 0;
 
-                if (h.stats.containsRelative(slowdown)) {
-                    h.stats.removeRelative(slowdown);
+                if (h.stats.contains(slowdown)) {
+                    h.stats.remove(slowdown);
                 }
 
                 attacking = false;
@@ -66,27 +88,6 @@ public class MeleeWeapon extends MainHand {
                 armIndex = 1;
             }
         } else {
-            float[][] X = new float[][] {
-                    {5, 6, 5, 3},
-                    {3, 0, 3, 4},
-                    {-5, -5, -5, -3},
-                    {-3, 0, -3, -5}
-            };
-
-            float[][] Y = new float[][] {
-                    {-1, 1, -1, -3},
-                    {3, 2, 3, 1},
-                    {0, 1, 0, -2},
-                    {-6, -6, -6, -5}
-            };
-
-            float[][] ROT = new float[][] {
-                    {0, 22.5f, 0, -22.5f},
-                    {90, 90 + 22.5f, 90, 90 - 22.5f},
-                    {180, 180 - 22.5f, 180, 180 + 22.5f},
-                    {270, 270 + 22.5f, 270, 270 - 22.5f}
-            };
-
             x = h.x + X[h.dir][h.step];
             y = h.y + Y[h.dir][h.step];
             rot = ROT[h.dir][h.step];
@@ -101,8 +102,8 @@ public class MeleeWeapon extends MainHand {
 
         if (!attacking) {
             attackTime = 1;
-            if (!h.stats.containsRelative(slowdown)) {
-                h.stats.addRelative(slowdown);
+            if (!h.stats.contains(slowdown)) {
+                h.stats.add(slowdown);
             }
             slowdown.value = .5f;
         }
@@ -125,12 +126,12 @@ public class MeleeWeapon extends MainHand {
         batch.draw(image, x, y, 4, 4, 8, 8, 1, 1, rot);
     }
 
-    public boolean attacking() {
+    public boolean isAttacking() {
         return attackTime > 0;
     }
 
     @Override
-    public boolean using() {
-        return super.using() || attacking();
+    public boolean isUsing() {
+        return super.isUsing() || isAttacking();
     }
 }

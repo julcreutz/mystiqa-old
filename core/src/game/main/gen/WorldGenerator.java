@@ -13,8 +13,10 @@ import game.main.item.equipment.hand.main.MeleeWeapon;
 import game.main.item.equipment.hand.off.Shield;
 import game.main.play.Play;
 import game.main.play.entity.Entity;
+import game.main.play.entity.Slime;
 import game.main.play.entity.humanoid.Humanoid;
 import game.main.play.tile.Tile;
+import game.main.stat.AbsoluteStat;
 import game.main.stat.StatType;
 import game.noise.Noise;
 import game.noise.NoiseParameters;
@@ -163,6 +165,7 @@ public class WorldGenerator {
             }
         }
 
+        /*
         rivers = new Array<Array<Room>>();
 
         for (int i = 0; i < 1 + rand.nextInt(3); i++) {
@@ -207,6 +210,7 @@ public class WorldGenerator {
 
             rivers.add(river);
         }
+        */
 
         play.tiles = new Tile[WIDTH * 16][HEIGHT * 8][8];
 
@@ -399,6 +403,19 @@ public class WorldGenerator {
         play.solidTiles = new Rectangle[play.tiles.length][play.tiles[0].length];
 
         play.entities = new Array<Entity>();
+        play.invisibleEntities = new Array<Entity>();
+
+        for (int x = 0; x < play.tiles.length; x++) {
+            for (int y = 0; y < play.tiles[0].length; y++) {
+                if (play.isFree(x, y, 0, 1) && rand.nextFloat() < .1f) {
+                    Slime s = new Slime();
+                    s.stats.add(new AbsoluteStat(StatType.MAX_HEALTH, 3));
+                    s.x = x * 8;
+                    s.y = y * 8;
+                    play.add(s);
+                }
+            }
+        }
 
         Humanoid h = new Humanoid();
         h.type = HumanoidLoader.load("Human");
@@ -430,13 +447,15 @@ public class WorldGenerator {
         feetArmor.palette = PaletteShaderLoader.load(new String[] {"Black", "Gray"});
         h.feetArmor = feetArmor;
 
-        h.stats.addAbsolute(StatType.SPEED, 24);
+        h.stats.add(new AbsoluteStat(StatType.SPEED, 24));
+        h.stats.add(new AbsoluteStat(StatType.MAX_HEALTH, 10));
+        h.stats.add(new AbsoluteStat(StatType.PHYSICAL_DAMAGE, 1));
 
         h.x = 64;
         h.y = 72 * 4 + 36;
 
         play.player = h;
-        play.entities.add(h);
+        play.add(h);
 
         play.positionCam();
     }

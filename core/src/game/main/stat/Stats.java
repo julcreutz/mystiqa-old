@@ -31,35 +31,27 @@ public class Stats {
         return total * p;
     }
 
-    public void addAbsolute(AbsoluteStat s) {
+    public void add(AbsoluteStat s) {
         absolutes.add(s);
     }
 
-    public void addAbsolute(StatType type, float value) {
-        addAbsolute(new AbsoluteStat(type, value));
-    }
-
-    public void addRelative(RelativeStat s) {
+    public void add(RelativeStat s) {
         relatives.add(s);
     }
 
-    public void addRelative(StatType type, float value) {
-        addRelative(new RelativeStat(type, value));
-    }
-
-    public void removeAbsolute(AbsoluteStat s) {
+    public void remove(AbsoluteStat s) {
         absolutes.removeValue(s, true);
     }
 
-    public void removeRelative(RelativeStat s) {
+    public void remove(RelativeStat s) {
         relatives.removeValue(s, true);
     }
 
-    public boolean containsAbsolute(AbsoluteStat s) {
+    public boolean contains(AbsoluteStat s) {
         return absolutes.contains(s, true);
     }
 
-    public boolean containsRelative(RelativeStat s) {
+    public boolean contains(RelativeStat s) {
         return relatives.contains(s, true);
     }
 }
