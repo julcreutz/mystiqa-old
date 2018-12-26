@@ -1,10 +1,12 @@
 package game.main.play.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import game.loader.palette.PaletteShaderLoader;
 import game.main.Game;
 import game.main.play.Play;
 import game.main.stat.StatType;
@@ -53,8 +55,6 @@ public class Entity {
                                 e.hitTime = .1f;
 
                                 e.health -= stats.count(StatType.PHYSICAL_DAMAGE);
-
-                                play.screenShake += 1;
 
                                 e.onHit(play);
 
@@ -147,7 +147,7 @@ public class Entity {
     }
 
     public void render(SpriteBatch batch) {
-
+        batch.setShader(palette());
     }
 
     public void onAdded(Play play) {
@@ -176,5 +176,29 @@ public class Entity {
 
     public boolean isDead() {
         return health <= 0;
+    }
+
+    public String[] colors() {
+        return null;
+    }
+
+    public String[] reverseColors(String[] colors) {
+        for (int i = 0; i < colors.length / 2; i++) {
+            int j = colors.length - 1 - i;
+
+            String color = colors[j];
+            colors[j] = colors[i];
+            colors[i] = color;
+        }
+
+        return colors;
+    }
+
+    public String[] reverseColors() {
+        return reverseColors(colors());
+    }
+
+    public ShaderProgram palette() {
+        return PaletteShaderLoader.load(isHit() ? reverseColors() : colors());
     }
 }
