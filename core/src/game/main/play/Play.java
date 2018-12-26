@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
+import game.loader.SheetLoader;
 import game.main.Game;
 import game.main.GameState;
 import game.main.gen.WorldGenerator;
@@ -153,6 +154,8 @@ public class Play extends GameState {
                 }
             }
         }
+
+        batch.draw(SheetLoader.load("GuiLayer")[0][0], cam.position.x - Game.WIDTH * .5f, cam.position.y + Game.HEIGHT * .5f - 8, Game.WIDTH, 8);
     }
 
     public Tile tileAt(int x, int y, int z) {

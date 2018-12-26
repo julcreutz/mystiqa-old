@@ -49,11 +49,11 @@ public class PaletteShaderLoader {
                     "    float b = floor(c.b * 255.0);\n" +
                     "\n" +
                     "    if (c.w > 0) {\n" +
-                    "        if (r == 0.0 && g == 0.0 && b == 0.0) {\n" +
+                    "        if (r <= 0.0 && g <= 0.0 && b <= 0.0) {\n" +
                     "            c.r = " + _colors[0].r + ";\n" +
                     "            c.g = " + _colors[0].g + ";\n" +
                     "            c.b = " + _colors[0].b + ";\n" +
-                    "        } else if (r == 255.0 && g == 255.0 && b == 255.0) {\n" +
+                    "        } else if (r <= 255.0 && g <= 255.0 && b <= 255.0) {\n" +
                     "            c.r = " + _colors[1].r + ";\n" +
                     "            c.g = " + _colors[1].g + ";\n" +
                     "            c.b = " + _colors[1].b + ";\n" +
@@ -79,15 +79,15 @@ public class PaletteShaderLoader {
                     "    float b = floor(c.b * 255.0);\n" +
                     "\n" +
                     "    if (c.w > 0) {\n" +
-                    "        if (r == 0.0 && g == 0.0 && b == 0.0) {\n" +
+                    "        if (r <= 0.0 && g <= 0.0 && b <= 0.0) {\n" +
                     "            c.r = " + _colors[0].r + ";\n" +
                     "            c.g = " + _colors[0].g + ";\n" +
                     "            c.b = " + _colors[0].b + ";\n" +
-                    "        } else if (r == 128.0 && g == 128.0 && b == 128.0) {\n" +
+                    "        } else if (r <= 128.0 && g <= 128.0 && b <= 128.0) {\n" +
                     "            c.r = " + _colors[1].r + ";\n" +
                     "            c.g = " + _colors[1].g + ";\n" +
                     "            c.b = " + _colors[1].b + ";\n" +
-                    "        } else if (r == 255.0 && g == 255.0 && b == 255.0) {\n" +
+                    "        } else if (r <= 255.0 && g <= 255.0 && b <= 255.0) {\n" +
                     "            c.r = " + _colors[2].r + ";\n" +
                     "            c.g = " + _colors[2].g + ";\n" +
                     "            c.b = " + _colors[2].b + ";\n" +
@@ -113,19 +113,19 @@ public class PaletteShaderLoader {
                     "    float b = floor(c.b * 255.0);\n" +
                     "\n" +
                     "    if (c.w > 0) {\n" +
-                    "        if (r == 0.0 && g == 0.0 && b == 0.0) {\n" +
+                    "        if (r <= 0.0 && g <= 0.0 && b <= 0.0) {\n" +
                     "            c.r = " + _colors[0].r + ";\n" +
                     "            c.g = " + _colors[0].g + ";\n" +
                     "            c.b = " + _colors[0].b + ";\n" +
-                    "        } else if (r == 64.0 && g == 64.0 && b == 64.0) {\n" +
+                    "        } else if (r <= 64.0 && g <= 64.0 && b <= 64.0) {\n" +
                     "            c.r = " + _colors[1].r + ";\n" +
                     "            c.g = " + _colors[1].g + ";\n" +
                     "            c.b = " + _colors[1].b + ";\n" +
-                    "        } else if (r == 128.0 && g == 128.0 && b == 128.0) {\n" +
+                    "        } else if (r <= 128.0 && g <= 128.0 && b <= 128.0) {\n" +
                     "            c.r = " + _colors[2].r + ";\n" +
                     "            c.g = " + _colors[2].g + ";\n" +
                     "            c.b = " + _colors[2].b + ";\n" +
-                    "        } else if (r == 255.0 && g == 255.0 && b == 255.0) {\n" +
+                    "        } else if (r <= 255.0 && g <= 255.0 && b <= 255.0) {\n" +
                     "            c.r = " + _colors[3].r + ";\n" +
                     "            c.g = " + _colors[3].g + ";\n" +
                     "            c.b = " + _colors[3].b + ";\n" +

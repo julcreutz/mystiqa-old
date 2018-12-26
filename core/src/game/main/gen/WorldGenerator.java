@@ -294,6 +294,7 @@ public class WorldGenerator {
             }
         }
 
+        /*
         for (Room r : rooms) {
             if (biomeAt(r.x / 2, r.y / 2).minElevation == 0) continue;
 
@@ -311,6 +312,7 @@ public class WorldGenerator {
                 }
             }
         }
+        */
 
         /*
         for (Array<Room> river : rivers) {
@@ -402,10 +404,10 @@ public class WorldGenerator {
         h.type = HumanoidLoader.load("Human");
 
         MeleeWeapon mw = new MeleeWeapon();
-        mw.image = SheetLoader.load("Sword")[0][0];
-        mw.palette = PaletteShaderLoader.load(new String[] {"Black", "Gray"});
-        mw.angle = 135;
-        mw.speed = 1;
+        mw.image = SheetLoader.load("Axe")[0][0];
+        mw.palette = PaletteShaderLoader.load(new String[] {"Black", "Brown", "Gray"});
+        mw.angle = 180;
+        mw.speed = .75f;
         h.mainHand = mw;
 
         Shield shield = new Shield();

@@ -63,7 +63,7 @@ public class Humanoid extends Entity {
             velX = MathUtils.round(MathUtils.cosDeg(angle) * speed);
             velY = MathUtils.round(MathUtils.sinDeg(angle) * speed);
 
-            if (lastUsed > .1f) {
+            if (lastUsed > .01f) {
                 switch (MathUtils.floor((angle + 360f) / 45f) % 8) {
                     case 0:
                         this.dir = 0;
