@@ -11,7 +11,7 @@ public class ColorLoader {
     private static HashMap<String, Color> colors;
 
     public static void load() {
-        colors = new HashMap<String, Color>();
+        colors = new HashMap<>();
 
         for (JsonValue json : new JsonReader().parse(Gdx.files.internal("data/colors.json"))) {
             Color c = new Color();
@@ -26,6 +26,6 @@ public class ColorLoader {
     }
 
     public static Color load(String name) {
-        return colors.containsKey(name) ? colors.get(name) : null;
+        return colors.getOrDefault(name, null);
     }
 }

@@ -13,7 +13,7 @@ public class StructureLoader {
     private static HashMap<String, Structure> structures;
 
     public static void load() {
-        structures = new HashMap<String, Structure>();
+        structures = new HashMap<>();
 
         for (JsonValue json : new JsonReader().parse(Gdx.files.internal("data/structures.json"))) {
             Structure struct = null;
@@ -34,6 +34,6 @@ public class StructureLoader {
     }
 
     public static Structure load(String name) {
-        return structures.containsKey(name) ? structures.get(name) : null;
+        return structures.getOrDefault(name, null);
     }
 }

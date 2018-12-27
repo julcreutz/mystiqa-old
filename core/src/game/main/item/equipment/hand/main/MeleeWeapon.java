@@ -68,7 +68,11 @@ public class MeleeWeapon extends MainHand {
 
             renderBehind = y > h.y + 4;
 
-            h.attackHitbox.set(8, 8, x - h.x, y - h.y);
+            if (attacking) {
+                h.attackHitbox.set(8, 8, x - h.x, y - h.y);
+            } else {
+                h.attackHitbox.set(0, 0, 0, 0);
+            }
 
             if (attackTime < 0) {
                 attackTime = 0;

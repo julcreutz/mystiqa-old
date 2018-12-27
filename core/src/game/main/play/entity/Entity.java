@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.JsonValue;
 import game.loader.palette.PaletteShaderLoader;
 import game.main.Game;
 import game.main.play.Play;
@@ -36,7 +37,7 @@ public class Entity {
     public Entity() {
         hitbox = new Hitbox();
         stats = new Stats();
-        hit = new Array<Entity>();
+        hit = new Array<>();
     }
 
     public void update(Play play) {
@@ -217,9 +218,7 @@ public class Entity {
     public String[] reverseColors(String[] colors) {
         String[] newColors = new String[colors.length];
 
-        for (int i = 0; i < colors.length; i++) {
-            newColors[i] = colors[i];
-        }
+        System.arraycopy(colors, 0, newColors, 0, colors.length);
 
         for (int i = 0; i < newColors.length / 2; i++) {
             int j = newColors.length - 1 - i;
@@ -246,5 +245,9 @@ public class Entity {
 
     public Hitbox getBlockHitbox() {
         return null;
+    }
+
+    public void deserialize(JsonValue json) {
+
     }
 }

@@ -11,16 +11,15 @@ import game.main.item.equipment.armor.FeetArmor;
 import game.main.item.equipment.hand.main.MeleeWeapon;
 import game.main.item.equipment.hand.off.Shield;
 import game.main.play.Play;
-import game.main.play.entity.Entity;
 import game.main.play.entity.slime.Slime;
 import game.main.play.entity.humanoid.Humanoid;
-import game.main.play.entity.slime.SlimeType;
 import game.main.play.tile.Tile;
 import game.main.stat.AbsoluteStat;
 import game.main.stat.StatType;
 import game.noise.Noise;
 import game.noise.NoiseParameters;
 
+import java.util.Objects;
 import java.util.Random;
 
 public class WorldGenerator {
@@ -58,7 +57,7 @@ public class WorldGenerator {
             }
         }
 
-        rooms = new Array<Room>();
+        rooms = new Array<>();
 
         // This is where it starts
         rooms.add(new Room(0, 0, 2, 2));
@@ -246,7 +245,7 @@ public class WorldGenerator {
                     larger = r1;
                 }
 
-                float diffX = larger.x - smaller.x;
+                float diffX = larger.x - Objects.requireNonNull(smaller).x;
 
                 if (diffX != 0) {
                     diffX /= Math.abs(diffX);
@@ -402,33 +401,29 @@ public class WorldGenerator {
 
         play.solidTiles = new Rectangle[play.tiles.length][play.tiles[0].length];
 
-        play.entities = new Array<Entity>();
-        play.invisibleEntities = new Array<Entity>();
+        play.entities = new Array<>();
+        play.invisibleEntities = new Array<>();
 
         for (int x = 0; x < play.tiles.length; x++) {
             for (int y = 0; y < play.tiles[0].length; y++) {
                 if (play.isFree(x, y, 0, 1) && rand.nextFloat() < .1f) {
-                    Slime s = new Slime();
-                    s.stats.add(new AbsoluteStat(StatType.MAX_HEALTH, 3));
+                    Slime s = (Slime) EntityLoader.load("GreenSlime");
+                    Objects.requireNonNull(s).stats.add(new AbsoluteStat(StatType.MAX_HEALTH, 3));
                     s.x = x * 8;
                     s.y = y * 8;
-                    s.type = new SlimeType();
-                    s.type.sheet = SheetLoader.load("Slime");
-                    s.type.colors = new String[] {"Black", "Green"};
                     play.add(s);
                 }
             }
         }
 
-        Humanoid h = new Humanoid();
-        h.type = HumanoidLoader.load("Human");
+        Humanoid h = (Humanoid) EntityLoader.load("Human");
 
         MeleeWeapon mw = new MeleeWeapon();
         mw.image = SheetLoader.load("Axe")[0][0];
         mw.palette = PaletteShaderLoader.load(new String[] {"Black", "Brown", "Gray"});
         mw.angle = 180;
         mw.speed = .75f;
-        h.mainHand = mw;
+        Objects.requireNonNull(h).mainHand = mw;
 
         Shield shield = new Shield();
         shield.images = new TextureRegion[] {

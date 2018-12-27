@@ -13,8 +13,8 @@ public class SheetLoader {
     private static HashMap<String, TextureRegion[][]> sheets;
 
     public static void load() {
-        textures = new HashMap<String, Texture>();
-        sheets = new HashMap<String, TextureRegion[][]>();
+        textures = new HashMap<>();
+        sheets = new HashMap<>();
 
         for (JsonValue json : new JsonReader().parse(Gdx.files.internal("data/sheets.json"))) {
             Texture t = new Texture(Gdx.files.internal(json.getString("path")));
@@ -25,7 +25,7 @@ public class SheetLoader {
     }
 
     public static TextureRegion[][] load(String id) {
-        return sheets.containsKey(id) ? sheets.get(id) : null;
+        return sheets.getOrDefault(id, null);
     }
 
     private static TextureRegion[][] split(Texture image, int splitW, int splitH) {

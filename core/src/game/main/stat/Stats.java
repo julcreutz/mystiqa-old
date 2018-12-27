@@ -7,8 +7,8 @@ public class Stats {
     public Array<RelativeStat> relatives;
 
     public Stats() {
-        absolutes = new Array<AbsoluteStat>();
-        relatives = new Array<RelativeStat>();
+        absolutes = new Array<>();
+        relatives = new Array<>();
     }
 
     public float count(StatType type) {

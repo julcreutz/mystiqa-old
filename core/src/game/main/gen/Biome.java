@@ -31,7 +31,7 @@ public class Biome {
         }
 
         if (json.has("roomSizes")) {
-            roomSizes = new Array<RoomSize>();
+            roomSizes = new Array<>();
 
             for (JsonValue roomSize : json.get("roomSizes")) {
                 RoomSize _roomSize = new RoomSize();

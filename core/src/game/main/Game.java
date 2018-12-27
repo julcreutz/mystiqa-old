@@ -5,29 +5,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.utils.JsonReader;
 import game.loader.*;
 import game.main.play.Play;
-import game.serialize.Serialize;
-import game.serialize.Serializer;
 
 public class Game extends ApplicationAdapter {
-	public static class Test {
-		@Serialize
-		public float f;
-
-		@Serialize
-		public String s;
-
-		@Serialize
-		public Test2 t;
-	}
-
-	public static class Test2 {
-		@Serialize
-		public int i;
-	}
-
 	public static final String TITLE = "Mystiqa";
 
 	public static final int WIDTH = 128;
@@ -52,14 +33,10 @@ public class Game extends ApplicationAdapter {
 		TileLoader.load();
 		StructureLoader.load();
 		BiomeLoader.load();
-		HumanoidLoader.load();
+		EntityLoader.load();
 
 		PLAY.create();
 		state = PLAY;
-
-		Test t = new Serializer().deserialize(new JsonReader().parse(Gdx.files.internal("test.json")), Test.class);
-
-		System.out.println(t.f + " " + t.s + " " + t.t.i);
 	}
 
 	@Override

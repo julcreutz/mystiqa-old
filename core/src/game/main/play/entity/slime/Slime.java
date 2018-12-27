@@ -4,13 +4,17 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.JsonValue;
+import game.loader.SheetLoader;
 import game.main.Game;
 import game.main.play.Play;
 import game.main.play.entity.Entity;
 import game.main.play.entity.Hitbox;
 
 public class Slime extends Entity {
-    public SlimeType type;
+    public TextureRegion[][] sheet;
+    public String[] colors;
+    
     public SlimeState state;
 
     public float time;
@@ -104,7 +108,7 @@ public class Slime extends Entity {
         super.render(batch);
 
         if (z > 0) {
-            batch.draw(type.sheet[1][1], x, y);
+            batch.draw(sheet[1][1], x, y);
         }
 
         TextureRegion image = null;
@@ -112,14 +116,14 @@ public class Slime extends Entity {
         switch (state) {
             case RANDOM_MOVEMENT:
             case FOLLOW_PLAYER:
-                image = type.sheet[0][0];
+                image = sheet[0][0];
                 break;
             case JUMP:
-                image = type.sheet[0][1];
+                image = sheet[0][1];
                 break;
             case JUMP_BEGIN:
             case JUMP_END:
-                image = type.sheet[1][0];
+                image = sheet[1][0];
                 break;
         }
 
@@ -128,7 +132,7 @@ public class Slime extends Entity {
 
     @Override
     public String[] colors() {
-        return type.colors;
+        return colors;
     }
 
     public void jump(float jumpAngle, float jumpSpeed, float time) {
@@ -155,5 +159,18 @@ public class Slime extends Entity {
     @Override
     public Hitbox getAttackHitbox() {
         return hitbox;
+    }
+
+    @Override
+    public void deserialize(JsonValue json) {
+        super.deserialize(json);
+
+        if (json.has("sheet")) {
+            sheet = SheetLoader.load(json.getString("sheet"));
+        }
+
+        if (json.has("colors")) {
+            colors = json.get("colors").asStringArray();
+        }
     }
 }

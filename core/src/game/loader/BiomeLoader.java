@@ -12,7 +12,7 @@ public class BiomeLoader {
     private static HashMap<String, Biome> biomes;
 
     public static void load() {
-        biomes = new HashMap<String, Biome>();
+        biomes = new HashMap<>();
 
         for (JsonValue json : new JsonReader().parse(Gdx.files.internal("data/biomes.json"))) {
             Biome b = new Biome();
@@ -24,11 +24,11 @@ public class BiomeLoader {
     }
 
     public static Biome load(String name) {
-        return biomes.containsKey(name) ? biomes.get(name) : null;
+        return biomes.getOrDefault(name, null);
     }
 
     public static Array<Biome> loadAll() {
-        Array<Biome> biomes = new Array<Biome>();
+        Array<Biome> biomes = new Array<>();
 
         for (Biome b : BiomeLoader.biomes.values()) {
             biomes.add(b);

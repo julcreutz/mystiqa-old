@@ -1,8 +1,6 @@
 package game.main.play.entity;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
-import game.loader.SheetLoader;
 
 /**
  * Describes a rectangle offset by specified x and y values relative to
