@@ -44,10 +44,10 @@ public class Entity {
     public void update(Play play) {
         attackHitbox.position(this);
 
-        if (isAttacking()) {
+        if (isAttacking() && isOnGround()) {
             for (Entity e : play.entities) {
                 if (e != this) {
-                    if (!e.isHit()) {
+                    if (!e.isHit() && e.isOnGround()) {
                         boolean contains = hit.contains(e, true);
 
                         if (attackHitbox.overlaps(e)) {
@@ -92,12 +92,14 @@ public class Entity {
             }
         }
 
-        for (Entity e : play.entities) {
-            if (e != this && hitbox.overlaps(e)) {
-                float a = new Vector2(e.x, e.y).sub(x, y).angle();
+        if (!isOnGround()) {
+            for (Entity e : play.entities) {
+                if (e != this && hitbox.overlaps(e) && e.isOnGround()) {
+                    float a = new Vector2(e.x, e.y).sub(x, y).angle();
 
-                velX += MathUtils.cosDeg(a + 180) * 16f;
-                velY += MathUtils.sinDeg(a + 180) * 16f;
+                    velX += MathUtils.cosDeg(a + 180) * 16f;
+                    velY += MathUtils.sinDeg(a + 180) * 16f;
+                }
             }
         }
 
@@ -179,6 +181,10 @@ public class Entity {
 
     public boolean isDead() {
         return health <= 0;
+    }
+
+    public boolean isOnGround() {
+        return true;
     }
 
     public String[] colors() {

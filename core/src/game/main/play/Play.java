@@ -149,6 +149,8 @@ public class Play extends GameState {
     public void renderToBuffer() {
         super.renderToBuffer();
 
+        batch.setShader(null);
+
         for (int x = x0; x < x1; x++) {
             for (int y = y1 - 1; y >= y0; y--) {
                 Tile tile = tiles[x][y][0];
@@ -159,9 +161,13 @@ public class Play extends GameState {
             }
         }
 
+        batch.setShader(null);
+
         for (Entity e : entities) {
             e.render(batch);
         }
+
+        batch.setShader(null);
 
         for (int x = x0; x < x1; x++) {
             for (int y = y1 - 1; y >= y0; y--) {
