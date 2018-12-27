@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import game.main.Game;
 import game.main.play.Play;
 import game.main.play.entity.Entity;
+import game.main.play.entity.Hitbox;
 
 public class Slime extends Entity {
     public SlimeType type;
@@ -48,7 +49,7 @@ public class Slime extends Entity {
                 time -= Game.delta();
 
                 if (time < 0) {
-                    jump(new Vector2(play.player.x, play.player.y).sub(x, y).angle(), new Vector2(play.player.x, play.player.y).sub(x, y).len() * 2, MathUtils.random(.5f, 1f));
+                    jump(new Vector2(play.player.x, play.player.y).sub(x, y).angle(), new Vector2(play.player.x, play.player.y).sub(x, y).len() * 2.5f, MathUtils.random(.5f, 1f));
                 }
 
                 break;
@@ -144,5 +145,15 @@ public class Slime extends Entity {
     @Override
     public boolean isOnGround() {
         return z <= 0;
+    }
+
+    @Override
+    public boolean isAttacking() {
+        return state == SlimeState.JUMP_END;
+    }
+
+    @Override
+    public Hitbox getAttackHitbox() {
+        return hitbox;
     }
 }

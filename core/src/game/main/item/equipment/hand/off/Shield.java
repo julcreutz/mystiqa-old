@@ -32,21 +32,25 @@ public class Shield extends OffHand {
                     x = h.x + 7;
                     y = h.y + 0;
                     renderBehind = true;
+                    h.blockHitbox.set(1, 8, 7, 0);
                     break;
                 case 2:
                     x = h.x - 7;
                     y = h.y + 0;
                     renderBehind = false;
+                    h.blockHitbox.set(1, 8, 0, 0);
                     break;
                 case 1:
                     x = h.x - 2;
                     y = h.y + 1;
                     renderBehind = true;
+                    h.blockHitbox.set(8, 1, 0, 7);
                     break;
                 case 3:
                     x = h.x + 2;
                     y = h.y - 2;
                     renderBehind = false;
+                    h.blockHitbox.set(8, 1, 0, 0);
                     break;
             }
         } else {

@@ -13,10 +13,14 @@ import game.main.item.equipment.armor.FeetArmor;
 import game.main.item.equipment.armor.HeadArmor;
 import game.main.play.Play;
 import game.main.play.entity.Entity;
+import game.main.play.entity.Hitbox;
 import game.main.stat.StatType;
 
 public class Humanoid extends Entity {
     public HumanoidType type;
+
+    public Hitbox attackHitbox;
+    public Hitbox blockHitbox;
 
     public MainHand mainHand;
     public OffHand offHand;
@@ -33,6 +37,8 @@ public class Humanoid extends Entity {
 
     public Humanoid() {
         hitbox.set(4, 2, 2, 1);
+        attackHitbox = new Hitbox();
+        blockHitbox = new Hitbox();
     }
 
     @Override
@@ -375,11 +381,26 @@ public class Humanoid extends Entity {
 
     @Override
     public boolean isAttacking() {
-        return mainHand.isUsing();
+        return mainHand != null && mainHand.isUsing();
+    }
+
+    @Override
+    public boolean isBlocking() {
+        return offHand != null && offHand.isUsing();
     }
 
     @Override
     public String[] colors() {
         return type.colors;
+    }
+
+    @Override
+    public Hitbox getAttackHitbox() {
+        return attackHitbox;
+    }
+
+    @Override
+    public Hitbox getBlockHitbox() {
+        return blockHitbox;
     }
 }

@@ -25,7 +25,6 @@ public class Entity {
 
     public Stats stats;
 
-    public Hitbox attackHitbox;
     public Array<Entity> hit;
 
     public float hitTime;
@@ -37,42 +36,62 @@ public class Entity {
     public Entity() {
         hitbox = new Hitbox();
         stats = new Stats();
-        attackHitbox = new Hitbox();
         hit = new Array<Entity>();
     }
 
     public void update(Play play) {
-        attackHitbox.position(this);
+        Hitbox attackHitbox = getAttackHitbox();
+        Hitbox blockHitbox = getBlockHitbox();
 
-        if (isAttacking() && isOnGround()) {
-            for (Entity e : play.entities) {
-                if (e != this) {
-                    if (!e.isHit() && e.isOnGround()) {
-                        boolean contains = hit.contains(e, true);
+        if (attackHitbox != null) {
+            getAttackHitbox().position(this);
 
-                        if (attackHitbox.overlaps(e)) {
-                            if (!contains) {
-                                e.hitTime = .1f;
+            if (isAttacking() && isOnGround()) {
+                for (Entity e : play.entities) {
+                    if (e != this) {
+                        if (!e.isHit() && e.isOnGround()) {
+                            boolean contains = hit.contains(e, true);
 
-                                e.hitAngle = new Vector2(e.x, e.y).sub(x, y).angle();
-                                e.hitSpeed = 48f;
+                            if (e.isBlocking()) {
+                                if (attackHitbox.overlaps(e.getBlockHitbox())) {
+                                    if (!contains) {
+                                        hit.add(e);
+                                    }
+                                } else {
+                                    if (contains) {
+                                        hit.removeValue(e, true);
+                                    }
+                                }
+                            } else {
+                                if (attackHitbox.overlaps(e)) {
+                                    if (!contains) {
+                                        e.hitTime = .1f;
 
-                                e.health -= stats.count(StatType.PHYSICAL_DAMAGE);
+                                        e.hitAngle = new Vector2(e.x, e.y).sub(x, y).angle();
+                                        e.hitSpeed = 48f;
 
-                                e.onHit(play);
+                                        e.health -= stats.count(StatType.PHYSICAL_DAMAGE);
 
-                                hit.add(e);
-                            }
-                        } else {
-                            if (contains) {
-                                hit.removeValue(e, true);
+                                        e.onHit(play);
+
+                                        hit.add(e);
+                                    }
+                                } else {
+                                    if (contains) {
+                                        hit.removeValue(e, true);
+                                    }
+                                }
                             }
                         }
                     }
                 }
+            } else {
+                hit.clear();
             }
-        } else {
-            hit.clear();
+        }
+
+        if (blockHitbox != null) {
+            blockHitbox.position(this);
         }
 
         if (isHit()) {
@@ -92,7 +111,7 @@ public class Entity {
             }
         }
 
-        if (!isOnGround()) {
+        if (isOnGround()) {
             for (Entity e : play.entities) {
                 if (e != this && hitbox.overlaps(e) && e.isOnGround()) {
                     float a = new Vector2(e.x, e.y).sub(x, y).angle();
@@ -175,6 +194,10 @@ public class Entity {
         return false;
     }
 
+    public boolean isBlocking() {
+        return false;
+    }
+
     public boolean isHit() {
         return hitTime > 0;
     }
@@ -215,5 +238,13 @@ public class Entity {
 
     public ShaderProgram palette() {
         return PaletteShaderLoader.load(isHit() ? reverseColors() : colors());
+    }
+
+    public Hitbox getAttackHitbox() {
+        return null;
+    }
+
+    public Hitbox getBlockHitbox() {
+        return null;
     }
 }
