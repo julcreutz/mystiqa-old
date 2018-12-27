@@ -1,0 +1,8 @@
+{
+  "class": "game.main.Game$Test",
+  "f": 1,
+  "s": "Hallo Welt",
+  "t": {
+    "i": 5
+  }
+}
