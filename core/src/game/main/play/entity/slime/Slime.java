@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonValue;
-import game.loader.SheetLoader;
+import game.loader.SpriteSheetLoader;
 import game.main.Game;
 import game.main.play.Play;
 import game.main.play.entity.Entity;
@@ -166,7 +166,7 @@ public class Slime extends Entity {
         super.deserialize(json);
 
         if (json.has("sheet")) {
-            sheet = SheetLoader.load(json.getString("sheet"));
+            sheet = Game.SPRITE_SHEETS.load(json.getString("sheet")).sheet;
         }
 
         if (json.has("colors")) {

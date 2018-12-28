@@ -5,7 +5,7 @@ import game.main.Game;
 import game.main.item.equipment.Equipment;
 import game.main.play.entity.humanoid.Humanoid;
 
-public class Hand extends Equipment {
+public abstract class Hand extends Equipment {
     public float useTime;
 
     public boolean started;

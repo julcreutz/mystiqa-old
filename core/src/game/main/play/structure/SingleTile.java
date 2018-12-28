@@ -2,6 +2,7 @@ package game.main.play.structure;
 
 import com.badlogic.gdx.utils.JsonValue;
 import game.loader.TileLoader;
+import game.main.Game;
 import game.main.play.Play;
 import game.main.play.tile.TileType;
 
@@ -22,7 +23,7 @@ public class SingleTile extends Structure {
         super.deserialize(json);
 
         if (json.has("tile")) {
-            tile = TileLoader.load(json.getString("tile"));
+            tile = Game.TILES.load(json.getString("tile"));
         }
     }
 }

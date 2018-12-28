@@ -7,13 +7,14 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
+import game.loader.Serializable;
 import game.loader.palette.PaletteShaderLoader;
 import game.main.Game;
 import game.main.play.Play;
 import game.main.stat.StatType;
 import game.main.stat.Stats;
 
-public class Entity {
+public class Entity implements Serializable {
     public float x;
     public float y;
 
@@ -247,6 +248,7 @@ public class Entity {
         return null;
     }
 
+    @Override
     public void deserialize(JsonValue json) {
 
     }

@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
 import game.loader.ColorLoader;
+import game.main.Game;
 
 import java.util.Objects;
 
@@ -24,7 +25,7 @@ public class PaletteShaderLoader {
         Color[] _colors = new Color[colors.length];
 
         for (int i = 0; i < colors.length; i++) {
-            _colors[i] = ColorLoader.load(colors[i]);
+            _colors[i] = Game.COLORS.load(colors[i]);
         }
 
         PaletteShader shader = new PaletteShader();

@@ -2,6 +2,7 @@ package game.main.play.structure;
 
 import com.badlogic.gdx.utils.JsonValue;
 import game.loader.TileLoader;
+import game.main.Game;
 import game.main.play.Play;
 import game.main.play.tile.TileType;
 
@@ -33,15 +34,15 @@ public class Tree extends Structure {
         super.deserialize(json);
 
         if (json.has("bottomTile")) {
-            bottomTile = TileLoader.load(json.getString("bottomTile"));
+            bottomTile = Game.TILES.load(json.getString("bottomTile"));
         }
 
         if (json.has("middleTile")) {
-            middleTile = TileLoader.load(json.getString("middleTile"));
+            middleTile = Game.TILES.load(json.getString("middleTile"));
         }
 
         if (json.has("topTile")) {
-            topTile = TileLoader.load(json.getString("topTile"));
+            topTile = Game.TILES.load(json.getString("topTile"));
         }
 
         minHeight = json.getInt("minHeight", 0);

@@ -2,9 +2,10 @@ package game.main.play.tile;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.JsonValue;
-import game.loader.SheetLoader;
+import game.loader.Serializable;
+import game.main.Game;
 
-public class TileType {
+public class TileType implements Serializable {
     public String name;
 
     public TextureRegion[][] sheet;
@@ -16,7 +17,7 @@ public class TileType {
 
     public boolean solid;
 
-    public boolean connect(TileType type) {
+    public boolean connectsTo(TileType type) {
         if (connect != null) {
             for (String _connect : connect) {
                 if (_connect.equals(type.name)) {
@@ -28,13 +29,14 @@ public class TileType {
         return name.equals(type.name);
     }
 
+    @Override
     public void deserialize(JsonValue json) {
         if (json.has("name")) {
             name = json.getString("name");
         }
 
         if (json.has("sheet")) {
-            sheet = SheetLoader.load(json.getString("sheet"));
+            sheet = Game.SPRITE_SHEETS.load(json.getString("sheet")).sheet;
         }
 
         if (json.has("colors")) {

@@ -2,12 +2,14 @@ package game.main.gen;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
+import game.loader.Serializable;
 import game.loader.StructureLoader;
 import game.loader.TileLoader;
+import game.main.Game;
 import game.main.play.structure.Structure;
 import game.main.play.tile.TileType;
 
-public class Biome {
+public class Biome implements Serializable {
     public float minElevation;
     public float maxElevation;
 
@@ -17,6 +19,7 @@ public class Biome {
     public TileType ground;
     public Structure wall;
 
+    @Override
     public void deserialize(JsonValue json) {
         if (json.has("minElevation")) {
             minElevation = json.getFloat("minElevation");
@@ -41,11 +44,11 @@ public class Biome {
         }
 
         if (json.has("ground")) {
-            ground = TileLoader.load(json.getString("ground"));
+            ground = Game.TILES.load(json.getString("ground"));
         }
 
         if (json.has("wall")) {
-            wall = StructureLoader.load(json.getString("wall"));
+            wall = Game.STRUCTURES.load(json.getString("wall"));
         }
     }
 }

@@ -104,6 +104,6 @@ public class Tile {
 
     public boolean connect(Play site, int x, int y, int z) {
         Tile tile = site.tileAt(x, y, z);
-        return tile != null && type.connect(tile.type);
+        return tile != null && type.connectsTo(tile.type);
     }
 }

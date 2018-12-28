@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import game.loader.*;
 import game.loader.palette.PaletteShaderLoader;
+import game.main.Game;
 import game.main.item.equipment.armor.BodyArmor;
 import game.main.item.equipment.armor.FeetArmor;
 import game.main.item.equipment.hand.main.MeleeWeapon;
@@ -108,7 +109,7 @@ public class WorldGenerator {
                         break;
                 }
 
-                // Make sure the rooms don't overlap multiple screens
+                // Make sure the rooms don'map overlap multiple screens
                 boolean position = true;
 
                 if (room.w > 1 && room.x % 2 != 0) {
@@ -407,7 +408,7 @@ public class WorldGenerator {
         for (int x = 0; x < play.tiles.length; x++) {
             for (int y = 0; y < play.tiles[0].length; y++) {
                 if (play.isFree(x, y, 0, 1) && rand.nextFloat() < .1f) {
-                    Slime s = (Slime) EntityLoader.load("GreenSlime");
+                    Slime s = (Slime) Game.ENTITIES.load("GreenSlime");
                     Objects.requireNonNull(s).stats.add(new AbsoluteStat(StatType.MAX_HEALTH, 3));
                     s.x = x * 8;
                     s.y = y * 8;
@@ -416,10 +417,10 @@ public class WorldGenerator {
             }
         }
 
-        Humanoid h = (Humanoid) EntityLoader.load("Human");
+        Humanoid h = (Humanoid) Game.ENTITIES.load("Human");
 
         MeleeWeapon mw = new MeleeWeapon();
-        mw.image = SheetLoader.load("Axe")[0][0];
+        mw.image = Game.SPRITE_SHEETS.load("Axe").sheet[0][0];
         mw.palette = PaletteShaderLoader.load(new String[] {"Black", "Brown", "Gray"});
         mw.angle = 180;
         mw.speed = .75f;
@@ -427,21 +428,21 @@ public class WorldGenerator {
 
         Shield shield = new Shield();
         shield.images = new TextureRegion[] {
-                SheetLoader.load("Shield")[0][0],
-                SheetLoader.load("Shield")[0][1],
-                SheetLoader.load("Shield")[0][2],
-                SheetLoader.load("Shield")[0][3]
+                Game.SPRITE_SHEETS.load("Shield").sheet[0][0],
+                Game.SPRITE_SHEETS.load("Shield").sheet[0][1],
+                Game.SPRITE_SHEETS.load("Shield").sheet[0][2],
+                Game.SPRITE_SHEETS.load("Shield").sheet[0][3]
         };
         shield.palette = PaletteShaderLoader.load(new String[] {"Black", "Gray"});
         h.offHand = shield;
 
         BodyArmor bodyArmor = new BodyArmor();
-        bodyArmor.sheet = SheetLoader.load("BodyArmor");
+        bodyArmor.sheet = Game.SPRITE_SHEETS.load("BodyArmor").sheet;
         bodyArmor.palette = PaletteShaderLoader.load(new String[] {"Black", "Gray"});
         h.bodyArmor = bodyArmor;
 
         FeetArmor feetArmor = new FeetArmor();
-        feetArmor.sheet = SheetLoader.load("FeetArmor");
+        feetArmor.sheet = Game.SPRITE_SHEETS.load("FeetArmor").sheet;
         feetArmor.palette = PaletteShaderLoader.load(new String[] {"Black", "Gray"});
         h.feetArmor = feetArmor;
 
@@ -475,7 +476,7 @@ public class WorldGenerator {
     public Biome biomeAt(int x, int y) {
         float e = elevationAt(x, y);
 
-        for (Biome b : BiomeLoader.loadAll()) {
+        for (Biome b : Game.BIOMES.loadAll()) {
             if (e >= b.minElevation && e <= b.maxElevation) {
                 return b;
             }
