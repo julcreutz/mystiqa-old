@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.utils.Disposable;
 import game.loader.*;
 import game.main.play.Play;
 
@@ -22,6 +23,8 @@ public class Game extends ApplicationAdapter {
 	public static final BiomeLoader BIOMES = new BiomeLoader();
 	public static final ItemLoader ITEMS = new ItemLoader();
 	public static final EntityLoader ENTITIES = new EntityLoader();
+
+	public static final Loader[] LOADERS = new Loader[] {SPRITE_SHEETS, COLORS, TILES, STRUCTURES, BIOMES, ITEMS, ENTITIES};
 
     public final Play PLAY = new Play();
 
@@ -74,6 +77,12 @@ public class Game extends ApplicationAdapter {
 	public void dispose() {
 		for (GameState state : STATES) {
 			state.dispose();
+		}
+
+		for (Loader l : LOADERS) {
+			if (l instanceof Disposable) {
+				((Disposable) l).dispose();
+			}
 		}
 	}
 
