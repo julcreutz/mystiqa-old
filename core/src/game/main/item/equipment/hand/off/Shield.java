@@ -6,7 +6,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import game.loader.resource.sprite_sheet.SpriteSheet;
 import game.main.Game;
 import game.main.state.play.entity.humanoid.Humanoid;
-import game.main.stat.RelativeStat;
+import game.main.stat.Stat;
 import game.main.stat.StatType;
 
 public class Shield extends OffHand {
@@ -16,10 +16,10 @@ public class Shield extends OffHand {
     public float x;
     public float y;
 
-    public RelativeStat slowdown;
+    public Stat slowdown;
 
     public Shield() {
-        slowdown = new RelativeStat(StatType.SPEED, .5f);
+        slowdown = new Stat(StatType.SPEED, .5f, 0);
         armIndex = 3;
     }
 
@@ -96,8 +96,8 @@ public class Shield extends OffHand {
     public void onStartUse(Humanoid h) {
         super.onStartUse(h);
 
-        if (!h.stats.contains(slowdown)) {
-            h.stats.add(slowdown);
+        if (!h.stats.stats.contains(slowdown, true)) {
+            h.stats.stats.add(slowdown);
         }
     }
 
@@ -105,8 +105,8 @@ public class Shield extends OffHand {
     public void onFinishUse(Humanoid h) {
         super.onFinishUse(h);
 
-        if (h.stats.contains(slowdown)) {
-            h.stats.remove(slowdown);
+        if (h.stats.stats.contains(slowdown, true)) {
+            h.stats.stats.removeValue(slowdown, true);
         }
     }
 

@@ -1,6 +1,20 @@
 {
   "Human": {
     "Humanoid": {
+      "stats": [
+        {
+          "type": "SPEED",
+          "absolute": 24
+        },
+        {
+          "type": "MAX_HEALTH",
+          "absolute": 10
+        },
+        {
+          "type": "PHYSICAL_DAMAGE",
+          "absolute": 1
+        }
+      ],
       "feet": "HumanFeet",
       "body": "HumanBody",
       "head": "HumanHead",
@@ -13,6 +27,16 @@
   },
   "GreenSlime": {
     "Slime": {
+      "stats": [
+        {
+          "type": "MAX_HEALTH",
+          "absolute": 3
+        },
+        {
+          "type": "PHYSICAL_DAMAGE",
+          "absolute": 1
+        }
+      ],
       "sheet": "Slime",
       "colors": [
         "Black",

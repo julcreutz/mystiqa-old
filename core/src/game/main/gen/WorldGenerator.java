@@ -1,22 +1,17 @@
 package game.main.gen;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
-import game.loader.palette.PaletteShaderLoader;
 import game.main.Game;
 import game.main.item.equipment.armor.BodyArmor;
 import game.main.item.equipment.armor.FeetArmor;
 import game.main.item.equipment.hand.main.MainHand;
-import game.main.item.equipment.hand.main.MeleeWeapon;
 import game.main.item.equipment.hand.off.OffHand;
-import game.main.item.equipment.hand.off.Shield;
 import game.main.state.play.Play;
 import game.main.state.play.entity.slime.Slime;
 import game.main.state.play.entity.humanoid.Humanoid;
 import game.main.state.play.tile.Tile;
-import game.main.stat.AbsoluteStat;
 import game.main.stat.StatType;
 import game.noise.Noise;
 import game.noise.NoiseParameters;
@@ -410,7 +405,6 @@ public class WorldGenerator {
             for (int y = 0; y < play.tiles[0].length; y++) {
                 if (play.isFree(x, y, 0, 1) && rand.nextFloat() < .1f) {
                     Slime s = (Slime) Game.ENTITIES.load("GreenSlime");
-                    s.stats.add(new AbsoluteStat(StatType.MAX_HEALTH, 3));
                     s.x = x * 8;
                     s.y = y * 8;
                     play.add(s);
@@ -423,10 +417,6 @@ public class WorldGenerator {
         h.offHand = (OffHand) Game.ITEMS.load("Shield");
         h.feetArmor = (FeetArmor) Game.ITEMS.load("FeetArmor");
         h.bodyArmor = (BodyArmor) Game.ITEMS.load("BodyArmor");
-
-        h.stats.add(new AbsoluteStat(StatType.SPEED, 24));
-        h.stats.add(new AbsoluteStat(StatType.MAX_HEALTH, 10));
-        h.stats.add(new AbsoluteStat(StatType.PHYSICAL_DAMAGE, 1));
 
         h.x = 64;
         h.y = 72 * 4 + 36;

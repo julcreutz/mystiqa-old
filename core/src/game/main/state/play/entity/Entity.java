@@ -250,6 +250,8 @@ public class Entity implements Serializable {
 
     @Override
     public void deserialize(JsonValue json) {
-
+        if (json.has("stats")) {
+            stats.deserialize(json.get("stats"));
+        }
     }
 }

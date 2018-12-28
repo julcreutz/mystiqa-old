@@ -5,10 +5,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.JsonValue;
 import game.loader.resource.sprite_sheet.SpriteSheet;
-import game.loader.resource.sprite_sheet.SpriteSheetLoader;
 import game.main.Game;
 import game.main.state.play.entity.humanoid.Humanoid;
-import game.main.stat.RelativeStat;
+import game.main.stat.Stat;
 import game.main.stat.StatType;
 
 public class MeleeWeapon extends MainHand {
@@ -39,7 +38,7 @@ public class MeleeWeapon extends MainHand {
     public float angle;
     public float speed;
 
-    public RelativeStat slowdown;
+    public Stat slowdown;
 
     public float attackTime;
 
@@ -52,7 +51,7 @@ public class MeleeWeapon extends MainHand {
     public boolean attacking;
 
     public MeleeWeapon() {
-        slowdown = new RelativeStat(StatType.SPEED, 0);
+        slowdown = new Stat(StatType.SPEED, 0, 0);
     }
 
     @Override
@@ -81,8 +80,8 @@ public class MeleeWeapon extends MainHand {
             if (attackTime < 0) {
                 attackTime = 0;
 
-                if (h.stats.contains(slowdown)) {
-                    h.stats.remove(slowdown);
+                if (h.stats.stats.contains(slowdown, true)) {
+                    h.stats.stats.removeValue(slowdown, true);
                 }
 
                 attacking = false;
@@ -114,10 +113,10 @@ public class MeleeWeapon extends MainHand {
 
         if (!attacking) {
             attackTime = 1;
-            if (!h.stats.contains(slowdown)) {
-                h.stats.add(slowdown);
+            if (!h.stats.stats.contains(slowdown, true)) {
+                h.stats.stats.add(slowdown);
             }
-            slowdown.value = .5f;
+            slowdown.relative = .5f;
         }
     }
 
@@ -127,7 +126,7 @@ public class MeleeWeapon extends MainHand {
 
         if (attackTime > 0) {
             attacking = true;
-            slowdown.value = 0;
+            slowdown.relative = 0;
         }
     }
 

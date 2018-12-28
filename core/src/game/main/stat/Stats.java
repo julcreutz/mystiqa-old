@@ -1,57 +1,46 @@
 package game.main.stat;
 
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.JsonValue;
+import game.loader.Serializable;
 
-public class Stats {
-    public Array<AbsoluteStat> absolutes;
-    public Array<RelativeStat> relatives;
+public class Stats implements Serializable {
+    public Array<Stat> stats;
 
     public Stats() {
-        absolutes = new Array<>();
-        relatives = new Array<>();
+        stats = new Array<>();
     }
 
     public float count(StatType type) {
-        float total = 0;
+        float absolute = 0;
+        float relative = 1;
 
-        for (AbsoluteStat absolute : absolutes) {
-            if (absolute.type == type) {
-                total += absolute.value;
+        for (Stat s : stats) {
+            if (s.type == type) {
+                absolute += s.absolute;
+                relative *= s.relative;
             }
         }
 
-        float p = 1;
+        return absolute * relative;
+    }
 
-        for (RelativeStat relative : relatives) {
-            if (relative.type == type) {
-                p *= relative.value;
+    public boolean has(StatType type) {
+        for (Stat s : stats) {
+            if (s.type == type) {
+                return true;
             }
         }
 
-        return total * p;
+        return false;
     }
 
-    public void add(AbsoluteStat s) {
-        absolutes.add(s);
-    }
-
-    public void add(RelativeStat s) {
-        relatives.add(s);
-    }
-
-    public void remove(AbsoluteStat s) {
-        absolutes.removeValue(s, true);
-    }
-
-    public void remove(RelativeStat s) {
-        relatives.removeValue(s, true);
-    }
-
-    public boolean contains(AbsoluteStat s) {
-        return absolutes.contains(s, true);
-    }
-
-    public boolean contains(RelativeStat s) {
-        return relatives.contains(s, true);
+    @Override
+    public void deserialize(JsonValue json) {
+        for (JsonValue stat : json) {
+            Stat s = new Stat();
+            s.deserialize(stat);
+            stats.add(s);
+        }
     }
 }
