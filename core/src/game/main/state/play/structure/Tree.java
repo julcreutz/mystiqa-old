@@ -1,9 +1,9 @@
-package game.main.play.structure;
+package game.main.state.play.structure;
 
 import com.badlogic.gdx.utils.JsonValue;
 import game.main.Game;
-import game.main.play.Play;
-import game.main.play.tile.TileType;
+import game.main.state.play.Play;
+import game.main.state.play.tile.TileType;
 
 import java.util.Random;
 

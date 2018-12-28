@@ -1,4 +1,4 @@
-package game.main.play.entity.slime;
+package game.main.state.play.entity.slime;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -6,9 +6,9 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonValue;
 import game.main.Game;
-import game.main.play.Play;
-import game.main.play.entity.Entity;
-import game.main.play.entity.Hitbox;
+import game.main.state.play.Play;
+import game.main.state.play.entity.Entity;
+import game.main.state.play.entity.Hitbox;
 
 public class Slime extends Entity {
     public TextureRegion[][] sheet;

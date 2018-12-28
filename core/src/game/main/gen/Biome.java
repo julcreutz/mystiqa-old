@@ -4,8 +4,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import game.loader.Serializable;
 import game.main.Game;
-import game.main.play.structure.Structure;
-import game.main.play.tile.TileType;
+import game.main.state.play.structure.Structure;
+import game.main.state.play.tile.TileType;
 
 public class Biome implements Serializable {
     public float minElevation;

@@ -1,4 +1,4 @@
-package game.main.play.tile;
+package game.main.state.play.tile;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.JsonValue;

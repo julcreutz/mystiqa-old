@@ -1,4 +1,4 @@
-package game.main;
+package game.loader.resource.sprite_sheet;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;

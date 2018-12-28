@@ -1,4 +1,4 @@
-package game.main.play.entity.slime;
+package game.main.state.play.entity.slime;
 
 public enum SlimeState {
     RANDOM_MOVEMENT,

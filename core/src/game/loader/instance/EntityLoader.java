@@ -1,8 +1,8 @@
 package game.loader.instance;
 
-import game.main.play.entity.Entity;
-import game.main.play.entity.humanoid.Humanoid;
-import game.main.play.entity.slime.Slime;
+import game.main.state.play.entity.Entity;
+import game.main.state.play.entity.humanoid.Humanoid;
+import game.main.state.play.entity.slime.Slime;
 
 public class EntityLoader extends InstanceLoader<Entity> {
     @Override

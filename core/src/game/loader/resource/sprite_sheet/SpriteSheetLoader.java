@@ -1,7 +1,7 @@
-package game.loader.resource;
+package game.loader.resource.sprite_sheet;
 
 import com.badlogic.gdx.utils.Disposable;
-import game.main.SpriteSheet;
+import game.loader.resource.ResourceLoader;
 
 public class SpriteSheetLoader extends ResourceLoader<SpriteSheet> implements Disposable {
     @Override

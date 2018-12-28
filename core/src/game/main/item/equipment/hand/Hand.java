@@ -3,7 +3,7 @@ package game.main.item.equipment.hand;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import game.main.Game;
 import game.main.item.equipment.Equipment;
-import game.main.play.entity.humanoid.Humanoid;
+import game.main.state.play.entity.humanoid.Humanoid;
 
 public abstract class Hand extends Equipment {
     public float useTime;

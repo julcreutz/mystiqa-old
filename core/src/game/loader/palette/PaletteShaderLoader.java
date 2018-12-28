@@ -8,9 +8,9 @@ import game.main.Game;
 import java.util.Objects;
 
 public class PaletteShaderLoader {
-    private static Array<PaletteShader> shaders;
+    public Array<PaletteShader> shaders;
 
-    public static ShaderProgram load(String[] colors) {
+    public ShaderProgram load(String[] colors) {
         if (shaders == null) {
             shaders = new Array<>();
         }

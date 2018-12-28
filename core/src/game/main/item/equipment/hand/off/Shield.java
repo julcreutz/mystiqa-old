@@ -2,13 +2,16 @@ package game.main.item.equipment.hand.off;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import game.main.play.entity.humanoid.Humanoid;
+import com.badlogic.gdx.utils.JsonValue;
+import game.loader.resource.sprite_sheet.SpriteSheet;
+import game.main.Game;
+import game.main.state.play.entity.humanoid.Humanoid;
 import game.main.stat.RelativeStat;
 import game.main.stat.StatType;
 
 public class Shield extends OffHand {
-    public TextureRegion[] images;
-    public int imageIndex;
+    public SpriteSheet spriteSheet;
+    public TextureRegion image;
 
     public float x;
     public float y;
@@ -24,10 +27,12 @@ public class Shield extends OffHand {
     public void update(Humanoid h) {
         super.update(h);
 
-        if (isUsing()) {
-            imageIndex = h.dir;
+        int dir;
 
-            switch (imageIndex) {
+        if (isUsing()) {
+            dir = h.dir;
+
+            switch (dir) {
                 case 0:
                     x = h.x + 7;
                     y = h.y + 0;
@@ -54,9 +59,9 @@ public class Shield extends OffHand {
                     break;
             }
         } else {
-            imageIndex = (h.dir + 1) % 4;
+            dir = (h.dir + 1) % 4;
 
-            switch (imageIndex) {
+            switch (dir) {
                 case 0:
                     x = h.x + 7;
                     y = h.y + 0;
@@ -79,6 +84,8 @@ public class Shield extends OffHand {
                     break;
             }
         }
+
+        image = spriteSheet.sheet[0][dir];
 
         if (h.step % 2 != 0) {
             y--;
@@ -107,6 +114,15 @@ public class Shield extends OffHand {
     public void render(SpriteBatch batch, Humanoid h) {
         super.render(batch, h);
 
-        batch.draw(images[imageIndex], x, y);
+        batch.draw(image, x, y);
+    }
+
+    @Override
+    public void deserialize(JsonValue json) {
+        super.deserialize(json);
+
+        if (json.has("spriteSheet")) {
+            spriteSheet = Game.SPRITE_SHEETS.load(json.getString("spriteSheet"));
+        }
     }
 }

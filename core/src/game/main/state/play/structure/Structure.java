@@ -1,8 +1,8 @@
-package game.main.play.structure;
+package game.main.state.play.structure;
 
 import com.badlogic.gdx.utils.JsonValue;
 import game.loader.Serializable;
-import game.main.play.Play;
+import game.main.state.play.Play;
 
 import java.util.Random;
 

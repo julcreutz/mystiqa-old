@@ -1,4 +1,4 @@
-package game.main.play.entity;
+package game.main.state.play.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -10,7 +10,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import game.loader.Serializable;
 import game.loader.palette.PaletteShaderLoader;
 import game.main.Game;
-import game.main.play.Play;
+import game.main.state.play.Play;
 import game.main.stat.StatType;
 import game.main.stat.Stats;
 
@@ -237,7 +237,7 @@ public class Entity implements Serializable {
     }
 
     public ShaderProgram palette() {
-        return PaletteShaderLoader.load(isHit() ? reverseColors() : colors());
+        return Game.PALETTES.load(isHit() ? reverseColors() : colors());
     }
 
     public Hitbox getAttackHitbox() {

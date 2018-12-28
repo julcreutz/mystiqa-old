@@ -1,9 +1,10 @@
-package game.main.play.tile;
+package game.main.state.play.tile;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import game.loader.palette.PaletteShaderLoader;
-import game.main.play.Play;
+import game.main.Game;
+import game.main.state.play.Play;
 
 public class Tile {
     public TileType type;
@@ -96,7 +97,7 @@ public class Tile {
     }
 
     public void render(SpriteBatch batch) {
-        batch.setShader(PaletteShaderLoader.load(type.colors));
+        batch.setShader(Game.PALETTES.load(type.colors));
         batch.draw(image, x * 8, y * 8 + z * 8);
         batch.setColor(1, 1, 1, 1);
         batch.setShader(null);

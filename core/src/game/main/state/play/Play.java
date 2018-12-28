@@ -1,4 +1,4 @@
-package game.main.play;
+package game.main.state.play;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -6,11 +6,11 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import game.main.Game;
-import game.main.GameState;
+import game.main.state.GameState;
 import game.main.gen.WorldGenerator;
-import game.main.play.entity.Entity;
-import game.main.play.tile.Tile;
-import game.main.play.tile.TileType;
+import game.main.state.play.entity.Entity;
+import game.main.state.play.tile.Tile;
+import game.main.state.play.tile.TileType;
 
 public class Play extends GameState {
     public static final float CAM_SPEED = 1.5f;

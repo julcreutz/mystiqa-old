@@ -10,11 +10,13 @@ import game.loader.*;
 import game.loader.instance.EntityLoader;
 import game.loader.instance.ItemLoader;
 import game.loader.instance.StructureLoader;
+import game.loader.palette.PaletteShaderLoader;
 import game.loader.resource.BiomeLoader;
-import game.loader.resource.ColorLoader;
-import game.loader.resource.SpriteSheetLoader;
+import game.loader.resource.color.ColorLoader;
+import game.loader.resource.sprite_sheet.SpriteSheetLoader;
 import game.loader.resource.TileLoader;
-import game.main.play.Play;
+import game.main.state.play.Play;
+import game.main.state.GameState;
 
 public class Game extends ApplicationAdapter {
 	public static final String TITLE = "Mystiqa";
@@ -23,6 +25,7 @@ public class Game extends ApplicationAdapter {
 	public static final int HEIGHT = 72;
 	public static final int SCALE = 12;
 
+	public static final PaletteShaderLoader PALETTES = new PaletteShaderLoader();
 	public static final SpriteSheetLoader SPRITE_SHEETS = new SpriteSheetLoader();
 	public static final ColorLoader COLORS = new ColorLoader();
 	public static final TileLoader TILES = new TileLoader();

@@ -3,8 +3,11 @@ package game.main.item.equipment.hand.main;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.utils.JsonValue;
+import game.loader.resource.sprite_sheet.SpriteSheet;
+import game.loader.resource.sprite_sheet.SpriteSheetLoader;
 import game.main.Game;
-import game.main.play.entity.humanoid.Humanoid;
+import game.main.state.play.entity.humanoid.Humanoid;
 import game.main.stat.RelativeStat;
 import game.main.stat.StatType;
 
@@ -30,6 +33,7 @@ public class MeleeWeapon extends MainHand {
             {270, 270 + 22.5f, 270, 270 - 22.5f}
     };
 
+    public SpriteSheet spriteSheet;
     public TextureRegion image;
 
     public float angle;
@@ -84,9 +88,11 @@ public class MeleeWeapon extends MainHand {
                 attacking = false;
             }
 
-            if (attackTime > .67f) {
+            float relativeAngle = a - h.dir * 90f;
+
+            if (relativeAngle < -90f) {
                 armIndex = 3;
-            } else if (attackTime > .33f) {
+            } else if (relativeAngle < -45f) {
                 armIndex = 2;
             } else {
                 armIndex = 1;
@@ -98,6 +104,8 @@ public class MeleeWeapon extends MainHand {
 
             renderBehind = h.dir == 2 || h.dir == 1;
         }
+
+        image = spriteSheet.sheet[0][0];
     }
 
     @Override
@@ -137,5 +145,22 @@ public class MeleeWeapon extends MainHand {
     @Override
     public boolean isUsing() {
         return super.isUsing() || isAttacking();
+    }
+
+    @Override
+    public void deserialize(JsonValue json) {
+        super.deserialize(json);
+
+        if (json.has("spriteSheet")) {
+            spriteSheet = Game.SPRITE_SHEETS.load(json.getString("spriteSheet"));
+        }
+
+        if (json.has("angle")) {
+            angle = json.getFloat("angle");
+        }
+
+        if (json.has("speed")) {
+            speed = json.getFloat("speed");
+        }
     }
 }

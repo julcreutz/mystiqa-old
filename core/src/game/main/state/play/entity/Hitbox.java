@@ -1,4 +1,4 @@
-package game.main.play.entity;
+package game.main.state.play.entity;
 
 import com.badlogic.gdx.math.Rectangle;
 

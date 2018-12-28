@@ -4,17 +4,18 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
-import game.loader.*;
 import game.loader.palette.PaletteShaderLoader;
 import game.main.Game;
 import game.main.item.equipment.armor.BodyArmor;
 import game.main.item.equipment.armor.FeetArmor;
+import game.main.item.equipment.hand.main.MainHand;
 import game.main.item.equipment.hand.main.MeleeWeapon;
+import game.main.item.equipment.hand.off.OffHand;
 import game.main.item.equipment.hand.off.Shield;
-import game.main.play.Play;
-import game.main.play.entity.slime.Slime;
-import game.main.play.entity.humanoid.Humanoid;
-import game.main.play.tile.Tile;
+import game.main.state.play.Play;
+import game.main.state.play.entity.slime.Slime;
+import game.main.state.play.entity.humanoid.Humanoid;
+import game.main.state.play.tile.Tile;
 import game.main.stat.AbsoluteStat;
 import game.main.stat.StatType;
 import game.noise.Noise;
@@ -409,7 +410,7 @@ public class WorldGenerator {
             for (int y = 0; y < play.tiles[0].length; y++) {
                 if (play.isFree(x, y, 0, 1) && rand.nextFloat() < .1f) {
                     Slime s = (Slime) Game.ENTITIES.load("GreenSlime");
-                    Objects.requireNonNull(s).stats.add(new AbsoluteStat(StatType.MAX_HEALTH, 3));
+                    s.stats.add(new AbsoluteStat(StatType.MAX_HEALTH, 3));
                     s.x = x * 8;
                     s.y = y * 8;
                     play.add(s);
@@ -418,33 +419,10 @@ public class WorldGenerator {
         }
 
         Humanoid h = (Humanoid) Game.ENTITIES.load("Human");
-
-        MeleeWeapon mw = new MeleeWeapon();
-        mw.image = Game.SPRITE_SHEETS.load("Axe").sheet[0][0];
-        mw.palette = PaletteShaderLoader.load(new String[] {"Black", "Brown", "Gray"});
-        mw.angle = 180;
-        mw.speed = .75f;
-        Objects.requireNonNull(h).mainHand = mw;
-
-        Shield shield = new Shield();
-        shield.images = new TextureRegion[] {
-                Game.SPRITE_SHEETS.load("Shield").sheet[0][0],
-                Game.SPRITE_SHEETS.load("Shield").sheet[0][1],
-                Game.SPRITE_SHEETS.load("Shield").sheet[0][2],
-                Game.SPRITE_SHEETS.load("Shield").sheet[0][3]
-        };
-        shield.palette = PaletteShaderLoader.load(new String[] {"Black", "Gray"});
-        h.offHand = shield;
-
-        BodyArmor bodyArmor = new BodyArmor();
-        bodyArmor.sheet = Game.SPRITE_SHEETS.load("BodyArmor").sheet;
-        bodyArmor.palette = PaletteShaderLoader.load(new String[] {"Black", "Gray"});
-        h.bodyArmor = bodyArmor;
-
-        FeetArmor feetArmor = new FeetArmor();
-        feetArmor.sheet = Game.SPRITE_SHEETS.load("FeetArmor").sheet;
-        feetArmor.palette = PaletteShaderLoader.load(new String[] {"Black", "Gray"});
-        h.feetArmor = feetArmor;
+        h.mainHand = (MainHand) Game.ITEMS.load("Axe");
+        h.offHand = (OffHand) Game.ITEMS.load("Shield");
+        h.feetArmor = (FeetArmor) Game.ITEMS.load("FeetArmor");
+        h.bodyArmor = (BodyArmor) Game.ITEMS.load("BodyArmor");
 
         h.stats.add(new AbsoluteStat(StatType.SPEED, 24));
         h.stats.add(new AbsoluteStat(StatType.MAX_HEALTH, 10));

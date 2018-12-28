@@ -1,9 +1,10 @@
-package game.main;
+package game.loader.resource.color;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.JsonValue;
 import game.loader.Serializable;
 
-public class Color extends com.badlogic.gdx.graphics.Color implements Serializable {
+public class ColorResource extends Color implements Serializable {
     @Override
     public void deserialize(JsonValue json) {
         r = json.getInt("r", 255) / 255f;
