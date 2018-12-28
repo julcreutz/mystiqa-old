@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonValue;
-import game.loader.SpriteSheetLoader;
 import game.main.Game;
 import game.main.item.equipment.hand.off.OffHand;
 import game.main.item.equipment.hand.main.MainHand;

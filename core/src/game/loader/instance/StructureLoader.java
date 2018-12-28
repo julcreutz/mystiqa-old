@@ -1,4 +1,4 @@
-package game.loader;
+package game.loader.instance;
 
 import game.main.play.structure.SingleTile;
 import game.main.play.structure.Structure;

@@ -1,4 +1,4 @@
-package game.loader;
+package game.loader.resource;
 
 import com.badlogic.gdx.utils.Disposable;
 import game.main.SpriteSheet;

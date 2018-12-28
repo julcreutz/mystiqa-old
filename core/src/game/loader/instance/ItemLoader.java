@@ -1,4 +1,4 @@
-package game.loader;
+package game.loader.instance;
 
 import game.main.item.Item;
 import game.main.item.equipment.armor.BodyArmor;

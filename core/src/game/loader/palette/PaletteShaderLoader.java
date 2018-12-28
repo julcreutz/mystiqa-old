@@ -3,7 +3,6 @@ package game.loader.palette;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
-import game.loader.ColorLoader;
 import game.main.Game;
 
 import java.util.Objects;

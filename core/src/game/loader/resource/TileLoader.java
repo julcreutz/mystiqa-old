@@ -1,4 +1,4 @@
-package game.loader;
+package game.loader.resource;
 
 import game.main.play.tile.TileType;
 

@@ -1,7 +1,6 @@
 package game.main.play.structure;
 
 import com.badlogic.gdx.utils.JsonValue;
-import game.loader.TileLoader;
 import game.main.Game;
 import game.main.play.Play;
 import game.main.play.tile.TileType;

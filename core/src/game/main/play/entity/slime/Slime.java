@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonValue;
-import game.loader.SpriteSheetLoader;
 import game.main.Game;
 import game.main.play.Play;
 import game.main.play.entity.Entity;

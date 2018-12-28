@@ -1,4 +1,4 @@
-package game.loader;
+package game.loader.instance;
 
 import game.main.play.entity.Entity;
 import game.main.play.entity.humanoid.Humanoid;

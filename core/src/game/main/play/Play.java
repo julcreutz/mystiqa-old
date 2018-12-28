@@ -5,7 +5,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
-import game.loader.SpriteSheetLoader;
 import game.main.Game;
 import game.main.GameState;
 import game.main.gen.WorldGenerator;

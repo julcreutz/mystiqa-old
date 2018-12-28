@@ -1,7 +1,9 @@
-package game.loader;
+package game.loader.instance;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.JsonValue;
+import game.loader.Loader;
+import game.loader.Serializable;
 
 import java.util.HashMap;
 

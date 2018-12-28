@@ -3,8 +3,6 @@ package game.main.gen;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import game.loader.Serializable;
-import game.loader.StructureLoader;
-import game.loader.TileLoader;
 import game.main.Game;
 import game.main.play.structure.Structure;
 import game.main.play.tile.TileType;

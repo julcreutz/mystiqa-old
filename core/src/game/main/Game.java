@@ -7,6 +7,13 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Disposable;
 import game.loader.*;
+import game.loader.instance.EntityLoader;
+import game.loader.instance.ItemLoader;
+import game.loader.instance.StructureLoader;
+import game.loader.resource.BiomeLoader;
+import game.loader.resource.ColorLoader;
+import game.loader.resource.SpriteSheetLoader;
+import game.loader.resource.TileLoader;
 import game.main.play.Play;
 
 public class Game extends ApplicationAdapter {
