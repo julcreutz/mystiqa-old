@@ -211,7 +211,7 @@ public class Play extends GameState {
         return camX != toCamX || camY != toCamY;
     }
 
-    public boolean isFree(int x, int y, int z, int r) {
+    public boolean isFree(Tile[][][] tiles, int x, int y, int z, int r) {
         for (int xx = -r; xx <= r; xx++) {
             for (int yy = -r; yy <= r; yy++) {
                 Tile t = tileAt(x + xx, y + yy, z);
@@ -225,6 +225,26 @@ public class Play extends GameState {
         return true;
     }
 
+    public boolean isFree(int x, int y, int z, int r) {
+        return isFree(tiles, x, y, z, r);
+    }
+
+    public int countSolid(int x, int y, int z, int r) {
+        int n = 0;
+
+        for (int xx = -r; xx <= r; xx++) {
+            for (int yy = -r; yy <= r; yy++) {
+                Tile t = tileAt(x + xx, y + yy, z);
+
+                if (t != null && t.type.solid) {
+                    n++;
+                }
+            }
+        }
+
+        return n;
+    }
+
     public void add(Entity e) {
         invisibleEntities.add(e);
         e.onAdded(this);
@@ -232,5 +252,17 @@ public class Play extends GameState {
 
     public boolean isVisible(Entity e) {
         return e.x >= x0 * 8 && e.x < x1 * 8 && e.y >= y0 * 8 && e.y < y1 * 8;
+    }
+
+    public Tile[][][] copyTiles() {
+        Tile[][][] tiles = new Tile[this.tiles.length][this.tiles[0].length][this.tiles[0][0].length];
+
+        for (int x = 0; x < tiles.length; x++) {
+            for (int y = 0; y < tiles[0].length; y++) {
+                System.arraycopy(this.tiles[x][y], 0, tiles[x][y], 0, tiles[0][0].length);
+            }
+        }
+
+        return tiles;
     }
 }

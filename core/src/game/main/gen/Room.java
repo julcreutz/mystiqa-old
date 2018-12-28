@@ -24,4 +24,20 @@ public class Room {
     public Room() {
         this(0, 0, 0, 0);
     }
+
+    public int x0() {
+        return x * 8;
+    }
+
+    public int x1() {
+        return x0() + w * 8;
+    }
+
+    public int y0() {
+        return y * 4;
+    }
+
+    public int y1() {
+        return y0() + h * 4;
+    }
 }

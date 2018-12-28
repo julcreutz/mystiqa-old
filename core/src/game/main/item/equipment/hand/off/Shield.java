@@ -19,7 +19,7 @@ public class Shield extends OffHand {
     public Stat slowdown;
 
     public Shield() {
-        slowdown = new Stat(StatType.SPEED, .5f, 0);
+        slowdown = new Stat(StatType.SPEED, 0, .5f);
         armIndex = 3;
     }
 

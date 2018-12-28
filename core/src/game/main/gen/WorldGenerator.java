@@ -12,10 +12,10 @@ import game.main.state.play.Play;
 import game.main.state.play.entity.slime.Slime;
 import game.main.state.play.entity.humanoid.Humanoid;
 import game.main.state.play.tile.Tile;
-import game.main.stat.StatType;
 import game.noise.Noise;
 import game.noise.NoiseParameters;
 
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
 
@@ -217,15 +217,27 @@ public class WorldGenerator {
             int y0 = r.y * 4;
             int y1 = y0 + r.h * 4;
 
+            Biome b = biomes[r.x / 2][r.y / 2];
+
             for (int x = x0; x < x1; x++) {
                 for (int y = y0; y < y1; y++) {
-                    Biome b = biomes[r.x / 2][r.y / 2];
-
                     play.placeTile(b.ground, x, y, 0);
 
                     if (b.wall != null) {
-                        if (x == x0 || x == x1 - 1 || y == y0 || y == y1 - 1) {
+                        if ((x == x0 || x == x1 - 1 || y == y0 || y == y1 - 1)) {
                             b.wall.generate(rand, play, x, y, 0);
+                        }
+                    }
+                }
+            }
+
+            RoomTemplate t = b.pickTemplate(r, rand);
+
+            if (t != null) {
+                for (int y = 0; y < t.layout.length; y++) {
+                    for (int x = 0; x < t.layout[0].length; x++) {
+                        if (t.layout[y][x] == '#') {
+                            b.wall.generate(rand, play, x0 + x, y1 - 1 - y, 0);
                         }
                     }
                 }
@@ -293,6 +305,22 @@ public class WorldGenerator {
                 }
             }
         }
+
+        /*
+        rooms.forEach(r -> {
+            Biome b = biomes[r.x / 2][r.y / 2];
+
+            if (b.wall != null) {
+                for (int x = r.x0(); x < r.x1(); x++) {
+                    for (int y = r.y0(); y < r.y1(); y++) {
+                        if (play.isFree(x, y, 0, 1) && rand.nextFloat() < .25f) {
+                            b.wall.generate(rand, play, x, y, 0);
+                        }
+                    }
+                }
+            }
+        });
+        */
 
         /*
         for (Room r : rooms) {
@@ -413,6 +441,7 @@ public class WorldGenerator {
         }
 
         Humanoid h = (Humanoid) Game.ENTITIES.load("Human");
+
         h.mainHand = (MainHand) Game.ITEMS.load("Axe");
         h.offHand = (OffHand) Game.ITEMS.load("Shield");
         h.feetArmor = (FeetArmor) Game.ITEMS.load("FeetArmor");

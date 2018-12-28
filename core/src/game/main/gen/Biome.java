@@ -7,6 +7,8 @@ import game.main.Game;
 import game.main.state.play.structure.Structure;
 import game.main.state.play.tile.TileType;
 
+import java.util.Random;
+
 public class Biome implements Serializable {
     public float minElevation;
     public float maxElevation;
@@ -16,6 +18,22 @@ public class Biome implements Serializable {
 
     public TileType ground;
     public Structure wall;
+
+    public Array<RoomTemplate> templates;
+
+    public RoomTemplate pickTemplate(Room r, Random rand) {
+        RoomTemplate t = null;
+
+        if (templates != null) {
+            for (RoomTemplate template : templates) {
+                if (template.width == r.w && template.height == r.h && rand.nextFloat() < template.chance) {
+                    t = template;
+                }
+            }
+        }
+
+        return t;
+    }
 
     @Override
     public void deserialize(JsonValue json) {
@@ -47,6 +65,16 @@ public class Biome implements Serializable {
 
         if (json.has("wall")) {
             wall = Game.STRUCTURES.load(json.getString("wall"));
+        }
+
+        if (json.has("templates")) {
+            templates = new Array<>();
+
+            for (JsonValue template : json.get("templates")) {
+                RoomTemplate t = new RoomTemplate();
+                t.deserialize(template);
+                templates.add(t);
+            }
         }
     }
 }
