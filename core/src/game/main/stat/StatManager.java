@@ -4,14 +4,14 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import game.loader.Serializable;
 
-public class Stats implements Serializable {
+public class StatManager implements Serializable {
     public Array<Stat> stats;
 
-    public Stats() {
+    public StatManager() {
         stats = new Array<>();
     }
 
-    public float count(StatType type) {
+    public float count(Stat.Type type) {
         float absolute = 0;
         float relative = 1;
 
@@ -25,7 +25,7 @@ public class Stats implements Serializable {
         return absolute * relative;
     }
 
-    public boolean has(StatType type) {
+    public boolean has(Stat.Type type) {
         for (Stat s : stats) {
             if (s.type == type) {
                 return true;

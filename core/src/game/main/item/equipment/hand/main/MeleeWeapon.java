@@ -8,7 +8,6 @@ import game.loader.resource.sprite_sheet.SpriteSheet;
 import game.main.Game;
 import game.main.state.play.entity.Humanoid;
 import game.main.stat.Stat;
-import game.main.stat.StatType;
 
 public class MeleeWeapon extends MainHand {
     public static final float[][] X = new float[][] {
@@ -51,7 +50,7 @@ public class MeleeWeapon extends MainHand {
     public boolean attacking;
 
     public MeleeWeapon() {
-        slowdown = new Stat(StatType.SPEED, 0, 0);
+        slowdown = new Stat(Stat.Type.SPEED, 0, 0);
     }
 
     @Override
@@ -80,8 +79,8 @@ public class MeleeWeapon extends MainHand {
             if (attackTime < 0) {
                 attackTime = 0;
 
-                if (h.stats.stats.contains(slowdown, true)) {
-                    h.stats.stats.removeValue(slowdown, true);
+                if (h.statManager.stats.contains(slowdown, true)) {
+                    h.statManager.stats.removeValue(slowdown, true);
                 }
 
                 attacking = false;
@@ -113,8 +112,8 @@ public class MeleeWeapon extends MainHand {
 
         if (!attacking) {
             attackTime = 1;
-            if (!h.stats.stats.contains(slowdown, true)) {
-                h.stats.stats.add(slowdown);
+            if (!h.statManager.stats.contains(slowdown, true)) {
+                h.statManager.stats.add(slowdown);
             }
             slowdown.relative = .5f;
         }

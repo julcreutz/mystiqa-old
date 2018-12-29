@@ -8,11 +8,10 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import game.loader.Serializable;
-import game.loader.palette.PaletteShaderLoader;
 import game.main.Game;
+import game.main.stat.Stat;
 import game.main.state.play.Play;
-import game.main.stat.StatType;
-import game.main.stat.Stats;
+import game.main.stat.StatManager;
 
 public class Entity implements Serializable {
     public float x;
@@ -25,7 +24,7 @@ public class Entity implements Serializable {
 
     public boolean updated;
 
-    public Stats stats;
+    public StatManager statManager;
 
     public Array<Entity> hit;
 
@@ -40,7 +39,7 @@ public class Entity implements Serializable {
 
     public Entity() {
         hitbox = new Hitbox();
-        stats = new Stats();
+        statManager = new StatManager();
         hit = new Array<>();
     }
 
@@ -75,7 +74,7 @@ public class Entity implements Serializable {
                                         e.hitAngle = new Vector2(e.x, e.y).sub(x, y).angle();
                                         e.hitSpeed = 48f;
 
-                                        e.health -= stats.count(StatType.PHYSICAL_DAMAGE);
+                                        e.health -= statManager.count(Stat.Type.PHYSICAL_DAMAGE);
 
                                         e.onHit(play);
 
@@ -180,7 +179,7 @@ public class Entity implements Serializable {
     }
 
     public void onAdded(Play play) {
-        health = stats.count(StatType.MAX_HEALTH);
+        health = statManager.count(Stat.Type.HEALTH);
     }
 
     public void onMove(Play play) {
@@ -258,7 +257,7 @@ public class Entity implements Serializable {
     @Override
     public void deserialize(JsonValue json) {
         if (json.has("stats")) {
-            stats.deserialize(json.get("stats"));
+            statManager.deserialize(json.get("stats"));
         }
 
         if (json.has("alignment")) {

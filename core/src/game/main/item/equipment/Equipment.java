@@ -2,13 +2,13 @@ package game.main.item.equipment;
 
 import com.badlogic.gdx.utils.JsonValue;
 import game.main.item.Item;
-import game.main.stat.Stats;
+import game.main.stat.StatManager;
 
 public abstract class Equipment extends Item {
-    public Stats stats;
+    public StatManager statManager;
 
     public Equipment() {
-        stats = new Stats();
+        statManager = new StatManager();
     }
 
     @Override
@@ -16,7 +16,7 @@ public abstract class Equipment extends Item {
         super.deserialize(json);
 
         if (json.has("stats")) {
-            stats.deserialize(json.get("stats"));
+            statManager.deserialize(json.get("stats"));
         }
     }
 }

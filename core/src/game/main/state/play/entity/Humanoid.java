@@ -2,9 +2,7 @@ package game.main.state.play.entity;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonValue;
@@ -15,10 +13,8 @@ import game.main.item.equipment.hand.main.MainHand;
 import game.main.item.equipment.armor.BodyArmor;
 import game.main.item.equipment.armor.FeetArmor;
 import game.main.item.equipment.armor.HeadArmor;
+import game.main.stat.Stat;
 import game.main.state.play.Play;
-import game.main.state.play.entity.Entity;
-import game.main.state.play.entity.Hitbox;
-import game.main.stat.StatType;
 
 public class Humanoid extends Entity {
     public SpriteSheet feet;
@@ -74,7 +70,7 @@ public class Humanoid extends Entity {
         float angle = dir.angle();
 
         if (dir.x != 0 || dir.y != 0) {
-            float speed = stats.count(StatType.SPEED);
+            float speed = statManager.count(Stat.Type.SPEED);
 
             velX = MathUtils.round(MathUtils.cosDeg(angle) * speed);
             velY = MathUtils.round(MathUtils.sinDeg(angle) * speed);

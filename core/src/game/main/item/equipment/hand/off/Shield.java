@@ -7,7 +7,6 @@ import game.loader.resource.sprite_sheet.SpriteSheet;
 import game.main.Game;
 import game.main.state.play.entity.Humanoid;
 import game.main.stat.Stat;
-import game.main.stat.StatType;
 
 public class Shield extends OffHand {
     public SpriteSheet spriteSheet;
@@ -19,7 +18,7 @@ public class Shield extends OffHand {
     public Stat slowdown;
 
     public Shield() {
-        slowdown = new Stat(StatType.SPEED, 0, .5f);
+        slowdown = new Stat(Stat.Type.SPEED, 0, .5f);
         armIndex = 3;
     }
 
@@ -96,8 +95,8 @@ public class Shield extends OffHand {
     public void onStartUse(Humanoid h) {
         super.onStartUse(h);
 
-        if (!h.stats.stats.contains(slowdown, true)) {
-            h.stats.stats.add(slowdown);
+        if (!h.statManager.stats.contains(slowdown, true)) {
+            h.statManager.stats.add(slowdown);
         }
     }
 
@@ -105,8 +104,8 @@ public class Shield extends OffHand {
     public void onFinishUse(Humanoid h) {
         super.onFinishUse(h);
 
-        if (h.stats.stats.contains(slowdown, true)) {
-            h.stats.stats.removeValue(slowdown, true);
+        if (h.statManager.stats.contains(slowdown, true)) {
+            h.statManager.stats.removeValue(slowdown, true);
         }
     }
 

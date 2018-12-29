@@ -1,6 +1,5 @@
 package game.main.gen;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
@@ -36,7 +35,7 @@ public class WorldGenerator {
 
     public Array<Room> rooms;
 
-    public Array<Array<Point>> rivers;
+    public Array<River> rivers;
 
     public WorldGenerator(Play play) {
         this.play = play;
@@ -188,11 +187,11 @@ public class WorldGenerator {
 
             do {
                 x = rand.nextInt(biomes.length) * 2;
-                y = (biomes[0].length - 2 + rand.nextInt(2)) * 2;
+                y = rand.nextInt(biomes[0].length) * 2;
             } while (biomes[x / 2][y / 2] != Game.BIOMES.load("Mountains") || (roomAt(x, y) != null && (roomAt(x, y).w == 1 || roomAt(x, y).h == 1)));
 
-            Array<Point> river = new Array<>();
-            river.add(new Point(x, y));
+            River river = new River(1 + rand.nextInt(3));
+            river.points.add(new Point(x, y));
 
             boolean goneHorizontal = false;
 
@@ -216,13 +215,13 @@ public class WorldGenerator {
 
                 Point p = new Point(x, y);
 
-                if (!river.contains(p, true)) {
-                    river.add(p);
+                if (!river.points.contains(p, true)) {
+                    river.points.add(p);
                 }
             } while (biomes[x / 2][y / 2] != Game.BIOMES.load("Ocean"));
 
             // Remove last because it's the ocean
-            river.removeIndex(river.size - 1);
+            river.points.removeIndex(river.points.size - 1);
 
             rivers.add(river);
         }
@@ -302,16 +301,16 @@ public class WorldGenerator {
             }
         }
 
-        for (Array<Point> river : rivers) {
-            for (int i = 0; i < river.size - 1; i++) {
-                Point p0 = river.get(i);
-                Point p1 = river.get(i + 1);
+        for (River river : rivers) {
+            for (int i = 0; i < river.points.size - 1; i++) {
+                Point p0 = river.points.get(i);
+                Point p1 = river.points.get(i + 1);
 
                 for (float p = 0; p < 1; p += .01f) {
                     int x = (int) MathUtils.lerp(p0.x * 8, p1.x * 8, p);
                     int y = (int) MathUtils.lerp(p0.y * 4, p1.y * 4, p);
 
-                    for (int xx = -1; xx <= 0; xx++) {
+                    for (int xx = -river.thickness; xx <= river.thickness - 1; xx++) {
                         for (int yy = -1; yy <= 0; yy++) {
                             Tile t = play.tileAt(x + xx, y + yy, 0);
 
@@ -504,5 +503,15 @@ public class WorldGenerator {
         }
 
         return points;
+    }
+
+    public class River {
+        public Array<Point> points;
+        public int thickness;
+
+        public River(int thickness) {
+            points = new Array<>();
+            this.thickness = thickness;
+        }
     }
 }
