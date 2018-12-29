@@ -4,10 +4,7 @@
     "sheet": "Grass",
     "palettes": [["Black", "Green"]],
     "autoTile": true,
-    "connect": [
-      "TreeBottom",
-      "Stone"
-    ]
+    "connect": ["TreeBottom", "Stone", "Bridge"]
   },
   "Water": {
     "name": "Water",
@@ -50,7 +47,7 @@
     "name": "Dirt",
     "sheet": "Grass",
     "palettes": [["Black", "Brown"]],
-    "connect": ["Stone", "Tendril"],
+    "connect": ["Stone", "Tendril", "Bridge"],
     "autoTile": true
   },
   "Bridge": {
