@@ -15,6 +15,9 @@ import game.main.state.play.tile.TileType;
 public class Play extends GameState {
     public static final float CAM_SPEED = 1.5f;
 
+    public static final int X_VIEW = 10;
+    public static final int Y_VIEW = 8;
+
     public Tile[][][] tiles;
     public Rectangle[][] solidTiles;
 
@@ -37,8 +40,6 @@ public class Play extends GameState {
     public float toCamY;
 
     public float camTime;
-
-    public float stop;
 
     @Override
     public void create() {
@@ -81,10 +82,10 @@ public class Play extends GameState {
 
         cam.update();
 
-        x0 = MathUtils.clamp(MathUtils.floor(cam.position.x / 8f) - 10, 0, tiles.length);
-        x1 = MathUtils.clamp(x0 + 20, 0, tiles.length);
-        y0 = MathUtils.clamp(MathUtils.floor(cam.position.y / 8f) - 8, 0, tiles[0].length);
-        y1 = MathUtils.clamp(y0 + 16, 0, tiles[0].length);
+        x0 = MathUtils.clamp(MathUtils.floor(cam.position.x / 8f) - X_VIEW, 0, tiles.length);
+        x1 = MathUtils.clamp(x0 + X_VIEW * 2, 0, tiles.length);
+        y0 = MathUtils.clamp(MathUtils.floor(cam.position.y / 8f) - Y_VIEW, 0, tiles[0].length);
+        y1 = MathUtils.clamp(y0 + Y_VIEW * 2, 0, tiles[0].length);
 
         for (int x = 0; x < solidTiles.length; x++) {
             for (int y = 0; y < solidTiles[0].length; y++) {

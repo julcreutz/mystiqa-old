@@ -35,6 +35,9 @@ public class Entity implements Serializable {
 
     public float health;
 
+    public enum Alignment {GOOD, EVIL}
+    public Alignment alignment;
+
     public Entity() {
         hitbox = new Hitbox();
         stats = new Stats();
@@ -51,7 +54,7 @@ public class Entity implements Serializable {
             if (isAttacking() && isOnGround()) {
                 for (Entity e : play.entities) {
                     if (e != this) {
-                        if (!e.isHit() && e.isOnGround()) {
+                        if (!e.isHit() && e.isOnGround() && isHostile(e)) {
                             boolean contains = hit.contains(e, true);
 
                             if (e.isBlocking()) {
@@ -248,10 +251,18 @@ public class Entity implements Serializable {
         return null;
     }
 
+    public boolean isHostile(Entity e) {
+        return alignment != e.alignment;
+    }
+
     @Override
     public void deserialize(JsonValue json) {
         if (json.has("stats")) {
             stats.deserialize(json.get("stats"));
+        }
+
+        if (json.has("alignment")) {
+            alignment = Alignment.valueOf(json.getString("alignment"));
         }
     }
 }

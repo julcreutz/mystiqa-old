@@ -15,6 +15,7 @@
           "absolute": 1
         }
       ],
+      "alignment": "GOOD",
       "feet": "HumanFeet",
       "body": "HumanBody",
       "head": "HumanHead",
@@ -37,6 +38,7 @@
           "absolute": 1
         }
       ],
+      "alignment": "EVIL",
       "sheet": "Slime",
       "colors": [
         "Black",

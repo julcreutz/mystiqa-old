@@ -1,4 +1,4 @@
-package game.main.state.play.entity.slime;
+package game.main.state.play.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -7,14 +7,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonValue;
 import game.main.Game;
 import game.main.state.play.Play;
-import game.main.state.play.entity.Entity;
-import game.main.state.play.entity.Hitbox;
 
 public class Slime extends Entity {
     public TextureRegion[][] sheet;
     public String[] colors;
-    
-    public SlimeState state;
+
+    public enum State {RANDOM_MOVEMENT, FOLLOW_PLAYER, JUMP_BEGIN, JUMP, JUMP_END}
+    public State state;
 
     public float time;
 
@@ -27,7 +26,7 @@ public class Slime extends Entity {
 
     public Slime() {
         hitbox.set(6, 4, 1, 1);
-        state = SlimeState.RANDOM_MOVEMENT;
+        state = State.RANDOM_MOVEMENT;
     }
 
     @Override
@@ -35,7 +34,7 @@ public class Slime extends Entity {
         switch (state) {
             case RANDOM_MOVEMENT:
                 if (new Vector2(play.player.x, play.player.y).sub(x, y).len() < 24) {
-                    state = SlimeState.FOLLOW_PLAYER;
+                    state = State.FOLLOW_PLAYER;
                     break;
                 }
 
@@ -64,7 +63,7 @@ public class Slime extends Entity {
                 jumpTime -= Game.delta();
 
                 if (jumpTime < 0) {
-                    state = SlimeState.JUMP;
+                    state = State.JUMP;
                 }
 
                 break;
@@ -81,7 +80,7 @@ public class Slime extends Entity {
 
                     jumpSpeed = 0;
 
-                    state = SlimeState.JUMP_END;
+                    state = State.JUMP_END;
                 }
 
                 break;
@@ -93,7 +92,7 @@ public class Slime extends Entity {
                 jumpTime -= Game.delta();
 
                 if (jumpTime < 0) {
-                    state = SlimeState.RANDOM_MOVEMENT;
+                    state = State.RANDOM_MOVEMENT;
                 }
 
                 break;
@@ -142,7 +141,7 @@ public class Slime extends Entity {
 
         this.time = time;
 
-        state = SlimeState.JUMP_BEGIN;
+        state = State.JUMP_BEGIN;
     }
 
     @Override
@@ -152,7 +151,7 @@ public class Slime extends Entity {
 
     @Override
     public boolean isAttacking() {
-        return state == SlimeState.JUMP_END;
+        return state == State.JUMP_END;
     }
 
     @Override

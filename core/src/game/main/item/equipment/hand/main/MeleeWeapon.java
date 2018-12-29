@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.JsonValue;
 import game.loader.resource.sprite_sheet.SpriteSheet;
 import game.main.Game;
-import game.main.state.play.entity.humanoid.Humanoid;
+import game.main.state.play.entity.Humanoid;
 import game.main.stat.Stat;
 import game.main.stat.StatType;
 
