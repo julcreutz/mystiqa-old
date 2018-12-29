@@ -25,4 +25,9 @@ public class SingleTile extends Structure {
             tile = Game.TILES.load(json.getString("tile"));
         }
     }
+
+    @Override
+    public TileType getTile() {
+        return tile;
+    }
 }

@@ -11,11 +11,13 @@ import game.main.item.equipment.hand.off.OffHand;
 import game.main.state.play.Play;
 import game.main.state.play.entity.Slime;
 import game.main.state.play.entity.Humanoid;
+import game.main.state.play.tile.Connector;
 import game.main.state.play.tile.Tile;
 import game.noise.Noise;
 import game.noise.NoiseParameters;
 
 import java.awt.*;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.Random;
 
@@ -190,7 +192,7 @@ public class WorldGenerator {
                 y = rand.nextInt(biomes[0].length) * 2;
             } while (biomes[x / 2][y / 2] != Game.BIOMES.load("Mountains") || (roomAt(x, y) != null && (roomAt(x, y).w == 1 || roomAt(x, y).h == 1)));
 
-            River river = new River(1 + rand.nextInt(3));
+            River river = new River(1);
             river.points.add(new Point(x, y));
 
             boolean goneHorizontal = false;
@@ -218,7 +220,7 @@ public class WorldGenerator {
                 if (!river.points.contains(p, true)) {
                     river.points.add(p);
                 }
-            } while (biomes[x / 2][y / 2] != Game.BIOMES.load("Ocean"));
+            } while (y > 0);
 
             // Remove last because it's the ocean
             river.points.removeIndex(river.points.size - 1);
@@ -292,12 +294,31 @@ public class WorldGenerator {
             }
         }
 
+        HashMap<Room, Array<Room>> connected = new HashMap<>();
+
         for (Room r0 : rooms) {
             for (Room r1 : r0.children) {
-                getConnection(r0, r1).forEach(p -> {
-                    play.erase(p.x, p.y);
-                    play.placeTile(biomeAt(p.x / 16, p.y / 8).ground, p.x, p.y, 0);
-                });
+                if (!connected.containsKey(r1) || !connected.get(r1).contains(r0, true)) {
+                    Connection connection = getConnection(r0, r1);
+
+                    connection.points.forEach(p -> {
+                        Tile t = play.tileAt(p.x, p.y, 0);
+
+                        Biome b = biomes[p.x / 16][p.y / 8];
+                        Connector c = b.getConnector(connection);
+
+                        if (t != null && b.wall != null && t.type == b.wall.getTile()) {
+                            play.erase(p.x, p.y);
+                            play.placeTile(c.tile, p.x, p.y, 0);
+                        }
+                    });
+
+                    if (!connected.containsKey(r0)) {
+                        connected.put(r0, new Array<>());
+                    }
+
+                    connected.get(r0).add(r1);
+                }
             }
         }
 
@@ -331,7 +352,7 @@ public class WorldGenerator {
 
         for (Room r0 : rooms) {
             for (Room r1 : r0.children) {
-                getConnection(r0, r1).forEach(p -> {
+                getConnection(r0, r1).points.forEach(p -> {
                     Tile t = play.tileAt(p.x, p.y, 0);
 
                     if (t != null && (t.type == Game.TILES.load("Water") || t.type == Game.TILES.load("Waterfall"))) {
@@ -449,8 +470,8 @@ public class WorldGenerator {
         return null;
     }
 
-    public Array<Point> getConnection(Room r0, Room r1) {
-        Array<Point> points = new Array<>();
+    public Connection getConnection(Room r0, Room r1) {
+        Connection c = new Connection();
 
         Room smaller = smaller(r0, r1);
         Room larger = larger(r0, r1);
@@ -462,15 +483,22 @@ public class WorldGenerator {
 
         int diffX = larger.x - Objects.requireNonNull(smaller).x;
 
+        c.absoluteDiffX = Math.abs(diffX);
+
         if (diffX != 0) {
-            diffX /= Math.abs(diffX);
+            diffX /= c.absoluteDiffX;
         }
 
         int diffY = larger.y - smaller.y;
 
+        c.absoluteDiffY = Math.abs(diffY);
+
         if (diffY != 0) {
-            diffY /= Math.abs(diffY);
+            diffY /= c.absoluteDiffY;
         }
+
+        Biome b = biomes[r0.x / 2][r0.y / 2];
+        c.wayThickness = b.wayThickness[rand.nextInt(b.wayThickness.length)];
 
         if (diffX != 0) {
             int[] xx = new int[] {smaller.x * 8 + smaller.w * 4, smaller.x * 8 + smaller.w * 4 + smaller.w * diffX * 8};
@@ -480,10 +508,10 @@ public class WorldGenerator {
 
             for (int x = x0; x < x1; x++) {
                 int y0 = smaller.y * 4 + smaller.h * 2 - 1;
-                int y1 = y0 + 2;
+                int y1 = y0 + c.wayThickness;
 
                 for (int y = y0; y < y1; y++) {
-                    points.add(new Point(x, y));
+                    c.points.add(new Point(x, y));
                 }
             }
         } else if (diffY != 0) {
@@ -494,15 +522,15 @@ public class WorldGenerator {
 
             for (int y = y0; y < y1; y++) {
                 int x0 = smaller.x * 8 + smaller.w * 4 - 1;
-                int x1 = x0 + 2;
+                int x1 = x0 + c.wayThickness;
 
                 for (int x = x0; x < x1; x++) {
-                    points.add(new Point(x, y));
+                    c.points.add(new Point(x, y));
                 }
             }
         }
 
-        return points;
+        return c;
     }
 
     public class River {
@@ -512,6 +540,19 @@ public class WorldGenerator {
         public River(int thickness) {
             points = new Array<>();
             this.thickness = thickness;
+        }
+    }
+
+    public class Connection {
+        public Array<Point> points;
+
+        public int absoluteDiffX;
+        public int absoluteDiffY;
+
+        public int wayThickness;
+
+        public Connection() {
+            points = new Array<>();
         }
     }
 }

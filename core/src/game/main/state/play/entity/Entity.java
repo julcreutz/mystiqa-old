@@ -12,6 +12,7 @@ import game.main.Game;
 import game.main.stat.Stat;
 import game.main.state.play.Play;
 import game.main.stat.StatManager;
+import game.main.state.play.tile.Tile;
 
 public class Entity implements Serializable {
     public float x;
@@ -126,6 +127,16 @@ public class Entity implements Serializable {
             }
         }
 
+        Tile t = tileAt(play);
+        float moveSpeed = 1;
+
+        if (t != null) {
+            moveSpeed = t.type.moveSpeed;
+        }
+
+        velX *= moveSpeed;
+        velY *= moveSpeed;
+
         hitbox.position(this, velX * Game.delta(), 0);
 
         for (int x = 0; x < play.solidTiles.length; x++) {
@@ -134,7 +145,7 @@ public class Entity implements Serializable {
 
                 if (solidTile != null && hitbox.overlaps(solidTile)) {
                     if (velX > 0) {
-                        this.x = solidTile.x - hitbox.width() - hitbox.offsetX;
+                        this.x = solidTile.x - hitbox.getWidth() - hitbox.offsetX;
                     } else if (velX < 0) {
                         this.x = solidTile.x + solidTile.width - hitbox.offsetX;
                     }
@@ -154,7 +165,7 @@ public class Entity implements Serializable {
 
                 if (solidTile != null && hitbox.overlaps(solidTile)) {
                     if (velY > 0) {
-                        this.y = solidTile.y - hitbox.height() - hitbox.offsetY;
+                        this.y = solidTile.y - hitbox.getHeight() - hitbox.offsetY;
                     } else if (velY < 0) {
                         this.y = solidTile.y + solidTile.height - hitbox.offsetY;
                     }
@@ -252,6 +263,10 @@ public class Entity implements Serializable {
 
     public boolean isHostile(Entity e) {
         return alignment != e.alignment;
+    }
+
+    public Tile tileAt(Play play) {
+        return play.tileAt(MathUtils.floor((hitbox.getCenterX()) / 8f), MathUtils.floor(hitbox.getY() / 8f), 0);
     }
 
     @Override

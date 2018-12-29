@@ -15,6 +15,7 @@ import game.main.item.equipment.armor.FeetArmor;
 import game.main.item.equipment.armor.HeadArmor;
 import game.main.stat.Stat;
 import game.main.state.play.Play;
+import game.main.state.play.tile.Tile;
 
 public class Humanoid extends Entity {
     public SpriteSheet feet;
@@ -90,6 +91,12 @@ public class Humanoid extends Entity {
                         this.dir = 3;
                         break;
                 }
+            }
+
+            Tile t = tileAt(play);
+
+            if (t != null && t.type.forcedDirection != -1) {
+                this.dir = t.type.forcedDirection;
             }
         }
 

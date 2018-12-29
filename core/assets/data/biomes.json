@@ -1,20 +1,6 @@
 {
-  "Ocean": {
-    "minElevation": 0,
-    "maxElevation": 0.1,
-    "horizontalChance": 0.5,
-    "roomSizes": [
-      {
-        "chance": 0.5,
-        "width": 2,
-        "height": 2
-      }
-    ],
-    "randomConnectChance": 1,
-    "ground": "Water"
-  },
   "Forest": {
-    "minElevation": 0.1,
+    "minElevation": 0,
     "maxElevation": 0.45,
     "horizontalChance": 0.5,
     "roomSizes": [
@@ -37,6 +23,12 @@
     "randomConnectChance": 0.25,
     "ground": "Grass",
     "wall": "OakTree",
+    "connectors": [
+      {
+        "tile": "Grass"
+      }
+    ],
+    "wayThickness": [1, 2, 2, 3],
     "templates": [
       {
         "chance": 1,
@@ -119,6 +111,18 @@
     "randomConnectChance": 0.1,
     "ground": "Dirt",
     "wall": "Stone",
+    "connectors": [
+      {
+        "tile": "Dirt"
+      },
+      {
+        "tile": "Tendril",
+        "absoluteDiffX": {"max": 0},
+        "absoluteDiffY": {"min": 1},
+        "wayThickness": {"max": 1}
+      }
+    ],
+    "wayThickness": [1, 1, 2],
     "templates": [
       {
         "chance": 1,

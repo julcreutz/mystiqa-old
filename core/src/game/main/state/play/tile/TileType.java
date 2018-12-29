@@ -21,6 +21,10 @@ public class TileType implements Serializable {
 
     public boolean solid;
 
+    public float moveSpeed;
+
+    public int forcedDirection;
+
     public boolean connectsTo(TileType type) {
         if (connect != null) {
             for (String _connect : connect) {
@@ -66,5 +70,9 @@ public class TileType implements Serializable {
         if (json.has("solid")) {
             solid = json.getBoolean("solid");
         }
+
+        moveSpeed = json.getFloat("moveSpeed", 1);
+
+        forcedDirection = json.getInt("forcedDirection", -1);
     }
 }

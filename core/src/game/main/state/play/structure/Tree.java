@@ -47,4 +47,9 @@ public class Tree extends Structure {
         minHeight = json.getInt("minHeight", 0);
         maxHeight = json.getInt("maxHeight", 1);
     }
+
+    @Override
+    public TileType getTile() {
+        return bottomTile;
+    }
 }

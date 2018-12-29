@@ -34,14 +34,23 @@
     "name": "Stone",
     "sheet": "Stone",
     "palettes": [["Black", "Brown", "Brown"]],
+    "connect": ["Tendril"],
     "autoTile": true,
     "solid": true
+  },
+  "Tendril": {
+    "name": "Tendril",
+    "sheet": "Tendril",
+    "palettes": [["Black", "Green", "Brown"]],
+    "connect": ["Stone"],
+    "moveSpeed": 0.5,
+    "forcedDirection": 1
   },
   "Dirt": {
     "name": "Dirt",
     "sheet": "Grass",
     "palettes": [["Black", "Brown"]],
-    "connect": ["Stone"],
+    "connect": ["Stone", "Tendril"],
     "autoTile": true
   },
   "Bridge": {

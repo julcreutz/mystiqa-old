@@ -15,8 +15,8 @@ import game.main.state.play.tile.TileType;
 public class Play extends GameState {
     public static final float CAM_SPEED = 1.5f;
 
-    public static final int X_VIEW = 1000;
-    public static final int Y_VIEW = 800;
+    public static final int X_VIEW = 10;
+    public static final int Y_VIEW = 8;
 
     public Tile[][][] tiles;
     public Rectangle[][] solidTiles;
@@ -184,8 +184,12 @@ public class Play extends GameState {
         batch.draw(Game.SPRITE_SHEETS.load("GuiLayer").sheet[0][0], cam.position.x - Game.WIDTH * .5f, cam.position.y + Game.HEIGHT * .5f - 8, Game.WIDTH, 8);
     }
 
-    public Tile tileAt(int x, int y, int z) {
+    public Tile tileAt(Tile[][][] tiles, int x, int y, int z) {
         return x >= 0 && x < tiles.length && y >= 0 && y < tiles[0].length && z >= 0 && z < tiles[0][0].length ? tiles[x][y][z] : null;
+    }
+
+    public Tile tileAt(int x, int y, int z) {
+        return tileAt(tiles, x, y, z);
     }
 
     public void placeTile(Tile tile, int x, int y, int z) {

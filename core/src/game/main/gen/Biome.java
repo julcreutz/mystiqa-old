@@ -5,6 +5,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import game.loader.Serializable;
 import game.main.Game;
 import game.main.state.play.structure.Structure;
+import game.main.state.play.tile.Connector;
 import game.main.state.play.tile.TileType;
 
 import java.util.Random;
@@ -21,6 +22,10 @@ public class Biome implements Serializable {
     public TileType ground;
     public Structure wall;
 
+    public Array<Connector> connectors;
+
+    public int[] wayThickness;
+
     public Array<RoomTemplate> templates;
 
     public RoomTemplate pickTemplate(Room r, Random rand) {
@@ -35,6 +40,18 @@ public class Biome implements Serializable {
         }
 
         return t;
+    }
+
+    public Connector getConnector(WorldGenerator.Connection connection) {
+        Connector c = null;
+
+        for (Connector connector : connectors) {
+            if (connector.fits(connection)) {
+                c = connector;
+            }
+        }
+
+        return c;
     }
 
     @Override
@@ -71,6 +88,21 @@ public class Biome implements Serializable {
 
         if (json.has("wall")) {
             wall = Game.STRUCTURES.load(json.getString("wall"));
+        }
+
+        if (json.has("connectors")) {
+            connectors = new Array<>();
+
+            for (JsonValue connector : json.get("connectors")) {
+                Connector c = new Connector();
+                c.deserialize(connector);
+
+                connectors.add(c);
+            }
+        }
+
+        if (json.has("wayThickness")) {
+            wayThickness = json.get("wayThickness").asIntArray();
         }
 
         if (json.has("templates")) {

@@ -109,6 +109,11 @@
     "splitW": 8,
     "splitH": 8
   },
+  "Tendril": {
+    "path": "graphics/tendril.png",
+    "splitW": 8,
+    "splitH": 8
+  },
   "BodyArmor": {
     "path": "graphics/body_armor.png",
     "splitW": 8,
