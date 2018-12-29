@@ -74,6 +74,11 @@
     "splitW": 8,
     "splitH": 8
   },
+  "Waterfall": {
+    "path": "graphics/waterfall.png",
+    "splitW": 8,
+    "splitH": 8
+  },
   "TreeBottom": {
     "path": "graphics/tree_bottom.png",
     "splitW": 8,

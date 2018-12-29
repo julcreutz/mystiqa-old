@@ -1,5 +1,6 @@
 package game.main.gen;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
@@ -161,15 +162,33 @@ public class WorldGenerator {
             }
         }
 
+        // Reduce linearity by connecting adjacent rooms
+        rooms.forEach(r0 -> {
+            Room[] rooms = new Room[] {
+                    roomAt(r0.x + r0.w, r0.y),
+                    roomAt(r0.x - 1, r0.y),
+                    roomAt(r0.x, r0.y + r0.h),
+                    roomAt(r0.x, r0.y - 1)
+            };
+
+            for (int i = 0; i < rooms.length; i++) {
+                Room r1 = rooms[i];
+
+                if (r1 != null && r0.parent != r1 && !r0.children.contains(r1, true) && rand.nextFloat() < biomes[r0.x / 2][r0.y / 2].randomConnectChance) {
+                    r0.children.add(r1);
+                }
+            }
+        });
+
         rivers = new Array<>();
 
-        for (int i = 0; i < 1 + rand.nextInt(3); i++) {
+        for (int i = 0; i < 2 + rand.nextInt(3); i++) {
             int x;
             int y;
 
             do {
-                x = rand.nextInt(biomes.length * 2);
-                y = biomes[0].length * 2 - 1;
+                x = rand.nextInt(biomes.length) * 2;
+                y = (biomes[0].length - 2 + rand.nextInt(2)) * 2;
             } while (biomes[x / 2][y / 2] != Game.BIOMES.load("Mountains") || (roomAt(x, y) != null && (roomAt(x, y).w == 1 || roomAt(x, y).h == 1)));
 
             Array<Point> river = new Array<>();
@@ -178,21 +197,21 @@ public class WorldGenerator {
             boolean goneHorizontal = false;
 
             do {
-                if (rand.nextFloat() < .5f && !goneHorizontal) {
+                if (rand.nextFloat() < (biomes[x / 2][y / 2] == Game.BIOMES.load("Mountains") ? 0 : .5f) && !goneHorizontal) {
                     goneHorizontal = true;
 
                     if (rand.nextFloat() < .5f) {
                         if (x > 0) {
-                            x--;
+                            x -= 2;
                         }
                     } else {
-                        if (x < biomes.length * 2 - 1) {
-                            x++;
+                        if (x < biomes.length * 2 - 2) {
+                            x += 2;
                         }
                     }
                 } else {
                     goneHorizontal = false;
-                    y--;
+                    y -= 2;
                 }
 
                 Point p = new Point(x, y);
@@ -276,12 +295,9 @@ public class WorldGenerator {
 
         for (Room r0 : rooms) {
             for (Room r1 : r0.children) {
-                getConnection(r0, r1, 0).forEach(p -> {
+                getConnection(r0, r1).forEach(p -> {
+                    play.erase(p.x, p.y);
                     play.placeTile(biomeAt(p.x / 16, p.y / 8).ground, p.x, p.y, 0);
-
-                    for (int z = 1; z < play.tiles[0][0].length; z++) {
-                        play.tiles[p.x][p.y][z] = null;
-                    }
                 });
             }
         }
@@ -297,10 +313,16 @@ public class WorldGenerator {
 
                     for (int xx = -1; xx <= 0; xx++) {
                         for (int yy = -1; yy <= 0; yy++) {
-                            play.placeTile(Game.TILES.load("Water"), x + xx, y + yy, 0);
+                            Tile t = play.tileAt(x + xx, y + yy, 0);
 
-                            for (int z = 1; z < play.tiles[0][0].length; z++) {
-                                play.tiles[x + xx][y + yy][z] = null;
+                            if (t != null && t.type != Game.TILES.load("Water") && t.type != Game.TILES.load("Waterfall")) {
+                                play.erase(x + xx, y + yy);
+
+                                if (biomes[p0.x / 2][p0.y / 2] == Game.BIOMES.load("Mountains") && biomes[p1.x / 2][p1.y / 2] == Game.BIOMES.load("Mountains")) {
+                                    play.placeTile(Game.TILES.load("Waterfall"), x + xx, y + yy, 0);
+                                } else {
+                                    play.placeTile(Game.TILES.load("Water"), x + xx, y + yy, 0);
+                                }
                             }
                         }
                     }
@@ -310,10 +332,10 @@ public class WorldGenerator {
 
         for (Room r0 : rooms) {
             for (Room r1 : r0.children) {
-                getConnection(r0, r1, 1).forEach(p -> {
+                getConnection(r0, r1).forEach(p -> {
                     Tile t = play.tileAt(p.x, p.y, 0);
 
-                    if (t != null && t.type == Game.TILES.load("Water")) {
+                    if (t != null && (t.type == Game.TILES.load("Water") || t.type == Game.TILES.load("Waterfall"))) {
                         play.placeTile(Game.TILES.load("Bridge"), p.x, p.y, 0);
                     }
                 });
@@ -343,8 +365,8 @@ public class WorldGenerator {
         h.feetArmor = (FeetArmor) Game.ITEMS.load("FeetArmor");
         h.bodyArmor = (BodyArmor) Game.ITEMS.load("BodyArmor");
 
-        h.x = 64;
-        h.y = 72 * 4 + 36;
+        h.x = biomes.length * 64 + 64;
+        h.y = biomes[0].length * 36 + 36;
 
         play.player = h;
         play.add(h);
@@ -353,7 +375,9 @@ public class WorldGenerator {
     }
 
     public Room roomAt(int x, int y) {
-        for (Room r : this.rooms) {
+        for (int i = 0; i < rooms.size; i++) {
+            Room r = rooms.get(i);
+
             if (x >= r.x && x < r.x + r.w && y >= r.y && y < r.y + r.h) {
                 return r;
             }
@@ -426,7 +450,7 @@ public class WorldGenerator {
         return null;
     }
 
-    public Array<Point> getConnection(Room r0, Room r1, int p) {
+    public Array<Point> getConnection(Room r0, Room r1) {
         Array<Point> points = new Array<>();
 
         Room smaller = smaller(r0, r1);

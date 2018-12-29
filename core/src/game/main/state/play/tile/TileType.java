@@ -1,6 +1,8 @@
 package game.main.state.play.tile;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import game.loader.Serializable;
 import game.main.Game;
@@ -9,7 +11,9 @@ public class TileType implements Serializable {
     public String name;
 
     public TextureRegion[][] sheet;
-    public String[] colors;
+
+    public Array<ShaderProgram> palettes;
+    public float paletteSpeed;
 
     public boolean autoTile;
 
@@ -39,8 +43,16 @@ public class TileType implements Serializable {
             sheet = Game.SPRITE_SHEETS.load(json.getString("sheet")).sheet;
         }
 
-        if (json.has("colors")) {
-            colors = json.get("colors").asStringArray();
+        if (json.has("palettes")) {
+            palettes = new Array<>();
+
+            for (JsonValue palette : json.get("palettes")) {
+                palettes.add(Game.PALETTES.load(palette.asStringArray()));
+            }
+        }
+
+        if (json.has("paletteSpeed")) {
+            paletteSpeed = json.getFloat("paletteSpeed");
         }
 
         if (json.has("autoTile")) {

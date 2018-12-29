@@ -15,8 +15,8 @@ import game.main.state.play.tile.TileType;
 public class Play extends GameState {
     public static final float CAM_SPEED = 1.5f;
 
-    public static final int X_VIEW = 10;
-    public static final int Y_VIEW = 8;
+    public static final int X_VIEW = 1000;
+    public static final int Y_VIEW = 800;
 
     public Tile[][][] tiles;
     public Rectangle[][] solidTiles;
@@ -265,5 +265,13 @@ public class Play extends GameState {
         }
 
         return tiles;
+    }
+
+    public void erase(int x, int y) {
+        if (x >= 0 && x < tiles.length && y >= 0 && y < tiles[0].length) {
+            for (int z = 0; z < tiles[0][0].length; z++) {
+                tiles[x][y][z] = null;
+            }
+        }
     }
 }

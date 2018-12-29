@@ -16,6 +16,8 @@ public class Biome implements Serializable {
     public float horizontalChance;
     public Array<RoomSize> roomSizes;
 
+    public float randomConnectChance;
+
     public TileType ground;
     public Structure wall;
 
@@ -57,6 +59,10 @@ public class Biome implements Serializable {
                 _roomSize.deserialize(roomSize);
                 roomSizes.add(_roomSize);
             }
+        }
+
+        if (json.has("randomConnectChance")) {
+            randomConnectChance = json.getFloat("randomConnectChance");
         }
 
         if (json.has("ground")) {

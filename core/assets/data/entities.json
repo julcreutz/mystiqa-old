@@ -2,48 +2,27 @@
   "Human": {
     "Humanoid": {
       "stats": [
-        {
-          "type": "SPEED",
-          "absolute": 24
-        },
-        {
-          "type": "MAX_HEALTH",
-          "absolute": 10
-        },
-        {
-          "type": "PHYSICAL_DAMAGE",
-          "absolute": 1
-        }
+        {"type": "SPEED", "absolute": 24},
+        {"type": "MAX_HEALTH", "absolute": 10},
+        {"type": "PHYSICAL_DAMAGE", "absolute": 1}
       ],
       "alignment": "GOOD",
       "feet": "HumanFeet",
       "body": "HumanBody",
       "head": "HumanHead",
       "animSpeed": 7.5,
-      "colors": [
-        "Black",
-        "Peach"
-      ]
+      "colors": ["Black", "Peach"]
     }
   },
   "GreenSlime": {
     "Slime": {
       "stats": [
-        {
-          "type": "MAX_HEALTH",
-          "absolute": 3
-        },
-        {
-          "type": "PHYSICAL_DAMAGE",
-          "absolute": 1
-        }
+        {"type": "MAX_HEALTH", "absolute": 3},
+        {"type": "PHYSICAL_DAMAGE", "absolute": 1}
       ],
       "alignment": "EVIL",
       "sheet": "Slime",
-      "colors": [
-        "Black",
-        "Green"
-      ]
+      "colors": ["Black", "Green"]
     }
   }
 }

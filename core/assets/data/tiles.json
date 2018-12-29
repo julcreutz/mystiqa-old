@@ -2,10 +2,7 @@
   "Grass": {
     "name": "Grass",
     "sheet": "Grass",
-    "colors": [
-      "Black",
-      "Green"
-    ],
+    "palettes": [["Black", "Green"]],
     "autoTile": true,
     "connect": [
       "TreeBottom",
@@ -15,79 +12,57 @@
   "Water": {
     "name": "Water",
     "sheet": "Water",
-    "colors": [
-      "Black",
-      "Blue",
-      "Brown"
-    ],
+    "palettes": [["Black", "Blue", "Brown"]],
     "autoTile": true,
-    "connect": ["Stone"],
+    "connect": ["Stone", "Waterfall"],
+    "solid": true
+  },
+  "Waterfall": {
+    "name": "Waterfall",
+    "sheet": "Waterfall",
+    "palettes": [["Blue", "Blue", "White"], ["Blue", "White", "Blue"], ["White", "Blue", "Blue"]],
+    "paletteSpeed": 10,
+    "connect": ["Water"],
     "solid": true
   },
   "Sand": {
     "name": "Sand",
     "sheet": "Sand",
-    "colors": [
-      "Black",
-      "Yellow"
-    ]
+    "palettes": [["Black", "Yellow"]]
   },
   "Stone": {
     "name": "Stone",
     "sheet": "Stone",
-    "colors": [
-      "Black",
-      "Brown",
-      "Brown"
-    ],
+    "palettes": [["Black", "Brown", "Brown"]],
     "autoTile": true,
     "solid": true
   },
   "Dirt": {
     "name": "Dirt",
     "sheet": "Grass",
-    "colors": [
-      "Black",
-      "Brown"
-    ],
-    "connect": [
-      "Stone"
-    ],
+    "palettes": [["Black", "Brown"]],
+    "connect": ["Stone"],
     "autoTile": true
   },
   "Bridge": {
     "name": "Bridge",
     "sheet": "Grass",
-    "colors": [
-      "Black",
-      "Brown"
-    ]
+    "palettes": [["Black", "Brown"]]
   },
   "TreeBottom": {
     "name": "TreeBottom",
     "sheet": "TreeBottom",
-    "colors": [
-      "Black",
-      "Green",
-      "Brown",
-      "Green"
-    ],
+    "palettes": [["Black", "Green", "Brown", "Green"]],
     "solid": true
   },
   "TreeMiddle": {
     "name": "TreeMiddle",
     "sheet": "TreeMiddle",
-    "colors": [
-      "Black",
-      "Green"
-    ]
+    "palettes": [["Black", "Green"]]
   },
   "TreeTop": {
     "name": "TreeTop",
     "sheet": "TreeTop",
-    "colors": [
-      "Black",
-      "Green"
-    ]
+    "palettes": [["Black", "Green"]]
   }
 }

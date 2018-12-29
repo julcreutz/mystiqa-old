@@ -10,7 +10,8 @@
         "height": 2
       }
     ],
-    "ground": "Grass"
+    "randomConnectChance": 1,
+    "ground": "Water"
   },
   "Forest": {
     "minElevation": 0.1,
@@ -33,6 +34,7 @@
         "height": 2
       }
     ],
+    "randomConnectChance": 0.25,
     "ground": "Grass",
     "wall": "OakTree",
     "templates": [
@@ -114,6 +116,7 @@
         "height": 2
       }
     ],
+    "randomConnectChance": 0.1,
     "ground": "Dirt",
     "wall": "Stone",
     "templates": [

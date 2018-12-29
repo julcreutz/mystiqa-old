@@ -40,4 +40,9 @@ public class Room {
     public int y1() {
         return y0() + h * 4;
     }
+
+    @Override
+    public String toString() {
+        return "(" + x + " " + y + " " + w + " " + h + ")";
+    }
 }

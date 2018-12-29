@@ -97,7 +97,7 @@ public class Tile {
     }
 
     public void render(SpriteBatch batch) {
-        batch.setShader(Game.PALETTES.load(type.colors));
+        batch.setShader(type.palettes.get((int) ((Game.time * type.paletteSpeed) % type.palettes.size)));
         batch.draw(image, x * 8, y * 8 + z * 8);
         batch.setColor(1, 1, 1, 1);
         batch.setShader(null);
