@@ -14,7 +14,7 @@
     "sheet": "Water",
     "palettes": [["Black", "Blue", "Brown"]],
     "autoTile": true,
-    "connect": ["Stone", "Waterfall"],
+    "connect": ["Stone", "Waterfall", "Bridge"],
     "solid": true
   },
   "Waterfall": {
@@ -55,8 +55,9 @@
   },
   "Bridge": {
     "name": "Bridge",
-    "sheet": "Grass",
-    "palettes": [["Black", "Brown"]]
+    "sheet": "Bridge",
+    "palettes": [["Black", "Brown"]],
+    "autoTile": true
   },
   "TreeBottom": {
     "name": "TreeBottom",

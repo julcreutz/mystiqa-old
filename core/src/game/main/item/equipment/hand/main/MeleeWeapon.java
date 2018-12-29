@@ -58,7 +58,7 @@ public class MeleeWeapon extends MainHand {
         super.update(h);
 
         if (isAttacking()) {
-            attackTime -= Game.delta() * 4f * speed;
+            attackTime -= Game.getDelta() * 4f * speed;
 
             float a = h.dir * 90 - 135 + (1 - attackTime) * angle;
             dist = 6 + MathUtils.sin(attackTime * MathUtils.PI) * 2f;

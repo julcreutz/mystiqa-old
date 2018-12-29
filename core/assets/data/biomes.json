@@ -23,12 +23,14 @@
     "randomConnectChance": 0.25,
     "ground": "Grass",
     "wall": "OakTree",
+    "river": "Water",
+    "riverBridge": "Bridge",
     "connectors": [
       {
         "tile": "Grass"
       }
     ],
-    "wayThickness": [1, 2, 2, 3],
+    "wayThickness": [1, 2, 2],
     "templates": [
       {
         "chance": 1,
@@ -111,6 +113,8 @@
     "randomConnectChance": 0.1,
     "ground": "Dirt",
     "wall": "Stone",
+    "river": "Waterfall",
+    "riverBridge": "Bridge",
     "connectors": [
       {
         "tile": "Dirt"
@@ -118,7 +122,7 @@
       {
         "tile": "Tendril",
         "absoluteDiffX": {"max": 0},
-        "absoluteDiffY": {"min": 1},
+        "absoluteDiffY": {"min": 2},
         "wayThickness": {"max": 1}
       }
     ],

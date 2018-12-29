@@ -65,7 +65,7 @@ public class Play extends GameState {
                 camTime = 1;
             }
 
-            camTime -= Game.delta() * CAM_SPEED;
+            camTime -= Game.getDelta() * CAM_SPEED;
 
             float p = MathUtils.clamp(1 - camTime, 0, 1);
 

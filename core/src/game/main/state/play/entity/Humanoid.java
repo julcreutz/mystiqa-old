@@ -122,7 +122,7 @@ public class Humanoid extends Entity {
 
         step = MathUtils.floor(time * animSpeed) % 4;
 
-        lastUsed += Game.delta();
+        lastUsed += Game.getDelta();
 
         if ((mainHand != null && mainHand.isUsing()) || (offHand != null && offHand.isUsing())) {
             lastUsed = 0;
@@ -389,7 +389,7 @@ public class Humanoid extends Entity {
     @Override
     public void onMove(Play play) {
         super.onMove(play);
-        time += Game.delta() * (new Vector2(velX, velY).len() / 24f);
+        time += Game.getDelta() * (new Vector2(velX, velY).len() / 24f);
     }
 
     @Override

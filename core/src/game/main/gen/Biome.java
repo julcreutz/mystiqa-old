@@ -26,6 +26,9 @@ public class Biome implements Serializable {
 
     public int[] wayThickness;
 
+    public TileType river;
+    public TileType riverBridge;
+
     public Array<RoomTemplate> templates;
 
     public RoomTemplate pickTemplate(Room r, Random rand) {
@@ -103,6 +106,14 @@ public class Biome implements Serializable {
 
         if (json.has("wayThickness")) {
             wayThickness = json.get("wayThickness").asIntArray();
+        }
+
+        if (json.has("river")) {
+            river = Game.TILES.load(json.getString("river"));
+        }
+
+        if (json.has("riverBridge")) {
+            riverBridge = Game.TILES.load(json.getString("riverBridge"));
         }
 
         if (json.has("templates")) {

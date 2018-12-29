@@ -100,7 +100,7 @@ public class Entity implements Serializable {
         }
 
         if (isHit()) {
-            hitTime -= Game.delta();
+            hitTime -= Game.getDelta();
 
             velX += MathUtils.cosDeg(hitAngle) * hitSpeed;
             velY += MathUtils.sinDeg(hitAngle) * hitSpeed;
@@ -137,7 +137,7 @@ public class Entity implements Serializable {
         velX *= moveSpeed;
         velY *= moveSpeed;
 
-        hitbox.position(this, velX * Game.delta(), 0);
+        hitbox.position(this, velX * Game.getDelta(), 0);
 
         for (int x = 0; x < play.solidTiles.length; x++) {
             for (int y = 0; y < play.solidTiles[0].length; y++) {
@@ -155,9 +155,9 @@ public class Entity implements Serializable {
             }
         }
 
-        x += velX * Game.delta();
+        x += velX * Game.getDelta();
 
-        hitbox.position(this, 0, velY * Game.delta());
+        hitbox.position(this, 0, velY * Game.getDelta());
 
         for (int x = 0; x < play.solidTiles.length; x++) {
             for (int y = 0; y < play.solidTiles[0].length; y++) {
@@ -175,7 +175,7 @@ public class Entity implements Serializable {
             }
         }
 
-        y += velY * Game.delta();
+        y += velY * Game.getDelta();
 
         if (velX != 0 || velY != 0) {
             onMove(play);

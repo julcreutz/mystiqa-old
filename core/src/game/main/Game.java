@@ -5,7 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import game.loader.*;
 import game.loader.instance.EntityLoader;
@@ -18,9 +17,6 @@ import game.loader.resource.sprite_sheet.SpriteSheetLoader;
 import game.loader.resource.TileLoader;
 import game.main.state.play.Play;
 import game.main.state.GameState;
-
-import java.util.Comparator;
-import java.util.function.Function;
 
 public class Game extends ApplicationAdapter {
 	public static final String TITLE = "Mystiqa";
@@ -79,7 +75,7 @@ public class Game extends ApplicationAdapter {
 			nextState = null;
 		}
 
-		time += delta();
+		time += getDelta();
 
 		if (state != null) {
 			state.update(this);
@@ -100,7 +96,7 @@ public class Game extends ApplicationAdapter {
 		}
 	}
 
-	public static float delta() {
+	public static float getDelta() {
 		return Gdx.graphics.getDeltaTime();
 	}
 
