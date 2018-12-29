@@ -6,15 +6,36 @@ import game.loader.Serializable;
 public class RoomTemplate implements Serializable {
     public float chance;
 
+    public float horizontalFlipChance;
+    public float verticalFlipChance;
+
     public int width;
     public int height;
 
     public char[][] layout;
 
+    public char[][] copyLayout() {
+        char[][] layout = new char[this.layout.length][this.layout[0].length];
+
+        for (int x = 0; x < layout.length; x++) {
+            System.arraycopy(this.layout[x], 0, layout[x], 0, layout[x].length);
+        }
+
+        return layout;
+    }
+
     @Override
     public void deserialize(JsonValue json) {
         if (json.has("chance")) {
             chance = json.getFloat("chance");
+        }
+
+        if (json.has("horizontalFlipChance")) {
+            horizontalFlipChance = json.getFloat("horizontalFlipChance");
+        }
+
+        if (json.has("verticalFlipChance")) {
+            verticalFlipChance = json.getFloat("verticalFlipChance");
         }
 
         if (json.has("width")) {

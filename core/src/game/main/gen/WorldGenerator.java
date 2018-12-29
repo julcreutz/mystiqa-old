@@ -16,6 +16,7 @@ import game.noise.Noise;
 import game.noise.NoiseParameters;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Random;
 
@@ -230,13 +231,46 @@ public class WorldGenerator {
                     }
                 }
             }
+        }
 
+        for (Room r : rooms) {
+            int x0 = r.x * 8;
+            int x1 = x0 + r.w * 8;
+
+            int y0 = r.y * 4;
+            int y1 = y0 + r.h * 4;
+
+            Biome b = biomes[r.x / 2][r.y / 2];
             RoomTemplate t = b.pickTemplate(r, rand);
 
             if (t != null) {
-                for (int y = 0; y < t.layout.length; y++) {
-                    for (int x = 0; x < t.layout[0].length; x++) {
-                        if (t.layout[y][x] == '#') {
+                char[][] layout = t.copyLayout();
+
+                // Flip vertically
+                if (rand.nextFloat() < t.verticalFlipChance) {
+                    for (int y = 0; y < layout.length / 2; y++) {
+                        char[] old = layout[y];
+
+                        layout[y] = layout[layout.length - 1 - y];
+                        layout[layout.length - 1 - y] = old;
+                    }
+                }
+
+                // Flip horizontally
+                if (rand.nextFloat() < t.horizontalFlipChance) {
+                    for (int y = 0; y < layout.length; y++) {
+                        for (int x = 0; x < layout[0].length / 2; x++) {
+                            char old = layout[y][x];
+
+                            layout[y][x] = layout[y][layout[0].length - 1 - x];
+                            layout[y][layout[0].length - 1 - x] = old;
+                        }
+                    }
+                }
+
+                for (int y = 0; y < layout.length; y++) {
+                    for (int x = 0; x < layout[0].length; x++) {
+                        if (layout[y][x] == '#') {
                             b.wall.generate(rand, play, x0 + x, y1 - 1 - y, 0);
                         }
                     }
