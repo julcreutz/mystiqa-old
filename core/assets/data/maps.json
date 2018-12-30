@@ -3,7 +3,10 @@
     "World": {
       "width": 16,
       "height": 8,
-      "riverCount": {"min": 2, "max": 5},
+      "riverCount": {
+        "min": 2,
+        "max": 5
+      },
       "biomes": [
         {
           "minElevation": 0,
@@ -131,9 +134,15 @@
             },
             {
               "tile": "Tendril",
-              "absoluteDiffX": {"max": 0},
-              "absoluteDiffY": {"min": 2},
-              "wayThickness": {"max": 1}
+              "absoluteDiffX": {
+                "max": 0
+              },
+              "absoluteDiffY": {
+                "min": 2
+              },
+              "wayThickness": {
+                "max": 1
+              }
             }
           ],
           "wayThickness": [1, 1, 2],

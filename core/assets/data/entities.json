@@ -2,9 +2,18 @@
   "Human": {
     "Humanoid": {
       "stats": [
-        {"type": "HEALTH", "absolute": 10},
-        {"type": "SPEED", "absolute": 24},
-        {"type": "PHYSICAL_DAMAGE", "absolute": 1}
+        {
+          "type": "HEALTH",
+          "absolute": 10
+        },
+        {
+          "type": "SPEED",
+          "absolute": 24
+        },
+        {
+          "type": "PHYSICAL_DAMAGE",
+          "absolute": 1
+        }
       ],
       "alignment": "GOOD",
       "feet": "HumanFeet",
@@ -17,8 +26,14 @@
   "GreenSlime": {
     "Slime": {
       "stats": [
-        {"type": "HEALTH", "absolute": 3},
-        {"type": "PHYSICAL_DAMAGE", "absolute": 1}
+        {
+          "type": "HEALTH",
+          "absolute": 3
+        },
+        {
+          "type": "PHYSICAL_DAMAGE",
+          "absolute": 1
+        }
       ],
       "alignment": "EVIL",
       "sheet": "Slime",

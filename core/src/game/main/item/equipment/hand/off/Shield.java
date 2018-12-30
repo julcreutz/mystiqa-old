@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.JsonValue;
 import game.loader.resource.sprite_sheet.SpriteSheet;
 import game.main.Game;
-import game.main.stat.StatType;
 import game.main.state.play.map.entity.Humanoid;
 import game.main.stat.Stat;
 
@@ -19,7 +18,7 @@ public class Shield extends OffHand {
     public Stat slowdown;
 
     public Shield() {
-        slowdown = new Stat(StatType.SPEED, 0, .5f);
+        slowdown = new Stat(Stat.Type.SPEED, 0, .5f);
         armIndex = 3;
     }
 

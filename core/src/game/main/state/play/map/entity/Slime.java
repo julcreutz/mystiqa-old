@@ -10,10 +10,17 @@ import game.main.state.play.Play;
 import game.main.state.play.map.Map;
 
 public class Slime extends Entity {
+    public enum State {
+        RANDOM_MOVEMENT,
+        FOLLOW_PLAYER,
+        JUMP_BEGIN,
+        JUMP,
+        JUMP_END
+    }
+
     public TextureRegion[][] sheet;
     public String[] colors;
 
-    public enum State {RANDOM_MOVEMENT, FOLLOW_PLAYER, JUMP_BEGIN, JUMP, JUMP_END}
     public State state;
 
     public float time;
