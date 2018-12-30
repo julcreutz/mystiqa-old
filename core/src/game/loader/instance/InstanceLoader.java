@@ -2,17 +2,18 @@ package game.loader.instance;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.ObjectMap;
 import game.loader.Loader;
 import game.loader.Serializable;
 
 import java.util.HashMap;
 
 public abstract class InstanceLoader<T extends Serializable> implements Loader<T> {
-    public HashMap<String, JsonValue> map;
+    public ObjectMap<String, JsonValue> map;
 
     @Override
     public void load(FileHandle file) {
-        map = new HashMap<String, JsonValue>();
+        map = new ObjectMap<String, JsonValue>();
 
         for (JsonValue json : Loader.READER.parse(file)) {
             map.put(json.name, json.child);
