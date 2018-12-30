@@ -18,15 +18,15 @@ public class Tree extends Structure {
 
     @Override
     public void generate(Random rand, Map map, int x, int y, int z) {
-        map.placeTile(bottomTile, x, y, z);
+        map.tiles.placeTile(bottomTile, x, y, z);
 
         z++;
         for (int i = 0; i < minHeight + rand.nextInt(maxHeight - minHeight + 1); i++) {
-            map.placeTile(middleTile, x, y, z);
+            map.tiles.placeTile(middleTile, x, y, z);
             z++;
         }
 
-        map.placeTile(topTile, x, y, z);
+        map.tiles.placeTile(topTile, x, y, z);
     }
 
     @Override

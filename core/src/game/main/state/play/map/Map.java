@@ -17,8 +17,7 @@ public abstract class Map implements Serializable {
     public static final int X_VIEW = 10;
     public static final int Y_VIEW = 8;
 
-    public Tile[][][] tiles;
-    public Rectangle[][] solidTiles;
+    public TileManager tiles;
 
     public Array<Entity> entities;
     public Array<Entity> invisibleEntities;
@@ -40,6 +39,14 @@ public abstract class Map implements Serializable {
     public float camPosY;
 
     public float camTime;
+
+    public Map parent;
+    public Array<Map> children;
+
+    public Map() {
+        tiles = new TileManager();
+        children = new Array<Map>();
+    }
 
     public void update(Play play) {
         toCamX = Game.WIDTH * .5f + MathUtils.floor((player.x + 4) / Game.WIDTH) * Game.WIDTH;
@@ -65,41 +72,12 @@ public abstract class Map implements Serializable {
             }
         }
 
-        x0 = MathUtils.clamp(MathUtils.floor(play.cam.position.x / 8f) - X_VIEW, 0, tiles.length);
-        x1 = MathUtils.clamp(x0 + X_VIEW * 2, 0, tiles.length);
-        y0 = MathUtils.clamp(MathUtils.floor(play.cam.position.y / 8f) - Y_VIEW, 0, tiles[0].length);
-        y1 = MathUtils.clamp(y0 + Y_VIEW * 2, 0, tiles[0].length);
+        x0 = MathUtils.clamp(MathUtils.floor(play.cam.position.x / 8f) - X_VIEW, 0, tiles.getWidth());
+        x1 = MathUtils.clamp(x0 + X_VIEW * 2, 0, tiles.getWidth());
+        y0 = MathUtils.clamp(MathUtils.floor(play.cam.position.y / 8f) - Y_VIEW, 0, tiles.getHeight());
+        y1 = MathUtils.clamp(y0 + Y_VIEW * 2, 0, tiles.getHeight());
 
-        for (int x = 0; x < solidTiles.length; x++) {
-            for (int y = 0; y < solidTiles[0].length; y++) {
-                Tile t = tiles[x][y][0];
-
-                if (t != null) {
-                    if (t.type.solid && solidTiles[x][y] == null) {
-                        solidTiles[x][y] = new Rectangle(x * 8, y * 8, 8, 8);
-                    } else if (!t.type.solid && solidTiles[x][y] != null) {
-                        solidTiles[x][y] = null;
-                    }
-                }
-            }
-        }
-
-        for (int x = x0; x < x1; x++) {
-            for (int y = y1 - 1; y >= y0; y--) {
-                for (int z = 0; z < tiles[0][0].length; z++) {
-                    Tile tile = tiles[x][y][z];
-
-                    if (tile != null) {
-                        if (!tile.updated) {
-                            tile.update(this);
-                            tile.updated = true;
-                        } else if (!isCamMoving()) {
-                            tile.update(this);
-                        }
-                    }
-                }
-            }
-        }
+        tiles.update(this, x0, x1, y0, y1);
 
         for (int i = invisibleEntities.size - 1; i >= 0; i--) {
             Entity e = invisibleEntities.get(i);
@@ -131,15 +109,7 @@ public abstract class Map implements Serializable {
     public void render(SpriteBatch batch) {
         batch.setShader(null);
 
-        for (int x = x0; x < x1; x++) {
-            for (int y = y1 - 1; y >= y0; y--) {
-                Tile tile = tiles[x][y][0];
-
-                if (tile != null) {
-                    tile.render(batch);
-                }
-            }
-        }
+        tiles.render(batch, x0, x1, y0, y1, 0, 1);
 
         batch.setShader(null);
 
@@ -149,40 +119,9 @@ public abstract class Map implements Serializable {
 
         batch.setShader(null);
 
-        for (int x = x0; x < x1; x++) {
-            for (int y = y1 - 1; y >= y0; y--) {
-                for (int z = 1; z < tiles[0][0].length; z++) {
-                    Tile tile = tiles[x][y][z];
-
-                    if (tile != null) {
-                        tile.render(batch);
-                    }
-                }
-            }
-        }
+        tiles.render(batch, x0, x1, y0, y1, 1, tiles.getDepth());
 
         batch.draw(Game.SPRITE_SHEETS.load("GuiLayer").sheet[0][0], camPosX - Game.WIDTH * .5f, camPosY + Game.HEIGHT * .5f - 8, Game.WIDTH, 8);
-    }
-
-    public Tile tileAt(Tile[][][] tiles, int x, int y, int z) {
-        return x >= 0 && x < tiles.length && y >= 0 && y < tiles[0].length && z >= 0 && z < tiles[0][0].length ? tiles[x][y][z] : null;
-    }
-
-    public Tile tileAt(int x, int y, int z) {
-        return tileAt(tiles, x, y, z);
-    }
-
-    public void placeTile(Tile tile, int x, int y, int z) {
-        if (x >= 0 && x < tiles.length && y >= 0 && y < tiles[0].length && z >= 0 && z < tiles[0].length) {
-            tile.x = x;
-            tile.y = y;
-            tile.z = z;
-            tiles[x][y][z] = tile;
-        }
-    }
-
-    public void placeTile(TileType type, int x, int y, int z) {
-        placeTile(new Tile(type), x, y, z);
     }
 
     public void positionCam() {
@@ -194,40 +133,6 @@ public abstract class Map implements Serializable {
         return camX != toCamX || camY != toCamY;
     }
 
-    public boolean isFree(Tile[][][] tiles, int x, int y, int z, int r) {
-        for (int xx = -r; xx <= r; xx++) {
-            for (int yy = -r; yy <= r; yy++) {
-                Tile t = tileAt(x + xx, y + yy, z);
-
-                if (t != null && t.type.solid) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
-    public boolean isFree(int x, int y, int z, int r) {
-        return isFree(tiles, x, y, z, r);
-    }
-
-    public int countSolid(int x, int y, int z, int r) {
-        int n = 0;
-
-        for (int xx = -r; xx <= r; xx++) {
-            for (int yy = -r; yy <= r; yy++) {
-                Tile t = tileAt(x + xx, y + yy, z);
-
-                if (t != null && t.type.solid) {
-                    n++;
-                }
-            }
-        }
-
-        return n;
-    }
-
     public void add(Entity e) {
         invisibleEntities.add(e);
         e.onAdded(this);
@@ -235,26 +140,6 @@ public abstract class Map implements Serializable {
 
     public boolean isVisible(Entity e) {
         return e.x >= x0 * 8 && e.x < x1 * 8 && e.y >= y0 * 8 && e.y < y1 * 8;
-    }
-
-    public Tile[][][] copyTiles() {
-        Tile[][][] tiles = new Tile[this.tiles.length][this.tiles[0].length][this.tiles[0][0].length];
-
-        for (int x = 0; x < tiles.length; x++) {
-            for (int y = 0; y < tiles[0].length; y++) {
-                System.arraycopy(this.tiles[x][y], 0, tiles[x][y], 0, tiles[0][0].length);
-            }
-        }
-
-        return tiles;
-    }
-
-    public void erase(int x, int y) {
-        if (x >= 0 && x < tiles.length && y >= 0 && y < tiles[0].length) {
-            for (int z = 0; z < tiles[0][0].length; z++) {
-                tiles[x][y][z] = null;
-            }
-        }
     }
 
     public abstract void generate();

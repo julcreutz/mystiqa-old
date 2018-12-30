@@ -15,7 +15,7 @@ public class SingleTile extends Structure {
     public void generate(Random rand, Map map, int x, int y, int z) {
         super.generate(rand, map, x, y, z);
 
-        map.placeTile(tile, x, y, z);
+        map.tiles.placeTile(tile, x, y, z);
     }
 
     @Override

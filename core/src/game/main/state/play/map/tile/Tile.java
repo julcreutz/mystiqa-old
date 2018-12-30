@@ -104,7 +104,7 @@ public class Tile {
     }
 
     public boolean connectsTo(Map map, int x, int y, int z) {
-        Tile tile = map.tileAt(x, y, z);
+        Tile tile = map.tiles.tileAt(x, y, z);
         return tile != null && type.connectsTo(tile.type);
     }
 }

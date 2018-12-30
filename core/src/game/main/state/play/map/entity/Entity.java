@@ -138,9 +138,9 @@ public class Entity implements Serializable {
 
         hitbox.position(this, velX * Game.getDelta(), 0);
 
-        for (int x = 0; x < map.solidTiles.length; x++) {
-            for (int y = 0; y < map.solidTiles[0].length; y++) {
-                Rectangle solidTile = map.solidTiles[x][y];
+        for (int x = 0; x < map.tiles.getWidth(); x++) {
+            for (int y = 0; y < map.tiles.getHeight(); y++) {
+                Rectangle solidTile = map.tiles.solidTiles[x][y];
 
                 if (solidTile != null && hitbox.overlaps(solidTile)) {
                     if (velX > 0) {
@@ -158,9 +158,9 @@ public class Entity implements Serializable {
 
         hitbox.position(this, 0, velY * Game.getDelta());
 
-        for (int x = 0; x < map.solidTiles.length; x++) {
-            for (int y = 0; y < map.solidTiles[0].length; y++) {
-                Rectangle solidTile = map.solidTiles[x][y];
+        for (int x = 0; x < map.tiles.getWidth(); x++) {
+            for (int y = 0; y < map.tiles.getHeight(); y++) {
+                Rectangle solidTile = map.tiles.solidTiles[x][y];
 
                 if (solidTile != null && hitbox.overlaps(solidTile)) {
                     if (velY > 0) {
@@ -265,7 +265,7 @@ public class Entity implements Serializable {
     }
 
     public Tile tileAt(Map map) {
-        return map.tileAt(MathUtils.floor((hitbox.getCenterX()) / 8f), MathUtils.floor(hitbox.getY() / 8f), 0);
+        return map.tiles.tileAt(MathUtils.floor((hitbox.getCenterX()) / 8f), MathUtils.floor(hitbox.getY() / 8f), 0);
     }
 
     @Override

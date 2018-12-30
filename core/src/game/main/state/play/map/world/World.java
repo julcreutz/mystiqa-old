@@ -231,7 +231,7 @@ public class World extends Map {
             rivers.add(river);
         }
 
-        tiles = new Tile[WIDTH * 16][HEIGHT * 8][8];
+        tiles.initSize(WIDTH * 16, HEIGHT * 8, 8);
 
         for (Room r : rooms) {
             int x0 = r.x0();
@@ -244,7 +244,7 @@ public class World extends Map {
 
             for (int x = x0; x < x1; x++) {
                 for (int y = y0; y < y1; y++) {
-                    placeTile(b.ground, x, y, 0);
+                    tiles.placeTile(b.ground, x, y, 0);
 
                     if (b.wall != null) {
                         if ((x == x0 || x == x1 - 1 || y == y0 || y == y1 - 1)) {
@@ -305,14 +305,14 @@ public class World extends Map {
                     Connection connection = getConnection(r0, r1);
 
                     for (Point p : connection.points) {
-                        Tile t = tileAt(p.x, p.y, 0);
+                        Tile t = tiles.tileAt(p.x, p.y, 0);
 
                         Biome b = biomes[p.x / 16][p.y / 8];
                         Connector c = b.getConnector(connection);
 
                         if (t != null && b.wall != null && t.type == b.wall.getTile()) {
-                            erase(p.x, p.y);
-                            placeTile(c.tile, p.x, p.y, 0);
+                            tiles.erase(p.x, p.y);
+                            tiles.placeTile(c.tile, p.x, p.y, 0);
                         }
                     }
 
@@ -338,11 +338,11 @@ public class World extends Map {
 
                     for (int xx = -river.thickness; xx <= river.thickness - 1; xx++) {
                         for (int yy = -1; yy <= 0; yy++) {
-                            Tile t = tileAt(x + xx, y + yy, 0);
+                            Tile t = tiles.tileAt(x + xx, y + yy, 0);
 
                             if (t != null && t.type != b.river) {
-                                erase(x + xx, y + yy);
-                                placeTile(b.river, x + xx, y + yy, 0);
+                                tiles.erase(x + xx, y + yy);
+                                tiles.placeTile(b.river, x + xx, y + yy, 0);
                             }
                         }
                     }
@@ -355,23 +355,21 @@ public class World extends Map {
                 Biome b = biomes[r1.x / 2][r1.y / 2];
 
                 for (Point p : getConnection(r0, r1).points) {
-                    Tile t = tileAt(p.x, p.y, 0);
+                    Tile t = tiles.tileAt(p.x, p.y, 0);
 
                     if (t != null && t.type == b.river) {
-                        placeTile(b.riverBridge, p.x, p.y, 0);
+                        tiles.placeTile(b.riverBridge, p.x, p.y, 0);
                     }
                 }
             }
         }
 
-        solidTiles = new Rectangle[tiles.length][tiles[0].length];
-
         entities = new Array<Entity>();
         invisibleEntities = new Array<Entity>();
 
-        for (int x = 0; x < tiles.length; x++) {
-            for (int y = 0; y < tiles[0].length; y++) {
-                if (isFree(x, y, 0, 1) && rand.nextFloat() < .1f) {
+        for (int x = 0; x < tiles.getWidth(); x++) {
+            for (int y = 0; y < tiles.getHeight(); y++) {
+                if (tiles.isFree(x, y, 0, 1) && rand.nextFloat() < .1f) {
                     Slime s = (Slime) Game.ENTITIES.load("GreenSlime");
                     s.x = x * 8;
                     s.y = y * 8;
@@ -503,7 +501,7 @@ public class World extends Map {
         c.wayThickness = b.wayThickness[rand.nextInt(b.wayThickness.length)];
 
         if (diffX != 0) {
-            int[] xx = new int[] {smaller.x * 8 + smaller.w * 4, smaller.x * 8 + smaller.w * 4 + smaller.w * diffX * 8};
+            int[] xx = new int[] {smaller.x * 8 + smaller.w * 4, smaller.x * 8 + smaller.w * 4 + larger.w * diffX * 8};
 
             int x0 = Math.min(xx[0], xx[1]);
             int x1 = Math.max(xx[0], xx[1]);
@@ -517,7 +515,7 @@ public class World extends Map {
                 }
             }
         } else if (diffY != 0) {
-            int[] yy = new int[] {smaller.y * 4 + smaller.h * 2, smaller.y * 4 + smaller.h * 2 + smaller.h * diffY * 4};
+            int[] yy = new int[] {smaller.y * 4 + smaller.h * 2, smaller.y * 4 + smaller.h * 2 + larger.h * diffY * 4};
 
             int y0 = Math.min(yy[0], yy[1]);
             int y1 = Math.max(yy[0], yy[1]);
