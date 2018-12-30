@@ -9,6 +9,9 @@ import com.badlogic.gdx.math.Rectangle;
  * @see Rectangle
  */
 public class Hitbox {
+    /** Holds reference of entity this belongs to. */
+    public Entity e;
+
     /** The rectangle itself. */
     public Rectangle rect;
 
@@ -21,28 +24,24 @@ public class Hitbox {
     /** Constructs the hitbox initializing it's rectangle to prevent
      *  potential {@link java.lang.NullPointerException}.
      */
-    public Hitbox() {
+    public Hitbox(Entity e) {
+        this.e = e;
         rect = new Rectangle();
     }
 
     /**
      * Positions rectangle relative to specified entity isUsing it's offsets and two additional offset values.
      *
-     * @param e Entity to position relative to
      * @param offsetX additional x offset
      * @param offsetY additional y offset
      */
-    public void position(Entity e, float offsetX, float offsetY) {
+    public void position(float offsetX, float offsetY) {
         rect.setPosition(e.x + this.offsetX + offsetX, e.y + this.offsetY + offsetY);
     }
 
-    /**
-     * Positions rectangle relative to specified entity isUsing it's offsets.
-     *
-     * @param e Entity to position relative to
-     */
-    public void position(Entity e) {
-        position(e, 0, 0);
+    /** Positions rectangle relative to specified entity isUsing it's offsets. */
+    public void position() {
+        position(0, 0);
     }
 
     /**

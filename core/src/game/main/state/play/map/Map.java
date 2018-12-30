@@ -39,13 +39,12 @@ public abstract class Map implements Serializable {
 
     public float camTime;
 
-    public Map parent;
-    public Array<Map> children;
-
     public Array<Teleport> teleports;
 
     public Map() {
-        children = new Array<Map>();
+        tiles = new TileManager(this);
+        entities = new EntityManager(this);
+
         teleports = new Array<Teleport>();
     }
 
@@ -81,24 +80,43 @@ public abstract class Map implements Serializable {
         tiles.update(x0, x1, y0, y1);
         entities.update();
 
-        for (Teleport t : teleports) {
-            if (t.rect.overlaps(player.hitbox.rect)) {
-                if (!t.destination.generated) {
-                    t.destination.generate();
+        //player.hitbox.position(player);
+
+        if (player.onTeleport) {
+            boolean onTeleport = false;
+
+            for (Teleport t : teleports) {
+                if (t.rect.overlaps(player.hitbox.rect)) {
+                    onTeleport = true;
+                    break;
                 }
+            }
 
-                play.nextMap = t.destination;
+            if (!onTeleport) {
+                player.onTeleport = false;
+            }
+        } else {
+            for (Teleport t : teleports) {
+                if (t.rect.overlaps(player.hitbox.rect)) {
+                    player.onTeleport = true;
 
-                player.x = t.destinationX;
-                player.y = t.destinationY;
+                    if (!t.destination.generated) {
+                        t.destination.generate();
+                    }
 
-                play.nextMap.entities.addEntity(player);
-                play.nextMap.player = player;
+                    play.nextMap = t.destination;
 
-                entities.entities.removeValue(player, true);
-                player = null;
+                    player.x = t.destinationX;
+                    player.y = t.destinationY;
 
-                break;
+                    play.nextMap.entities.addEntity(player);
+                    play.nextMap.player = player;
+
+                    entities.entities.removeValue(player, true);
+                    player = null;
+
+                    break;
+                }
             }
         }
     }
@@ -116,10 +134,14 @@ public abstract class Map implements Serializable {
 
         tiles.render(batch, x0, x1, y0, y1, 1, tiles.getDepth());
 
+        for (Teleport t : teleports) {
+            batch.draw(Game.SPRITE_SHEETS.load("GuiLayer").sheet[0][0], t.rect.x, t.rect.y, t.rect.width, t.rect.height);
+        }
+
         batch.draw(Game.SPRITE_SHEETS.load("GuiLayer").sheet[0][0], camPosX - Game.WIDTH * .5f, camPosY + Game.HEIGHT * .5f - 8, Game.WIDTH, 8);
     }
 
-    public void positionCam() {
+    public void positionCamera() {
         camX = toCamX = camPosX = Game.WIDTH * .5f + MathUtils.floor((player.x + 4) / Game.WIDTH) * Game.WIDTH;
         camY = toCamY = camPosY = Game.HEIGHT * .5f + MathUtils.floor((player.y + 4) / (Game.HEIGHT - 8)) * (Game.HEIGHT - 8);
     }
@@ -138,6 +160,11 @@ public abstract class Map implements Serializable {
 
     public void generate() {
         generated = true;
+    }
+
+    public void connect(Map destination, float fromX, float fromY, float toX, float toY) {
+        teleports.add(new Teleport(destination, toX, toY, fromX, fromY, 8, 8));
+        destination.teleports.add(new Teleport(this, fromX, fromY, toX, toY, 8, 8));
     }
 
     public abstract void placePlayer();

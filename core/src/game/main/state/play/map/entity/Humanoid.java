@@ -46,8 +46,8 @@ public class Humanoid extends Entity {
 
     public Humanoid() {
         hitbox.set(4, 2, 2, 1);
-        attackHitbox = new Hitbox();
-        blockHitbox = new Hitbox();
+        attackHitbox = new Hitbox(this);
+        blockHitbox = new Hitbox(this);
     }
 
     @Override

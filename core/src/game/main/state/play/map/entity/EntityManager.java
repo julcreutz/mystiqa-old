@@ -58,4 +58,9 @@ public class EntityManager {
         invisibleEntities.add(e);
         e.onAdded(map);
     }
+
+    public void clear() {
+        entities.clear();
+        invisibleEntities.clear();
+    }
 }

@@ -9,10 +9,7 @@ import game.main.item.equipment.armor.BodyArmor;
 import game.main.item.equipment.armor.FeetArmor;
 import game.main.item.equipment.hand.main.MainHand;
 import game.main.item.equipment.hand.off.OffHand;
-import game.main.state.play.map.Teleport;
-import game.main.state.play.map.entity.EntityManager;
 import game.main.state.play.map.Map;
-import game.main.state.play.map.tile.TileManager;
 import game.main.state.play.map.entity.Humanoid;
 import game.main.state.play.map.entity.Slime;
 import game.main.state.play.map.tile.Tile;
@@ -234,7 +231,6 @@ public class World extends Map {
             rivers.add(river);
         }
 
-        tiles = new TileManager(this);
         tiles.initSize(WIDTH * 16, HEIGHT * 8, 8);
 
         for (Room r : rooms) {
@@ -374,7 +370,13 @@ public class World extends Map {
             }
         }
 
-        entities = new EntityManager(this);
+        for (Room r : rooms) {
+            if (r.w == 2 && r.h == 2) {
+                Game.STRUCTURES.load("HouseExterior").generate(rand, this, r.x0() + 3, r.y0() + 3, 0);
+            }
+        }
+
+        entities.clear();
 
         for (int x = 0; x < tiles.getWidth(); x++) {
             for (int y = 0; y < tiles.getHeight(); y++) {
@@ -398,22 +400,10 @@ public class World extends Map {
         h.bodyArmor = (BodyArmor) Game.ITEMS.load("BodyArmor");
 
         h.x = biomes.length * 64 + 64;
-        h.y = (biomes[0].length - 1) * 64 - 16;
+        h.y = (biomes[0].length - 5) * 64 - 16;
 
         player = h;
         entities.addEntity(h);
-
-        Teleport t = new Teleport(player.x + 32, player.y, 8, 8);
-        t.destination = Game.MAPS.load("Overworld");
-        t.destinationX = player.x + 32;
-        t.destinationY = player.y;
-        teleports.add(t);
-
-        Teleport t2 = new Teleport(player.x, player.y, 8, 8);
-        t2.destination = this;
-        t2.destinationX = player.x;
-        t2.destinationY = player.y;
-        t.destination.teleports.add(t2);
     }
 
     public Room roomAt(int x, int y) {

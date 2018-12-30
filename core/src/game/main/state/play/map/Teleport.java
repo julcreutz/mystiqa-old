@@ -10,7 +10,12 @@ public class Teleport {
     public float destinationX;
     public float destinationY;
 
-    public Teleport(float x, float y, float width, float height) {
+    public Teleport(Map destination, float destinationX, float destinationY, float x, float y, float width, float height) {
+        this.destination = destination;
+
+        this.destinationX = destinationX;
+        this.destinationY = destinationY;
+
         rect = new Rectangle(x, y, width, height);
     }
 }

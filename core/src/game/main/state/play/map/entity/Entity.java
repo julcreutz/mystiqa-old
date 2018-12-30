@@ -37,8 +37,10 @@ public class Entity implements Serializable {
 
     public Alignment alignment;
 
+    public boolean onTeleport;
+
     public Entity() {
-        hitbox = new Hitbox();
+        hitbox = new Hitbox(this);
         statManager = new StatManager();
         hit = new Array<Entity>();
     }
@@ -48,7 +50,7 @@ public class Entity implements Serializable {
         Hitbox blockHitbox = getBlockHitbox();
 
         if (attackHitbox != null) {
-            getAttackHitbox().position(this);
+            getAttackHitbox().position();
 
             if (isAttacking() && isOnGround()) {
                 for (Entity e : map.entities.entities) {
@@ -95,7 +97,7 @@ public class Entity implements Serializable {
         }
 
         if (blockHitbox != null) {
-            blockHitbox.position(this);
+            blockHitbox.position();
         }
 
         if (isHit()) {
@@ -136,7 +138,7 @@ public class Entity implements Serializable {
         velX *= moveSpeed;
         velY *= moveSpeed;
 
-        hitbox.position(this, velX * Game.getDelta(), 0);
+        hitbox.position(velX * Game.getDelta(), 0);
 
         for (int x = 0; x < map.tiles.getWidth(); x++) {
             for (int y = 0; y < map.tiles.getHeight(); y++) {
@@ -156,7 +158,7 @@ public class Entity implements Serializable {
 
         x += velX * Game.getDelta();
 
-        hitbox.position(this, 0, velY * Game.getDelta());
+        hitbox.position(0, velY * Game.getDelta());
 
         for (int x = 0; x < map.tiles.getWidth(); x++) {
             for (int y = 0; y < map.tiles.getHeight(); y++) {
@@ -189,6 +191,7 @@ public class Entity implements Serializable {
     }
 
     public void onAdded(Map map) {
+        hitbox.position();
         health = statManager.count(StatType.HEALTH);
     }
 
@@ -265,7 +268,14 @@ public class Entity implements Serializable {
     }
 
     public Tile tileAt(Map map) {
-        return map.tiles.tileAt(MathUtils.floor((hitbox.getCenterX()) / 8f), MathUtils.floor(hitbox.getY() / 8f), 0);
+        int x = MathUtils.floor((hitbox.getCenterX()) / 8f);
+        int y = MathUtils.floor(hitbox.getY() / 8f);
+
+        if (map.tiles.inBounds(x, y)) {
+            return map.tiles.tileAt(x, y, 0);
+        }
+
+        return null;
     }
 
     @Override

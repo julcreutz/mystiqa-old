@@ -31,8 +31,6 @@ public class Tree extends Structure {
 
     @Override
     public void deserialize(JsonValue json) {
-        super.deserialize(json);
-
         if (json.has("bottomTile")) {
             bottomTile = Game.TILES.load(json.getString("bottomTile"));
         }

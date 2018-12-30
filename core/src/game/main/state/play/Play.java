@@ -23,15 +23,15 @@ public class Play extends GameState {
 
         if (nextMap != null) {
             map = nextMap;
-            map.positionCam();
+            map.positionCamera();
             nextMap = null;
         }
+
+        map.update(this);
 
         cam.position.x = map.camPosX;
         cam.position.y = map.camPosY;
         cam.update();
-
-        map.update(this);
     }
 
     @Override

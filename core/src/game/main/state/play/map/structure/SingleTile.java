@@ -13,15 +13,11 @@ public class SingleTile extends Structure {
 
     @Override
     public void generate(Random rand, Map map, int x, int y, int z) {
-        super.generate(rand, map, x, y, z);
-
         map.tiles.placeTile(tile, x, y, z);
     }
 
     @Override
     public void deserialize(JsonValue json) {
-        super.deserialize(json);
-
         if (json.has("tile")) {
             tile = Game.TILES.load(json.getString("tile"));
         }

@@ -12,5 +12,19 @@
     "SingleTile": {
       "tile": "Stone"
     }
+  },
+  "HouseExterior": {
+    "HouseExterior": {
+      "wall": "Stone",
+      "width": {
+        "min": 3,
+        "max": 6
+      },
+      "height": {
+        "min": 2,
+        "max": 3
+      },
+      "interior": "HouseInterior"
+    }
   }
 }

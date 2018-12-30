@@ -9,14 +9,12 @@ import game.main.state.play.map.tile.TileType;
 import java.util.Random;
 
 public abstract class Structure implements Serializable {
-    public void generate(Random rand, Map map, int x, int y, int z) {
-
+    public TileType getTile() {
+        return null;
     }
+
+    public abstract void generate(Random rand, Map map, int x, int y, int z);
 
     @Override
-    public void deserialize(JsonValue json) {
-
-    }
-
-    public abstract TileType getTile();
+    public abstract void deserialize(JsonValue json);
 }
