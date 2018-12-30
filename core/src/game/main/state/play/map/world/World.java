@@ -13,8 +13,7 @@ import game.main.state.play.map.Map;
 import game.main.state.play.map.entity.Humanoid;
 import game.main.state.play.map.entity.Slime;
 import game.main.state.play.map.tile.Tile;
-import game.noise.Noise;
-import game.noise.NoiseParameters;
+import game.Noise;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -24,7 +23,7 @@ public class World extends Map {
     public static final int WIDTH = 16;
     public static final int HEIGHT = 8;
 
-    public static final NoiseParameters ELEVATION = new NoiseParameters(3, .25f, 1);
+    public static final Noise.Parameters ELEVATION = new Noise.Parameters(3, .25f, 1);
 
     public int width;
     public int height;

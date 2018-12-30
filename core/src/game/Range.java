@@ -7,10 +7,10 @@ import java.util.Random;
 
 /** Class enclosing interval with two inclusive boundaries. */
 public class Range implements Serializable {
-    /** Lower bound. */
+    /** Lower inclusive bound. */
     public int min;
 
-    /** Higher bound. */
+    /** Higher inclusive bound. */
     public int max;
 
     /** Constructs range with given boundaries. */
@@ -25,7 +25,8 @@ public class Range implements Serializable {
     }
 
     /**
-     * Checks whether given value is in range of bounds.
+     * Checks whether given value is in range of bounds. The boundaries are inclusive,
+     * meaning the method will return true if given value equals {@link #min} or {@link #max}.
      *
      * @param val value to be checked
      * @return whether value is within bounds

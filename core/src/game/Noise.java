@@ -1,4 +1,4 @@
-package game.noise;
+package game;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -6,6 +6,18 @@ import com.badlogic.gdx.math.Vector2;
 import java.util.Random;
 
 public class Noise {
+    public static class Parameters {
+        public int octaves;
+        public float frequency;
+        public float persistence;
+
+        public Parameters(int octaves, float frequency, float persistence) {
+            this.octaves = octaves;
+            this.frequency = frequency;
+            this.persistence = persistence;
+        }
+    }
+
     private Vector2[][] gradients;
 
     public Noise(Random rand) {
@@ -25,7 +37,7 @@ public class Noise {
         }
     }
 
-    public float noiseAt(float x, float y, NoiseParameters params) {
+    public float noiseAt(float x, float y, Parameters params) {
         float val = 0;
         float total = 0;
 
