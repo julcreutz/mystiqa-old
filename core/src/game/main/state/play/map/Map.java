@@ -2,20 +2,21 @@ package game.main.state.play.map;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import game.loader.Serializable;
 import game.main.Game;
 import game.main.state.play.Play;
 import game.main.state.play.map.entity.Entity;
-import game.main.state.play.map.tile.Tile;
-import game.main.state.play.map.tile.TileType;
+import game.main.state.play.map.entity.EntityManager;
+import game.main.state.play.map.tile.TileManager;
 
 public abstract class Map implements Serializable {
     public static final float CAM_SPEED = 1.5f;
 
     public static final int X_VIEW = 10;
     public static final int Y_VIEW = 8;
+
+    public boolean generated;
 
     public TileManager tiles;
 
@@ -41,8 +42,11 @@ public abstract class Map implements Serializable {
     public Map parent;
     public Array<Map> children;
 
+    public Array<Teleport> teleports;
+
     public Map() {
         children = new Array<Map>();
+        teleports = new Array<Teleport>();
     }
 
     public void update(Play play) {
@@ -76,6 +80,27 @@ public abstract class Map implements Serializable {
 
         tiles.update(x0, x1, y0, y1);
         entities.update();
+
+        for (Teleport t : teleports) {
+            if (t.rect.overlaps(player.hitbox.rect)) {
+                if (!t.destination.generated) {
+                    t.destination.generate();
+                }
+
+                play.nextMap = t.destination;
+
+                player.x = t.destinationX;
+                player.y = t.destinationY;
+
+                play.nextMap.entities.addEntity(player);
+                play.nextMap.player = player;
+
+                entities.entities.removeValue(player, true);
+                player = null;
+
+                break;
+            }
+        }
     }
 
     public void render(SpriteBatch batch) {
@@ -111,5 +136,9 @@ public abstract class Map implements Serializable {
         return isVisible(e.x, e.y);
     }
 
-    public abstract void generate();
+    public void generate() {
+        generated = true;
+    }
+
+    public abstract void placePlayer();
 }

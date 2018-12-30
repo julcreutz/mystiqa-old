@@ -1,7 +1,8 @@
-package game.main.state.play.map;
+package game.main.state.play.map.tile;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import game.main.state.play.map.Map;
 import game.main.state.play.map.tile.Tile;
 import game.main.state.play.map.tile.TileType;
 

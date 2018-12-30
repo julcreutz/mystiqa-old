@@ -1,7 +1,6 @@
 package game.main.state.play.map.world;
 
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import game.Range;
@@ -10,10 +9,10 @@ import game.main.item.equipment.armor.BodyArmor;
 import game.main.item.equipment.armor.FeetArmor;
 import game.main.item.equipment.hand.main.MainHand;
 import game.main.item.equipment.hand.off.OffHand;
-import game.main.state.play.map.EntityManager;
+import game.main.state.play.map.Teleport;
+import game.main.state.play.map.entity.EntityManager;
 import game.main.state.play.map.Map;
-import game.main.state.play.map.TileManager;
-import game.main.state.play.map.entity.Entity;
+import game.main.state.play.map.tile.TileManager;
 import game.main.state.play.map.entity.Humanoid;
 import game.main.state.play.map.entity.Slime;
 import game.main.state.play.map.tile.Tile;
@@ -49,6 +48,8 @@ public class World extends Map {
 
     @Override
     public void generate() {
+        super.generate();
+
         rand = new Random(MathUtils.random(Long.MAX_VALUE));
 
         noise = new Noise(rand);
@@ -385,7 +386,10 @@ public class World extends Map {
                 }
             }
         }
+    }
 
+    @Override
+    public void placePlayer() {
         Humanoid h = (Humanoid) Game.ENTITIES.load("Human");
 
         h.mainHand = (MainHand) Game.ITEMS.load("Axe");
@@ -394,12 +398,22 @@ public class World extends Map {
         h.bodyArmor = (BodyArmor) Game.ITEMS.load("BodyArmor");
 
         h.x = biomes.length * 64 + 64;
-        h.y = (biomes[0].length - 1) * 64 - 32;
+        h.y = (biomes[0].length - 1) * 64 - 16;
 
         player = h;
         entities.addEntity(h);
 
-        positionCam();
+        Teleport t = new Teleport(player.x + 32, player.y, 8, 8);
+        t.destination = Game.MAPS.load("Overworld");
+        t.destinationX = player.x + 32;
+        t.destinationY = player.y;
+        teleports.add(t);
+
+        Teleport t2 = new Teleport(player.x, player.y, 8, 8);
+        t2.destination = this;
+        t2.destinationX = player.x;
+        t2.destinationY = player.y;
+        t.destination.teleports.add(t2);
     }
 
     public Room roomAt(int x, int y) {

@@ -1,7 +1,8 @@
-package game.main.state.play.map;
+package game.main.state.play.map.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
+import game.main.state.play.map.Map;
 import game.main.state.play.map.entity.Entity;
 
 import java.util.Iterator;
