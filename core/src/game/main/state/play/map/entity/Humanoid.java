@@ -1,4 +1,4 @@
-package game.main.state.play.entity;
+package game.main.state.play.map.entity;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -15,7 +15,8 @@ import game.main.item.equipment.armor.FeetArmor;
 import game.main.item.equipment.armor.HeadArmor;
 import game.main.stat.Stat;
 import game.main.state.play.Play;
-import game.main.state.play.tile.Tile;
+import game.main.state.play.map.Map;
+import game.main.state.play.map.tile.Tile;
 
 public class Humanoid extends Entity {
     public SpriteSheet feet;
@@ -49,7 +50,7 @@ public class Humanoid extends Entity {
     }
 
     @Override
-    public void update(Play play) {
+    public void update(Map map) {
         Vector2 dir = new Vector2();
 
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
@@ -93,7 +94,7 @@ public class Humanoid extends Entity {
                 }
             }
 
-            Tile t = tileAt(play);
+            Tile t = tileAt(map);
 
             if (t != null && t.type.forcedDirection != -1) {
                 this.dir = t.type.forcedDirection;
@@ -128,7 +129,7 @@ public class Humanoid extends Entity {
             lastUsed = 0;
         }
 
-        super.update(play);
+        super.update(map);
     }
 
     @Override
@@ -387,8 +388,8 @@ public class Humanoid extends Entity {
     }
 
     @Override
-    public void onMove(Play play) {
-        super.onMove(play);
+    public void onMove(Map map) {
+        super.onMove(map);
         time += Game.getDelta() * (new Vector2(velX, velY).len() / 24f);
     }
 

@@ -1,4 +1,4 @@
-package game.main.state.play.tile;
+package game.main.state.play.map.tile;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -55,21 +55,15 @@ public class TileType implements Serializable {
             }
         }
 
-        if (json.has("paletteSpeed")) {
-            paletteSpeed = json.getFloat("paletteSpeed");
-        }
+        paletteSpeed = json.getFloat("paletteSpeed", 0);
 
-        if (json.has("autoTile")) {
-            autoTile = json.getBoolean("autoTile");
-        }
+        autoTile = json.getBoolean("autoTile", false);
 
         if (json.has("connect")) {
             connect = json.get("connect").asStringArray();
         }
 
-        if (json.has("solid")) {
-            solid = json.getBoolean("solid");
-        }
+        solid = json.getBoolean("solid", false);
 
         moveSpeed = json.getFloat("moveSpeed", 1);
 

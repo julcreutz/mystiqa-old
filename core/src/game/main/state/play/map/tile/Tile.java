@@ -1,10 +1,10 @@
-package game.main.state.play.tile;
+package game.main.state.play.map.tile;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import game.loader.palette.PaletteShaderLoader;
 import game.main.Game;
 import game.main.state.play.Play;
+import game.main.state.play.map.Map;
 
 public class Tile {
     public TileType type;
@@ -21,23 +21,23 @@ public class Tile {
         this.type = type;
     }
 
-    public void update(Play site) {
+    public void update(Map map) {
         if (type.autoTile) {
             int n = 0;
 
-            if (connect(site, x + 1, y, z)) {
+            if (connectsTo(map, x + 1, y, z)) {
                 n++;
             }
 
-            if (connect(site, x, y + 1, z)) {
+            if (connectsTo(map, x, y + 1, z)) {
                 n += 2;
             }
 
-            if (connect(site, x - 1, y, z)) {
+            if (connectsTo(map, x - 1, y, z)) {
                 n += 4;
             }
 
-            if (connect(site, x, y - 1, z)) {
+            if (connectsTo(map, x, y - 1, z)) {
                 n += 8;
             }
 
@@ -103,8 +103,8 @@ public class Tile {
         batch.setShader(null);
     }
 
-    public boolean connect(Play site, int x, int y, int z) {
-        Tile tile = site.tileAt(x, y, z);
+    public boolean connectsTo(Map map, int x, int y, int z) {
+        Tile tile = map.tileAt(x, y, z);
         return tile != null && type.connectsTo(tile.type);
     }
 }

@@ -1,9 +1,10 @@
-package game.main.state.play.structure;
+package game.main.state.play.map.structure;
 
 import com.badlogic.gdx.utils.JsonValue;
 import game.main.Game;
 import game.main.state.play.Play;
-import game.main.state.play.tile.TileType;
+import game.main.state.play.map.Map;
+import game.main.state.play.map.tile.TileType;
 
 import java.util.Random;
 
@@ -11,10 +12,10 @@ public class SingleTile extends Structure {
     public TileType tile;
 
     @Override
-    public void generate(Random rand, Play play, int x, int y, int z) {
-        super.generate(rand, play, x, y, z);
+    public void generate(Random rand, Map map, int x, int y, int z) {
+        super.generate(rand, map, x, y, z);
 
-        play.placeTile(tile, x, y, z);
+        map.placeTile(tile, x, y, z);
     }
 
     @Override

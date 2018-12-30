@@ -4,8 +4,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import game.Range;
 import game.loader.Serializable;
 import game.main.Game;
-import game.main.gen.WorldGenerator;
-import game.main.state.play.tile.TileType;
+import game.main.state.play.map.tile.TileType;
 
 public class Connector implements Serializable {
     public TileType tile;

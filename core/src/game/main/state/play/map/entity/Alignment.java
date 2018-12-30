@@ -1,4 +1,4 @@
-package game.main.state.play.entity;
+package game.main.state.play.map.entity;
 
 public enum Alignment {
     GOOD, EVIL;

@@ -1,4 +1,4 @@
-package game.main.state.play.entity;
+package game.main.state.play.map.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -10,9 +10,9 @@ import com.badlogic.gdx.utils.JsonValue;
 import game.loader.Serializable;
 import game.main.Game;
 import game.main.stat.Stat;
-import game.main.state.play.Play;
 import game.main.stat.StatManager;
-import game.main.state.play.tile.Tile;
+import game.main.state.play.map.Map;
+import game.main.state.play.map.tile.Tile;
 
 public class Entity implements Serializable {
     public float x;
@@ -43,7 +43,7 @@ public class Entity implements Serializable {
         hit = new Array<Entity>();
     }
 
-    public void update(Play play) {
+    public void update(Map map) {
         Hitbox attackHitbox = getAttackHitbox();
         Hitbox blockHitbox = getBlockHitbox();
 
@@ -51,7 +51,7 @@ public class Entity implements Serializable {
             getAttackHitbox().position(this);
 
             if (isAttacking() && isOnGround()) {
-                for (Entity e : play.entities) {
+                for (Entity e : map.entities) {
                     if (e != this) {
                         if (!e.isHit() && e.isOnGround() && isHostile(e)) {
                             boolean contains = hit.contains(e, true);
@@ -76,7 +76,7 @@ public class Entity implements Serializable {
 
                                         e.health -= statManager.count(Stat.Type.PHYSICAL_DAMAGE);
 
-                                        e.onHit(play);
+                                        e.onHit(map);
 
                                         hit.add(e);
                                     }
@@ -110,13 +110,13 @@ public class Entity implements Serializable {
             }
         } else {
             if (isDead()) {
-                onDeath(play);
-                play.entities.removeValue(this, true);
+                onDeath(map);
+                map.entities.removeValue(this, true);
             }
         }
 
         if (isOnGround()) {
-            for (Entity e : play.entities) {
+            for (Entity e : map.entities) {
                 if (e != this && hitbox.overlaps(e) && e.isOnGround()) {
                     float a = new Vector2(e.x, e.y).sub(x, y).angle();
 
@@ -126,7 +126,7 @@ public class Entity implements Serializable {
             }
         }
 
-        Tile t = tileAt(play);
+        Tile t = tileAt(map);
         float moveSpeed = 1;
 
         if (t != null) {
@@ -138,9 +138,9 @@ public class Entity implements Serializable {
 
         hitbox.position(this, velX * Game.getDelta(), 0);
 
-        for (int x = 0; x < play.solidTiles.length; x++) {
-            for (int y = 0; y < play.solidTiles[0].length; y++) {
-                Rectangle solidTile = play.solidTiles[x][y];
+        for (int x = 0; x < map.solidTiles.length; x++) {
+            for (int y = 0; y < map.solidTiles[0].length; y++) {
+                Rectangle solidTile = map.solidTiles[x][y];
 
                 if (solidTile != null && hitbox.overlaps(solidTile)) {
                     if (velX > 0) {
@@ -158,9 +158,9 @@ public class Entity implements Serializable {
 
         hitbox.position(this, 0, velY * Game.getDelta());
 
-        for (int x = 0; x < play.solidTiles.length; x++) {
-            for (int y = 0; y < play.solidTiles[0].length; y++) {
-                Rectangle solidTile = play.solidTiles[x][y];
+        for (int x = 0; x < map.solidTiles.length; x++) {
+            for (int y = 0; y < map.solidTiles[0].length; y++) {
+                Rectangle solidTile = map.solidTiles[x][y];
 
                 if (solidTile != null && hitbox.overlaps(solidTile)) {
                     if (velY > 0) {
@@ -177,7 +177,7 @@ public class Entity implements Serializable {
         y += velY * Game.getDelta();
 
         if (velX != 0 || velY != 0) {
-            onMove(play);
+            onMove(map);
         }
 
         velX = 0;
@@ -188,19 +188,19 @@ public class Entity implements Serializable {
         batch.setShader(palette());
     }
 
-    public void onAdded(Play play) {
+    public void onAdded(Map map) {
         health = statManager.count(Stat.Type.HEALTH);
     }
 
-    public void onMove(Play play) {
+    public void onMove(Map map) {
 
     }
 
-    public void onHit(Play play) {
+    public void onHit(Map map) {
 
     }
 
-    public void onDeath(Play play) {
+    public void onDeath(Map map) {
 
     }
 
@@ -261,11 +261,11 @@ public class Entity implements Serializable {
     }
 
     public boolean isHostile(Entity e) {
-        return alignment != e.alignment;
+        return alignment.isHostile(e.alignment);
     }
 
-    public Tile tileAt(Play play) {
-        return play.tileAt(MathUtils.floor((hitbox.getCenterX()) / 8f), MathUtils.floor(hitbox.getY() / 8f), 0);
+    public Tile tileAt(Map map) {
+        return map.tileAt(MathUtils.floor((hitbox.getCenterX()) / 8f), MathUtils.floor(hitbox.getY() / 8f), 0);
     }
 
     @Override

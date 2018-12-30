@@ -1,4 +1,4 @@
-package game.main.state.play.entity;
+package game.main.state.play.map.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonValue;
 import game.main.Game;
 import game.main.state.play.Play;
+import game.main.state.play.map.Map;
 
 public class Slime extends Entity {
     public TextureRegion[][] sheet;
@@ -30,10 +31,10 @@ public class Slime extends Entity {
     }
 
     @Override
-    public void update(Play play) {
+    public void update(Map map) {
         switch (state) {
             case RANDOM_MOVEMENT:
-                if (new Vector2(play.player.x, play.player.y).sub(x, y).len() < 24) {
+                if (new Vector2(map.player.x, map.player.y).sub(x, y).len() < 24) {
                     state = State.FOLLOW_PLAYER;
                     break;
                 }
@@ -51,7 +52,7 @@ public class Slime extends Entity {
                 time -= Game.getDelta();
 
                 if (time < 0) {
-                    jump(new Vector2(play.player.x, play.player.y).sub(x, y).angle(), new Vector2(play.player.x, play.player.y).sub(x, y).len() * 2.5f, MathUtils.random(.5f, 1f));
+                    jump(new Vector2(map.player.x, map.player.y).sub(x, y).angle(), new Vector2(map.player.x, map.player.y).sub(x, y).len() * 2.5f, MathUtils.random(.5f, 1f));
                 }
 
                 break;
@@ -98,7 +99,7 @@ public class Slime extends Entity {
                 break;
         }
 
-        super.update(play);
+        super.update(map);
     }
 
     @Override

@@ -1,8 +1,8 @@
 package game.loader.instance;
 
-import game.main.state.play.structure.SingleTile;
-import game.main.state.play.structure.Structure;
-import game.main.state.play.structure.Tree;
+import game.main.state.play.map.structure.SingleTile;
+import game.main.state.play.map.structure.Structure;
+import game.main.state.play.map.structure.Tree;
 
 public class StructureLoader extends InstanceLoader<Structure> {
     @Override

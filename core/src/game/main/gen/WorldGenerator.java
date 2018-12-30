@@ -8,11 +8,11 @@ import game.main.item.equipment.armor.BodyArmor;
 import game.main.item.equipment.armor.FeetArmor;
 import game.main.item.equipment.hand.main.MainHand;
 import game.main.item.equipment.hand.off.OffHand;
-import game.main.state.play.Play;
-import game.main.state.play.entity.Entity;
-import game.main.state.play.entity.Slime;
-import game.main.state.play.entity.Humanoid;
-import game.main.state.play.tile.Tile;
+import game.main.state.play.map.Map;
+import game.main.state.play.map.entity.Entity;
+import game.main.state.play.map.entity.Slime;
+import game.main.state.play.map.entity.Humanoid;
+import game.main.state.play.map.tile.Tile;
 import game.noise.Noise;
 import game.noise.NoiseParameters;
 
@@ -26,7 +26,7 @@ public class WorldGenerator {
 
     public static final NoiseParameters ELEVATION = new NoiseParameters(3, .25f, 1);
 
-    public Play play;
+    public Map map;
 
     public Random rand;
 
@@ -38,8 +38,8 @@ public class WorldGenerator {
 
     public Array<River> rivers;
 
-    public WorldGenerator(Play play) {
-        this.play = play;
+    public WorldGenerator(Map map) {
+        this.map = map;
     }
 
     public void generate() {
@@ -227,7 +227,7 @@ public class WorldGenerator {
             rivers.add(river);
         }
 
-        play.tiles = new Tile[WIDTH * 16][HEIGHT * 8][8];
+        map.tiles = new Tile[WIDTH * 16][HEIGHT * 8][8];
 
         for (Room r : rooms) {
             int x0 = r.x0();
@@ -240,11 +240,11 @@ public class WorldGenerator {
 
             for (int x = x0; x < x1; x++) {
                 for (int y = y0; y < y1; y++) {
-                    play.placeTile(b.ground, x, y, 0);
+                    map.placeTile(b.ground, x, y, 0);
 
                     if (b.wall != null) {
                         if ((x == x0 || x == x1 - 1 || y == y0 || y == y1 - 1)) {
-                            b.wall.generate(rand, play, x, y, 0);
+                            b.wall.generate(rand, map, x, y, 0);
                         }
                     }
                 }
@@ -286,7 +286,7 @@ public class WorldGenerator {
                 for (int y = 0; y < layout.length; y++) {
                     for (int x = 0; x < layout[0].length; x++) {
                         if (layout[y][x] == '#') {
-                            b.wall.generate(rand, play, x0 + x, y1 - 1 - y, 0);
+                            b.wall.generate(rand, map, x0 + x, y1 - 1 - y, 0);
                         }
                     }
                 }
@@ -301,14 +301,14 @@ public class WorldGenerator {
                     Connection connection = getConnection(r0, r1);
 
                     for (Point p : connection.points) {
-                        Tile t = play.tileAt(p.x, p.y, 0);
+                        Tile t = map.tileAt(p.x, p.y, 0);
 
                         Biome b = biomes[p.x / 16][p.y / 8];
                         Connector c = b.getConnector(connection);
 
                         if (t != null && b.wall != null && t.type == b.wall.getTile()) {
-                            play.erase(p.x, p.y);
-                            play.placeTile(c.tile, p.x, p.y, 0);
+                            map.erase(p.x, p.y);
+                            map.placeTile(c.tile, p.x, p.y, 0);
                         }
                     }
 
@@ -334,11 +334,11 @@ public class WorldGenerator {
 
                     for (int xx = -river.thickness; xx <= river.thickness - 1; xx++) {
                         for (int yy = -1; yy <= 0; yy++) {
-                            Tile t = play.tileAt(x + xx, y + yy, 0);
+                            Tile t = map.tileAt(x + xx, y + yy, 0);
 
                             if (t != null && t.type != b.river) {
-                                play.erase(x + xx, y + yy);
-                                play.placeTile(b.river, x + xx, y + yy, 0);
+                                map.erase(x + xx, y + yy);
+                                map.placeTile(b.river, x + xx, y + yy, 0);
                             }
                         }
                     }
@@ -351,27 +351,27 @@ public class WorldGenerator {
                 Biome b = biomes[r1.x / 2][r1.y / 2];
 
                 for (Point p : getConnection(r0, r1).points) {
-                    Tile t = play.tileAt(p.x, p.y, 0);
+                    Tile t = map.tileAt(p.x, p.y, 0);
 
                     if (t != null && t.type == b.river) {
-                        play.placeTile(b.riverBridge, p.x, p.y, 0);
+                        map.placeTile(b.riverBridge, p.x, p.y, 0);
                     }
                 }
             }
         }
 
-        play.solidTiles = new Rectangle[play.tiles.length][play.tiles[0].length];
+        map.solidTiles = new Rectangle[map.tiles.length][map.tiles[0].length];
 
-        play.entities = new Array<Entity>();
-        play.invisibleEntities = new Array<Entity>();
+        map.entities = new Array<Entity>();
+        map.invisibleEntities = new Array<Entity>();
 
-        for (int x = 0; x < play.tiles.length; x++) {
-            for (int y = 0; y < play.tiles[0].length; y++) {
-                if (play.isFree(x, y, 0, 1) && rand.nextFloat() < .1f) {
+        for (int x = 0; x < map.tiles.length; x++) {
+            for (int y = 0; y < map.tiles[0].length; y++) {
+                if (map.isFree(x, y, 0, 1) && rand.nextFloat() < .1f) {
                     Slime s = (Slime) Game.ENTITIES.load("GreenSlime");
                     s.x = x * 8;
                     s.y = y * 8;
-                    play.add(s);
+                    map.add(s);
                 }
             }
         }
@@ -386,10 +386,10 @@ public class WorldGenerator {
         h.x = biomes.length * 64 + 64;
         h.y = (biomes[0].length - 1) * 64 - 32;
 
-        play.player = h;
-        play.add(h);
+        map.player = h;
+        map.add(h);
 
-        play.positionCam();
+        map.positionCam();
     }
 
     public Room roomAt(int x, int y) {
@@ -499,7 +499,7 @@ public class WorldGenerator {
         c.wayThickness = b.wayThickness[rand.nextInt(b.wayThickness.length)];
 
         if (diffX != 0) {
-            int[] xx = new int[] {smaller.x * 8 + smaller.w * 4, smaller.x * 8 + smaller.w * 4 + larger.w * diffX * 8};
+            int[] xx = new int[] {smaller.x * 8 + smaller.w * 4, smaller.x * 8 + smaller.w * 4 + smaller.w * diffX * 8};
 
             int x0 = Math.min(xx[0], xx[1]);
             int x1 = Math.max(xx[0], xx[1]);
@@ -513,7 +513,7 @@ public class WorldGenerator {
                 }
             }
         } else if (diffY != 0) {
-            int[] yy = new int[] {smaller.y * 4 + smaller.h * 2, smaller.y * 4 + smaller.h * 2 + larger.h * diffY * 4};
+            int[] yy = new int[] {smaller.y * 4 + smaller.h * 2, smaller.y * 4 + smaller.h * 2 + smaller.h * diffY * 4};
 
             int y0 = Math.min(yy[0], yy[1]);
             int y1 = Math.max(yy[0], yy[1]);
