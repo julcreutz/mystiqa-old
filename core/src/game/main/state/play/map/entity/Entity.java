@@ -51,7 +51,7 @@ public class Entity implements Serializable {
             getAttackHitbox().position(this);
 
             if (isAttacking() && isOnGround()) {
-                for (Entity e : map.entities) {
+                for (Entity e : map.entities.entities) {
                     if (e != this) {
                         if (!e.isHit() && e.isOnGround() && isHostile(e)) {
                             boolean contains = hit.contains(e, true);
@@ -111,12 +111,12 @@ public class Entity implements Serializable {
         } else {
             if (isDead()) {
                 onDeath(map);
-                map.entities.removeValue(this, true);
+                map.entities.entities.removeValue(this, true);
             }
         }
 
         if (isOnGround()) {
-            for (Entity e : map.entities) {
+            for (Entity e : map.entities.entities) {
                 if (e != this && hitbox.overlaps(e) && e.isOnGround()) {
                     float a = new Vector2(e.x, e.y).sub(x, y).angle();
 

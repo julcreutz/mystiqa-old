@@ -10,7 +10,9 @@ import game.main.item.equipment.armor.BodyArmor;
 import game.main.item.equipment.armor.FeetArmor;
 import game.main.item.equipment.hand.main.MainHand;
 import game.main.item.equipment.hand.off.OffHand;
+import game.main.state.play.map.EntityManager;
 import game.main.state.play.map.Map;
+import game.main.state.play.map.TileManager;
 import game.main.state.play.map.entity.Entity;
 import game.main.state.play.map.entity.Humanoid;
 import game.main.state.play.map.entity.Slime;
@@ -231,6 +233,7 @@ public class World extends Map {
             rivers.add(river);
         }
 
+        tiles = new TileManager(this);
         tiles.initSize(WIDTH * 16, HEIGHT * 8, 8);
 
         for (Room r : rooms) {
@@ -340,11 +343,13 @@ public class World extends Map {
 
                     for (int xx = -river.thickness; xx <= river.thickness - 1; xx++) {
                         for (int yy = -1; yy <= 0; yy++) {
-                            Tile t = tiles.tileAt(x + xx, y + yy, 0);
+                            if (tiles.inBounds(x + xx, y + yy)) {
+                                Tile t = tiles.tileAt(x + xx, y + yy, 0);
 
-                            if (t != null && t.type != b.river) {
-                                tiles.erase(x + xx, y + yy);
-                                tiles.placeTile(b.river, x + xx, y + yy, 0);
+                                if (t != null && t.type != b.river) {
+                                    tiles.erase(x + xx, y + yy);
+                                    tiles.placeTile(b.river, x + xx, y + yy, 0);
+                                }
                             }
                         }
                     }
@@ -368,8 +373,7 @@ public class World extends Map {
             }
         }
 
-        entities = new Array<Entity>();
-        invisibleEntities = new Array<Entity>();
+        entities = new EntityManager(this);
 
         for (int x = 0; x < tiles.getWidth(); x++) {
             for (int y = 0; y < tiles.getHeight(); y++) {
@@ -377,7 +381,7 @@ public class World extends Map {
                     Slime s = (Slime) Game.ENTITIES.load("GreenSlime");
                     s.x = x * 8;
                     s.y = y * 8;
-                    add(s);
+                    entities.addEntity(s);
                 }
             }
         }
@@ -393,7 +397,7 @@ public class World extends Map {
         h.y = (biomes[0].length - 1) * 64 - 32;
 
         player = h;
-        add(h);
+        entities.addEntity(h);
 
         positionCam();
     }

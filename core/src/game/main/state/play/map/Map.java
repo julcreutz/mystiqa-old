@@ -19,9 +19,7 @@ public abstract class Map implements Serializable {
 
     public TileManager tiles;
 
-    public Array<Entity> entities;
-    public Array<Entity> invisibleEntities;
-
+    public EntityManager entities;
     public Entity player;
 
     public int x0;
@@ -44,7 +42,6 @@ public abstract class Map implements Serializable {
     public Array<Map> children;
 
     public Map() {
-        tiles = new TileManager();
         children = new Array<Map>();
     }
 
@@ -77,33 +74,8 @@ public abstract class Map implements Serializable {
         y0 = MathUtils.clamp(MathUtils.floor(play.cam.position.y / 8f) - Y_VIEW, 0, tiles.getHeight());
         y1 = MathUtils.clamp(y0 + Y_VIEW * 2, 0, tiles.getHeight());
 
-        tiles.update(this, x0, x1, y0, y1);
-
-        for (int i = invisibleEntities.size - 1; i >= 0; i--) {
-            Entity e = invisibleEntities.get(i);
-
-            if (isVisible(e)) {
-                entities.add(e);
-                invisibleEntities.removeIndex(i);
-            }
-        }
-
-        for (int i = entities.size - 1; i >= 0; i--) {
-            Entity e = entities.get(i);
-
-            if (!isVisible(e)) {
-                invisibleEntities.add(e);
-                entities.removeIndex(i);
-                continue;
-            }
-
-            if (!e.updated) {
-                e.update(this);
-                e.updated = true;
-            } else if (!isCamMoving()) {
-                e.update(this);
-            }
-        }
+        tiles.update(x0, x1, y0, y1);
+        entities.update();
     }
 
     public void render(SpriteBatch batch) {
@@ -113,9 +85,7 @@ public abstract class Map implements Serializable {
 
         batch.setShader(null);
 
-        for (Entity e : entities) {
-            e.render(batch);
-        }
+        entities.render(batch);
 
         batch.setShader(null);
 
@@ -133,13 +103,12 @@ public abstract class Map implements Serializable {
         return camX != toCamX || camY != toCamY;
     }
 
-    public void add(Entity e) {
-        invisibleEntities.add(e);
-        e.onAdded(this);
+    public boolean isVisible(float x, float y) {
+        return x >= x0 * 8 && x < x1 * 8 && y >= y0 * 8 && y < y1 * 8;
     }
 
     public boolean isVisible(Entity e) {
-        return e.x >= x0 * 8 && e.x < x1 * 8 && e.y >= y0 * 8 && e.y < y1 * 8;
+        return isVisible(e.x, e.y);
     }
 
     public abstract void generate();

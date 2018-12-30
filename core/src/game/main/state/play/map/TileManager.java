@@ -16,23 +16,29 @@ import game.main.state.play.map.tile.TileType;
  * z coordinate to give an impression of space.
  */
 public class TileManager {
+    /** Holds reference to map. */
+    public Map map;
+
     /** Stores tiles. */
     public Tile[][][] tiles;
 
     /** Stores solid tile "hitboxes". */
     public Rectangle[][] solidTiles;
 
+    public TileManager(Map map) {
+        this.map = map;
+    }
+
     /**
      * Updates all tiles in a given area. If a tile is newly created
      * it will be updated even when the camera is moving to prevent missing textures.
      *
-     * @param map map the tiles are contained in
      * @param x0 start x (inclusive
      * @param x1 end x (exclusive)
      * @param y0 start y (inclusive)
      * @param y1 end y (exclusive)
      */
-    public void update(Map map, int x0, int x1, int y0, int y1) {
+    public void update(int x0, int x1, int y0, int y1) {
         for (int x = 0; x < solidTiles.length; x++) {
             for (int y = 0; y < solidTiles[0].length; y++) {
                 Tile t = tiles[x][y][0];
