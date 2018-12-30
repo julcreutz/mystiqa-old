@@ -1,4 +1,4 @@
-package game.main.gen;
+package game.main.state.play.map.world;
 
 import com.badlogic.gdx.utils.JsonValue;
 import game.Range;

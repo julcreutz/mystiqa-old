@@ -1,4 +1,4 @@
-package game.main.gen;
+package game.main.state.play.map.world;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
@@ -10,8 +10,8 @@ import game.main.item.equipment.hand.main.MainHand;
 import game.main.item.equipment.hand.off.OffHand;
 import game.main.state.play.map.Map;
 import game.main.state.play.map.entity.Entity;
-import game.main.state.play.map.entity.Slime;
 import game.main.state.play.map.entity.Humanoid;
+import game.main.state.play.map.entity.Slime;
 import game.main.state.play.map.tile.Tile;
 import game.noise.Noise;
 import game.noise.NoiseParameters;
@@ -20,13 +20,11 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.Random;
 
-public class WorldGenerator {
+public class World extends Map {
     public static final int WIDTH = 16;
     public static final int HEIGHT = 8;
 
     public static final NoiseParameters ELEVATION = new NoiseParameters(3, .25f, 1);
-
-    public Map map;
 
     public Random rand;
 
@@ -38,10 +36,7 @@ public class WorldGenerator {
 
     public Array<River> rivers;
 
-    public WorldGenerator(Map map) {
-        this.map = map;
-    }
-
+    @Override
     public void generate() {
         rand = new Random(MathUtils.random(Long.MAX_VALUE));
 
@@ -227,7 +222,7 @@ public class WorldGenerator {
             rivers.add(river);
         }
 
-        map.tiles = new Tile[WIDTH * 16][HEIGHT * 8][8];
+        tiles = new Tile[WIDTH * 16][HEIGHT * 8][8];
 
         for (Room r : rooms) {
             int x0 = r.x0();
@@ -240,11 +235,11 @@ public class WorldGenerator {
 
             for (int x = x0; x < x1; x++) {
                 for (int y = y0; y < y1; y++) {
-                    map.placeTile(b.ground, x, y, 0);
+                    placeTile(b.ground, x, y, 0);
 
                     if (b.wall != null) {
                         if ((x == x0 || x == x1 - 1 || y == y0 || y == y1 - 1)) {
-                            b.wall.generate(rand, map, x, y, 0);
+                            b.wall.generate(rand, this, x, y, 0);
                         }
                     }
                 }
@@ -286,7 +281,7 @@ public class WorldGenerator {
                 for (int y = 0; y < layout.length; y++) {
                     for (int x = 0; x < layout[0].length; x++) {
                         if (layout[y][x] == '#') {
-                            b.wall.generate(rand, map, x0 + x, y1 - 1 - y, 0);
+                            b.wall.generate(rand, this, x0 + x, y1 - 1 - y, 0);
                         }
                     }
                 }
@@ -301,14 +296,14 @@ public class WorldGenerator {
                     Connection connection = getConnection(r0, r1);
 
                     for (Point p : connection.points) {
-                        Tile t = map.tileAt(p.x, p.y, 0);
+                        Tile t = tileAt(p.x, p.y, 0);
 
                         Biome b = biomes[p.x / 16][p.y / 8];
                         Connector c = b.getConnector(connection);
 
                         if (t != null && b.wall != null && t.type == b.wall.getTile()) {
-                            map.erase(p.x, p.y);
-                            map.placeTile(c.tile, p.x, p.y, 0);
+                            erase(p.x, p.y);
+                            placeTile(c.tile, p.x, p.y, 0);
                         }
                     }
 
@@ -334,11 +329,11 @@ public class WorldGenerator {
 
                     for (int xx = -river.thickness; xx <= river.thickness - 1; xx++) {
                         for (int yy = -1; yy <= 0; yy++) {
-                            Tile t = map.tileAt(x + xx, y + yy, 0);
+                            Tile t = tileAt(x + xx, y + yy, 0);
 
                             if (t != null && t.type != b.river) {
-                                map.erase(x + xx, y + yy);
-                                map.placeTile(b.river, x + xx, y + yy, 0);
+                                erase(x + xx, y + yy);
+                                placeTile(b.river, x + xx, y + yy, 0);
                             }
                         }
                     }
@@ -351,27 +346,27 @@ public class WorldGenerator {
                 Biome b = biomes[r1.x / 2][r1.y / 2];
 
                 for (Point p : getConnection(r0, r1).points) {
-                    Tile t = map.tileAt(p.x, p.y, 0);
+                    Tile t = tileAt(p.x, p.y, 0);
 
                     if (t != null && t.type == b.river) {
-                        map.placeTile(b.riverBridge, p.x, p.y, 0);
+                        placeTile(b.riverBridge, p.x, p.y, 0);
                     }
                 }
             }
         }
 
-        map.solidTiles = new Rectangle[map.tiles.length][map.tiles[0].length];
+        solidTiles = new Rectangle[tiles.length][tiles[0].length];
 
-        map.entities = new Array<Entity>();
-        map.invisibleEntities = new Array<Entity>();
+        entities = new Array<Entity>();
+        invisibleEntities = new Array<Entity>();
 
-        for (int x = 0; x < map.tiles.length; x++) {
-            for (int y = 0; y < map.tiles[0].length; y++) {
-                if (map.isFree(x, y, 0, 1) && rand.nextFloat() < .1f) {
+        for (int x = 0; x < tiles.length; x++) {
+            for (int y = 0; y < tiles[0].length; y++) {
+                if (isFree(x, y, 0, 1) && rand.nextFloat() < .1f) {
                     Slime s = (Slime) Game.ENTITIES.load("GreenSlime");
                     s.x = x * 8;
                     s.y = y * 8;
-                    map.add(s);
+                    add(s);
                 }
             }
         }
@@ -386,10 +381,10 @@ public class WorldGenerator {
         h.x = biomes.length * 64 + 64;
         h.y = (biomes[0].length - 1) * 64 - 32;
 
-        map.player = h;
-        map.add(h);
+        player = h;
+        add(h);
 
-        map.positionCam();
+        positionCam();
     }
 
     public Room roomAt(int x, int y) {

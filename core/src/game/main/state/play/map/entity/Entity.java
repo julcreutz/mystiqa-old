@@ -9,8 +9,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import game.loader.Serializable;
 import game.main.Game;
-import game.main.stat.Stat;
 import game.main.stat.StatManager;
+import game.main.stat.StatType;
 import game.main.state.play.map.Map;
 import game.main.state.play.map.tile.Tile;
 
@@ -74,7 +74,7 @@ public class Entity implements Serializable {
                                         e.hitAngle = new Vector2(e.x, e.y).sub(x, y).angle();
                                         e.hitSpeed = 48f;
 
-                                        e.health -= statManager.count(Stat.Type.PHYSICAL_DAMAGE);
+                                        e.health -= statManager.count(StatType.PHYSICAL_DAMAGE);
 
                                         e.onHit(map);
 
@@ -189,7 +189,7 @@ public class Entity implements Serializable {
     }
 
     public void onAdded(Map map) {
-        health = statManager.count(Stat.Type.HEALTH);
+        health = statManager.count(StatType.HEALTH);
     }
 
     public void onMove(Map map) {

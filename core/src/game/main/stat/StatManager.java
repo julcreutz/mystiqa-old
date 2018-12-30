@@ -11,7 +11,7 @@ public class StatManager implements Serializable {
         stats = new Array<Stat>();
     }
 
-    public float count(Stat.Type type) {
+    public float count(StatType type) {
         float absolute = 0;
         float relative = 1;
 
@@ -25,7 +25,7 @@ public class StatManager implements Serializable {
         return absolute * relative;
     }
 
-    public boolean has(Stat.Type type) {
+    public boolean has(StatType type) {
         for (Stat s : stats) {
             if (s.type == type) {
                 return true;

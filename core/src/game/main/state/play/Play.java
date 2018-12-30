@@ -3,6 +3,7 @@ package game.main.state.play;
 import game.main.Game;
 import game.main.state.GameState;
 import game.main.state.play.map.Map;
+import game.main.state.play.map.world.World;
 
 public class Play extends GameState {
     public Map map;
@@ -11,7 +12,7 @@ public class Play extends GameState {
     public void create() {
         super.create();
 
-        map = new Map();
+        map = new World();
     }
 
     @Override

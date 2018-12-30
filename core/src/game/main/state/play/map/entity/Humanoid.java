@@ -14,6 +14,7 @@ import game.main.item.equipment.armor.BodyArmor;
 import game.main.item.equipment.armor.FeetArmor;
 import game.main.item.equipment.armor.HeadArmor;
 import game.main.stat.Stat;
+import game.main.stat.StatType;
 import game.main.state.play.Play;
 import game.main.state.play.map.Map;
 import game.main.state.play.map.tile.Tile;
@@ -72,7 +73,7 @@ public class Humanoid extends Entity {
         float angle = dir.angle();
 
         if (dir.x != 0 || dir.y != 0) {
-            float speed = statManager.count(Stat.Type.SPEED);
+            float speed = statManager.count(StatType.SPEED);
 
             velX = MathUtils.round(MathUtils.cosDeg(angle) * speed);
             velY = MathUtils.round(MathUtils.sinDeg(angle) * speed);

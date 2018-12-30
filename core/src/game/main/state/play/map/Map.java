@@ -1,19 +1,16 @@
 package game.main.state.play.map;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import game.main.Game;
-import game.main.gen.WorldGenerator;
 import game.main.state.play.Play;
 import game.main.state.play.map.entity.Entity;
 import game.main.state.play.map.tile.Tile;
 import game.main.state.play.map.tile.TileType;
 
-public class Map {
+public abstract class Map {
     public static final float CAM_SPEED = 1.5f;
 
     public static final int X_VIEW = 10;
@@ -32,8 +29,6 @@ public class Map {
     public int y0;
     public int y1;
 
-    public WorldGenerator worldGenerator;
-
     public float camX;
     public float camY;
 
@@ -46,15 +41,10 @@ public class Map {
     public float camTime;
 
     public Map() {
-        worldGenerator = new WorldGenerator(this);
-        worldGenerator.generate();
+        generate();
     }
 
     public void update(Play play) {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
-            worldGenerator.generate();
-        }
-
         toCamX = Game.WIDTH * .5f + MathUtils.floor((player.x + 4) / Game.WIDTH) * Game.WIDTH;
         toCamY = Game.HEIGHT * .5f + MathUtils.floor((player.y + 4) / (Game.HEIGHT - 8)) * (Game.HEIGHT - 8);
 
@@ -269,4 +259,6 @@ public class Map {
             }
         }
     }
+
+    public abstract void generate();
 }

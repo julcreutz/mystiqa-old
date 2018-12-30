@@ -1,6 +1,6 @@
 package game.loader.resource;
 
-import game.main.gen.Biome;
+import game.main.state.play.map.world.Biome;
 
 public class BiomeLoader extends ResourceLoader<Biome> {
     @Override
