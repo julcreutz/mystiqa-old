@@ -3,6 +3,8 @@ package game;
 import com.badlogic.gdx.utils.JsonValue;
 import game.loader.Serializable;
 
+import java.util.Random;
+
 public class Range implements Serializable {
     public int min;
     public int max;
@@ -18,6 +20,10 @@ public class Range implements Serializable {
 
     public boolean inRange(int val) {
         return val >= min && val <= max;
+    }
+
+    public int pickRandom(Random rand) {
+        return min + rand.nextInt(max - min + 1);
     }
 
     @Override

@@ -13,6 +13,9 @@ public class Biome implements Serializable {
     public float minElevation;
     public float maxElevation;
 
+    public boolean possibleRiverSource;
+    public float riverHorizontalChance;
+
     public float horizontalChance;
     public Array<RoomSize> roomSizes;
 
@@ -64,6 +67,14 @@ public class Biome implements Serializable {
 
         if (json.has("maxElevation")) {
             maxElevation = json.getFloat("maxElevation");
+        }
+
+        if (json.has("possibleRiverSource")) {
+            possibleRiverSource = json.getBoolean("possibleRiverSource");
+        }
+
+        if (json.has("riverHorizontalChance")) {
+            riverHorizontalChance = json.getFloat("riverHorizontalChance");
         }
 
         if (json.has("horizontalChance")) {

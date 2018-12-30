@@ -12,7 +12,8 @@ public class Play extends GameState {
     public void create() {
         super.create();
 
-        map = new World();
+        map = Game.MAPS.load("Overworld");
+        map.generate();
     }
 
     @Override

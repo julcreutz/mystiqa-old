@@ -4,13 +4,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
+import game.loader.Serializable;
 import game.main.Game;
 import game.main.state.play.Play;
 import game.main.state.play.map.entity.Entity;
 import game.main.state.play.map.tile.Tile;
 import game.main.state.play.map.tile.TileType;
 
-public abstract class Map {
+public abstract class Map implements Serializable {
     public static final float CAM_SPEED = 1.5f;
 
     public static final int X_VIEW = 10;
@@ -39,10 +40,6 @@ public abstract class Map {
     public float camPosY;
 
     public float camTime;
-
-    public Map() {
-        generate();
-    }
 
     public void update(Play play) {
         toCamX = Game.WIDTH * .5f + MathUtils.floor((player.x + 4) / Game.WIDTH) * Game.WIDTH;

@@ -1,10 +1,15 @@
 {
   "Overworld": {
-    "Overworld": {
+    "World": {
+      "width": 16,
+      "height": 8,
+      "riverCount": {"min": 2, "max": 5},
       "biomes": [
         {
           "minElevation": 0,
           "maxElevation": 0.45,
+          "possibleRiverSource": false,
+          "riverHorizontalChance": 0.5,
           "horizontalChance": 0.5,
           "roomSizes": [
             {
@@ -100,6 +105,8 @@
         {
           "minElevation": 0.45,
           "maxElevation": 1,
+          "possibleRiverSource": true,
+          "riverHorizontalChance": 0,
           "horizontalChance": 0.75,
           "roomSizes": [
             {

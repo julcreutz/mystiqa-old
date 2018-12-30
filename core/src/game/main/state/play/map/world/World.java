@@ -3,6 +3,8 @@ package game.main.state.play.map.world;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.JsonValue;
+import game.Range;
 import game.main.Game;
 import game.main.item.equipment.armor.BodyArmor;
 import game.main.item.equipment.armor.FeetArmor;
@@ -25,6 +27,13 @@ public class World extends Map {
     public static final int HEIGHT = 8;
 
     public static final NoiseParameters ELEVATION = new NoiseParameters(3, .25f, 1);
+
+    public int width;
+    public int height;
+
+    public Range riverCount;
+
+    public Array<Biome> allBiomes = new Array<Biome>();
 
     public Random rand;
 
@@ -184,7 +193,7 @@ public class World extends Map {
             do {
                 x = rand.nextInt(biomes.length) * 2;
                 y = rand.nextInt(biomes[0].length) * 2;
-            } while (biomes[x / 2][y / 2] != Game.BIOMES.load("Mountains") || (roomAt(x, y) != null && (roomAt(x, y).w == 1 || roomAt(x, y).h == 1)));
+            } while (!biomes[x / 2][y / 2].possibleRiverSource || (roomAt(x, y) != null && (roomAt(x, y).w == 1 || roomAt(x, y).h == 1)));
 
             River river = new River(1);
             river.points.add(new Point(x, y));
@@ -192,7 +201,7 @@ public class World extends Map {
             boolean goneHorizontal = false;
 
             do {
-                if (rand.nextFloat() < (biomes[x / 2][y / 2] == Game.BIOMES.load("Mountains") ? 0 : .5f) && !goneHorizontal) {
+                if (rand.nextFloat() < biomes[x / 2][y / 2].riverHorizontalChance && !goneHorizontal) {
                     goneHorizontal = true;
 
                     if (rand.nextFloat() < .5f) {
@@ -406,7 +415,7 @@ public class World extends Map {
     public Biome biomeAt(int x, int y) {
         float e = elevationAt(x, y);
 
-        for (Biome b : Game.BIOMES.loadAll()) {
+        for (Biome b : allBiomes) {
             if (e >= b.minElevation && e <= b.maxElevation) {
                 return b;
             }
@@ -524,5 +533,31 @@ public class World extends Map {
         }
 
         return c;
+    }
+
+    @Override
+    public void deserialize(JsonValue json) {
+        if (json.has("width")) {
+            width = json.getInt("width");
+        }
+
+        if (json.has("height")) {
+            height = json.getInt("height");
+        }
+
+        if (json.has("riverCount")) {
+            riverCount = new Range();
+            riverCount.deserialize(json.get("riverCount"));
+        }
+
+        if (json.has("biomes")) {
+            allBiomes = new Array<Biome>();
+
+            for (JsonValue biome : json.get("biomes")) {
+                Biome b = new Biome();
+                b.deserialize(biome);
+                allBiomes.add(b);
+            }
+        }
     }
 }
