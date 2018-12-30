@@ -305,14 +305,16 @@ public class World extends Map {
                     Connection connection = getConnection(r0, r1);
 
                     for (Point p : connection.points) {
-                        Tile t = tiles.tileAt(p.x, p.y, 0);
+                        if (tiles.inBounds(p.x, p.y)) {
+                            Tile t = tiles.tileAt(p.x, p.y, 0);
 
-                        Biome b = biomes[p.x / 16][p.y / 8];
-                        Connector c = b.getConnector(connection);
+                            Biome b = biomes[p.x / 16][p.y / 8];
+                            Connector c = b.getConnector(connection);
 
-                        if (t != null && b.wall != null && t.type == b.wall.getTile()) {
-                            tiles.erase(p.x, p.y);
-                            tiles.placeTile(c.tile, p.x, p.y, 0);
+                            if (t != null && b.wall != null && t.type == b.wall.getTile()) {
+                                tiles.erase(p.x, p.y);
+                                tiles.placeTile(c.tile, p.x, p.y, 0);
+                            }
                         }
                     }
 
@@ -355,10 +357,12 @@ public class World extends Map {
                 Biome b = biomes[r1.x / 2][r1.y / 2];
 
                 for (Point p : getConnection(r0, r1).points) {
-                    Tile t = tiles.tileAt(p.x, p.y, 0);
+                    if (tiles.inBounds(p.x, p.y)) {
+                        Tile t = tiles.tileAt(p.x, p.y, 0);
 
-                    if (t != null && t.type == b.river) {
-                        tiles.placeTile(b.riverBridge, p.x, p.y, 0);
+                        if (t != null && t.type == b.river) {
+                            tiles.placeTile(b.riverBridge, p.x, p.y, 0);
+                        }
                     }
                 }
             }
