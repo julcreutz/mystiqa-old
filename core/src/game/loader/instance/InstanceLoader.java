@@ -12,7 +12,7 @@ public abstract class InstanceLoader<T extends Serializable> implements Loader<T
 
     @Override
     public void load(FileHandle file) {
-        map = new HashMap<>();
+        map = new HashMap<String, JsonValue>();
 
         for (JsonValue json : Loader.READER.parse(file)) {
             map.put(json.name, json.child);

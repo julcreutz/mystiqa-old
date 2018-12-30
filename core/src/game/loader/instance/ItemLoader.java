@@ -12,22 +12,16 @@ public class ItemLoader extends InstanceLoader<Item> {
     public Item newInstance(String name) {
         Item i = null;
 
-        switch (name) {
-            case "MeleeWeapon":
-                i = new MeleeWeapon();
-                break;
-            case "Shield":
-                i = new Shield();
-                break;
-            case "FeetArmor":
-                i = new FeetArmor();
-                break;
-            case "BodyArmor":
-                i = new BodyArmor();
-                break;
-            case "HeadArmor":
-                i = new HeadArmor();
-                break;
+        if (name.equals("MeleeWeapon")) {
+            i = new MeleeWeapon();
+        } else if (name.equals("Shield")) {
+            i = new Shield();
+        } else if (name.equals("FeetArmor")) {
+            i = new FeetArmor();
+        } else if (name.equals("BodyArmor")) {
+            i = new BodyArmor();
+        } else if (name.equals("HeadArmor")) {
+            i = new HeadArmor();
         }
 
         return i;

@@ -2,14 +2,18 @@
   "Grass": {
     "name": "Grass",
     "sheet": "Grass",
-    "palettes": [["Black", "Green"]],
+    "palettes": [
+      ["Black", "Green"]
+    ],
     "autoTile": true,
     "connect": ["TreeBottom", "Stone", "Bridge"]
   },
   "Water": {
     "name": "Water",
     "sheet": "Water",
-    "palettes": [["Black", "Blue", "Brown"]],
+    "palettes": [
+      ["Black", "Blue", "Brown"]
+    ],
     "autoTile": true,
     "connect": ["Stone", "Waterfall", "Bridge"],
     "solid": true
@@ -17,7 +21,11 @@
   "Waterfall": {
     "name": "Waterfall",
     "sheet": "Waterfall",
-    "palettes": [["Blue", "Blue", "White"], ["Blue", "White", "Blue"], ["White", "Blue", "Blue"]],
+    "palettes": [
+      ["Blue", "Blue", "White"],
+      ["Blue", "White", "Blue"],
+      ["White", "Blue", "Blue"]
+    ],
     "paletteSpeed": 10,
     "connect": ["Water"],
     "solid": true
@@ -25,12 +33,16 @@
   "Sand": {
     "name": "Sand",
     "sheet": "Sand",
-    "palettes": [["Black", "Yellow"]]
+    "palettes": [
+      ["Black", "Yellow"]
+    ]
   },
   "Stone": {
     "name": "Stone",
     "sheet": "Stone",
-    "palettes": [["Black", "Brown", "Brown"]],
+    "palettes": [
+      ["Black", "Brown", "Brown"]
+    ],
     "connect": ["Tendril"],
     "autoTile": true,
     "solid": true
@@ -38,7 +50,9 @@
   "Tendril": {
     "name": "Tendril",
     "sheet": "Tendril",
-    "palettes": [["Black", "Green", "Brown"]],
+    "palettes": [
+      ["Black", "Green", "Brown"]
+    ],
     "connect": ["Stone"],
     "moveSpeed": 0.5,
     "forcedDirection": 1
@@ -46,30 +60,40 @@
   "Dirt": {
     "name": "Dirt",
     "sheet": "Grass",
-    "palettes": [["Black", "Brown"]],
+    "palettes": [
+      ["Black", "Brown"]
+    ],
     "connect": ["Stone", "Tendril", "Bridge"],
     "autoTile": true
   },
   "Bridge": {
     "name": "Bridge",
     "sheet": "Bridge",
-    "palettes": [["Black", "Brown"]],
+    "palettes": [
+      ["Black", "Brown"]
+    ],
     "autoTile": true
   },
   "TreeBottom": {
     "name": "TreeBottom",
     "sheet": "TreeBottom",
-    "palettes": [["Black", "Green", "Brown", "Green"]],
+    "palettes": [
+      ["Black", "Green", "Brown", "Green"]
+    ],
     "solid": true
   },
   "TreeMiddle": {
     "name": "TreeMiddle",
     "sheet": "TreeMiddle",
-    "palettes": [["Black", "Green"]]
+    "palettes": [
+      ["Black", "Green"]
+    ]
   },
   "TreeTop": {
     "name": "TreeTop",
     "sheet": "TreeTop",
-    "palettes": [["Black", "Green"]]
+    "palettes": [
+      ["Black", "Green"]
+    ]
   }
 }

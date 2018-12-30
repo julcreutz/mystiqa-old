@@ -9,13 +9,10 @@ public class EntityLoader extends InstanceLoader<Entity> {
     public Entity newInstance(String name) {
         Entity e = null;
 
-        switch (name) {
-            case "Humanoid":
-                e = new Humanoid();
-                break;
-            case "Slime":
-                e = new Slime();
-                break;
+        if (name.equals("Humanoid")) {
+            e = new Humanoid();
+        } else if (name.equals("Slime")) {
+            e = new Slime();
         }
 
         return e;

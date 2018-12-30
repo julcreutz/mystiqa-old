@@ -9,16 +9,15 @@ import game.main.item.equipment.armor.FeetArmor;
 import game.main.item.equipment.hand.main.MainHand;
 import game.main.item.equipment.hand.off.OffHand;
 import game.main.state.play.Play;
+import game.main.state.play.entity.Entity;
 import game.main.state.play.entity.Slime;
 import game.main.state.play.entity.Humanoid;
-import game.main.state.play.tile.Connector;
 import game.main.state.play.tile.Tile;
 import game.noise.Noise;
 import game.noise.NoiseParameters;
 
 import java.awt.*;
 import java.util.HashMap;
-import java.util.Objects;
 import java.util.Random;
 
 public class WorldGenerator {
@@ -56,7 +55,7 @@ public class WorldGenerator {
             }
         }
 
-        rooms = new Array<>();
+        rooms = new Array<Room>();
 
         // This is where it starts
         rooms.add(new Room(0, 0, 2, 2));
@@ -164,7 +163,7 @@ public class WorldGenerator {
         }
 
         // Reduce linearity by connecting adjacent rooms
-        rooms.forEach(r0 -> {
+        for (Room r0 : rooms) {
             Room[] rooms = new Room[] {
                     roomAt(r0.x + r0.w, r0.y),
                     roomAt(r0.x - 1, r0.y),
@@ -179,9 +178,9 @@ public class WorldGenerator {
                     r0.children.add(r1);
                 }
             }
-        });
+        }
 
-        rivers = new Array<>();
+        rivers = new Array<River>();
 
         for (int i = 0; i < 2 + rand.nextInt(3); i++) {
             int x;
@@ -294,14 +293,14 @@ public class WorldGenerator {
             }
         }
 
-        HashMap<Room, Array<Room>> connected = new HashMap<>();
+        HashMap<Room, Array<Room>> connected = new HashMap<Room, Array<Room>>();
 
         for (Room r0 : rooms) {
             for (Room r1 : r0.children) {
                 if (!connected.containsKey(r1) || !connected.get(r1).contains(r0, true)) {
                     Connection connection = getConnection(r0, r1);
 
-                    connection.points.forEach(p -> {
+                    for (Point p : connection.points) {
                         Tile t = play.tileAt(p.x, p.y, 0);
 
                         Biome b = biomes[p.x / 16][p.y / 8];
@@ -311,10 +310,10 @@ public class WorldGenerator {
                             play.erase(p.x, p.y);
                             play.placeTile(c.tile, p.x, p.y, 0);
                         }
-                    });
+                    }
 
                     if (!connected.containsKey(r0)) {
-                        connected.put(r0, new Array<>());
+                        connected.put(r0, new Array<Room>());
                     }
 
                     connected.get(r0).add(r1);
@@ -351,20 +350,20 @@ public class WorldGenerator {
             for (Room r1 : r0.children) {
                 Biome b = biomes[r1.x / 2][r1.y / 2];
 
-                getConnection(r0, r1).points.forEach(p -> {
+                for (Point p : getConnection(r0, r1).points) {
                     Tile t = play.tileAt(p.x, p.y, 0);
 
                     if (t != null && t.type == b.river) {
                         play.placeTile(b.riverBridge, p.x, p.y, 0);
                     }
-                });
+                }
             }
         }
 
         play.solidTiles = new Rectangle[play.tiles.length][play.tiles[0].length];
 
-        play.entities = new Array<>();
-        play.invisibleEntities = new Array<>();
+        play.entities = new Array<Entity>();
+        play.invisibleEntities = new Array<Entity>();
 
         for (int x = 0; x < play.tiles.length; x++) {
             for (int y = 0; y < play.tiles[0].length; y++) {
@@ -480,7 +479,7 @@ public class WorldGenerator {
             larger = r1;
         }
 
-        int diffX = larger.x - Objects.requireNonNull(smaller).x;
+        int diffX = larger.x - smaller.x;
 
         c.absoluteDiffX = Math.abs(diffX);
 
@@ -530,28 +529,5 @@ public class WorldGenerator {
         }
 
         return c;
-    }
-
-    public class River {
-        public Array<Point> points;
-        public int thickness;
-
-        public River(int thickness) {
-            points = new Array<>();
-            this.thickness = thickness;
-        }
-    }
-
-    public class Connection {
-        public Array<Point> points;
-
-        public int absoluteDiffX;
-        public int absoluteDiffY;
-
-        public int wayThickness;
-
-        public Connection() {
-            points = new Array<>();
-        }
     }
 }

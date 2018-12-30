@@ -5,14 +5,12 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
 import game.main.Game;
 
-import java.util.Objects;
-
 public class PaletteShaderLoader {
     public Array<PaletteShader> shaders;
 
     public ShaderProgram load(String[] colors) {
         if (shaders == null) {
-            shaders = new Array<>();
+            shaders = new Array<PaletteShader>();
         }
 
         for (PaletteShader shader : shaders) {
@@ -150,7 +148,7 @@ public class PaletteShaderLoader {
                 "    v_texCoords = a_texCoord0;\n" +
                 "\n" +
                 "    gl_Position = u_projTrans * a_position;\n" +
-                "}", Objects.requireNonNull(frag));
+                "}", frag);
 
         shaders.add(shader);
 

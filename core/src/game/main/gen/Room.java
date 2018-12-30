@@ -18,7 +18,7 @@ public class Room {
         this.w = w;
         this.h = h;
 
-        children = new Array<>();
+        children = new Array<Room>();
     }
 
     public Room() {

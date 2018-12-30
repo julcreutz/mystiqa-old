@@ -48,7 +48,7 @@ public class TileType implements Serializable {
         }
 
         if (json.has("palettes")) {
-            palettes = new Array<>();
+            palettes = new Array<ShaderProgram>();
 
             for (JsonValue palette : json.get("palettes")) {
                 palettes.add(Game.PALETTES.load(palette.asStringArray()));

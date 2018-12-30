@@ -8,7 +8,7 @@ public class StatManager implements Serializable {
     public Array<Stat> stats;
 
     public StatManager() {
-        stats = new Array<>();
+        stats = new Array<Stat>();
     }
 
     public float count(Stat.Type type) {

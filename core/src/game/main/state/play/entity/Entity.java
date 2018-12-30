@@ -35,13 +35,12 @@ public class Entity implements Serializable {
 
     public float health;
 
-    public enum Alignment {GOOD, EVIL}
     public Alignment alignment;
 
     public Entity() {
         hitbox = new Hitbox();
         statManager = new StatManager();
-        hit = new Array<>();
+        hit = new Array<Entity>();
     }
 
     public void update(Play play) {

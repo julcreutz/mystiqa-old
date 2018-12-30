@@ -1,10 +1,11 @@
-package game.main.state.play.tile;
+package game.main.gen;
 
 import com.badlogic.gdx.utils.JsonValue;
 import game.Range;
 import game.loader.Serializable;
 import game.main.Game;
 import game.main.gen.WorldGenerator;
+import game.main.state.play.tile.TileType;
 
 public class Connector implements Serializable {
     public TileType tile;
@@ -14,7 +15,7 @@ public class Connector implements Serializable {
 
     public Range wayThickness;
 
-    public boolean fits(WorldGenerator.Connection c) {
+    public boolean fits(Connection c) {
         return absoluteDiffX.inRange(c.absoluteDiffX) && absoluteDiffY.inRange(c.absoluteDiffY) && wayThickness.inRange(c.wayThickness);
     }
 
