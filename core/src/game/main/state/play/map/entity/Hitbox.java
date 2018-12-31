@@ -9,20 +9,21 @@ import com.badlogic.gdx.math.Rectangle;
  * @see Rectangle
  */
 public class Hitbox {
-    /** Holds reference of entity this belongs to. */
+    /** Holds reference of entity this applies to. */
     public Entity e;
 
-    /** The rectangle itself. */
+    /** Rectangle itself. */
     public Rectangle rect;
 
-    /** The value the rectangle is offset by on x axis relative to an entity. */
+    /** Value the rectangle is offset by on x axis relative to an entity. */
     public float offsetX;
 
-    /** The value of the rectangle is offset by on y axis relative to an entity. */
+    /** Value of the rectangle is offset by on y axis relative to an entity. */
     public float offsetY;
 
-    /** Constructs the hitbox initializing it's rectangle to prevent
-     *  potential {@link java.lang.NullPointerException}.
+    /**
+     * Constructs hitbox initializing rectangle to prevent
+     * potential {@link java.lang.NullPointerException}.
      */
     public Hitbox(Entity e) {
         this.e = e;
@@ -30,7 +31,7 @@ public class Hitbox {
     }
 
     /**
-     * Positions rectangle relative to specified entity isUsing it's offsets and two additional offset values.
+     * Positions rectangle relative to entity using offsets and two additional offset values.
      *
      * @param offsetX additional x offset
      * @param offsetY additional y offset
@@ -39,40 +40,39 @@ public class Hitbox {
         rect.setPosition(e.x + this.offsetX + offsetX, e.y + this.offsetY + offsetY);
     }
 
-    /** Positions rectangle relative to specified entity isUsing it's offsets. */
+    /** Positions rectangle relative to entity using offsets. */
     public void position() {
         position(0, 0);
     }
 
     /**
-     * Checks whether the specified rectangle overlaps.
-     * Only works if the both rectangle's width and height are greater than zero.
+     * Checks whether specified rectangle overlaps.
+     * Only works if both rectangle's width and height are greater than zero.
      *
      * @param rect rectangle to check overlap
-     * @return whether the rectangle overlaps
+     * @return whether rectangle overlaps
      */
     public boolean overlaps(Rectangle rect) {
         return width() > 0 && height() > 0 && rect.width > 0 && rect.height > 0 && this.rect.overlaps(rect);
     }
 
     /**
-     * Convenience method using to check whether the specified hitbox overlaps.
-     * {@link #overlaps(Rectangle)} for more details.
+     * Convenience method to check whether specified hitbox overlaps.
+     * See {@link #overlaps(Rectangle)} for more details.
      *
      * @param hitbox hitbox to check overlap
-     * @return whether the hitbox overlaps
+     * @return whether hitbox overlaps
      */
     public boolean overlaps(Hitbox hitbox) {
         return overlaps(hitbox.rect);
     }
 
     /**
-     * Convenience method using to check whether the specified entity,
-     * more specifically it's hitbox, overlaps.
-     * {@link #overlaps(Rectangle)} for more details.
+     * Convenience method to check whether specified entity's hitbox overlaps.
+     * See {@link #overlaps(Rectangle)} for more details.
      *
      * @param e entity to check overlap
-     * @return whether the hitbox overlaps
+     * @return whether hitbox overlaps
      */
     public boolean overlaps(Entity e) {
         return overlaps(e.hitbox);

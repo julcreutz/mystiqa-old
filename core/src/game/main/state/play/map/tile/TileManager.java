@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Rectangle;
 import game.main.state.play.map.Map;
 
 /**
- * A helper class that manages, constructs and generally
+ * Helper class that manages, constructs and generally
  * handles tiles.
  *
  * Tiles are stored in a three dimensional array, where the
@@ -15,7 +15,7 @@ import game.main.state.play.map.Map;
  * z coordinate to give an impression of space.
  */
 public class TileManager {
-    /** Holds reference to map. */
+    /** Holds reference of map. */
     public Map map;
 
     /** Stores tiles. */

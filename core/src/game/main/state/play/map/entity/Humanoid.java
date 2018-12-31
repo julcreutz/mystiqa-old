@@ -40,6 +40,8 @@ public class Humanoid extends Entity {
     public int dir;
     public float time;
 
+    public float lastUsed;
+
     public Humanoid() {
         hitbox.set(4, 2, 2, 1);
         attackHitbox = new Hitbox(this);
@@ -94,19 +96,21 @@ public class Humanoid extends Entity {
             velX = MathUtils.round(MathUtils.cosDeg(angle) * speed);
             velY = MathUtils.round(MathUtils.sinDeg(angle) * speed);
 
-            switch (MathUtils.floor((angle + 360f) / 45f) % 8) {
-                case 0:
-                    this.dir = 0;
-                    break;
-                case 2:
-                    this.dir = 1;
-                    break;
-                case 4:
-                    this.dir = 2;
-                    break;
-                case 6:
-                    this.dir = 3;
-                    break;
+            if (lastUsed > .01f) {
+                switch (MathUtils.floor((angle + 360f) / 45f) % 8) {
+                    case 0:
+                        this.dir = 0;
+                        break;
+                    case 2:
+                        this.dir = 1;
+                        break;
+                    case 4:
+                        this.dir = 2;
+                        break;
+                    case 6:
+                        this.dir = 3;
+                        break;
+                }
             }
 
             Tile t = tileAt(map);
@@ -117,6 +121,12 @@ public class Humanoid extends Entity {
         }
 
         step = MathUtils.floor(time * animSpeed) % 4;
+
+        lastUsed += Game.delta();
+
+        if ((mainHand != null && mainHand.isUsing()) || (offHand != null && offHand.isUsing())) {
+            lastUsed = 0;
+        }
 
         super.update(map);
     }
