@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.JsonValue;
 import game.loader.resource.sprite_sheet.SpriteSheet;
 import game.main.Game;
+import game.main.stat.StatType;
 import game.main.state.play.map.entity.Humanoid;
 import game.main.stat.Stat;
 
@@ -50,7 +51,7 @@ public class MeleeWeapon extends MainHand {
     public boolean attacking;
 
     public MeleeWeapon() {
-        slowdown = new Stat(Stat.Type.SPEED, 0, 0);
+        slowdown = new Stat(StatType.SPEED, 0, 0);
     }
 
     @Override

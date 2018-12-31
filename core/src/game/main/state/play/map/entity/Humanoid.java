@@ -14,6 +14,7 @@ import game.main.item.equipment.armor.BodyArmor;
 import game.main.item.equipment.armor.FeetArmor;
 import game.main.item.equipment.armor.HeadArmor;
 import game.main.stat.Stat;
+import game.main.stat.StatType;
 import game.main.state.play.map.Map;
 import game.main.state.play.map.tile.Tile;
 
@@ -50,26 +51,6 @@ public class Humanoid extends Entity {
 
     @Override
     public void update(Map map) {
-        if (Gdx.input.isKeyPressed(Input.Keys.F)) {
-            if (mainHand != null) {
-                mainHand.use();
-            }
-        }
-
-        if (mainHand != null) {
-            mainHand.update(this);
-        }
-
-        if (Gdx.input.isKeyPressed(Input.Keys.D) && (mainHand == null || !mainHand.isUsing())) {
-            if (offHand != null) {
-                offHand.use();
-            }
-        }
-
-        if (offHand != null) {
-            offHand.update(this);
-        }
-
         Vector2 dir = new Vector2();
 
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
@@ -91,7 +72,7 @@ public class Humanoid extends Entity {
         float angle = dir.angle();
 
         if (dir.x != 0 || dir.y != 0) {
-            float speed = statManager.count(Stat.Type.SPEED);
+            float speed = statManager.count(StatType.SPEED);
 
             velX = MathUtils.round(MathUtils.cosDeg(angle) * speed);
             velY = MathUtils.round(MathUtils.sinDeg(angle) * speed);
@@ -118,6 +99,26 @@ public class Humanoid extends Entity {
             if (t != null && t.type.forcedDirection != -1) {
                 this.dir = t.type.forcedDirection;
             }
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.F)) {
+            if (mainHand != null) {
+                mainHand.use();
+            }
+        }
+
+        if (mainHand != null) {
+            mainHand.update(this);
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.D) && (mainHand == null || !mainHand.isUsing())) {
+            if (offHand != null) {
+                offHand.use();
+            }
+        }
+
+        if (offHand != null) {
+            offHand.update(this);
         }
 
         step = MathUtils.floor(time * animSpeed) % 4;

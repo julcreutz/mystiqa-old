@@ -7,10 +7,10 @@ import java.util.Random;
 
 /** Class enclosing interval with two inclusive boundaries. */
 public class Range implements Serializable {
-    /** Lower inclusive bound. */
+    /** Lower bound. Inclusive */
     public int min;
 
-    /** Higher inclusive bound. */
+    /** Higher bound. Inclusive */
     public int max;
 
     /** Constructs range with given boundaries. */

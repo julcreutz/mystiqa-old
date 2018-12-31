@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import game.Range;
 import game.main.Game;
 import game.main.state.play.map.Map;
+import game.main.state.play.map.Node;
 import game.main.state.play.map.world.Biome;
 import game.main.state.play.map.world.Room;
 import game.main.state.play.map.world.World;
@@ -63,10 +64,10 @@ public class Village extends Structure<World> {
             Rectangle r0 = houses.get(i);
             Rectangle r1 = houses.get(i + 1);
 
-            Array<World.Node> path = map.findPath(r0.x + r0.width / 2, r0.y - 1, r1.x + r1.width / 2, r1.y - 1);
+            Array<Node> path = map.findPath(r0.x + r0.width / 2, r0.y - 1, r1.x + r1.width / 2, r1.y - 1);
 
             if (path != null) {
-                for (World.Node node : path) {
+                for (Node node : path) {
                     if (map.tiles.tileAt(node.x, node.y, 0) != null && map.tiles.tileAt(node.x, node.y, 0).type == map.biomes[node.x / 16][node.y / 8].ground) {
                         map.tiles.placeTile(Game.TILES.load("Path"), node.x, node.y, 0);
                     }
