@@ -58,7 +58,9 @@ public class MeleeWeapon extends MainHand {
         super.update(h);
 
         if (isAttacking()) {
-            attackTime -= Game.getDelta() * 4f * speed;
+            if (attacking) {
+                attackTime -= Game.delta() * 4f * speed;
+            }
 
             float a = h.dir * 90 - 135 + (1 - attackTime) * angle;
             dist = 6 + MathUtils.sin(attackTime * MathUtils.PI) * 2f;
@@ -112,6 +114,7 @@ public class MeleeWeapon extends MainHand {
 
         if (!attacking) {
             attackTime = 1;
+            attackTime = MathUtils.clamp(attackTime, 0, 1);
             if (!h.statManager.stats.contains(slowdown, true)) {
                 h.statManager.stats.add(slowdown);
             }

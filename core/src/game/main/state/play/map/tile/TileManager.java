@@ -3,8 +3,6 @@ package game.main.state.play.map.tile;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import game.main.state.play.map.Map;
-import game.main.state.play.map.tile.Tile;
-import game.main.state.play.map.tile.TileType;
 
 /**
  * A helper class that manages, constructs and generally
@@ -148,7 +146,7 @@ public class TileManager {
         }
     }
 
-    public void placeTile(TileType type, int x, int y, int z) {
+    public void placeTile(Tile.Type type, int x, int y, int z) {
         placeTile(new Tile(type), x, y, z);
     }
 

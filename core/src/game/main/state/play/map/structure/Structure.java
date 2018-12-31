@@ -2,14 +2,13 @@ package game.main.state.play.map.structure;
 
 import com.badlogic.gdx.utils.JsonValue;
 import game.loader.Serializable;
-import game.main.state.play.Play;
 import game.main.state.play.map.Map;
-import game.main.state.play.map.tile.TileType;
+import game.main.state.play.map.tile.Tile;
 
 import java.util.Random;
 
 public abstract class Structure implements Serializable {
-    public TileType getTile() {
+    public Tile.Type tile() {
         return null;
     }
 

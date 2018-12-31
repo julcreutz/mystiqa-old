@@ -6,7 +6,7 @@
       ["Black", "Green"]
     ],
     "autoTile": true,
-    "connect": ["TreeBottom", "Stone", "Bridge"]
+    "connect": ["TreeBottom", "Stone", "Bridge", "HouseWall", "HouseEntrance"]
   },
   "Water": {
     "name": "Water",
@@ -95,5 +95,30 @@
     "palettes": [
       ["Black", "Green"]
     ]
+  },
+  "HouseEntrance": {
+    "name": "HouseEntrance",
+    "sheet": "HouseEntrance",
+    "palettes": [
+      ["Black", "Brown"]
+    ]
+  },
+  "HouseWall": {
+    "name": "HouseWall",
+    "sheet": "HouseWall",
+    "palettes": [
+      ["Black","Brown"]
+    ],
+    "autoTile": true,
+    "connect": ["HouseEntrance"],
+    "solid": true
+  },
+  "HouseRoof": {
+    "name": "HouseRoof",
+    "sheet": "HouseRoof",
+    "palettes": [
+      ["Black", "Brown", "Yellow"]
+    ],
+    "autoTile": true
   }
 }

@@ -2,6 +2,7 @@ package game.main.state.play.map;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import game.loader.Serializable;
 import game.main.Game;
@@ -11,6 +12,24 @@ import game.main.state.play.map.entity.EntityManager;
 import game.main.state.play.map.tile.TileManager;
 
 public abstract class Map implements Serializable {
+    public class Teleport {
+        public Rectangle rect;
+
+        public Map destination;
+
+        public float destinationX;
+        public float destinationY;
+
+        public Teleport(Map destination, float destinationX, float destinationY, float x, float y, float width, float height) {
+            this.destination = destination;
+
+            this.destinationX = destinationX;
+            this.destinationY = destinationY;
+
+            rect = new Rectangle(x, y, width, height);
+        }
+    }
+
     public static final float CAM_SPEED = 1.5f;
 
     public static final int X_VIEW = 10;
@@ -57,7 +76,7 @@ public abstract class Map implements Serializable {
                 camTime = 1;
             }
 
-            camTime -= Game.getDelta() * CAM_SPEED;
+            camTime -= Game.delta() * CAM_SPEED;
 
             float p = MathUtils.clamp(1 - camTime, 0, 1);
 
@@ -79,8 +98,6 @@ public abstract class Map implements Serializable {
 
         tiles.update(x0, x1, y0, y1);
         entities.update();
-
-        //player.hitbox.position(player);
 
         if (player.onTeleport) {
             boolean onTeleport = false;
@@ -133,10 +150,6 @@ public abstract class Map implements Serializable {
         batch.setShader(null);
 
         tiles.render(batch, x0, x1, y0, y1, 1, tiles.getDepth());
-
-        for (Teleport t : teleports) {
-            batch.draw(Game.SPRITE_SHEETS.load("GuiLayer").sheet[0][0], t.rect.x, t.rect.y, t.rect.width, t.rect.height);
-        }
 
         batch.draw(Game.SPRITE_SHEETS.load("GuiLayer").sheet[0][0], camPosX - Game.WIDTH * .5f, camPosY + Game.HEIGHT * .5f - 8, Game.WIDTH, 8);
     }

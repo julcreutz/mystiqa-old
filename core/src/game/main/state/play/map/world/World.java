@@ -310,7 +310,7 @@ public class World extends Map {
                             Biome b = biomes[p.x / 16][p.y / 8];
                             Connector c = b.getConnector(connection);
 
-                            if (t != null && b.wall != null && t.type == b.wall.getTile()) {
+                            if (t != null && b.wall != null && t.type == b.wall.tile()) {
                                 tiles.erase(p.x, p.y);
                                 tiles.placeTile(c.tile, p.x, p.y, 0);
                             }

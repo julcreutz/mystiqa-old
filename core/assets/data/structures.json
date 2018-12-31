@@ -15,7 +15,9 @@
   },
   "HouseExterior": {
     "HouseExterior": {
-      "wall": "Stone",
+      "entrance": "HouseEntrance",
+      "wall": "HouseWall",
+      "roof": "HouseRoof",
       "width": {
         "min": 3,
         "max": 6

@@ -5,7 +5,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import game.loader.Serializable;
 import game.main.Game;
 import game.main.state.play.map.structure.Structure;
-import game.main.state.play.map.tile.TileType;
+import game.main.state.play.map.tile.Tile;
 
 import java.util.Random;
 
@@ -21,15 +21,15 @@ public class Biome implements Serializable {
 
     public float randomConnectChance;
 
-    public TileType ground;
+    public Tile.Type ground;
     public Structure wall;
 
     public Array<Connector> connectors;
 
     public int[] wayThickness;
 
-    public TileType river;
-    public TileType riverBridge;
+    public Tile.Type river;
+    public Tile.Type riverBridge;
 
     public Array<RoomTemplate> templates;
 

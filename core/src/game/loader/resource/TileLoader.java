@@ -1,10 +1,10 @@
 package game.loader.resource;
 
-import game.main.state.play.map.tile.TileType;
+import game.main.state.play.map.tile.Tile;
 
-public class TileLoader extends ResourceLoader<TileType> {
+public class TileLoader extends ResourceLoader<Tile.Type> {
     @Override
-    public TileType newInstance() {
-        return new TileType();
+    public Tile.Type newInstance() {
+        return new Tile.Type();
     }
 }

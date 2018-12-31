@@ -1,6 +1,7 @@
 package game.main.state;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -26,6 +27,10 @@ public abstract class GameState {
     }
 
     public void update(Game g) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+            create();
+        }
+
         cam.update();
     }
 

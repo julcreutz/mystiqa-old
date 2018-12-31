@@ -110,7 +110,7 @@ public class Entity implements Serializable {
         }
 
         if (isHit()) {
-            hitTime -= Game.getDelta();
+            hitTime -= Game.delta();
 
             velX += MathUtils.cosDeg(hitAngle) * hitSpeed;
             velY += MathUtils.sinDeg(hitAngle) * hitSpeed;
@@ -147,7 +147,7 @@ public class Entity implements Serializable {
         velX *= moveSpeed;
         velY *= moveSpeed;
 
-        hitbox.position(velX * Game.getDelta(), 0);
+        hitbox.position(velX * Game.delta(), 0);
 
         for (int x = 0; x < map.tiles.getWidth(); x++) {
             for (int y = 0; y < map.tiles.getHeight(); y++) {
@@ -155,7 +155,7 @@ public class Entity implements Serializable {
 
                 if (solidTile != null && hitbox.overlaps(solidTile)) {
                     if (velX > 0) {
-                        this.x = solidTile.x - hitbox.getWidth() - hitbox.offsetX;
+                        this.x = solidTile.x - hitbox.width() - hitbox.offsetX;
                     } else if (velX < 0) {
                         this.x = solidTile.x + solidTile.width - hitbox.offsetX;
                     }
@@ -165,9 +165,9 @@ public class Entity implements Serializable {
             }
         }
 
-        x += velX * Game.getDelta();
+        x += velX * Game.delta();
 
-        hitbox.position(0, velY * Game.getDelta());
+        hitbox.position(0, velY * Game.delta());
 
         for (int x = 0; x < map.tiles.getWidth(); x++) {
             for (int y = 0; y < map.tiles.getHeight(); y++) {
@@ -175,7 +175,7 @@ public class Entity implements Serializable {
 
                 if (solidTile != null && hitbox.overlaps(solidTile)) {
                     if (velY > 0) {
-                        this.y = solidTile.y - hitbox.getHeight() - hitbox.offsetY;
+                        this.y = solidTile.y - hitbox.height() - hitbox.offsetY;
                     } else if (velY < 0) {
                         this.y = solidTile.y + solidTile.height - hitbox.offsetY;
                     }
@@ -185,7 +185,7 @@ public class Entity implements Serializable {
             }
         }
 
-        y += velY * Game.getDelta();
+        y += velY * Game.delta();
 
         if (velX != 0 || velY != 0) {
             onMove(map);
@@ -277,8 +277,8 @@ public class Entity implements Serializable {
     }
 
     public Tile tileAt(Map map) {
-        int x = MathUtils.floor((hitbox.getCenterX()) / 8f);
-        int y = MathUtils.floor(hitbox.getY() / 8f);
+        int x = MathUtils.floor((hitbox.centerX()) / 8f);
+        int y = MathUtils.floor(hitbox.y() / 8f);
 
         if (map.tiles.inBounds(x, y)) {
             return map.tiles.tileAt(x, y, 0);

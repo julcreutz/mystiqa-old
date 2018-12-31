@@ -2,16 +2,15 @@ package game.main.state.play.map.structure;
 
 import com.badlogic.gdx.utils.JsonValue;
 import game.main.Game;
-import game.main.state.play.Play;
 import game.main.state.play.map.Map;
-import game.main.state.play.map.tile.TileType;
+import game.main.state.play.map.tile.Tile;
 
 import java.util.Random;
 
 public class Tree extends Structure {
-    public TileType bottomTile;
-    public TileType middleTile;
-    public TileType topTile;
+    public Tile.Type bottomTile;
+    public Tile.Type middleTile;
+    public Tile.Type topTile;
 
     public int minHeight;
     public int maxHeight;
@@ -48,7 +47,7 @@ public class Tree extends Structure {
     }
 
     @Override
-    public TileType getTile() {
+    public Tile.Type tile() {
         return bottomTile;
     }
 }

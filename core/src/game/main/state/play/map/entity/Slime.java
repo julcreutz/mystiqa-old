@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonValue;
 import game.main.Game;
-import game.main.state.play.Play;
 import game.main.state.play.map.Map;
 
 public class Slime extends Entity {
@@ -46,7 +45,7 @@ public class Slime extends Entity {
                     break;
                 }
 
-                time -= Game.getDelta();
+                time -= Game.delta();
 
                 if (time < 0) {
                     jump(MathUtils.random(360f), MathUtils.random(12f, 24f), MathUtils.random(1f, 2f));
@@ -56,7 +55,7 @@ public class Slime extends Entity {
 
                 break;
             case FOLLOW_PLAYER:
-                time -= Game.getDelta();
+                time -= Game.delta();
 
                 if (time < 0) {
                     jump(new Vector2(map.player.x, map.player.y).sub(x, y).angle(), new Vector2(map.player.x, map.player.y).sub(x, y).len() * 2.5f, MathUtils.random(.5f, 1f));
@@ -68,7 +67,7 @@ public class Slime extends Entity {
                     jumpTime = .1f;
                 }
 
-                jumpTime -= Game.getDelta();
+                jumpTime -= Game.delta();
 
                 if (jumpTime < 0) {
                     state = State.JUMP;
@@ -79,8 +78,8 @@ public class Slime extends Entity {
                 velX = MathUtils.cosDeg(jumpAngle) * jumpSpeed;
                 velY = MathUtils.sinDeg(jumpAngle) * jumpSpeed;
 
-                z += velZ * Game.getDelta();
-                velZ -= Game.getDelta() * 512f;
+                z += velZ * Game.delta();
+                velZ -= Game.delta() * 512f;
 
                 if (z < 0) {
                     z = 0;
@@ -97,7 +96,7 @@ public class Slime extends Entity {
                     jumpTime = .1f;
                 }
 
-                jumpTime -= Game.getDelta();
+                jumpTime -= Game.delta();
 
                 if (jumpTime < 0) {
                     state = State.RANDOM_MOVEMENT;

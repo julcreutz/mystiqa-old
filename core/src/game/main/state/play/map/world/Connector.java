@@ -4,10 +4,10 @@ import com.badlogic.gdx.utils.JsonValue;
 import game.Range;
 import game.loader.Serializable;
 import game.main.Game;
-import game.main.state.play.map.tile.TileType;
+import game.main.state.play.map.tile.Tile;
 
 public class Connector implements Serializable {
-    public TileType tile;
+    public Tile.Type tile;
 
     public Range absoluteDiffX;
     public Range absoluteDiffY;
