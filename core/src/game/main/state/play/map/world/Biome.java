@@ -10,6 +10,32 @@ import game.main.state.play.map.tile.Tile;
 import java.util.Random;
 
 public class Biome implements Serializable {
+    public static class Decoration implements Serializable {
+        public float chance;
+        public int freeRadius;
+
+        public Structure structure;
+
+        public Decoration(JsonValue json) {
+            deserialize(json);
+        }
+
+        @Override
+        public void deserialize(JsonValue json) {
+            if (json.has("chance")) {
+                chance = json.getFloat("chance");
+            }
+
+            if (json.has("freeRadius")) {
+                freeRadius = json.getInt("freeRadius");
+            }
+
+            if (json.has("structure")) {
+                structure = Game.STRUCTURES.load(json.getString("structure"));
+            }
+        }
+    }
+
     public float minElevation;
     public float maxElevation;
 
@@ -32,6 +58,8 @@ public class Biome implements Serializable {
     public Tile.Type riverBridge;
 
     public Array<RoomTemplate> templates;
+
+    public Decoration[] decorations;
 
     public RoomTemplate pickTemplate(Room r, Random rand) {
         RoomTemplate t = null;
@@ -133,6 +161,15 @@ public class Biome implements Serializable {
                 RoomTemplate t = new RoomTemplate();
                 t.deserialize(template);
                 templates.add(t);
+            }
+        }
+
+        JsonValue decorations = json.get("decorations");
+        if (decorations != null) {
+            this.decorations = new Decoration[decorations.size];
+
+            for (int i = 0; i < decorations.size; i++) {
+                this.decorations[i] = new Decoration(decorations.get(i));
             }
         }
     }

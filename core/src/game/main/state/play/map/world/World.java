@@ -374,6 +374,28 @@ public class World extends Map {
         }
 
         for (Room r : rooms) {
+            Biome b = biomeAt(r.x / 2, r.y / 2);
+
+            if (b.decorations != null) {
+                for (int x = r.x0(); x < r.x1(); x++) {
+                    for (int y = r.y0(); y < r.y1(); y++) {
+                        Biome.Decoration decoration = null;
+
+                        for (Biome.Decoration d : b.decorations) {
+                            if (tiles.isFree(x, y, 0, d.freeRadius) && rand.nextFloat() < d.chance) {
+                                decoration = d;
+                            }
+                        }
+
+                        if (decoration != null) {
+                            decoration.structure.generate(rand, this, x, y, 0);
+                        }
+                    }
+                }
+            }
+        }
+
+        for (Room r : rooms) {
             if (r.w == 2 && r.h == 2 && r.x % 4 == 0 && r.y % 4 == 0 && r.x < biomes.length * 2 - 2 && r.y < biomes[0].length * 2 - 2 && rand.nextFloat() < .25f) {
                 Game.STRUCTURES.load("Village").generate(rand, this, r.x0(), r.y0(), 0);
             }
