@@ -13,6 +13,16 @@
       "tile": "Stone"
     }
   },
+  "Rock": {
+    "SingleTile": {
+      "tile": "Rock"
+    }
+  },
+  "TallGrass": {
+    "SingleTile": {
+      "tile": "TallGrass"
+    }
+  },
   "HouseExterior": {
     "HouseExterior": {
       "entrance": "HouseEntrance",

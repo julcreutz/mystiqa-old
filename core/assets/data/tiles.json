@@ -6,7 +6,7 @@
       ["Black", "Green"]
     ],
     "autoTile": true,
-    "connect": ["TreeBottom", "Stone", "Bridge", "HouseWall", "HouseEntrance"]
+    "connect": ["TreeBottom", "Stone", "Bridge", "HouseWall", "HouseEntrance", "Rock", "TallGrass"]
   },
   "Path": {
     "name": "Path",
@@ -127,6 +127,22 @@
     "sheet": "HouseRoof",
     "palettes": [
       ["Black", "Brown", "Yellow"]
+    ],
+    "autoTile": true
+  },
+  "Rock": {
+    "name": "Rock",
+    "sheet": "Rock",
+    "palettes": [
+      ["Black", "Green", "Gray"]
+    ],
+    "solid": true
+  },
+  "TallGrass": {
+    "name": "TallGrass",
+    "sheet": "TallGrass",
+    "palettes": [
+      ["Black", "Green"]
     ],
     "autoTile": true
   }

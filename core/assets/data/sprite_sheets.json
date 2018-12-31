@@ -134,6 +134,16 @@
     "splitW": 8,
     "splitH": 8
   },
+  "Rock": {
+    "path": "graphics/rock.png",
+    "splitW": 8,
+    "splitH": 8
+  },
+  "TallGrass": {
+    "path": "graphics/tall_grass.png",
+    "splitW": 8,
+    "splitH": 8
+  },
   "BodyArmor": {
     "path": "graphics/body_armor.png",
     "splitW": 8,

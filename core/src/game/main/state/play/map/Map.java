@@ -60,8 +60,8 @@ public abstract class Map implements Serializable {
 
     public static final float CAM_SPEED = 1.5f;
 
-    public static final int X_VIEW = 10;
-    public static final int Y_VIEW = 8;
+    public static final int X_VIEW = 1000;
+    public static final int Y_VIEW = 800;
 
     public boolean generated;
 

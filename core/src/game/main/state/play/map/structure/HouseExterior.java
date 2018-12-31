@@ -27,8 +27,12 @@ public class HouseExterior extends Structure<World> {
     public void generate(Random rand, World map, int x, int y, int z) {
         for (int xx = -1; xx < w + 1; xx++) {
             for (int yy = -1; yy < h + 1; yy++) {
-                map.tiles.erase(x + xx, y + yy);
-                map.tiles.placeTile(map.biomes[x / 16][y / 8].ground, x + xx, y + yy, 0);
+                Tile t = map.tiles.tileAt(x + xx, y + yy, 0);
+
+                if (t != null && t.type == map.biomes[(x + xx) / 16][(y + yy) / 8].wall.tile()) {
+                    map.tiles.erase(x + xx, y + yy);
+                    map.tiles.placeTile(map.biomes[x / 16][y / 8].ground, x + xx, y + yy, 0);
+                }
             }
         }
 

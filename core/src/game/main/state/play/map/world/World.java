@@ -357,18 +357,31 @@ public class World extends Map {
             }
         }
 
+        connected = new HashMap<Room, Array<Room>>();
+
         for (Room r0 : rooms) {
+            Biome b = biomes[r0.x / 2][r0.y / 2];
+
             for (Room r1 : r0.children) {
-                Biome b = biomes[r1.x / 2][r1.y / 2];
+                if (!connected.containsKey(r1) || !connected.get(r1).contains(r0, true)) {
+                    Connection connection = getConnection(r0, r1);
 
-                for (Point p : getConnection(r0, r1).points) {
-                    if (tiles.inBounds(p.x, p.y)) {
-                        Tile t = tiles.tileAt(p.x, p.y, 0);
+                    for (Point p : connection.points) {
+                        if (tiles.inBounds(p.x, p.y)) {
+                            Tile t = tiles.tileAt(p.x, p.y, 0);
 
-                        if (t != null && t.type == b.river) {
-                            tiles.placeTile(b.riverBridge, p.x, p.y, 0);
+                            if (t != null && t.type == b.river) {
+                                tiles.erase(p.x, p.y);
+                                tiles.placeTile(b.riverBridge, p.x, p.y, 0);
+                            }
                         }
                     }
+
+                    if (!connected.containsKey(r0)) {
+                        connected.put(r0, new Array<Room>());
+                    }
+
+                    connected.get(r0).add(r1);
                 }
             }
         }
@@ -379,16 +392,20 @@ public class World extends Map {
             if (b.decorations != null) {
                 for (int x = r.x0(); x < r.x1(); x++) {
                     for (int y = r.y0(); y < r.y1(); y++) {
-                        Biome.Decoration decoration = null;
+                        Tile t = tiles.tileAt(x, y, 0);
 
-                        for (Biome.Decoration d : b.decorations) {
-                            if (tiles.isFree(x, y, 0, d.freeRadius) && rand.nextFloat() < d.chance) {
-                                decoration = d;
+                        if (t != null && t.type == b.ground) {
+                            Biome.Decoration decoration = null;
+
+                            for (Biome.Decoration d : b.decorations) {
+                                if (tiles.isFree(x, y, 0, d.freeRadius) && rand.nextFloat() < d.chance) {
+                                    decoration = d;
+                                }
                             }
-                        }
 
-                        if (decoration != null) {
-                            decoration.structure.generate(rand, this, x, y, 0);
+                            if (decoration != null) {
+                                decoration.structure.generate(rand, this, x, y, 0);
+                            }
                         }
                     }
                 }
@@ -538,7 +555,7 @@ public class World extends Map {
         c.wayThickness = b.wayThickness[rand.nextInt(b.wayThickness.length)];
 
         if (diffX != 0) {
-            int[] xx = new int[] {smaller.x * 8 + smaller.w * 4, smaller.x * 8 + smaller.w * 4 + larger.w * diffX * 8};
+            int[] xx = new int[] {smaller.x * 8 + smaller.w * 4, smaller.x * 8 + smaller.w * 4 + smaller.w * 8 * diffX};
 
             int x0 = Math.min(xx[0], xx[1]);
             int x1 = Math.max(xx[0], xx[1]);
@@ -552,7 +569,7 @@ public class World extends Map {
                 }
             }
         } else if (diffY != 0) {
-            int[] yy = new int[] {smaller.y * 4 + smaller.h * 2, smaller.y * 4 + smaller.h * 2 + larger.h * diffY * 4};
+            int[] yy = new int[] {smaller.y * 4 + smaller.h * 2, smaller.y * 4 + smaller.h * 2 + smaller.h * 4 * diffY};
 
             int y0 = Math.min(yy[0], yy[1]);
             int y1 = Math.max(yy[0], yy[1]);
