@@ -40,8 +40,6 @@ public class Humanoid extends Entity {
     public int dir;
     public float time;
 
-    public float lastUsed;
-
     public Humanoid() {
         hitbox.set(4, 2, 2, 1);
         attackHitbox = new Hitbox(this);
@@ -50,6 +48,26 @@ public class Humanoid extends Entity {
 
     @Override
     public void update(Map map) {
+        if (Gdx.input.isKeyPressed(Input.Keys.F)) {
+            if (mainHand != null) {
+                mainHand.use();
+            }
+        }
+
+        if (mainHand != null) {
+            mainHand.update(this);
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.D) && (mainHand == null || !mainHand.isUsing())) {
+            if (offHand != null) {
+                offHand.use();
+            }
+        }
+
+        if (offHand != null) {
+            offHand.update(this);
+        }
+
         Vector2 dir = new Vector2();
 
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
@@ -76,21 +94,19 @@ public class Humanoid extends Entity {
             velX = MathUtils.round(MathUtils.cosDeg(angle) * speed);
             velY = MathUtils.round(MathUtils.sinDeg(angle) * speed);
 
-            if (lastUsed > .01f) {
-                switch (MathUtils.floor((angle + 360f) / 45f) % 8) {
-                    case 0:
-                        this.dir = 0;
-                        break;
-                    case 2:
-                        this.dir = 1;
-                        break;
-                    case 4:
-                        this.dir = 2;
-                        break;
-                    case 6:
-                        this.dir = 3;
-                        break;
-                }
+            switch (MathUtils.floor((angle + 360f) / 45f) % 8) {
+                case 0:
+                    this.dir = 0;
+                    break;
+                case 2:
+                    this.dir = 1;
+                    break;
+                case 4:
+                    this.dir = 2;
+                    break;
+                case 6:
+                    this.dir = 3;
+                    break;
             }
 
             Tile t = tileAt(map);
@@ -100,33 +116,7 @@ public class Humanoid extends Entity {
             }
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.F)) {
-            if (mainHand != null) {
-                mainHand.use();
-            }
-        }
-
-        if (Gdx.input.isKeyPressed(Input.Keys.D) && (mainHand == null || !mainHand.isUsing())) {
-            if (offHand != null) {
-                offHand.use();
-            }
-        }
-
-        if (mainHand != null) {
-            mainHand.update(this);
-        }
-
-        if (offHand != null) {
-            offHand.update(this);
-        }
-
         step = MathUtils.floor(time * animSpeed) % 4;
-
-        lastUsed += Game.delta();
-
-        if ((mainHand != null && mainHand.isUsing()) || (offHand != null && offHand.isUsing())) {
-            lastUsed = 0;
-        }
 
         super.update(map);
     }
