@@ -1,5 +1,7 @@
 package game.main.state.play;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import game.main.Game;
 import game.main.state.GameState;
 import game.main.state.play.map.Map;
@@ -20,6 +22,12 @@ public class Play extends GameState {
     @Override
     public void update(Game g) {
         super.update(g);
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+            nextMap = Game.MAPS.load("Overworld");
+            nextMap.generate();
+            nextMap.placePlayer();
+        }
 
         if (nextMap != null) {
             map = nextMap;

@@ -104,7 +104,7 @@ public class TileManager {
      * @return whether coordinates are in bounds
      */
     public boolean inBounds(int x, int y, int z) {
-        return x >= 0 && x < getWidth() && y >= 0 && y < getHeight() && z >= 0 && z < getDepth();
+        return x >= 0 && x < width() && y >= 0 && y < height() && z >= 0 && z < depth();
     }
 
     /**
@@ -174,20 +174,20 @@ public class TileManager {
         return true;
     }
 
-    public int getWidth() {
+    public int width() {
         return tiles.length;
     }
 
-    public int getHeight() {
+    public int height() {
         return tiles[0].length;
+    }
+
+    public int depth() {
+        return tiles[0][0].length;
     }
 
     public void initSize(int w, int h, int d) {
         tiles = new Tile[w][h][d];
         solidTiles = new Rectangle[w][h];
-    }
-
-    public int getDepth() {
-        return tiles[0][0].length;
     }
 }

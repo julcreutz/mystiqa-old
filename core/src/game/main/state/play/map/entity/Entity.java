@@ -149,8 +149,8 @@ public class Entity implements Serializable {
 
         hitbox.position(velX * Game.delta(), 0);
 
-        for (int x = 0; x < map.tiles.getWidth(); x++) {
-            for (int y = 0; y < map.tiles.getHeight(); y++) {
+        for (int x = 0; x < map.tiles.width(); x++) {
+            for (int y = 0; y < map.tiles.height(); y++) {
                 Rectangle solidTile = map.tiles.solidTiles[x][y];
 
                 if (solidTile != null && hitbox.overlaps(solidTile)) {
@@ -169,8 +169,8 @@ public class Entity implements Serializable {
 
         hitbox.position(0, velY * Game.delta());
 
-        for (int x = 0; x < map.tiles.getWidth(); x++) {
-            for (int y = 0; y < map.tiles.getHeight(); y++) {
+        for (int x = 0; x < map.tiles.width(); x++) {
+            for (int y = 0; y < map.tiles.height(); y++) {
                 Rectangle solidTile = map.tiles.solidTiles[x][y];
 
                 if (solidTile != null && hitbox.overlaps(solidTile)) {

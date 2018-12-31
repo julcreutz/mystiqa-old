@@ -20,13 +20,22 @@
       "roof": "HouseRoof",
       "width": {
         "min": 3,
-        "max": 6
+        "max": 5
       },
       "height": {
         "min": 2,
         "max": 3
       },
       "interior": "HouseInterior"
+    }
+  },
+  "Village": {
+    "Village": {
+      "house": "HouseExterior",
+      "count": {
+        "min": 5,
+        "max": 7
+      }
     }
   }
 }

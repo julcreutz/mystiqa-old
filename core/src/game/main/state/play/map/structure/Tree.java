@@ -7,7 +7,7 @@ import game.main.state.play.map.tile.Tile;
 
 import java.util.Random;
 
-public class Tree extends Structure {
+public class Tree extends Structure<Map> {
     public Tile.Type bottomTile;
     public Tile.Type middleTile;
     public Tile.Type topTile;

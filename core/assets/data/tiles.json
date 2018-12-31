@@ -8,6 +8,15 @@
     "autoTile": true,
     "connect": ["TreeBottom", "Stone", "Bridge", "HouseWall", "HouseEntrance"]
   },
+  "Path": {
+    "name": "Path",
+    "sheet": "Grass",
+    "palettes": [
+      ["Black", "Brown"]
+    ],
+    "autoTile": true,
+    "connect": ["TreeBottom", "Stone", "Bridge", "HouseWall", "HouseEntrance", "Grass"]
+  },
   "Water": {
     "name": "Water",
     "sheet": "Water",

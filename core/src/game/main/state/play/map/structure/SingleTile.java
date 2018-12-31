@@ -7,7 +7,7 @@ import game.main.state.play.map.tile.Tile;
 
 import java.util.Random;
 
-public class SingleTile extends Structure {
+public class SingleTile extends Structure<Map> {
     public Tile.Type tile;
 
     @Override

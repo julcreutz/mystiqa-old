@@ -194,6 +194,10 @@ public class World extends Map {
                 y = rand.nextInt(biomes[0].length) * 2;
             } while (!biomes[x / 2][y / 2].possibleRiverSource || (roomAt(x, y) != null && (roomAt(x, y).w == 1 || roomAt(x, y).h == 1)));
 
+            Room r = roomAt(x, y);
+            x = r.x;
+            y = r.y;
+
             River river = new River(1);
             river.points.add(new Point(x, y));
 
@@ -204,7 +208,7 @@ public class World extends Map {
                     goneHorizontal = true;
 
                     if (rand.nextFloat() < .5f) {
-                        if (x > 1) {
+                        if (x >= 2) {
                             x -= 2;
                         }
                     } else {
@@ -222,7 +226,7 @@ public class World extends Map {
                 if (!river.points.contains(p, true)) {
                     river.points.add(p);
                 }
-            } while (y > 0);
+            } while (y >= 0);
 
             // Remove last because it's the ocean
             river.points.removeIndex(river.points.size - 1);
@@ -331,11 +335,11 @@ public class World extends Map {
                 Point p0 = river.points.get(i);
                 Point p1 = river.points.get(i + 1);
 
-                Biome b = biomes[p1.x / 2][p1.y / 2];
-
                 for (float p = 0; p < 1; p += .01f) {
                     int x = (int) MathUtils.lerp(p0.x * 8, p1.x * 8, p);
                     int y = (int) MathUtils.lerp(p0.y * 4, p1.y * 4, p);
+
+                    Biome b = biomes[x / 16][y / 8];
 
                     for (int xx = -river.thickness; xx <= river.thickness - 1; xx++) {
                         for (int yy = -1; yy <= 0; yy++) {
@@ -370,15 +374,15 @@ public class World extends Map {
         }
 
         for (Room r : rooms) {
-            if (r.w == 2 && r.h == 2) {
-                Game.STRUCTURES.load("HouseExterior").generate(rand, this, r.x0() + 3, r.y0() + 3, 0);
+            if (r.w == 2 && r.h == 2 && r.x % 4 == 0 && r.y % 4 == 0 && r.x < biomes.length * 2 - 2 && r.y < biomes[0].length * 2 - 2 && rand.nextFloat() < .25f) {
+                Game.STRUCTURES.load("Village").generate(rand, this, r.x0(), r.y0(), 0);
             }
         }
 
         entities.clear();
 
-        for (int x = 0; x < tiles.getWidth(); x++) {
-            for (int y = 0; y < tiles.getHeight(); y++) {
+        for (int x = 0; x < tiles.width(); x++) {
+            for (int y = 0; y < tiles.height(); y++) {
                 if (tiles.isFree(x, y, 0, 1) && rand.nextFloat() < .1f) {
                     Slime s = (Slime) Game.ENTITIES.load("GreenSlime");
                     s.x = x * 8;

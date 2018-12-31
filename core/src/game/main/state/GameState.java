@@ -27,10 +27,6 @@ public abstract class GameState {
     }
 
     public void update(Game g) {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
-            create();
-        }
-
         cam.update();
     }
 
