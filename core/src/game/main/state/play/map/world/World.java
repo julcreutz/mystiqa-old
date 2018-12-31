@@ -548,8 +548,6 @@ public class World extends Map {
                     c.points.add(new Point(x, y));
                 }
             }
-
-            System.out.println(c.wayThickness);
         } else if (diffY != 0) {
             int[] yy = new int[] {smaller.y * 4 + smaller.h * 2, smaller.y * 4 + smaller.h * 2 + Math.max(r0.h, r1.h) * 4 * diffY};
 
