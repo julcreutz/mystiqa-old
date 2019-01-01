@@ -15,8 +15,9 @@ public abstract class Equipment extends Item {
     public void deserialize(JsonValue json) {
         super.deserialize(json);
 
-        if (json.has("stats")) {
-            statManager.deserialize(json.get("stats"));
+        JsonValue stats = json.get("stats");
+        if (stats != null) {
+            statManager.deserialize(stats);
         }
     }
 }

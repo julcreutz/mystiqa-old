@@ -21,16 +21,19 @@ public class Stat implements Serializable {
 
     @Override
     public void deserialize(JsonValue json) {
-        if (json.has("type")) {
-            type = StatType.valueOf(json.getString("type"));
+        JsonValue type = json.get("type");
+        if (type != null) {
+            this.type = StatType.valueOf(type.asString());
         }
 
-        if (json.has("absolute")) {
-            absolute = json.getFloat("absolute");
+        JsonValue absolute = json.get("absolute");
+        if (absolute != null) {
+            this.absolute = absolute.asFloat();
         }
 
-        if (json.has("relative")) {
-            relative = json.getFloat("relative");
+        JsonValue relative = json.get("relative");
+        if (relative != null) {
+            this.relative = relative.asFloat();
         }
     }
 }

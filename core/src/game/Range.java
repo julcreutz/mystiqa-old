@@ -39,8 +39,8 @@ public class Range implements Serializable {
     }
 
     /**
-     * Checks whether given value is in range of bounds. The boundaries are inclusive,
-     * meaning the method will return true if given value equals {@link #min} or {@link #max}.
+     * Checks whether given value is in range of bounds. The boundaries are inclusive, meaning the method will return
+     * true if given value equals {@link #min} or {@link #max}.
      *
      * @param val value to be checked
      * @return whether value is within bounds
