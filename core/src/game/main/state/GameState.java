@@ -49,13 +49,9 @@ public abstract class GameState {
         batch.setProjectionMatrix(cam.combined);
 
         batch.begin();
-        batch.draw(
-                buffer.getColorBufferTexture(),
-                cam.position.x - buffer.getWidth() * .5f,
-                cam.position.y + buffer.getHeight() * .5f,
-                buffer.getWidth(),
-                -buffer.getHeight()
-        );
+        batch.draw(buffer.getColorBufferTexture(),
+                cam.position.x - buffer.getWidth() * .5f, cam.position.y + buffer.getHeight() * .5f,
+                buffer.getWidth(), -buffer.getHeight());
         batch.end();
     }
 
@@ -65,16 +61,8 @@ public abstract class GameState {
     public void resize(int w, int h) {
         viewport.update(w, h);
 
-        buffer = new FrameBuffer(
-                Pixmap.Format.RGBA8888,
-                Game.WIDTH,
-                Game.HEIGHT,
-                false
-        );
-        buffer.getColorBufferTexture().setFilter(
-                Texture.TextureFilter.Nearest,
-                Texture.TextureFilter.Nearest
-        );
+        buffer = new FrameBuffer(Pixmap.Format.RGBA8888, Game.WIDTH, Game.HEIGHT, false);
+        buffer.getColorBufferTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
     }
 
     public void dispose() {

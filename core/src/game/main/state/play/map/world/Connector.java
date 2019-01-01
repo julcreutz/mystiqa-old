@@ -1,18 +1,16 @@
 package game.main.state.play.map.world;
 
 import com.badlogic.gdx.utils.JsonValue;
-import game.Range;
+import game.range.IntRange;
 import game.loader.Serializable;
-import game.main.Game;
-import game.main.state.play.map.tile.Tile;
 
 public class Connector implements Serializable {
     public String tile;
 
-    public Range absoluteDiffX;
-    public Range absoluteDiffY;
+    public IntRange absoluteDiffX;
+    public IntRange absoluteDiffY;
 
-    public Range wayThickness;
+    public IntRange wayThickness;
 
     public boolean fits(Connection c) {
         return (absoluteDiffX == null || absoluteDiffX.inRange(c.absoluteDiffX)) && (absoluteDiffY == null || absoluteDiffY.inRange(c.absoluteDiffY)) && (wayThickness == null || wayThickness.inRange(c.wayThickness));
@@ -27,17 +25,17 @@ public class Connector implements Serializable {
 
         JsonValue absoluteDiffX = json.get("absoluteDiffX");
         if (absoluteDiffX != null) {
-            this.absoluteDiffX = new Range(absoluteDiffX);
+            this.absoluteDiffX = new IntRange(absoluteDiffX);
         }
 
         JsonValue absoluteDiffY = json.get("absoluteDiffY");
         if (absoluteDiffY != null) {
-            this.absoluteDiffY = new Range(absoluteDiffY);
+            this.absoluteDiffY = new IntRange(absoluteDiffY);
         }
 
         JsonValue wayThickness = json.get("wayThickness");
         if (wayThickness != null) {
-            this.wayThickness = new Range(wayThickness);
+            this.wayThickness = new IntRange(wayThickness);
         }
     }
 }

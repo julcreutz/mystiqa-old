@@ -1,10 +1,9 @@
 package game.main.state.play.map.structure;
 
 import com.badlogic.gdx.utils.JsonValue;
-import game.Range;
+import game.range.IntRange;
 import game.main.Game;
 import game.main.state.play.map.Map;
-import game.main.state.play.map.tile.Tile;
 
 import java.util.Random;
 
@@ -13,7 +12,7 @@ public class Tree extends Structure<Map> {
     public String middleTile;
     public String topTile;
 
-    public Range height;
+    public IntRange height;
 
     @Override
     public void generate(Random rand, Map map, int x, int y, int z) {
@@ -47,7 +46,7 @@ public class Tree extends Structure<Map> {
 
         JsonValue height = json.get("height");
         if (height != null) {
-            this.height = new Range(height);
+            this.height = new IntRange(height);
         }
     }
 

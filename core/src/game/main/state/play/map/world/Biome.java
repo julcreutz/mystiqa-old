@@ -6,12 +6,12 @@ import game.loader.Serializable;
 import game.main.Game;
 import game.main.state.play.map.structure.Structure;
 import game.main.state.play.map.tile.Tile;
+import game.range.FloatRange;
 
 import java.util.Random;
 
 public class Biome implements Serializable {
-    public float minElevation;
-    public float maxElevation;
+    public FloatRange elevation;
 
     public boolean possibleRiverSource;
     public float riverHorizontalChance;
@@ -63,12 +63,9 @@ public class Biome implements Serializable {
 
     @Override
     public void deserialize(JsonValue json) {
-        if (json.has("minElevation")) {
-            minElevation = json.getFloat("minElevation");
-        }
-
-        if (json.has("maxElevation")) {
-            maxElevation = json.getFloat("maxElevation");
+        JsonValue elevation = json.get("elevation");
+        if (elevation != null) {
+            this.elevation = new FloatRange(elevation);
         }
 
         if (json.has("possibleRiverSource")) {

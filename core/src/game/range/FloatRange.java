@@ -1,4 +1,4 @@
-package game;
+package game.range;
 
 import com.badlogic.gdx.utils.JsonValue;
 import game.loader.Serializable;
@@ -6,19 +6,19 @@ import game.loader.Serializable;
 import java.util.Random;
 
 /** Class enclosing an interval with two inclusive boundaries. */
-public class Range implements Serializable {
+public class FloatRange implements Serializable {
     /** Lower bound. Inclusive */
-    public int min;
+    public float min;
 
     /** Upper bound. Inclusive */
-    public int max;
+    public float max;
 
     /**
      * Constructs new instance and directly deserializes it from given json value.
      *
      * @param json json value
      */
-    public Range(JsonValue json) {
+    public FloatRange(JsonValue json) {
         deserialize(json);
     }
 
@@ -28,14 +28,14 @@ public class Range implements Serializable {
      * @param min lower inclusive bound
      * @param max upper inclusive bound
      */
-    public Range(int min, int max) {
+    public FloatRange(float min, float max) {
         this.min = min;
         this.max = max;
     }
 
     /** Constructs new instance with boundaries of approximately -infinite to infinite. */
-    public Range() {
-        this(-Integer.MAX_VALUE, Integer.MAX_VALUE);
+    public FloatRange() {
+        this(-Float.MAX_VALUE, Float.MAX_VALUE);
     }
 
     /**
@@ -45,7 +45,7 @@ public class Range implements Serializable {
      * @param val value to be checked
      * @return whether value is within bounds
      */
-    public boolean inRange(int val) {
+    public boolean inRange(float val) {
         return val >= min && val <= max;
     }
 
@@ -55,20 +55,20 @@ public class Range implements Serializable {
      * @param rand random number generator
      * @return random value within bounds
      */
-    public int pickRandom(Random rand) {
-        return min + rand.nextInt(max - min + 1);
+    public float pickRandom(Random rand) {
+        return min + rand.nextFloat() * (max - min);
     }
 
     @Override
     public void deserialize(JsonValue json) {
         JsonValue min = json.get("min");
         if (min != null) {
-            this.min = min.asInt();
+            this.min = min.asFloat();
         }
 
         JsonValue max = json.get("max");
         if (max != null) {
-            this.max = max.asInt();
+            this.max = max.asFloat();
         }
     }
 }

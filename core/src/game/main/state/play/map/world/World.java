@@ -3,7 +3,7 @@ package game.main.state.play.map.world;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
-import game.Range;
+import game.range.IntRange;
 import game.main.Game;
 import game.main.item.equipment.armor.BodyArmor;
 import game.main.item.equipment.armor.FeetArmor;
@@ -16,7 +16,6 @@ import game.main.state.play.map.tile.Tile;
 import game.Noise;
 
 import java.awt.*;
-import java.util.HashMap;
 import java.util.Random;
 
 public class World extends Map {
@@ -28,7 +27,7 @@ public class World extends Map {
     public int width;
     public int height;
 
-    public Range riverCount;
+    public IntRange riverCount;
 
     public Array<Biome> allBiomes = new Array<Biome>();
 
@@ -448,7 +447,7 @@ public class World extends Map {
         float e = elevationAt(x, y);
 
         for (Biome b : allBiomes) {
-            if (e >= b.minElevation && e <= b.maxElevation) {
+            if (b.elevation.inRange(e)) {
                 return b;
             }
         }
@@ -578,7 +577,7 @@ public class World extends Map {
         }
 
         if (json.has("riverCount")) {
-            riverCount = new Range();
+            riverCount = new IntRange();
             riverCount.deserialize(json.get("riverCount"));
         }
 

@@ -9,8 +9,10 @@
       },
       "biomes": [
         {
-          "minElevation": 0,
-          "maxElevation": 0.45,
+          "elevation": {
+            "min": 0,
+            "max": 0.45
+          },
           "possibleRiverSource": false,
           "riverHorizontalChance": 0.5,
           "horizontalChance": 0.5,
@@ -123,8 +125,10 @@
           ]
         },
         {
-          "minElevation": 0.45,
-          "maxElevation": 1,
+          "elevation": {
+            "min": 0.45,
+            "max": 1
+          },
           "possibleRiverSource": true,
           "riverHorizontalChance": 0,
           "horizontalChance": 0.75,

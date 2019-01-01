@@ -3,11 +3,9 @@ package game.main.state.play.map.structure;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
-import game.Range;
+import game.range.IntRange;
 import game.main.Game;
-import game.main.state.play.map.Map;
 import game.main.state.play.map.Node;
-import game.main.state.play.map.world.Biome;
 import game.main.state.play.map.world.Room;
 import game.main.state.play.map.world.World;
 
@@ -16,7 +14,7 @@ import java.util.Random;
 
 public class Village extends Structure<World> {
     public String house;
-    public Range count;
+    public IntRange count;
 
     @Override
     public void generate(Random rand, World map, int x, int y, int z) {
@@ -28,8 +26,8 @@ public class Village extends Structure<World> {
             while (true) {
                 Room r = map.roomAt(x / 16 + rand.nextInt(4), y / 8 + rand.nextInt(4));
 
-                r0.width = ((HouseExterior) Game.STRUCTURES.load(house)).width.pickRandom(rand);
-                r0.height = ((HouseExterior) Game.STRUCTURES.load(house)).height.pickRandom(rand);
+                r0.width = (int) ((HouseExterior) Game.STRUCTURES.load(house)).width.pickRandom(rand);
+                r0.height = (int) ((HouseExterior) Game.STRUCTURES.load(house)).height.pickRandom(rand);
 
                 final int dist = 2;
 
@@ -83,7 +81,7 @@ public class Village extends Structure<World> {
         }
 
         if (json.has("count")) {
-            count = new Range();
+            count = new IntRange();
             count.deserialize(json.get("count"));
         }
     }

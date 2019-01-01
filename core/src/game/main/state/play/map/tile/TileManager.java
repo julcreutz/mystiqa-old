@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Rectangle;
 import game.main.state.play.map.Map;
 
 /**
- * Helper class that manages, constructs and generally handles tiles.
+ * Helper class that manages, constructs and generally handles {@link Tile} objects.
  *
  * Tiles are stored in a three dimensional array, where the first dimension is x, the second y and the third z, which is
  * basically three dimensional "depth" in a two dimensional world. The tiles' y offset depends on their z coordinate
@@ -245,7 +245,7 @@ public class TileManager {
     }
 
     /**
-     * Initializes tiles with given dimensions.
+     * Initializes {@link #tiles} and {@link #solidTiles} as new empty array with given dimensions.
      *
      * @param w width
      * @param h height

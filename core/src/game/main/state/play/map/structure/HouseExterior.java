@@ -1,9 +1,8 @@
 package game.main.state.play.map.structure;
 
 import com.badlogic.gdx.utils.JsonValue;
-import game.Range;
+import game.range.IntRange;
 import game.main.Game;
-import game.main.state.play.map.Map;
 import game.main.state.play.map.house.HouseInterior;
 import game.main.state.play.map.tile.Tile;
 import game.main.state.play.map.world.World;
@@ -15,8 +14,8 @@ public class HouseExterior extends Structure<World> {
     public String wall;
     public String roof;
 
-    public Range width;
-    public Range height;
+    public IntRange width;
+    public IntRange height;
 
     public int w;
     public int h;
@@ -71,12 +70,12 @@ public class HouseExterior extends Structure<World> {
         }
 
         if (json.has("width")) {
-            width = new Range();
+            width = new IntRange();
             width.deserialize(json.get("width"));
         }
 
         if (json.has("height")) {
-            height = new Range();
+            height = new IntRange();
             height.deserialize(json.get("height"));
         }
 

@@ -5,7 +5,7 @@
       "middleTile": "TreeMiddle",
       "topTile": "TreeTop",
       "height": {
-        "min": 1,
+        "min": 0,
         "max": 2
       }
     }
