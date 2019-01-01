@@ -1,7 +1,6 @@
 package game.main.state.play.map.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
@@ -10,11 +9,10 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import game.loader.Serializable;
 import game.main.Game;
-import game.main.stat.Stat;
 import game.main.stat.StatManager;
 import game.main.stat.StatType;
 import game.main.state.play.map.Map;
-import game.main.state.play.map.tile.Overlay;
+import game.main.state.play.map.tile.TileOverlay;
 import game.main.state.play.map.tile.Tile;
 
 public class Entity implements Serializable {
@@ -42,7 +40,7 @@ public class Entity implements Serializable {
 
     public boolean onTeleport;
 
-    public Overlay overlay;
+    public TileOverlay overlay;
 
     public Entity() {
         hitbox = new Hitbox(this);

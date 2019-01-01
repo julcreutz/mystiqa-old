@@ -2,7 +2,7 @@
   "Grass": {
     "Tile": {
       "name": "Grass",
-      "sheet": "Grass",
+      "spriteSheet": "Grass",
       "palettes": [
         ["Black", "Green"]
       ],
@@ -13,7 +13,7 @@
   "Path": {
     "Tile": {
       "name": "Path",
-      "sheet": "Grass",
+      "spriteSheet": "Grass",
       "palettes": [
         ["Black", "Brown"]
       ],
@@ -24,7 +24,7 @@
   "Water": {
     "Tile": {
       "name": "Water",
-      "sheet": "Water",
+      "spriteSheet": "Water",
       "palettes": [
         ["Black", "Blue", "Brown"]
       ],
@@ -36,7 +36,7 @@
   "Waterfall": {
     "Tile": {
       "name": "Waterfall",
-      "sheet": "Waterfall",
+      "spriteSheet": "Waterfall",
       "palettes": [
         ["Blue", "Blue", "White"],
         ["Blue", "White", "Blue"],
@@ -50,7 +50,7 @@
   "Sand": {
     "Tile": {
       "name": "Sand",
-      "sheet": "Sand",
+      "spriteSheet": "Sand",
       "palettes": [
         ["Black", "Yellow"]
       ]
@@ -59,7 +59,7 @@
   "Stone": {
     "Tile": {
       "name": "Stone",
-      "sheet": "Stone",
+      "spriteSheet": "Stone",
       "palettes": [
         ["Black", "Brown", "Brown"]
       ],
@@ -71,7 +71,7 @@
   "Tendril": {
     "Tile": {
       "name": "Tendril",
-      "sheet": "Tendril",
+      "spriteSheet": "Tendril",
       "palettes": [
         ["Black", "Green", "Brown"]
       ],
@@ -83,7 +83,7 @@
   "Dirt": {
     "Tile": {
       "name": "Dirt",
-      "sheet": "Grass",
+      "spriteSheet": "Grass",
       "palettes": [
         ["Black", "Brown"]
       ],
@@ -94,7 +94,7 @@
   "Bridge": {
     "Tile": {
       "name": "Bridge",
-      "sheet": "Bridge",
+      "spriteSheet": "Bridge",
       "palettes": [
         ["Black", "Brown"]
       ],
@@ -104,7 +104,7 @@
   "TreeBottom": {
     "Tile": {
       "name": "TreeBottom",
-      "sheet": "TreeBottom",
+      "spriteSheet": "TreeBottom",
       "palettes": [
         ["Black", "Green", "Brown", "Green"]
       ],
@@ -114,7 +114,7 @@
   "TreeMiddle": {
     "Tile": {
       "name": "TreeMiddle",
-      "sheet": "TreeMiddle",
+      "spriteSheet": "TreeMiddle",
       "palettes": [
         ["Black", "Green"]
       ]
@@ -123,7 +123,7 @@
   "TreeTop": {
     "Tile": {
       "name": "TreeTop",
-      "sheet": "TreeTop",
+      "spriteSheet": "TreeTop",
       "palettes": [
         ["Black", "Green"]
       ]
@@ -132,7 +132,7 @@
   "HouseEntrance": {
     "Tile": {
       "name": "HouseEntrance",
-      "sheet": "HouseEntrance",
+      "spriteSheet": "HouseEntrance",
       "palettes": [
         ["Black", "Brown"]
       ]
@@ -141,7 +141,7 @@
   "HouseWall": {
     "Tile": {
       "name": "HouseWall",
-      "sheet": "HouseWall",
+      "spriteSheet": "HouseWall",
       "palettes": [
         ["Black","Brown"]
       ],
@@ -153,7 +153,7 @@
   "HouseRoof": {
     "Tile": {
       "name": "HouseRoof",
-      "sheet": "HouseRoof",
+      "spriteSheet": "HouseRoof",
       "palettes": [
         ["Black", "Brown", "Yellow"]
       ],
@@ -163,7 +163,7 @@
   "Rock": {
     "Tile": {
       "name": "Rock",
-      "sheet": "Rock",
+      "spriteSheet": "Rock",
       "palettes": [
         ["Black", "Green", "Gray"]
       ],
@@ -173,7 +173,7 @@
   "TallGrass": {
     "Tile": {
       "name": "TallGrass",
-      "sheet": "TallGrass",
+      "spriteSheet": "TallGrass",
       "palettes": [
         ["Black", "Green"]
       ],

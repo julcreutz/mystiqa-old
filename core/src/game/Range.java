@@ -5,26 +5,35 @@ import game.loader.Serializable;
 
 import java.util.Random;
 
-/** Class enclosing interval with two inclusive boundaries. */
+/** Class enclosing an interval with two inclusive boundaries. */
 public class Range implements Serializable {
     /** Lower bound. Inclusive */
     public int min;
 
-    /** Higher bound. Inclusive */
+    /** Upper bound. Inclusive */
     public int max;
 
-    /** Constructs and directly deserializes new instance from given json value. */
+    /**
+     * Constructs new instance and directly deserializes it from given json value.
+     *
+     * @param json json value
+     */
     public Range(JsonValue json) {
         deserialize(json);
     }
 
-    /** Constructs range with given boundaries. */
+    /**
+     * Constructs new instance with given boundaries.
+     *
+     * @param min lower inclusive bound
+     * @param max upper inclusive bound
+     */
     public Range(int min, int max) {
         this.min = min;
         this.max = max;
     }
 
-    /** Constructs range with boundaries of approximately -infinite to infinite. */
+    /** Constructs new instance with boundaries of approximately -infinite to infinite. */
     public Range() {
         this(-Integer.MAX_VALUE, Integer.MAX_VALUE);
     }
@@ -41,8 +50,7 @@ public class Range implements Serializable {
     }
 
     /**
-     * Picks a random value within bounds of range. Uses given
-     * {@link Random} object for random number generation.
+     * Picks a random value within bounds. Uses given {@link Random} object for random number generation.
      *
      * @param rand random number generator
      * @return random value within bounds
@@ -53,7 +61,14 @@ public class Range implements Serializable {
 
     @Override
     public void deserialize(JsonValue json) {
-        min = json.getInt("min", min);
-        max = json.getInt("max", max);
+        JsonValue min = json.get("min");
+        if (min != null) {
+            this.min = min.asInt();
+        }
+
+        JsonValue max = json.get("max");
+        if (max != null) {
+            this.max = max.asInt();
+        }
     }
 }

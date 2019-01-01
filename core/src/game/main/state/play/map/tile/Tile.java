@@ -12,9 +12,9 @@ import game.main.state.play.map.Map;
 public class Tile implements Serializable {
     public String name;
 
-    public TextureRegion[][] sheet;
+    public TextureRegion[][] spriteSheet;
 
-    public Array<ShaderProgram> palettes;
+    public ShaderProgram[] palettes;
     public float paletteSpeed;
 
     public boolean autoTile;
@@ -27,7 +27,7 @@ public class Tile implements Serializable {
 
     public int forcedDirection;
 
-    public Overlay overlay;
+    public TileOverlay overlay;
 
     public TextureRegion image;
 
@@ -36,6 +36,11 @@ public class Tile implements Serializable {
     public int z;
 
     public boolean updated;
+
+    public Tile() {
+        moveSpeed = 1;
+        forcedDirection = -1;
+    }
 
     public void update(Map map) {
         if (autoTile) {
@@ -59,61 +64,61 @@ public class Tile implements Serializable {
 
             switch (n) {
                 case 0:
-                    image = sheet[3][3];
+                    image = spriteSheet[3][3];
                     break;
                 case 1:
-                    image = sheet[0][3];
+                    image = spriteSheet[0][3];
                     break;
                 case 2:
-                    image = sheet[3][2];
+                    image = spriteSheet[3][2];
                     break;
                 case 3:
-                    image = sheet[0][2];
+                    image = spriteSheet[0][2];
                     break;
                 case 4:
-                    image = sheet[2][3];
+                    image = spriteSheet[2][3];
                     break;
                 case 5:
-                    image = sheet[1][3];
+                    image = spriteSheet[1][3];
                     break;
                 case 6:
-                    image = sheet[2][2];
+                    image = spriteSheet[2][2];
                     break;
                 case 7:
-                    image = sheet[1][2];
+                    image = spriteSheet[1][2];
                     break;
                 case 8:
-                    image = sheet[3][0];
+                    image = spriteSheet[3][0];
                     break;
                 case 9:
-                    image = sheet[0][0];
+                    image = spriteSheet[0][0];
                     break;
                 case 10:
-                    image = sheet[3][1];
+                    image = spriteSheet[3][1];
                     break;
                 case 11:
-                    image = sheet[0][1];
+                    image = spriteSheet[0][1];
                     break;
                 case 12:
-                    image = sheet[2][0];
+                    image = spriteSheet[2][0];
                     break;
                 case 13:
-                    image = sheet[1][0];
+                    image = spriteSheet[1][0];
                     break;
                 case 14:
-                    image = sheet[2][1];
+                    image = spriteSheet[2][1];
                     break;
                 case 15:
-                    image = sheet[1][1];
+                    image = spriteSheet[1][1];
                     break;
             }
         } else {
-            image = sheet[0][0];
+            image = spriteSheet[0][0];
         }
     }
 
     public void render(SpriteBatch batch) {
-        batch.setShader(palettes.get((int) ((Game.time * paletteSpeed) % palettes.size)));
+        batch.setShader(palettes[(int) ((Game.time * paletteSpeed) % palettes.length)]);
         batch.draw(image, x * 8, y * 8 + z * 8);
         batch.setColor(1, 1, 1, 1);
         batch.setShader(null);
@@ -141,39 +146,58 @@ public class Tile implements Serializable {
 
     @Override
     public void deserialize(JsonValue json) {
-        if (json.has("name")) {
-            name = json.getString("name");
+        JsonValue name = json.get("name");
+        if (name != null) {
+            this.name = name.asString();
         }
 
-        if (json.has("sheet")) {
-            sheet = Game.SPRITE_SHEETS.load(json.getString("sheet")).sheet;
+        JsonValue spriteSheet = json.get("spriteSheet");
+        if (spriteSheet != null) {
+            this.spriteSheet = Game.SPRITE_SHEETS.load(spriteSheet.asString()).sheet;
         }
 
-        if (json.has("palettes")) {
-            palettes = new Array<ShaderProgram>();
+        JsonValue palettes = json.get("palettes");
+        if (palettes != null) {
+            this.palettes = new ShaderProgram[palettes.size];
 
-            for (JsonValue palette : json.get("palettes")) {
-                palettes.add(Game.PALETTES.load(palette.asStringArray()));
+            for (int i = 0; i < palettes.size; i++) {
+                this.palettes[i] = Game.PALETTES.load(palettes.get(i).asStringArray());
             }
         }
 
-        paletteSpeed = json.getFloat("paletteSpeed", 0);
-
-        autoTile = json.getBoolean("autoTile", false);
-
-        if (json.has("connect")) {
-            connect = json.get("connect").asStringArray();
+        JsonValue paletteSpeed = json.get("paletteSpeed");
+        if (paletteSpeed != null) {
+            this.paletteSpeed = paletteSpeed.asFloat();
         }
 
-        solid = json.getBoolean("solid", false);
+        JsonValue autoTile = json.get("autoTile");
+        if (autoTile != null) {
+            this.autoTile = autoTile.asBoolean();
+        }
 
-        moveSpeed = json.getFloat("moveSpeed", 1);
+        JsonValue connect = json.get("connect");
+        if (connect != null) {
+            this.connect = connect.asStringArray();
+        }
 
-        forcedDirection = json.getInt("forcedDirection", -1);
+        JsonValue solid = json.get("solid");
+        if (solid != null) {
+            this.solid = solid.asBoolean();
+        }
+
+        JsonValue moveSpeed = json.get("moveSpeed");
+        if (moveSpeed != null) {
+            this.moveSpeed = moveSpeed.asFloat();
+        }
+
+        JsonValue forcedDirection = json.get("forcedDirection");
+        if (forcedDirection != null) {
+            this.forcedDirection = forcedDirection.asInt();
+        }
 
         JsonValue overlay = json.get("overlay");
         if (overlay != null) {
-            this.overlay = new Overlay(overlay);
+            this.overlay = new TileOverlay(overlay);
         }
     }
 }

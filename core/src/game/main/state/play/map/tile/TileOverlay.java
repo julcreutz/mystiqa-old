@@ -8,14 +8,34 @@ import game.loader.Serializable;
 import game.main.Game;
 import game.main.state.play.map.entity.Entity;
 
-public class Overlay implements Serializable {
+/**
+ * Represents a property of a {@link Tile}. Overlays are rendered when an {@link Entity} walks
+ * over the tile this belongs to.
+ *
+ * This can create interesting effects, e.g. tall grass.
+ */
+public class TileOverlay implements Serializable {
+    /** Image to be rendered. */
     public TextureRegion image;
+    /** Colors to be applied to rendered image. */
     public ShaderProgram colors;
 
-    public Overlay(JsonValue json) {
+    /**
+     * Constructs new instance and directly deserializes it with given json value.
+     *
+     * @param json json value to deserialize from
+     */
+    public TileOverlay(JsonValue json) {
         deserialize(json);
     }
 
+    /**
+     * Renders colored overlay image relative to specified entity. It's positioned
+     * relative to the entity's hitbox center.
+     *
+     * @param batch sprite batch to render to
+     * @param e entity to render relative to
+     */
     public void render(SpriteBatch batch, Entity e) {
         batch.setShader(colors);
         batch.draw(image, e.hitbox.centerX() - image.getRegionWidth() * .5f, e.hitbox.y() - image.getRegionHeight() * .5f);

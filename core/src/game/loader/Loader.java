@@ -15,7 +15,7 @@ public interface Loader<T extends Serializable> {
 
     /**
      * Loads given file and deserializes all objects within. Storing is handled
-     * by implementation. See subclasses for more detail.
+     * by respective implementation.
      *
      * @param file file to be deserialized
      */
@@ -23,7 +23,7 @@ public interface Loader<T extends Serializable> {
 
     /**
      * Loads and returns the object corresponding to given name. This is handled
-     * differently by implementation. See subclasses for more detail.
+     * differently per implementation.
      *
      * @param name name of object
      * @return deserialized object
