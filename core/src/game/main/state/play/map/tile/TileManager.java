@@ -31,13 +31,14 @@ public class TileManager {
     }
 
     /**
-     * Updates all tiles in a given area. If a tile is newly created it will be updated even when the camera is moving
-     * to prevent missing textures.
+     * Updates all tiles in a given area. Z is not important as every tile in depth is updated.
      *
-     * @param x0 start x (inclusive
-     * @param x1 end x (exclusive)
-     * @param y0 start y (inclusive)
-     * @param y1 end y (exclusive)
+     * If a tile is newly created it will be updated even when the camera is moving to prevent missing textures.
+     *
+     * @param x0 lower x bound, inclusive
+     * @param x1 upper x bound, exclusive
+     * @param y0 lower y bound, inclusive
+     * @param y1 upper y bound, exclusive
      */
     public void update(int x0, int x1, int y0, int y1) {
         for (int x = 0; x < solidTiles.length; x++) {
@@ -76,12 +77,12 @@ public class TileManager {
      * Renders tiles in a given area.
      *
      * @param batch sprite batch to use
-     * @param x0 start x (inclusive)
-     * @param x1 end x (exclusive)
-     * @param y0 start y (inclusive)
-     * @param y1 end y (exclusive)
-     * @param z0 start z (inclusive)
-     * @param z1 end z (exclusive)
+     * @param x0 lower x bound, inclusive
+     * @param x1 upper x bound, exclusive
+     * @param y0 lower y bound, inclusive
+     * @param y1 upper y bound, exclusive
+     * @param z0 lower z bound, inclusive
+     * @param z1 upper z bound, inclusive
      */
     public void render(SpriteBatch batch, int x0, int x1, int y0, int y1, int z0, int z1) {
         for (int x = x0; x < x1; x++) {
