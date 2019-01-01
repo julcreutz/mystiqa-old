@@ -7,7 +7,7 @@ import java.util.Random;
 
 /**
  * Two dimensional noise implementation based on Ken Perlin's
- * original noise implementation called "Perlin Noise".
+ * original implementation called "Perlin Noise".
  *
  * See {@link #noiseAt(float, float)} for algorithmic details.
  */
@@ -65,7 +65,7 @@ public class Noise {
      * Returns combined noise value of given parameters at specified coordinates.
      *
      * Total noise value is calculated by layering each octave's noise value. Each value
-     * is multiplied by an amplitude starting at one.
+     * is multiplied by the amplitude starting at one.
      *
      * For each successive octaves the amplitude is halved and the frequency doubled, which creates
      * the typical noise pattern.
@@ -155,7 +155,7 @@ public class Noise {
     }
 
     /**
-     * Interpolates between to values. This was originally suggested by
+     * Interpolates between two values. This was originally suggested by
      * Ken Perlin to improve noise continuity.
      *
      * @param from starting value

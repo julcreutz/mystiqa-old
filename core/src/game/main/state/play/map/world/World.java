@@ -367,6 +367,12 @@ public class World extends Map {
         }
 
         for (Room r : rooms) {
+            if (r.w == 2 && r.h == 2 && r.x % 4 == 0 && r.y % 4 == 0 && r.x < biomes.length * 2 - 2 && r.y < biomes[0].length * 2 - 2 && rand.nextFloat() < .25f) {
+                Game.STRUCTURES.load("Village").generate(rand, this, r.x0(), r.y0(), 0);
+            }
+        }
+
+        for (Room r : rooms) {
             Biome b = biomeAt(r.x / 2, r.y / 2);
 
             if (b.decorations != null) {
@@ -389,12 +395,6 @@ public class World extends Map {
                         }
                     }
                 }
-            }
-        }
-
-        for (Room r : rooms) {
-            if (r.w == 2 && r.h == 2 && r.x % 4 == 0 && r.y % 4 == 0 && r.x < biomes.length * 2 - 2 && r.y < biomes[0].length * 2 - 2 && rand.nextFloat() < .25f) {
-                Game.STRUCTURES.load("Village").generate(rand, this, r.x0(), r.y0(), 0);
             }
         }
 
