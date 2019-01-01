@@ -21,6 +21,11 @@ public class TileManager {
     /** Stores solid tile "hitboxes". */
     public Rectangle[][] solidTiles;
 
+    /**
+     * Constructs new instance with map reference.
+     *
+     * @param map map reference
+     */
     public TileManager(Map map) {
         this.map = map;
     }
