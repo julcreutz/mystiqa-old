@@ -7,11 +7,15 @@ import game.main.Game;
 public class DesktopLauncher {
 	public static void main(String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.title = Game.TITLE;
+
+		config.title = Game.TITLE + " " + Game.VERSION;
+
 		config.width = Game.WIDTH * Game.SCALE;
 		config.height = Game.HEIGHT * Game.SCALE;
+
 		config.backgroundFPS = 0;
 		config.foregroundFPS = 0;
+
 		config.vSyncEnabled = true;
 		config.resizable = false;
 
