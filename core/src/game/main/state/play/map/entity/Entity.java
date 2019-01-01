@@ -1,6 +1,7 @@
 package game.main.state.play.map.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
@@ -13,6 +14,7 @@ import game.main.stat.Stat;
 import game.main.stat.StatManager;
 import game.main.stat.StatType;
 import game.main.state.play.map.Map;
+import game.main.state.play.map.tile.Overlay;
 import game.main.state.play.map.tile.Tile;
 
 public class Entity implements Serializable {
@@ -39,6 +41,8 @@ public class Entity implements Serializable {
     public Alignment alignment;
 
     public boolean onTeleport;
+
+    public Overlay overlay;
 
     public Entity() {
         hitbox = new Hitbox(this);
@@ -133,7 +137,8 @@ public class Entity implements Serializable {
         float moveSpeed = 1;
 
         if (t != null) {
-            moveSpeed = t.type.moveSpeed;
+            moveSpeed = t.moveSpeed;
+            overlay = t.overlay;
         }
 
         velX *= moveSpeed;
@@ -187,8 +192,18 @@ public class Entity implements Serializable {
         velY = 0;
     }
 
-    public void render(SpriteBatch batch) {
+    public void preRender(SpriteBatch batch) {
         batch.setShader(palette());
+    }
+
+    public void render(SpriteBatch batch) {
+
+    }
+
+    public void postRender(SpriteBatch batch) {
+        if (overlay != null) {
+            overlay.render(batch, this);
+        }
     }
 
     public void onAdded(Map map) {

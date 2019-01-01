@@ -1,149 +1,188 @@
 {
   "Grass": {
-    "name": "Grass",
-    "sheet": "Grass",
-    "palettes": [
-      ["Black", "Green"]
-    ],
-    "autoTile": true,
-    "connect": ["TreeBottom", "Stone", "Bridge", "HouseWall", "HouseEntrance", "Rock", "TallGrass"]
+    "Tile": {
+      "name": "Grass",
+      "sheet": "Grass",
+      "palettes": [
+        ["Black", "Green"]
+      ],
+      "autoTile": true,
+      "connect": ["TreeBottom", "Stone", "Bridge", "HouseWall", "HouseEntrance", "Rock", "TallGrass"]
+    }
   },
   "Path": {
-    "name": "Path",
-    "sheet": "Grass",
-    "palettes": [
-      ["Black", "Brown"]
-    ],
-    "autoTile": true,
-    "connect": ["TreeBottom", "Stone", "Bridge", "HouseWall", "HouseEntrance", "Grass"]
+    "Tile": {
+      "name": "Path",
+      "sheet": "Grass",
+      "palettes": [
+        ["Black", "Brown"]
+      ],
+      "autoTile": true,
+      "connect": ["TreeBottom", "Stone", "Bridge", "HouseWall", "HouseEntrance", "Grass"]
+    }
   },
   "Water": {
-    "name": "Water",
-    "sheet": "Water",
-    "palettes": [
-      ["Black", "Blue", "Brown"]
-    ],
-    "autoTile": true,
-    "connect": ["Stone", "Waterfall", "Bridge"],
-    "solid": true
+    "Tile": {
+      "name": "Water",
+      "sheet": "Water",
+      "palettes": [
+        ["Black", "Blue", "Brown"]
+      ],
+      "autoTile": true,
+      "connect": ["Stone", "Waterfall", "Bridge"],
+      "solid": true
+    }
   },
   "Waterfall": {
-    "name": "Waterfall",
-    "sheet": "Waterfall",
-    "palettes": [
-      ["Blue", "Blue", "White"],
-      ["Blue", "White", "Blue"],
-      ["White", "Blue", "Blue"]
-    ],
-    "paletteSpeed": 10,
-    "connect": ["Water"],
-    "solid": true
+    "Tile": {
+      "name": "Waterfall",
+      "sheet": "Waterfall",
+      "palettes": [
+        ["Blue", "Blue", "White"],
+        ["Blue", "White", "Blue"],
+        ["White", "Blue", "Blue"]
+      ],
+      "paletteSpeed": 10,
+      "connect": ["Water"],
+      "solid": true
+    }
   },
   "Sand": {
-    "name": "Sand",
-    "sheet": "Sand",
-    "palettes": [
-      ["Black", "Yellow"]
-    ]
+    "Tile": {
+      "name": "Sand",
+      "sheet": "Sand",
+      "palettes": [
+        ["Black", "Yellow"]
+      ]
+    }
   },
   "Stone": {
-    "name": "Stone",
-    "sheet": "Stone",
-    "palettes": [
-      ["Black", "Brown", "Brown"]
-    ],
-    "connect": ["Tendril"],
-    "autoTile": true,
-    "solid": true
+    "Tile": {
+      "name": "Stone",
+      "sheet": "Stone",
+      "palettes": [
+        ["Black", "Brown", "Brown"]
+      ],
+      "connect": ["Tendril"],
+      "autoTile": true,
+      "solid": true
+    }
   },
   "Tendril": {
-    "name": "Tendril",
-    "sheet": "Tendril",
-    "palettes": [
-      ["Black", "Green", "Brown"]
-    ],
-    "connect": ["Stone"],
-    "moveSpeed": 0.5,
-    "forcedDirection": 1
+    "Tile": {
+      "name": "Tendril",
+      "sheet": "Tendril",
+      "palettes": [
+        ["Black", "Green", "Brown"]
+      ],
+      "connect": ["Stone"],
+      "moveSpeed": 0.5,
+      "forcedDirection": 1
+    }
   },
   "Dirt": {
-    "name": "Dirt",
-    "sheet": "Grass",
-    "palettes": [
-      ["Black", "Brown"]
-    ],
-    "connect": ["Stone", "Tendril", "Bridge"],
-    "autoTile": true
+    "Tile": {
+      "name": "Dirt",
+      "sheet": "Grass",
+      "palettes": [
+        ["Black", "Brown"]
+      ],
+      "connect": ["Stone", "Tendril", "Bridge"],
+      "autoTile": true
+    }
   },
   "Bridge": {
-    "name": "Bridge",
-    "sheet": "Bridge",
-    "palettes": [
-      ["Black", "Brown"]
-    ],
-    "autoTile": true
+    "Tile": {
+      "name": "Bridge",
+      "sheet": "Bridge",
+      "palettes": [
+        ["Black", "Brown"]
+      ],
+      "autoTile": true
+    }
   },
   "TreeBottom": {
-    "name": "TreeBottom",
-    "sheet": "TreeBottom",
-    "palettes": [
-      ["Black", "Green", "Brown", "Green"]
-    ],
-    "solid": true
+    "Tile": {
+      "name": "TreeBottom",
+      "sheet": "TreeBottom",
+      "palettes": [
+        ["Black", "Green", "Brown", "Green"]
+      ],
+      "solid": true
+    }
   },
   "TreeMiddle": {
-    "name": "TreeMiddle",
-    "sheet": "TreeMiddle",
-    "palettes": [
-      ["Black", "Green"]
-    ]
+    "Tile": {
+      "name": "TreeMiddle",
+      "sheet": "TreeMiddle",
+      "palettes": [
+        ["Black", "Green"]
+      ]
+    }
   },
   "TreeTop": {
-    "name": "TreeTop",
-    "sheet": "TreeTop",
-    "palettes": [
-      ["Black", "Green"]
-    ]
+    "Tile": {
+      "name": "TreeTop",
+      "sheet": "TreeTop",
+      "palettes": [
+        ["Black", "Green"]
+      ]
+    }
   },
   "HouseEntrance": {
-    "name": "HouseEntrance",
-    "sheet": "HouseEntrance",
-    "palettes": [
-      ["Black", "Brown"]
-    ]
+    "Tile": {
+      "name": "HouseEntrance",
+      "sheet": "HouseEntrance",
+      "palettes": [
+        ["Black", "Brown"]
+      ]
+    }
   },
   "HouseWall": {
-    "name": "HouseWall",
-    "sheet": "HouseWall",
-    "palettes": [
-      ["Black","Brown"]
-    ],
-    "autoTile": true,
-    "connect": ["HouseEntrance"],
-    "solid": true
+    "Tile": {
+      "name": "HouseWall",
+      "sheet": "HouseWall",
+      "palettes": [
+        ["Black","Brown"]
+      ],
+      "autoTile": true,
+      "connect": ["HouseEntrance"],
+      "solid": true
+    }
   },
   "HouseRoof": {
-    "name": "HouseRoof",
-    "sheet": "HouseRoof",
-    "palettes": [
-      ["Black", "Brown", "Yellow"]
-    ],
-    "autoTile": true
+    "Tile": {
+      "name": "HouseRoof",
+      "sheet": "HouseRoof",
+      "palettes": [
+        ["Black", "Brown", "Yellow"]
+      ],
+      "autoTile": true
+    }
   },
   "Rock": {
-    "name": "Rock",
-    "sheet": "Rock",
-    "palettes": [
-      ["Black", "Green", "Gray"]
-    ],
-    "solid": true
+    "Tile": {
+      "name": "Rock",
+      "sheet": "Rock",
+      "palettes": [
+        ["Black", "Green", "Gray"]
+      ],
+      "solid": true
+    }
   },
   "TallGrass": {
-    "name": "TallGrass",
-    "sheet": "TallGrass",
-    "palettes": [
-      ["Black", "Green"]
-    ],
-    "autoTile": true
+    "Tile": {
+      "name": "TallGrass",
+      "sheet": "TallGrass",
+      "palettes": [
+        ["Black", "Green"]
+      ],
+      "autoTile": true,
+      "moveSpeed": 0.75,
+      "overlay": {
+        "image": "TallGrassOverlay",
+        "colors": ["Black", "Green"]
+      }
+    }
   }
 }

@@ -216,7 +216,7 @@ public abstract class Map implements Serializable {
                         if (tiles.inBounds(xx, yy)) {
                             Tile t = tiles.tileAt(xx, yy, 0);
 
-                            if (xx >= 0 && xx < tiles.width() && yy >= 0 && yy < tiles.height() && t != null && !t.type.solid) {
+                            if (xx >= 0 && xx < tiles.width() && yy >= 0 && yy < tiles.height() && t != null && !t.solid) {
                                 Node node = new Node(xx, yy);
 
                                 // Ignore if node is in closed list

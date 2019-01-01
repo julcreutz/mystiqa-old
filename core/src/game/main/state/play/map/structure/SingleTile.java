@@ -8,22 +8,23 @@ import game.main.state.play.map.tile.Tile;
 import java.util.Random;
 
 public class SingleTile extends Structure<Map> {
-    public Tile.Type tile;
+    public String tile;
 
     @Override
     public void generate(Random rand, Map map, int x, int y, int z) {
-        map.tiles.placeTile(tile, x, y, z);
+        map.tiles.placeTile(Game.TILES.load(tile), x, y, z);
     }
 
     @Override
     public void deserialize(JsonValue json) {
-        if (json.has("tile")) {
-            tile = Game.TILES.load(json.getString("tile"));
+        JsonValue tile = json.get("tile");
+        if (tile != null) {
+            this.tile = tile.asString();
         }
     }
 
     @Override
-    public Tile.Type tile() {
+    public String tile() {
         return tile;
     }
 }

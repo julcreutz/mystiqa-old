@@ -1,6 +1,7 @@
 package game.main.state.play.map.structure;
 
 import com.badlogic.gdx.utils.JsonValue;
+import game.Range;
 import game.main.Game;
 import game.main.state.play.map.Map;
 import game.main.state.play.map.tile.Tile;
@@ -8,46 +9,50 @@ import game.main.state.play.map.tile.Tile;
 import java.util.Random;
 
 public class Tree extends Structure<Map> {
-    public Tile.Type bottomTile;
-    public Tile.Type middleTile;
-    public Tile.Type topTile;
+    public String bottomTile;
+    public String middleTile;
+    public String topTile;
 
-    public int minHeight;
-    public int maxHeight;
+    public Range height;
 
     @Override
     public void generate(Random rand, Map map, int x, int y, int z) {
-        map.tiles.placeTile(bottomTile, x, y, z);
+        map.tiles.placeTile(Game.TILES.load(bottomTile), x, y, z);
 
         z++;
-        for (int i = 0; i < minHeight + rand.nextInt(maxHeight - minHeight + 1); i++) {
-            map.tiles.placeTile(middleTile, x, y, z);
+        for (int i = 0; i < height.pickRandom(rand); i++) {
+            map.tiles.placeTile(Game.TILES.load(middleTile), x, y, z);
             z++;
         }
 
-        map.tiles.placeTile(topTile, x, y, z);
+        map.tiles.placeTile(Game.TILES.load(topTile), x, y, z);
     }
 
     @Override
     public void deserialize(JsonValue json) {
-        if (json.has("bottomTile")) {
-            bottomTile = Game.TILES.load(json.getString("bottomTile"));
+        JsonValue bottomTile = json.get("bottomTile");
+        if (bottomTile != null) {
+            this.bottomTile = bottomTile.asString();
         }
 
-        if (json.has("middleTile")) {
-            middleTile = Game.TILES.load(json.getString("middleTile"));
+        JsonValue middleTile = json.get("middleTile");
+        if (middleTile != null) {
+            this.middleTile = middleTile.asString();
         }
 
-        if (json.has("topTile")) {
-            topTile = Game.TILES.load(json.getString("topTile"));
+        JsonValue topTile = json.get("topTile");
+        if (topTile != null) {
+            this.topTile = topTile.asString();
         }
 
-        minHeight = json.getInt("minHeight", 0);
-        maxHeight = json.getInt("maxHeight", 1);
+        JsonValue height = json.get("height");
+        if (height != null) {
+            this.height = new Range(height);
+        }
     }
 
     @Override
-    public Tile.Type tile() {
+    public String tile() {
         return bottomTile;
     }
 }

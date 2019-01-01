@@ -7,75 +7,27 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import game.loader.Serializable;
 import game.main.Game;
-import game.main.state.play.Play;
 import game.main.state.play.map.Map;
 
-public class Tile {
-    public static class Type implements Serializable {
-        public String name;
+public class Tile implements Serializable {
+    public String name;
 
-        public TextureRegion[][] sheet;
+    public TextureRegion[][] sheet;
 
-        public Array<ShaderProgram> palettes;
-        public float paletteSpeed;
+    public Array<ShaderProgram> palettes;
+    public float paletteSpeed;
 
-        public boolean autoTile;
+    public boolean autoTile;
 
-        public String[] connect;
+    public String[] connect;
 
-        public boolean solid;
+    public boolean solid;
 
-        public float moveSpeed;
+    public float moveSpeed;
 
-        public int forcedDirection;
+    public int forcedDirection;
 
-        public boolean connectsTo(Type type) {
-            if (connect != null) {
-                for (String _connect : connect) {
-                    if (_connect.equals(type.name)) {
-                        return true;
-                    }
-                }
-            }
-
-            return name.equals(type.name);
-        }
-
-        @Override
-        public void deserialize(JsonValue json) {
-            if (json.has("name")) {
-                name = json.getString("name");
-            }
-
-            if (json.has("sheet")) {
-                sheet = Game.SPRITE_SHEETS.load(json.getString("sheet")).sheet;
-            }
-
-            if (json.has("palettes")) {
-                palettes = new Array<ShaderProgram>();
-
-                for (JsonValue palette : json.get("palettes")) {
-                    palettes.add(Game.PALETTES.load(palette.asStringArray()));
-                }
-            }
-
-            paletteSpeed = json.getFloat("paletteSpeed", 0);
-
-            autoTile = json.getBoolean("autoTile", false);
-
-            if (json.has("connect")) {
-                connect = json.get("connect").asStringArray();
-            }
-
-            solid = json.getBoolean("solid", false);
-
-            moveSpeed = json.getFloat("moveSpeed", 1);
-
-            forcedDirection = json.getInt("forcedDirection", -1);
-        }
-    }
-
-    public Type type;
+    public Overlay overlay;
 
     public TextureRegion image;
 
@@ -85,12 +37,8 @@ public class Tile {
 
     public boolean updated;
 
-    public Tile(Type type) {
-        this.type = type;
-    }
-
     public void update(Map map) {
-        if (type.autoTile) {
+        if (autoTile) {
             int n = 0;
 
             if (connectsTo(map, x + 1, y, z)) {
@@ -111,61 +59,61 @@ public class Tile {
 
             switch (n) {
                 case 0:
-                    image = type.sheet[3][3];
+                    image = sheet[3][3];
                     break;
                 case 1:
-                    image = type.sheet[0][3];
+                    image = sheet[0][3];
                     break;
                 case 2:
-                    image = type.sheet[3][2];
+                    image = sheet[3][2];
                     break;
                 case 3:
-                    image = type.sheet[0][2];
+                    image = sheet[0][2];
                     break;
                 case 4:
-                    image = type.sheet[2][3];
+                    image = sheet[2][3];
                     break;
                 case 5:
-                    image = type.sheet[1][3];
+                    image = sheet[1][3];
                     break;
                 case 6:
-                    image = type.sheet[2][2];
+                    image = sheet[2][2];
                     break;
                 case 7:
-                    image = type.sheet[1][2];
+                    image = sheet[1][2];
                     break;
                 case 8:
-                    image = type.sheet[3][0];
+                    image = sheet[3][0];
                     break;
                 case 9:
-                    image = type.sheet[0][0];
+                    image = sheet[0][0];
                     break;
                 case 10:
-                    image = type.sheet[3][1];
+                    image = sheet[3][1];
                     break;
                 case 11:
-                    image = type.sheet[0][1];
+                    image = sheet[0][1];
                     break;
                 case 12:
-                    image = type.sheet[2][0];
+                    image = sheet[2][0];
                     break;
                 case 13:
-                    image = type.sheet[1][0];
+                    image = sheet[1][0];
                     break;
                 case 14:
-                    image = type.sheet[2][1];
+                    image = sheet[2][1];
                     break;
                 case 15:
-                    image = type.sheet[1][1];
+                    image = sheet[1][1];
                     break;
             }
         } else {
-            image = type.sheet[0][0];
+            image = sheet[0][0];
         }
     }
 
     public void render(SpriteBatch batch) {
-        batch.setShader(type.palettes.get((int) ((Game.time * type.paletteSpeed) % type.palettes.size)));
+        batch.setShader(palettes.get((int) ((Game.time * paletteSpeed) % palettes.size)));
         batch.draw(image, x * 8, y * 8 + z * 8);
         batch.setColor(1, 1, 1, 1);
         batch.setShader(null);
@@ -174,9 +122,58 @@ public class Tile {
     public boolean connectsTo(Map map, int x, int y, int z) {
         if (map.tiles.inBounds(x, y, z)) {
             Tile tile = map.tiles.tileAt(x, y, z);
-            return tile != null && type.connectsTo(tile.type);
+
+            if (tile != null) {
+                if (connect != null) {
+                    for (String _connect : connect) {
+                        if (_connect.equals(tile.name)) {
+                            return true;
+                        }
+                    }
+                }
+
+                return name.equals(tile.name);
+            }
         }
 
         return false;
+    }
+
+    @Override
+    public void deserialize(JsonValue json) {
+        if (json.has("name")) {
+            name = json.getString("name");
+        }
+
+        if (json.has("sheet")) {
+            sheet = Game.SPRITE_SHEETS.load(json.getString("sheet")).sheet;
+        }
+
+        if (json.has("palettes")) {
+            palettes = new Array<ShaderProgram>();
+
+            for (JsonValue palette : json.get("palettes")) {
+                palettes.add(Game.PALETTES.load(palette.asStringArray()));
+            }
+        }
+
+        paletteSpeed = json.getFloat("paletteSpeed", 0);
+
+        autoTile = json.getBoolean("autoTile", false);
+
+        if (json.has("connect")) {
+            connect = json.get("connect").asStringArray();
+        }
+
+        solid = json.getBoolean("solid", false);
+
+        moveSpeed = json.getFloat("moveSpeed", 1);
+
+        forcedDirection = json.getInt("forcedDirection", -1);
+
+        JsonValue overlay = json.get("overlay");
+        if (overlay != null) {
+            this.overlay = new Overlay(overlay);
+        }
     }
 }

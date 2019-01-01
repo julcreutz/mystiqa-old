@@ -43,9 +43,9 @@ public class TileManager {
                 Tile t = tiles[x][y][0];
 
                 if (t != null) {
-                    if (t.type.solid && solidTiles[x][y] == null) {
+                    if (t.solid && solidTiles[x][y] == null) {
                         solidTiles[x][y] = new Rectangle(x * 8, y * 8, 8, 8);
-                    } else if (!t.type.solid && solidTiles[x][y] != null) {
+                    } else if (!t.solid && solidTiles[x][y] != null) {
                         solidTiles[x][y] = null;
                     }
                 }
@@ -146,10 +146,6 @@ public class TileManager {
         }
     }
 
-    public void placeTile(Tile.Type type, int x, int y, int z) {
-        placeTile(new Tile(type), x, y, z);
-    }
-
     public void erase(int x, int y) {
         if (x >= 0 && x < tiles.length && y >= 0 && y < tiles[0].length) {
             for (int z = 0; z < tiles[0][0].length; z++) {
@@ -164,7 +160,7 @@ public class TileManager {
                 if (inBounds(x + xx, y + yy, z)) {
                     Tile t = tileAt(x + xx, y + yy, z);
 
-                    if (t != null && t.type.solid) {
+                    if (t != null && t.solid) {
                         return false;
                     }
                 }

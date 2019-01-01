@@ -68,7 +68,7 @@ public class Village extends Structure<World> {
 
             if (path != null) {
                 for (Node node : path) {
-                    if (map.tiles.tileAt(node.x, node.y, 0) != null && map.tiles.tileAt(node.x, node.y, 0).type == map.biomes[node.x / 16][node.y / 8].ground) {
+                    if (map.tiles.tileAt(node.x, node.y, 0) != null && map.tiles.tileAt(node.x, node.y, 0).name.equals(map.biomes[node.x / 16][node.y / 8].ground)) {
                         map.tiles.placeTile(Game.TILES.load("Path"), node.x, node.y, 0);
                     }
                 }

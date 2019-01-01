@@ -50,7 +50,9 @@ public class EntityManager {
 
     public void render(SpriteBatch batch) {
         for (Entity e : entities) {
+            e.preRender(batch);
             e.render(batch);
+            e.postRender(batch);
         }
     }
 

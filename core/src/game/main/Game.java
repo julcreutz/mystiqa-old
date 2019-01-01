@@ -14,7 +14,7 @@ import game.loader.instance.StructureLoader;
 import game.loader.palette.PaletteShaderLoader;
 import game.loader.resource.color.ColorLoader;
 import game.loader.resource.sprite_sheet.SpriteSheetLoader;
-import game.loader.resource.TileLoader;
+import game.loader.instance.TileLoader;
 import game.main.state.play.Play;
 import game.main.state.GameState;
 

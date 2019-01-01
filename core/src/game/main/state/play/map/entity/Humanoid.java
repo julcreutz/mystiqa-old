@@ -96,8 +96,8 @@ public class Humanoid extends Entity {
 
             Tile t = tileAt(map);
 
-            if (t != null && t.type.forcedDirection != -1) {
-                this.dir = t.type.forcedDirection;
+            if (t != null && t.forcedDirection != -1) {
+                this.dir = t.forcedDirection;
             }
         }
 

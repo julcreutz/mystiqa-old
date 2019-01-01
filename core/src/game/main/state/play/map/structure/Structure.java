@@ -8,7 +8,7 @@ import game.main.state.play.map.tile.Tile;
 import java.util.Random;
 
 public abstract class Structure<T extends Map> implements Serializable {
-    public Tile.Type tile() {
+    public String tile() {
         return null;
     }
 

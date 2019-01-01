@@ -247,7 +247,7 @@ public class World extends Map {
 
             for (int x = x0; x < x1; x++) {
                 for (int y = y0; y < y1; y++) {
-                    tiles.placeTile(b.ground, x, y, 0);
+                    tiles.placeTile(Game.TILES.load(b.ground), x, y, 0);
 
                     if (b.wall != null) {
                         if ((x == x0 || x == x1 - 1 || y == y0 || y == y1 - 1)) {
@@ -311,9 +311,9 @@ public class World extends Map {
                         Biome b = biomes[p.x / 16][p.y / 8];
                         Connector c = b.getConnector(connection);
 
-                        if (t != null && b.wall != null && t.type == b.wall.tile()) {
+                        if (t != null && b.wall != null && t.name.equals(b.wall.tile())) {
                             tiles.erase(p.x, p.y);
-                            tiles.placeTile(c.tile, p.x, p.y, 0);
+                            tiles.placeTile(Game.TILES.load(c.tile), p.x, p.y, 0);
                         }
                     }
                 }
@@ -336,9 +336,9 @@ public class World extends Map {
                             if (tiles.inBounds(x + xx, y + yy)) {
                                 Tile t = tiles.tileAt(x + xx, y + yy, 0);
 
-                                if (t != null && t.type != b.river) {
+                                if (t != null && !t.name.equals(b.river)) {
                                     tiles.erase(x + xx, y + yy);
-                                    tiles.placeTile(b.river, x + xx, y + yy, 0);
+                                    tiles.placeTile(Game.TILES.load(b.river), x + xx, y + yy, 0);
                                 }
                             }
                         }
@@ -357,9 +357,9 @@ public class World extends Map {
                     if (tiles.inBounds(p.x, p.y)) {
                         Tile t = tiles.tileAt(p.x, p.y, 0);
 
-                        if (t != null && t.type == b.river) {
+                        if (t != null && t.name.equals(b.river)) {
                             tiles.erase(p.x, p.y);
-                            tiles.placeTile(b.riverBridge, p.x, p.y, 0);
+                            tiles.placeTile(Game.TILES.load(b.riverBridge), p.x, p.y, 0);
                         }
                     }
                 }
@@ -380,10 +380,10 @@ public class World extends Map {
                     for (int y = r.y0(); y < r.y1(); y++) {
                         Tile t = tiles.tileAt(x, y, 0);
 
-                        if (t != null && t.type == b.ground) {
-                            Biome.Decoration decoration = null;
+                        if (t != null && t.name.equals(b.ground)) {
+                            Decoration decoration = null;
 
-                            for (Biome.Decoration d : b.decorations) {
+                            for (Decoration d : b.decorations) {
                                 if (tiles.isFree(x, y, 0, d.freeRadius) && rand.nextFloat() < d.chance) {
                                     decoration = d;
                                 }

@@ -10,32 +10,6 @@ import game.main.state.play.map.tile.Tile;
 import java.util.Random;
 
 public class Biome implements Serializable {
-    public static class Decoration implements Serializable {
-        public float chance;
-        public int freeRadius;
-
-        public Structure structure;
-
-        public Decoration(JsonValue json) {
-            deserialize(json);
-        }
-
-        @Override
-        public void deserialize(JsonValue json) {
-            if (json.has("chance")) {
-                chance = json.getFloat("chance");
-            }
-
-            if (json.has("freeRadius")) {
-                freeRadius = json.getInt("freeRadius");
-            }
-
-            if (json.has("structure")) {
-                structure = Game.STRUCTURES.load(json.getString("structure"));
-            }
-        }
-    }
-
     public float minElevation;
     public float maxElevation;
 
@@ -47,15 +21,15 @@ public class Biome implements Serializable {
 
     public float randomConnectChance;
 
-    public Tile.Type ground;
+    public String ground;
     public Structure wall;
 
     public Array<Connector> connectors;
 
     public int[] wayThickness;
 
-    public Tile.Type river;
-    public Tile.Type riverBridge;
+    public String river;
+    public String riverBridge;
 
     public Array<RoomTemplate> templates;
 
@@ -124,7 +98,7 @@ public class Biome implements Serializable {
         }
 
         if (json.has("ground")) {
-            ground = Game.TILES.load(json.getString("ground"));
+            ground = json.getString("ground");
         }
 
         if (json.has("wall")) {
@@ -147,11 +121,11 @@ public class Biome implements Serializable {
         }
 
         if (json.has("river")) {
-            river = Game.TILES.load(json.getString("river"));
+            river = json.getString("river");
         }
 
         if (json.has("riverBridge")) {
-            riverBridge = Game.TILES.load(json.getString("riverBridge"));
+            riverBridge = json.getString("riverBridge");
         }
 
         if (json.has("templates")) {

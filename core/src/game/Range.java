@@ -13,6 +13,11 @@ public class Range implements Serializable {
     /** Higher bound. Inclusive */
     public int max;
 
+    /** Constructs and directly deserializes new instance from given json value. */
+    public Range(JsonValue json) {
+        deserialize(json);
+    }
+
     /** Constructs range with given boundaries. */
     public Range(int min, int max) {
         this.min = min;
