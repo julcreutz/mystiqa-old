@@ -9,26 +9,6 @@
     "splitW": 8,
     "splitH": 8
   },
-  "Sand": {
-    "path": "graphics/sand.png",
-    "splitW": 8,
-    "splitH": 8
-  },
-  "Tree": {
-    "path": "graphics/tree.png",
-    "splitW": 8,
-    "splitH": 8
-  },
-  "Mountains": {
-    "path": "graphics/mountains.png",
-    "splitW": 8,
-    "splitH": 8
-  },
-  "Hills": {
-    "path": "graphics/hills.png",
-    "splitW": 8,
-    "splitH": 8
-  },
   "HumanFeet": {
     "path": "graphics/human_feet.png",
     "splitW": 8,
@@ -44,35 +24,10 @@
     "splitW": 8,
     "splitH": 8
   },
-  "Cursor": {
-    "path": "graphics/cursor.png",
-    "splitW": 8,
-    "splitH": 8
-  },
-  "Path": {
-    "path": "graphics/path.png",
-    "splitW": 8,
-    "splitH": 8
-  },
-  "River": {
-    "path": "graphics/river.png",
-    "splitW": 8,
-    "splitH": 8
-  },
-  "House": {
-    "path": "graphics/house.png",
-    "splitW": 8,
-    "splitH": 8
-  },
   "Font": {
     "path": "graphics/font.png",
     "splitW": 4,
     "splitH": 4
-  },
-  "Ice": {
-    "path": "graphics/ice.png",
-    "splitW": 8,
-    "splitH": 8
   },
   "Waterfall": {
     "path": "graphics/waterfall.png",
@@ -136,6 +91,11 @@
   },
   "Rock": {
     "path": "graphics/rock.png",
+    "splitW": 8,
+    "splitH": 8
+  },
+  "Rock2": {
+    "path": "graphics/rock_2.png",
     "splitW": 8,
     "splitH": 8
   },

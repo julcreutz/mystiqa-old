@@ -6,8 +6,7 @@ import game.loader.Serializable;
 import game.main.Game;
 
 /**
- * Superclass every type of item, e.g. weapons or consumables, must
- * extend. Only consists of name and palette.
+ * Superclass every type of item, e.g. weapons or consumables, must extend. Only consists of name and palette.
  */
 public abstract class Item implements Serializable {
     /** Name of item. */

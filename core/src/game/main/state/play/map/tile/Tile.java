@@ -3,7 +3,6 @@ package game.main.state.play.map.tile;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import game.loader.Serializable;
 import game.main.Game;
@@ -46,19 +45,19 @@ public class Tile implements Serializable {
         if (autoTile) {
             int n = 0;
 
-            if (connectsTo(map, x + 1, y, z)) {
+            if (connectsWith(map, x + 1, y, z)) {
                 n++;
             }
 
-            if (connectsTo(map, x, y + 1, z)) {
+            if (connectsWith(map, x, y + 1, z)) {
                 n += 2;
             }
 
-            if (connectsTo(map, x - 1, y, z)) {
+            if (connectsWith(map, x - 1, y, z)) {
                 n += 4;
             }
 
-            if (connectsTo(map, x, y - 1, z)) {
+            if (connectsWith(map, x, y - 1, z)) {
                 n += 8;
             }
 
@@ -124,7 +123,7 @@ public class Tile implements Serializable {
         batch.setShader(null);
     }
 
-    public boolean connectsTo(Map map, int x, int y, int z) {
+    public boolean connectsWith(Map map, int x, int y, int z) {
         if (map.tiles.inBounds(x, y, z)) {
             Tile tile = map.tiles.tileAt(x, y, z);
 

@@ -20,6 +20,11 @@
       "tile": "Rock"
     }
   },
+  "Rock2": {
+    "SingleTile": {
+      "tile": "Rock2"
+    }
+  },
   "TallGrass": {
     "SingleTile": {
       "tile": "TallGrass"

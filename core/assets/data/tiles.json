@@ -7,7 +7,7 @@
         ["Black", "Green"]
       ],
       "autoTile": true,
-      "connect": ["TreeBottom", "Stone", "Bridge", "HouseWall", "HouseEntrance", "Rock", "TallGrass"]
+      "connect": ["TreeBottom", "Stone", "Bridge", "HouseWall", "HouseEntrance", "Rock", "Rock2", "TallGrass", "Flowers"]
     }
   },
   "Path": {
@@ -45,15 +45,6 @@
       "paletteSpeed": 10,
       "connect": ["Water"],
       "solid": true
-    }
-  },
-  "Sand": {
-    "Tile": {
-      "name": "Sand",
-      "spriteSheet": "Sand",
-      "palettes": [
-        ["Black", "Yellow"]
-      ]
     }
   },
   "Stone": {
@@ -164,6 +155,16 @@
     "Tile": {
       "name": "Rock",
       "spriteSheet": "Rock",
+      "palettes": [
+        ["Black", "Green", "Gray"]
+      ],
+      "solid": true
+    }
+  },
+  "Rock2": {
+    "Tile": {
+      "name": "Rock2",
+      "spriteSheet": "Rock2",
       "palettes": [
         ["Black", "Green", "Gray"]
       ],

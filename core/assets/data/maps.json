@@ -109,7 +109,6 @@
           "decorations": [
             {
               "chance": 0.5,
-              "freeRadius": 0,
               "structure": "TallGrass"
             },
             {
@@ -121,6 +120,11 @@
               "chance": 0.05,
               "freeRadius": 1,
               "structure": "Rock"
+            },
+            {
+              "chance": 0.05,
+              "freeRadius": 1,
+              "structure": "Rock2"
             }
           ]
         },

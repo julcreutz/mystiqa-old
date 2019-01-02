@@ -4,6 +4,7 @@ import com.badlogic.gdx.utils.JsonValue;
 
 /**
  * Defines a class able to be serialized into .json format.
+ *
  * Serialization is using libGDX's {@link com.badlogic.gdx.utils.Json} implementation.
  */
 public interface Serializable {
