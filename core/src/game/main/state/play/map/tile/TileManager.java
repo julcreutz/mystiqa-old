@@ -107,7 +107,7 @@ public class TileManager {
      * @return whether coordinates are in bounds
      */
     public boolean inBounds(int x, int y, int z) {
-        return x >= 0 && x < width() && y >= 0 && y < height() && z >= 0 && z < depth();
+        return x >= 0 && x < getWidth() && y >= 0 && y < getHeight() && z >= 0 && z < getDepth();
     }
 
     /**
@@ -181,7 +181,7 @@ public class TileManager {
      * @param y y coordinate
      */
     public void erase(int x, int y) {
-        erase(x, x + 1, y, y + 1, 0, depth());
+        erase(x, x + 1, y, y + 1, 0, getDepth());
     }
 
     /**
@@ -230,17 +230,17 @@ public class TileManager {
     }
 
     /** @return width of tiles */
-    public int width() {
+    public int getWidth() {
         return tiles.length;
     }
 
     /** @return height of tiles */
-    public int height() {
+    public int getHeight() {
         return tiles[0].length;
     }
 
     /** @return depth of tiles */
-    public int depth() {
+    public int getDepth() {
         return tiles[0][0].length;
     }
 

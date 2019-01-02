@@ -53,7 +53,7 @@ public class Hitbox {
      * @return whether rectangle overlaps
      */
     public boolean overlaps(Rectangle rect) {
-        return width() > 0 && height() > 0 && rect.width > 0 && rect.height > 0 && this.rect.overlaps(rect);
+        return getWidth() > 0 && getHeight() > 0 && rect.width > 0 && rect.height > 0 && this.rect.overlaps(rect);
     }
 
     /**
@@ -79,33 +79,33 @@ public class Hitbox {
     }
 
     /** @return x position of rectangle */
-    public float x() {
+    public float getX() {
         return rect.x;
     }
 
     /** @return y position of rectangle */
-    public float y() {
+    public float getY() {
         return rect.y;
     }
 
     /** @return width of rectangle */
-    public float width() {
+    public float getWidth() {
         return rect.width;
     }
 
     /** @return height of rectangle */
-    public float height() {
+    public float getHeight() {
         return rect.height;
     }
 
     /** @return x center position of rectangle */
-    public float centerX() {
-        return x() + width() * .5f;
+    public float getCenterX() {
+        return getX() + getWidth() * .5f;
     }
 
     /** @return y center position of rectangle */
-    public float centerY() {
-        return y() + height() * .5f;
+    public float getCenterY() {
+        return getY() + getHeight() * .5f;
     }
 
     /**

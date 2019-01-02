@@ -14,6 +14,8 @@ public class RoomTemplate implements Serializable {
 
     public char[][] layout;
 
+    public MonsterComponent monsters;
+
     public char[][] copyLayout() {
         char[][] layout = new char[this.layout.length][this.layout[0].length];
 
@@ -54,6 +56,11 @@ public class RoomTemplate implements Serializable {
                 layout[i] = row.asCharArray();
                 i++;
             }
+        }
+
+        JsonValue monsters = json.get("monsters");
+        if (monsters != null) {
+            this.monsters = new MonsterComponent(monsters);
         }
     }
 }

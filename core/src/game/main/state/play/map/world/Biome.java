@@ -5,8 +5,8 @@ import com.badlogic.gdx.utils.JsonValue;
 import game.loader.Serializable;
 import game.main.Game;
 import game.main.state.play.map.structure.Structure;
-import game.main.state.play.map.tile.Tile;
 import game.range.FloatRange;
+import game.range.IntRange;
 
 import java.util.Random;
 

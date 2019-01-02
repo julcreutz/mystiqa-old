@@ -12,6 +12,8 @@ public class Room {
     public Room parent;
     public Array<Room> children;
 
+    public MonsterComponent monsters;
+
     public Room(int x, int y, int w, int h) {
         this.x = x;
         this.y = y;
@@ -25,20 +27,20 @@ public class Room {
         this(0, 0, 0, 0);
     }
 
-    public int x0() {
+    public int getX0() {
         return x * 8;
     }
 
-    public int x1() {
-        return x0() + w * 8;
+    public int getX1() {
+        return getX0() + w * 8;
     }
 
-    public int y0() {
+    public int getY0() {
         return y * 4;
     }
 
-    public int y1() {
-        return y0() + h * 4;
+    public int getY1() {
+        return getY0() + h * 4;
     }
 
     @Override

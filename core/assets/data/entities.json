@@ -33,6 +33,10 @@
         {
           "type": "PHYSICAL_DAMAGE",
           "absolute": 1
+        },
+        {
+          "type": "SPEED",
+          "absolute": 24
         }
       ],
       "alignment": "EVIL",

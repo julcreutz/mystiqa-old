@@ -31,8 +31,8 @@ public class Village extends Structure<World> {
 
                 final int dist = 2;
 
-                r0.x = r.x0() + dist + rand.nextInt(MathUtils.clamp(r.w * 8 - dist * 2 - r0.width, 1, Integer.MAX_VALUE));
-                r0.y = r.y0() + dist + rand.nextInt(MathUtils.clamp(r.h * 4 - dist * 2 - r0.height, 1, Integer.MAX_VALUE));
+                r0.x = r.getX0() + dist + rand.nextInt(MathUtils.clamp(r.w * 8 - dist * 2 - r0.width, 1, Integer.MAX_VALUE));
+                r0.y = r.getY0() + dist + rand.nextInt(MathUtils.clamp(r.h * 4 - dist * 2 - r0.height, 1, Integer.MAX_VALUE));
 
                 boolean overlaps = false;
 

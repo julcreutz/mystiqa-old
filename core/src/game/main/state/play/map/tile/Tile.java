@@ -13,12 +13,12 @@ public class Tile implements Serializable {
 
     public TextureRegion[][] spriteSheet;
 
-    public ShaderProgram[] palettes;
-    public float paletteSpeed;
+    public ShaderProgram[] colors;
+    public float colorSwitchSpeed;
 
     public boolean autoTile;
 
-    public String[] connect;
+    public String[] connectWith;
 
     public boolean solid;
 
@@ -117,7 +117,7 @@ public class Tile implements Serializable {
     }
 
     public void render(SpriteBatch batch) {
-        batch.setShader(palettes[(int) ((Game.time * paletteSpeed) % palettes.length)]);
+        batch.setShader(colors[(int) ((Game.time * colorSwitchSpeed) % colors.length)]);
         batch.draw(image, x * 8, y * 8 + z * 8);
         batch.setColor(1, 1, 1, 1);
         batch.setShader(null);
@@ -128,8 +128,8 @@ public class Tile implements Serializable {
             Tile tile = map.tiles.tileAt(x, y, z);
 
             if (tile != null) {
-                if (connect != null) {
-                    for (String _connect : connect) {
+                if (connectWith != null) {
+                    for (String _connect : connectWith) {
                         if (_connect.equals(tile.name)) {
                             return true;
                         }
@@ -140,7 +140,7 @@ public class Tile implements Serializable {
             }
         }
 
-        return false;
+        return true;
     }
 
     @Override
@@ -155,18 +155,18 @@ public class Tile implements Serializable {
             this.spriteSheet = Game.SPRITE_SHEETS.load(spriteSheet.asString()).sheet;
         }
 
-        JsonValue palettes = json.get("palettes");
+        JsonValue palettes = json.get("colors");
         if (palettes != null) {
-            this.palettes = new ShaderProgram[palettes.size];
+            this.colors = new ShaderProgram[palettes.size];
 
             for (int i = 0; i < palettes.size; i++) {
-                this.palettes[i] = Game.PALETTES.load(palettes.get(i).asStringArray());
+                this.colors[i] = Game.PALETTES.load(palettes.get(i).asStringArray());
             }
         }
 
-        JsonValue paletteSpeed = json.get("paletteSpeed");
+        JsonValue paletteSpeed = json.get("colorSwitchSpeed");
         if (paletteSpeed != null) {
-            this.paletteSpeed = paletteSpeed.asFloat();
+            this.colorSwitchSpeed = paletteSpeed.asFloat();
         }
 
         JsonValue autoTile = json.get("autoTile");
@@ -174,9 +174,9 @@ public class Tile implements Serializable {
             this.autoTile = autoTile.asBoolean();
         }
 
-        JsonValue connect = json.get("connect");
+        JsonValue connect = json.get("connectWith");
         if (connect != null) {
-            this.connect = connect.asStringArray();
+            this.connectWith = connect.asStringArray();
         }
 
         JsonValue solid = json.get("solid");

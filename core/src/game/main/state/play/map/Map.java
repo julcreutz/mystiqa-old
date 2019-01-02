@@ -59,7 +59,7 @@ public abstract class Map implements Serializable {
                 camTime = 1;
             }
 
-            camTime -= Game.delta() * CAM_SPEED;
+            camTime -= Game.getDelta() * CAM_SPEED;
 
             float p = MathUtils.clamp(1 - camTime, 0, 1);
 
@@ -74,10 +74,10 @@ public abstract class Map implements Serializable {
             }
         }
 
-        x0 = MathUtils.clamp(MathUtils.floor(play.cam.position.x / 8f) - X_VIEW, 0, tiles.width());
-        x1 = MathUtils.clamp(x0 + X_VIEW * 2, 0, tiles.width());
-        y0 = MathUtils.clamp(MathUtils.floor(play.cam.position.y / 8f) - Y_VIEW, 0, tiles.height());
-        y1 = MathUtils.clamp(y0 + Y_VIEW * 2, 0, tiles.height());
+        x0 = MathUtils.clamp(MathUtils.floor(play.cam.position.x / 8f) - X_VIEW, 0, tiles.getWidth());
+        x1 = MathUtils.clamp(x0 + X_VIEW * 2, 0, tiles.getWidth());
+        y0 = MathUtils.clamp(MathUtils.floor(play.cam.position.y / 8f) - Y_VIEW, 0, tiles.getHeight());
+        y1 = MathUtils.clamp(y0 + Y_VIEW * 2, 0, tiles.getHeight());
 
         tiles.update(x0, x1, y0, y1);
         entities.update();
@@ -132,7 +132,7 @@ public abstract class Map implements Serializable {
 
         batch.setShader(null);
 
-        tiles.render(batch, x0, x1, y0, y1, 1, tiles.depth());
+        tiles.render(batch, x0, x1, y0, y1, 1, tiles.getDepth());
 
         batch.draw(Game.SPRITE_SHEETS.load("GuiLayer").sheet[0][0], camPosX - Game.WIDTH * .5f, camPosY + Game.HEIGHT * .5f - 8, Game.WIDTH, 8);
     }
@@ -215,7 +215,7 @@ public abstract class Map implements Serializable {
                         if (tiles.inBounds(xx, yy)) {
                             Tile t = tiles.tileAt(xx, yy, 0);
 
-                            if (xx >= 0 && xx < tiles.width() && yy >= 0 && yy < tiles.height() && t != null && !t.solid) {
+                            if (xx >= 0 && xx < tiles.getWidth() && yy >= 0 && yy < tiles.getHeight() && t != null && !t.solid) {
                                 Node node = new Node(xx, yy);
 
                                 // Ignore if node is in closed list

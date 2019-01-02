@@ -38,7 +38,7 @@ public class TileOverlay implements Serializable {
      */
     public void render(SpriteBatch batch, Entity e) {
         batch.setShader(colors);
-        batch.draw(image, e.hitbox.centerX() - image.getRegionWidth() * .5f, e.hitbox.y() - image.getRegionHeight() * .5f);
+        batch.draw(image, e.hitbox.getCenterX() - image.getRegionWidth() * .5f, e.hitbox.getY() - image.getRegionHeight() * .5f);
     }
 
     @Override

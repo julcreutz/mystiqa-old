@@ -3,6 +3,7 @@ package game.main.state.play.map.world;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
+import game.main.state.play.map.entity.Entity;
 import game.range.IntRange;
 import game.main.Game;
 import game.main.item.equipment.armor.BodyArmor;
@@ -236,11 +237,11 @@ public class World extends Map {
         tiles.initSize(WIDTH * 16, HEIGHT * 8, 8);
 
         for (Room r : rooms) {
-            int x0 = r.x0();
-            int x1 = r.x1();
+            int x0 = r.getX0();
+            int x1 = r.getX1();
 
-            int y0 = r.y0();
-            int y1 = r.y1();
+            int y0 = r.getY0();
+            int y1 = r.getY1();
 
             Biome b = biomes[r.x / 2][r.y / 2];
 
@@ -258,13 +259,15 @@ public class World extends Map {
         }
 
         for (Room r : rooms) {
-            int x0 = r.x0();
-            int y1 = r.y1();
+            int x0 = r.getX0();
+            int y1 = r.getY1();
 
             Biome b = biomes[r.x / 2][r.y / 2];
             RoomTemplate t = b.pickTemplate(r, rand);
 
             if (t != null) {
+                r.monsters = t.monsters;
+
                 char[][] layout = t.copyLayout();
 
                 // Flip vertically
@@ -367,7 +370,7 @@ public class World extends Map {
 
         for (Room r : rooms) {
             if (r.w == 2 && r.h == 2 && r.x % 4 == 0 && r.y % 4 == 0 && r.x < biomes.length * 2 - 2 && r.y < biomes[0].length * 2 - 2 && rand.nextFloat() < .25f) {
-                Game.STRUCTURES.load("Village").generate(rand, this, r.x0(), r.y0(), 0);
+                Game.STRUCTURES.load("Village").generate(rand, this, r.getX0(), r.getY0(), 0);
             }
         }
 
@@ -375,8 +378,8 @@ public class World extends Map {
             Biome b = biomeAt(r.x / 2, r.y / 2);
 
             if (b.decorations != null) {
-                for (int x = r.x0(); x < r.x1(); x++) {
-                    for (int y = r.y0(); y < r.y1(); y++) {
+                for (int x = r.getX0(); x < r.getX1(); x++) {
+                    for (int y = r.getY0(); y < r.getY1(); y++) {
                         Tile t = tiles.tileAt(x, y, 0);
 
                         if (t != null && t.name.equals(b.ground)) {
@@ -399,8 +402,29 @@ public class World extends Map {
 
         entities.clear();
 
-        for (int x = 0; x < tiles.width(); x++) {
-            for (int y = 0; y < tiles.height(); y++) {
+        for (Room r : rooms) {
+            if (r.monsters != null) {
+                for (int i = 0; i < r.monsters.getRandomCount(rand); i++) {
+                    int x;
+                    int y;
+
+                    do {
+                        x = r.getX0() + rand.nextInt(r.getX1() - r.getX0());
+                        y = r.getY0() + rand.nextInt(r.getY1() - r.getY0());
+                    } while (!tiles.isFree(x, y, 0, 0));
+
+                    Entity monster = r.monsters.getRandomMonster(rand);
+
+                    monster.x = x * 8;
+                    monster.y = y * 8;
+
+                    entities.addEntity(monster);
+                }
+            }
+        }
+
+        for (int x = 0; x < tiles.getWidth(); x++) {
+            for (int y = 0; y < tiles.getHeight(); y++) {
                 if (tiles.isFree(x, y, 0, 1) && rand.nextFloat() < .1f) {
                     Slime s = (Slime) Game.ENTITIES.load("GreenSlime");
                     s.x = x * 8;

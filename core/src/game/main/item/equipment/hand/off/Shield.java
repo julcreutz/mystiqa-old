@@ -96,8 +96,8 @@ public class Shield extends OffHand {
     public void onStartUse(Humanoid h) {
         super.onStartUse(h);
 
-        if (!h.statManager.stats.contains(slowdown, true)) {
-            h.statManager.stats.add(slowdown);
+        if (!h.stats.stats.contains(slowdown, true)) {
+            h.stats.stats.add(slowdown);
         }
     }
 
@@ -105,8 +105,8 @@ public class Shield extends OffHand {
     public void onFinishUse(Humanoid h) {
         super.onFinishUse(h);
 
-        if (h.statManager.stats.contains(slowdown, true)) {
-            h.statManager.stats.removeValue(slowdown, true);
+        if (h.stats.stats.contains(slowdown, true)) {
+            h.stats.stats.removeValue(slowdown, true);
         }
     }
 

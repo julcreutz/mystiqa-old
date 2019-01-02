@@ -78,7 +78,7 @@ public class Game extends ApplicationAdapter {
 			nextState = null;
 		}
 
-		time += delta();
+		time += getDelta();
 
 		if (state != null) {
 			state.update(this);
@@ -99,7 +99,7 @@ public class Game extends ApplicationAdapter {
 		}
 	}
 
-	public static float delta() {
+	public static float getDelta() {
 		return Gdx.graphics.getDeltaTime();
 	}
 

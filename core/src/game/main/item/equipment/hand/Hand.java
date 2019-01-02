@@ -16,7 +16,7 @@ public abstract class Hand extends Equipment {
     public boolean renderBehind;
 
     public void use() {
-        useTime += Game.delta();
+        useTime += Game.getDelta();
         state++;
     }
 

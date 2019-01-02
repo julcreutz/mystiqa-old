@@ -17,6 +17,15 @@
       "speed": 1
     }
   },
+  "Club": {
+    "MeleeWeapon": {
+      "name": "Club",
+      "palette": ["Black", "Brown", "Peach"],
+      "spriteSheet": "Club",
+      "angle": 135,
+      "speed": 0.75
+    }
+  },
   "Shield": {
     "Shield": {
       "name": "Shield",

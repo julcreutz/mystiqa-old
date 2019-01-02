@@ -10,7 +10,6 @@ import game.main.state.play.map.Map;
 
 public class Slime extends Entity {
     public TextureRegion[][] sheet;
-    public String[] colors;
 
     public SlimeState state;
 
@@ -37,7 +36,7 @@ public class Slime extends Entity {
                     break;
                 }
 
-                time -= Game.delta();
+                time -= Game.getDelta();
 
                 if (time < 0) {
                     jump(MathUtils.random(360f), MathUtils.random(12f, 24f), MathUtils.random(1f, 2f));
@@ -47,10 +46,11 @@ public class Slime extends Entity {
 
                 break;
             case FOLLOW_PLAYER:
-                time -= Game.delta();
+                time -= Game.getDelta();
 
                 if (time < 0) {
-                    jump(new Vector2(map.player.x, map.player.y).sub(x, y).angle(), new Vector2(map.player.x, map.player.y).sub(x, y).len() * 2.5f, MathUtils.random(.5f, 1f));
+                    Vector2 v = new Vector2(map.player.x, map.player.y).sub(x, y);
+                    jump(v.angle(), v.len() * 2.5f, MathUtils.random(.5f, 1f));
                 }
 
                 break;
@@ -59,7 +59,7 @@ public class Slime extends Entity {
                     jumpTime = .1f;
                 }
 
-                jumpTime -= Game.delta();
+                jumpTime -= Game.getDelta();
 
                 if (jumpTime < 0) {
                     state = SlimeState.JUMP;
@@ -70,8 +70,8 @@ public class Slime extends Entity {
                 velX = MathUtils.cosDeg(jumpAngle) * jumpSpeed;
                 velY = MathUtils.sinDeg(jumpAngle) * jumpSpeed;
 
-                z += velZ * Game.delta();
-                velZ -= Game.delta() * 512f;
+                z += velZ * Game.getDelta();
+                velZ -= Game.getDelta() * 512f;
 
                 if (z < 0) {
                     z = 0;
@@ -88,7 +88,7 @@ public class Slime extends Entity {
                     jumpTime = .1f;
                 }
 
-                jumpTime -= Game.delta();
+                jumpTime -= Game.getDelta();
 
                 if (jumpTime < 0) {
                     state = SlimeState.RANDOM_MOVEMENT;
@@ -125,11 +125,6 @@ public class Slime extends Entity {
         }
 
         batch.draw(image, x, y + z);
-    }
-
-    @Override
-    public String[] colors() {
-        return colors;
     }
 
     public void jump(float jumpAngle, float jumpSpeed, float time) {

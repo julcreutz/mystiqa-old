@@ -1,6 +1,7 @@
 package game.main.state.play.map.house;
 
 import com.badlogic.gdx.utils.JsonValue;
+import game.main.Game;
 import game.main.state.play.map.Map;
 
 public class HouseInterior extends Map {
@@ -9,6 +10,18 @@ public class HouseInterior extends Map {
         super.generate();
 
         tiles.initSize(16, 8, 1);
+
+        for (int x = 0; x < tiles.getWidth(); x++) {
+            for (int y = 0; y < tiles.getHeight(); y++) {
+                if (x == 0 || x == tiles.getWidth() - 1 || y == 0 || y == tiles.getHeight() - 1) {
+                    tiles.placeTile(Game.TILES.load("Stone"), x, y, 0);
+                } else {
+                    tiles.placeTile(Game.TILES.load("Dirt"), x, y, 0);
+                }
+            }
+        }
+
+        tiles.placeTile(Game.TILES.load("Dirt"), getEntranceX(), getEntranceY(), 0);
     }
 
     @Override
@@ -26,6 +39,6 @@ public class HouseInterior extends Map {
     }
 
     public int getEntranceY() {
-        return 1;
+        return 0;
     }
 }

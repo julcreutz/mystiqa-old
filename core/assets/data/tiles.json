@@ -3,33 +3,33 @@
     "Tile": {
       "name": "Grass",
       "spriteSheet": "Grass",
-      "palettes": [
+      "colors": [
         ["Black", "Green"]
       ],
       "autoTile": true,
-      "connect": ["TreeBottom", "Stone", "Bridge", "HouseWall", "HouseEntrance", "Rock", "Rock2", "TallGrass", "Flowers"]
+      "connectWith": ["TreeBottom", "Stone", "Bridge", "HouseWall", "HouseEntrance", "Rock", "Rock2", "TallGrass", "Flowers"]
     }
   },
   "Path": {
     "Tile": {
       "name": "Path",
       "spriteSheet": "Grass",
-      "palettes": [
+      "colors": [
         ["Black", "Brown"]
       ],
       "autoTile": true,
-      "connect": ["TreeBottom", "Stone", "Bridge", "HouseWall", "HouseEntrance", "Grass"]
+      "connectWith": ["TreeBottom", "Stone", "Bridge", "HouseWall", "HouseEntrance", "Grass"]
     }
   },
   "Water": {
     "Tile": {
       "name": "Water",
       "spriteSheet": "Water",
-      "palettes": [
+      "colors": [
         ["Black", "Blue", "Brown"]
       ],
       "autoTile": true,
-      "connect": ["Stone", "Waterfall", "Bridge"],
+      "connectWith": ["Stone", "Waterfall", "Bridge"],
       "solid": true
     }
   },
@@ -37,13 +37,13 @@
     "Tile": {
       "name": "Waterfall",
       "spriteSheet": "Waterfall",
-      "palettes": [
+      "colors": [
         ["Blue", "Blue", "White"],
         ["Blue", "White", "Blue"],
         ["White", "Blue", "Blue"]
       ],
-      "paletteSpeed": 10,
-      "connect": ["Water"],
+      "colorSwitchSpeed": 10,
+      "connectWith": ["Water"],
       "solid": true
     }
   },
@@ -51,10 +51,10 @@
     "Tile": {
       "name": "Stone",
       "spriteSheet": "Stone",
-      "palettes": [
+      "colors": [
         ["Black", "Brown", "Brown"]
       ],
-      "connect": ["Tendril"],
+      "connectWith": ["Tendril"],
       "autoTile": true,
       "solid": true
     }
@@ -63,10 +63,10 @@
     "Tile": {
       "name": "Tendril",
       "spriteSheet": "Tendril",
-      "palettes": [
+      "colors": [
         ["Black", "Green", "Brown"]
       ],
-      "connect": ["Stone"],
+      "connectWith": ["Stone"],
       "moveSpeed": 0.5,
       "forcedDirection": 1
     }
@@ -75,10 +75,10 @@
     "Tile": {
       "name": "Dirt",
       "spriteSheet": "Grass",
-      "palettes": [
+      "colors": [
         ["Black", "Brown"]
       ],
-      "connect": ["Stone", "Tendril", "Bridge"],
+      "connectWith": ["Stone", "Tendril", "Bridge", "MountainsRock", "MountainsRock2"],
       "autoTile": true
     }
   },
@@ -86,7 +86,7 @@
     "Tile": {
       "name": "Bridge",
       "spriteSheet": "Bridge",
-      "palettes": [
+      "colors": [
         ["Black", "Brown"]
       ],
       "autoTile": true
@@ -96,7 +96,7 @@
     "Tile": {
       "name": "TreeBottom",
       "spriteSheet": "TreeBottom",
-      "palettes": [
+      "colors": [
         ["Black", "Green", "Brown", "Green"]
       ],
       "solid": true
@@ -106,7 +106,7 @@
     "Tile": {
       "name": "TreeMiddle",
       "spriteSheet": "TreeMiddle",
-      "palettes": [
+      "colors": [
         ["Black", "Green"]
       ]
     }
@@ -115,7 +115,7 @@
     "Tile": {
       "name": "TreeTop",
       "spriteSheet": "TreeTop",
-      "palettes": [
+      "colors": [
         ["Black", "Green"]
       ]
     }
@@ -124,7 +124,7 @@
     "Tile": {
       "name": "HouseEntrance",
       "spriteSheet": "HouseEntrance",
-      "palettes": [
+      "colors": [
         ["Black", "Brown"]
       ]
     }
@@ -133,11 +133,11 @@
     "Tile": {
       "name": "HouseWall",
       "spriteSheet": "HouseWall",
-      "palettes": [
+      "colors": [
         ["Black","Brown"]
       ],
       "autoTile": true,
-      "connect": ["HouseEntrance"],
+      "connectWith": ["HouseEntrance"],
       "solid": true
     }
   },
@@ -145,7 +145,7 @@
     "Tile": {
       "name": "HouseRoof",
       "spriteSheet": "HouseRoof",
-      "palettes": [
+      "colors": [
         ["Black", "Brown", "Yellow"]
       ],
       "autoTile": true
@@ -155,7 +155,7 @@
     "Tile": {
       "name": "Rock",
       "spriteSheet": "Rock",
-      "palettes": [
+      "colors": [
         ["Black", "Green", "Gray"]
       ],
       "solid": true
@@ -165,8 +165,28 @@
     "Tile": {
       "name": "Rock2",
       "spriteSheet": "Rock2",
-      "palettes": [
+      "colors": [
         ["Black", "Green", "Gray"]
+      ],
+      "solid": true
+    }
+  },
+  "MountainsRock": {
+    "Tile": {
+      "name": "MountainsRock",
+      "spriteSheet": "Rock",
+      "colors": [
+        ["Black", "Brown", "Gray"]
+      ],
+      "solid": true
+    }
+  },
+  "MountainsRock2": {
+    "Tile": {
+      "name": "MountainsRock2",
+      "spriteSheet": "Rock2",
+      "colors": [
+        ["Black", "Brown", "Gray"]
       ],
       "solid": true
     }
@@ -175,7 +195,7 @@
     "Tile": {
       "name": "TallGrass",
       "spriteSheet": "TallGrass",
-      "palettes": [
+      "colors": [
         ["Black", "Green"]
       ],
       "autoTile": true,

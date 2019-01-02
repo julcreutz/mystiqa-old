@@ -22,11 +22,13 @@ public class Entity implements Serializable {
     public float velX;
     public float velY;
 
+    public String[] colors;
+
     public Hitbox hitbox;
 
     public boolean updated;
 
-    public StatManager statManager;
+    public StatManager stats;
 
     public Array<Entity> hit;
 
@@ -44,7 +46,7 @@ public class Entity implements Serializable {
 
     public Entity() {
         hitbox = new Hitbox(this);
-        statManager = new StatManager();
+        stats = new StatManager();
         hit = new Array<Entity>();
     }
 
@@ -79,7 +81,7 @@ public class Entity implements Serializable {
                                         e.hitAngle = new Vector2(e.x, e.y).sub(x, y).angle();
                                         e.hitSpeed = 48f;
 
-                                        e.health -= statManager.count(StatType.PHYSICAL_DAMAGE);
+                                        e.health -= stats.count(StatType.PHYSICAL_DAMAGE);
 
                                         e.onHit(map);
 
@@ -104,7 +106,7 @@ public class Entity implements Serializable {
         }
 
         if (isHit()) {
-            hitTime -= Game.delta();
+            hitTime -= Game.getDelta();
 
             velX += MathUtils.cosDeg(hitAngle) * hitSpeed;
             velY += MathUtils.sinDeg(hitAngle) * hitSpeed;
@@ -142,15 +144,15 @@ public class Entity implements Serializable {
         velX *= moveSpeed;
         velY *= moveSpeed;
 
-        hitbox.position(velX * Game.delta(), 0);
+        hitbox.position(velX * Game.getDelta(), 0);
 
-        for (int x = 0; x < map.tiles.width(); x++) {
-            for (int y = 0; y < map.tiles.height(); y++) {
+        for (int x = 0; x < map.tiles.getWidth(); x++) {
+            for (int y = 0; y < map.tiles.getHeight(); y++) {
                 Rectangle solidTile = map.tiles.solidTiles[x][y];
 
                 if (solidTile != null && hitbox.overlaps(solidTile)) {
                     if (velX > 0) {
-                        this.x = solidTile.x - hitbox.width() - hitbox.offsetX;
+                        this.x = solidTile.x - hitbox.getWidth() - hitbox.offsetX;
                     } else if (velX < 0) {
                         this.x = solidTile.x + solidTile.width - hitbox.offsetX;
                     }
@@ -160,17 +162,17 @@ public class Entity implements Serializable {
             }
         }
 
-        x += velX * Game.delta();
+        x += velX * Game.getDelta();
 
-        hitbox.position(0, velY * Game.delta());
+        hitbox.position(0, velY * Game.getDelta());
 
-        for (int x = 0; x < map.tiles.width(); x++) {
-            for (int y = 0; y < map.tiles.height(); y++) {
+        for (int x = 0; x < map.tiles.getWidth(); x++) {
+            for (int y = 0; y < map.tiles.getHeight(); y++) {
                 Rectangle solidTile = map.tiles.solidTiles[x][y];
 
                 if (solidTile != null && hitbox.overlaps(solidTile)) {
                     if (velY > 0) {
-                        this.y = solidTile.y - hitbox.height() - hitbox.offsetY;
+                        this.y = solidTile.y - hitbox.getHeight() - hitbox.offsetY;
                     } else if (velY < 0) {
                         this.y = solidTile.y + solidTile.height - hitbox.offsetY;
                     }
@@ -180,7 +182,7 @@ public class Entity implements Serializable {
             }
         }
 
-        y += velY * Game.delta();
+        y += velY * Game.getDelta();
 
         if (velX != 0 || velY != 0) {
             onMove(map);
@@ -191,7 +193,7 @@ public class Entity implements Serializable {
     }
 
     public void preRender(SpriteBatch batch) {
-        batch.setShader(palette());
+        batch.setShader(getColorShader());
     }
 
     public void render(SpriteBatch batch) {
@@ -206,7 +208,7 @@ public class Entity implements Serializable {
 
     public void onAdded(Map map) {
         hitbox.position();
-        health = statManager.count(StatType.HEALTH);
+        health = stats.count(StatType.HEALTH);
     }
 
     public void onMove(Map map) {
@@ -241,10 +243,6 @@ public class Entity implements Serializable {
         return true;
     }
 
-    public String[] colors() {
-        return null;
-    }
-
     public String[] reverseColors(String[] colors) {
         String[] newColors = new String[colors.length];
 
@@ -262,11 +260,15 @@ public class Entity implements Serializable {
     }
 
     public String[] reverseColors() {
-        return reverseColors(colors());
+        return reverseColors(colors);
     }
 
-    public ShaderProgram palette() {
-        return Game.PALETTES.load(isHit() ? reverseColors() : colors());
+    public String[] getColors() {
+        return isHit() ? reverseColors() : colors;
+    }
+
+    public ShaderProgram getColorShader() {
+        return Game.PALETTES.load(getColors());
     }
 
     public Hitbox getAttackHitbox() {
@@ -282,8 +284,8 @@ public class Entity implements Serializable {
     }
 
     public Tile tileAt(Map map) {
-        int x = MathUtils.floor((hitbox.centerX()) / 8f);
-        int y = MathUtils.floor(hitbox.y() / 8f);
+        int x = MathUtils.floor((hitbox.getCenterX()) / 8f);
+        int y = MathUtils.floor(hitbox.getY() / 8f);
 
         if (map.tiles.inBounds(x, y)) {
             return map.tiles.tileAt(x, y, 0);
@@ -295,7 +297,7 @@ public class Entity implements Serializable {
     @Override
     public void deserialize(JsonValue json) {
         if (json.has("stats")) {
-            statManager.deserialize(json.get("stats"));
+            stats.deserialize(json.get("stats"));
         }
 
         if (json.has("alignment")) {
