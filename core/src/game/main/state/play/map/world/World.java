@@ -28,7 +28,7 @@ public class World extends Map {
     public int width;
     public int height;
 
-    public IntRange riverCount;
+    public int[] riverCount;
 
     public Array<Biome> allBiomes = new Array<Biome>();
 
@@ -600,9 +600,9 @@ public class World extends Map {
             height = json.getInt("height");
         }
 
-        if (json.has("riverCount")) {
-            riverCount = new IntRange();
-            riverCount.deserialize(json.get("riverCount"));
+        JsonValue riverCount = json.get("riverCount");
+        if (riverCount != null) {
+            this.riverCount = riverCount.asIntArray();
         }
 
         if (json.has("biomes")) {
