@@ -16,15 +16,15 @@ public class Tree extends Structure<Map> {
 
     @Override
     public void generate(Random rand, Map map, int x, int y, int z) {
-        map.tiles.placeTile(Game.TILES.load(bottomTile), x, y, z);
+        map.tiles.set(Game.TILES.load(bottomTile), x, y, z);
 
         z++;
         for (int i = 0; i < height.pickRandom(rand); i++) {
-            map.tiles.placeTile(Game.TILES.load(middleTile), x, y, z);
+            map.tiles.set(Game.TILES.load(middleTile), x, y, z);
             z++;
         }
 
-        map.tiles.placeTile(Game.TILES.load(topTile), x, y, z);
+        map.tiles.set(Game.TILES.load(topTile), x, y, z);
     }
 
     @Override

@@ -50,7 +50,15 @@ public class Entity implements Serializable {
         hit = new Array<Entity>();
     }
 
+    public void preUpdate(Map map) {
+
+    }
+
     public void update(Map map) {
+
+    }
+
+    public void postUpdate(Map map) {
         Hitbox attackHitbox = getAttackHitbox();
         Hitbox blockHitbox = getBlockHitbox();
 
@@ -288,7 +296,7 @@ public class Entity implements Serializable {
         int y = MathUtils.floor(hitbox.getY() / 8f);
 
         if (map.tiles.inBounds(x, y)) {
-            return map.tiles.tileAt(x, y, 0);
+            return map.tiles.at(x, y, 0);
         }
 
         return null;
@@ -296,12 +304,14 @@ public class Entity implements Serializable {
 
     @Override
     public void deserialize(JsonValue json) {
-        if (json.has("stats")) {
-            stats.deserialize(json.get("stats"));
+        JsonValue stats = json.get("stats");
+        if (stats != null) {
+            this.stats.deserialize(stats);
         }
 
-        if (json.has("alignment")) {
-            alignment = Alignment.valueOf(json.getString("alignment"));
+        JsonValue alignment = json.get("alignment");
+        if (alignment != null) {
+            this.alignment = Alignment.valueOf(alignment.asString());
         }
     }
 }

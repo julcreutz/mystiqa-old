@@ -4,8 +4,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import game.main.Game;
+import game.main.stat.StatType;
 import game.main.state.play.map.Map;
 
 public class Slime extends Entity {
@@ -21,6 +23,8 @@ public class Slime extends Entity {
 
     public float z;
     public float velZ;
+
+    public Array<String[]> splitInto;
 
     public Slime() {
         hitbox.set(6, 4, 1, 1);
@@ -96,8 +100,6 @@ public class Slime extends Entity {
 
                 break;
         }
-
-        super.update(map);
     }
 
     @Override
@@ -133,9 +135,34 @@ public class Slime extends Entity {
 
         velZ = 90;
 
-        this.time = time;
+        this.time = time / stats.count(StatType.SPEED);
 
         state = SlimeState.JUMP_BEGIN;
+    }
+
+    @Override
+    public void onAdded(Map map) {
+        super.onAdded(map);
+
+        jump(MathUtils.random(360f), MathUtils.random(24f, 32f), MathUtils.random(1f, 2f));
+    }
+
+    @Override
+    public void onDeath(Map map) {
+        super.onDeath(map);
+
+        if (splitInto != null) {
+            String[] splitInto = this.splitInto.get(MathUtils.random(this.splitInto.size - 1));
+
+            for (String s : splitInto) {
+                Entity e = Game.ENTITIES.load(s);
+
+                e.x = x;
+                e.y = y;
+
+                map.entities.addEntity(e);
+            }
+        }
     }
 
     @Override
@@ -163,6 +190,15 @@ public class Slime extends Entity {
 
         if (json.has("colors")) {
             colors = json.get("colors").asStringArray();
+        }
+
+        JsonValue splitInto = json.get("splitInto");
+        if (splitInto != null) {
+            this.splitInto = new Array<String[]>();
+
+            for (JsonValue _json : splitInto) {
+                this.splitInto.add(_json.asStringArray());
+            }
         }
     }
 }

@@ -19,8 +19,30 @@
       "feet": "HumanFeet",
       "body": "HumanBody",
       "head": "HumanHead",
-      "animSpeed": 7.5,
       "colors": ["Black", "Peach"]
+    }
+  },
+  "Orc": {
+    "Humanoid": {
+      "stats": [
+        {
+          "type": "HEALTH",
+          "absolute": 7
+        },
+        {
+          "type": "SPEED",
+          "absolute": 20
+        },
+        {
+          "type": "PHYSICAL_DAMAGE",
+          "absolute": 1
+        }
+      ],
+      "alignment": "EVIL",
+      "feet": "HumanFeet",
+      "body": "HumanBody",
+      "head": "HumanHead",
+      "colors": ["Black", "Green"]
     }
   },
   "GreenSlime": {
@@ -36,11 +58,38 @@
         },
         {
           "type": "SPEED",
-          "absolute": 24
+          "absolute": 1
         }
       ],
       "alignment": "EVIL",
       "sheet": "Slime",
+      "colors": ["Black", "Green"],
+      "splitInto": [
+        ["SmallGreenSlime"],
+        ["SmallGreenSlime", "SmallGreenSlime"],
+        ["SmallGreenSlime", "SmallGreenSlime"],
+        ["SmallGreenSlime", "SmallGreenSlime", "SmallGreenSlime"]
+      ]
+    }
+  },
+  "SmallGreenSlime": {
+    "Slime": {
+      "stats": [
+        {
+          "type": "HEALTH",
+          "absolute": 2
+        },
+        {
+          "type": "PHYSICAL_DAMAGE",
+          "absolute": 1
+        },
+        {
+          "type": "SPEED",
+          "absolute": 2
+        }
+      ],
+      "alignment": "EVIL",
+      "sheet": "SmallSlime",
       "colors": ["Black", "Green"]
     }
   }

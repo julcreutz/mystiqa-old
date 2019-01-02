@@ -125,7 +125,7 @@ public class Tile implements Serializable {
 
     public boolean connectsWith(Map map, int x, int y, int z) {
         if (map.tiles.inBounds(x, y, z)) {
-            Tile tile = map.tiles.tileAt(x, y, z);
+            Tile tile = map.tiles.at(x, y, z);
 
             if (tile != null) {
                 if (connectWith != null) {

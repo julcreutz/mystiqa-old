@@ -134,6 +134,11 @@
     "splitW": 8,
     "splitH": 8
   },
+  "SmallSlime": {
+    "path": "graphics/small_slime.png",
+    "splitW": 8,
+    "splitH": 8
+  },
   "Club": {
     "path": "graphics/club.png",
     "splitW": 8,

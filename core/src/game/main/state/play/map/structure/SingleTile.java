@@ -3,7 +3,6 @@ package game.main.state.play.map.structure;
 import com.badlogic.gdx.utils.JsonValue;
 import game.main.Game;
 import game.main.state.play.map.Map;
-import game.main.state.play.map.tile.Tile;
 
 import java.util.Random;
 
@@ -12,7 +11,7 @@ public class SingleTile extends Structure<Map> {
 
     @Override
     public void generate(Random rand, Map map, int x, int y, int z) {
-        map.tiles.placeTile(Game.TILES.load(tile), x, y, z);
+        map.tiles.set(Game.TILES.load(tile), x, y, z);
     }
 
     @Override

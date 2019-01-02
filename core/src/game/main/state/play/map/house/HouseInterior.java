@@ -14,14 +14,14 @@ public class HouseInterior extends Map {
         for (int x = 0; x < tiles.getWidth(); x++) {
             for (int y = 0; y < tiles.getHeight(); y++) {
                 if (x == 0 || x == tiles.getWidth() - 1 || y == 0 || y == tiles.getHeight() - 1) {
-                    tiles.placeTile(Game.TILES.load("Stone"), x, y, 0);
+                    tiles.set(Game.TILES.load("Stone"), x, y, 0);
                 } else {
-                    tiles.placeTile(Game.TILES.load("Dirt"), x, y, 0);
+                    tiles.set(Game.TILES.load("Dirt"), x, y, 0);
                 }
             }
         }
 
-        tiles.placeTile(Game.TILES.load("Dirt"), getEntranceX(), getEntranceY(), 0);
+        tiles.set(Game.TILES.load("Dirt"), getEntranceX(), getEntranceY(), 0);
     }
 
     @Override

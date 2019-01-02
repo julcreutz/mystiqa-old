@@ -213,7 +213,7 @@ public abstract class Map implements Serializable {
                         int yy = curr.y + y;
 
                         if (tiles.inBounds(xx, yy)) {
-                            Tile t = tiles.tileAt(xx, yy, 0);
+                            Tile t = tiles.at(xx, yy, 0);
 
                             if (xx >= 0 && xx < tiles.getWidth() && yy >= 0 && yy < tiles.getHeight() && t != null && !t.solid) {
                                 Node node = new Node(xx, yy);

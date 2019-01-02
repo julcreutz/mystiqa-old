@@ -4,7 +4,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import game.main.state.play.map.entity.Entity;
-import game.range.IntRange;
 import game.main.Game;
 import game.main.item.equipment.armor.BodyArmor;
 import game.main.item.equipment.armor.FeetArmor;
@@ -247,7 +246,7 @@ public class World extends Map {
 
             for (int x = x0; x < x1; x++) {
                 for (int y = y0; y < y1; y++) {
-                    tiles.placeTile(Game.TILES.load(b.ground), x, y, 0);
+                    tiles.set(Game.TILES.load(b.ground), x, y, 0);
 
                     if (b.wall != null) {
                         if ((x == x0 || x == x1 - 1 || y == y0 || y == y1 - 1)) {
@@ -308,14 +307,14 @@ public class World extends Map {
 
                 for (Point p : connection.points) {
                     if (tiles.inBounds(p.x, p.y)) {
-                        Tile t = tiles.tileAt(p.x, p.y, 0);
+                        Tile t = tiles.at(p.x, p.y, 0);
 
                         Biome b = biomes[p.x / 16][p.y / 8];
                         Connector c = b.getConnector(connection);
 
                         if (t != null && b.wall != null && t.name.equals(b.wall.tile())) {
-                            tiles.erase(p.x, p.y);
-                            tiles.placeTile(Game.TILES.load(c.tile), p.x, p.y, 0);
+                            tiles.clear(p.x, p.y);
+                            tiles.set(Game.TILES.load(c.tile), p.x, p.y, 0);
                         }
                     }
                 }
@@ -336,11 +335,11 @@ public class World extends Map {
                     for (int xx = -river.thickness; xx <= river.thickness - 1; xx++) {
                         for (int yy = -1; yy <= 0; yy++) {
                             if (tiles.inBounds(x + xx, y + yy)) {
-                                Tile t = tiles.tileAt(x + xx, y + yy, 0);
+                                Tile t = tiles.at(x + xx, y + yy, 0);
 
                                 if (t != null && !t.name.equals(b.river)) {
-                                    tiles.erase(x + xx, y + yy);
-                                    tiles.placeTile(Game.TILES.load(b.river), x + xx, y + yy, 0);
+                                    tiles.clear(x + xx, y + yy);
+                                    tiles.set(Game.TILES.load(b.river), x + xx, y + yy, 0);
                                 }
                             }
                         }
@@ -357,11 +356,11 @@ public class World extends Map {
 
                 for (Point p : connection.points) {
                     if (tiles.inBounds(p.x, p.y)) {
-                        Tile t = tiles.tileAt(p.x, p.y, 0);
+                        Tile t = tiles.at(p.x, p.y, 0);
 
                         if (t != null && t.name.equals(b.river)) {
-                            tiles.erase(p.x, p.y);
-                            tiles.placeTile(Game.TILES.load(b.riverBridge), p.x, p.y, 0);
+                            tiles.clear(p.x, p.y);
+                            tiles.set(Game.TILES.load(b.riverBridge), p.x, p.y, 0);
                         }
                     }
                 }
@@ -380,7 +379,7 @@ public class World extends Map {
             if (b.decorations != null) {
                 for (int x = r.getX0(); x < r.getX1(); x++) {
                     for (int y = r.getY0(); y < r.getY1(); y++) {
-                        Tile t = tiles.tileAt(x, y, 0);
+                        Tile t = tiles.at(x, y, 0);
 
                         if (t != null && t.name.equals(b.ground)) {
                             Decoration decoration = null;
@@ -446,6 +445,8 @@ public class World extends Map {
 
         h.x = biomes.length * 64 + 64;
         h.y = (biomes[0].length - 5) * 64 - 16;
+
+        h.controlledByPlayer = true;
 
         player = h;
         entities.addEntity(h);

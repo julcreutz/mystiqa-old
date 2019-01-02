@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonValue;
 import game.loader.resource.sprite_sheet.SpriteSheet;
@@ -22,8 +23,6 @@ public class Humanoid extends Entity {
     public SpriteSheet body;
     public SpriteSheet head;
 
-    public float animSpeed;
-
     public Hitbox attackHitbox;
     public Hitbox blockHitbox;
 
@@ -40,42 +39,103 @@ public class Humanoid extends Entity {
 
     public float lastUsed;
 
+    public boolean controlledByPlayer;
+
+    public HumanoidState state;
+    public float stateTime;
+
+    public float moveAngle;
+    public float moveSpeed;
+
     public Humanoid() {
         hitbox.set(4, 2, 2, 1);
         attackHitbox = new Hitbox(this);
         blockHitbox = new Hitbox(this);
+
+        state = HumanoidState.RANDOM_MOVEMENT;
     }
 
     @Override
     public void update(Map map) {
         Vector2 dir = new Vector2();
 
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            dir.x -= 1;
+        boolean useMainHand = false;
+        boolean useOffHand = false;
+
+        if (controlledByPlayer) {
+            if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+                dir.x -= 1;
+            }
+
+            if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+                dir.x += 1;
+            }
+
+            if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+                dir.y -= 1;
+            }
+
+            if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+                dir.y += 1;
+            }
+
+            if (Gdx.input.isKeyPressed(Input.Keys.F)) {
+                useMainHand = true;
+            }
+
+            if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+                useOffHand = true;
+            }
+
+            if (dir.x != 0 || dir.y != 0) {
+                moveAngle = dir.angle();
+                moveSpeed = stats.count(StatType.SPEED);
+            } else {
+                moveSpeed = 0;
+            }
+        } else {
+            Vector2 toPlayer = new Vector2(map.player.x, map.player.y).sub(x, y);
+
+            switch (state) {
+                case RANDOM_MOVEMENT:
+                    if (toPlayer.len() < 24) {
+                        state = HumanoidState.FOLLOW_PLAYER;
+                        break;
+                    }
+
+                    stateTime -= Game.getDelta();
+
+                    if (stateTime < 0) {
+                        stateTime = MathUtils.random(1f, 3f);
+
+                        if (MathUtils.randomBoolean(.5f)) {
+                            moveAngle = MathUtils.random(360f);
+                            moveSpeed = stats.count(StatType.SPEED);
+                        } else {
+                            moveSpeed = 0;
+                        }
+                    }
+
+                    break;
+                case FOLLOW_PLAYER:
+                    if (toPlayer.len() > 32) {
+                        state = HumanoidState.RANDOM_MOVEMENT;
+                        break;
+                    }
+
+                    moveAngle = toPlayer.angle();
+                    moveSpeed = stats.count(StatType.SPEED);
+
+                    break;
+            }
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            dir.x += 1;
-        }
-
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            dir.y -= 1;
-        }
-
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            dir.y += 1;
-        }
-
-        float angle = dir.angle();
-
-        if (dir.x != 0 || dir.y != 0) {
-            float speed = stats.count(StatType.SPEED);
-
-            velX = MathUtils.round(MathUtils.cosDeg(angle) * speed);
-            velY = MathUtils.round(MathUtils.sinDeg(angle) * speed);
+        if (moveSpeed != 0) {
+            velX = MathUtils.round(MathUtils.cosDeg(moveAngle) * moveSpeed);
+            velY = MathUtils.round(MathUtils.sinDeg(moveAngle) * moveSpeed);
 
             if (lastUsed > .01f) {
-                switch (MathUtils.floor((angle + 360f) / 45f) % 8) {
+                switch (MathUtils.floor((moveAngle + 360f) / 45f) % 8) {
                     case 0:
                         this.dir = 0;
                         break;
@@ -98,35 +158,29 @@ public class Humanoid extends Entity {
             }
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.F)) {
-            if (mainHand != null) {
+        if (mainHand != null) {
+            if (useMainHand) {
                 mainHand.use();
             }
-        }
 
-        if (mainHand != null) {
             mainHand.update(this);
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.D) && (mainHand == null || !mainHand.isUsing())) {
-            if (offHand != null) {
+        if (offHand != null) {
+            if (useOffHand && (mainHand == null || !mainHand.isUsing())) {
                 offHand.use();
             }
-        }
 
-        if (offHand != null) {
             offHand.update(this);
         }
 
-        step = MathUtils.floor(time * animSpeed) % 4;
+        step = MathUtils.floor(time * 7.5f) % 4;
 
         lastUsed += Game.getDelta();
 
         if ((mainHand != null && mainHand.isUsing()) || (offHand != null && offHand.isUsing())) {
             lastUsed = 0;
         }
-
-        super.update(map);
     }
 
     @Override
@@ -424,10 +478,6 @@ public class Humanoid extends Entity {
 
         if (json.has("head")) {
             head = Game.SPRITE_SHEETS.load(json.getString("head"));
-        }
-
-        if (json.has("animSpeed")) {
-            animSpeed = json.getFloat("animSpeed");
         }
 
         if (json.has("colors")) {

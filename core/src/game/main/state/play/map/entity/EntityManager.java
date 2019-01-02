@@ -40,10 +40,14 @@ public class EntityManager {
             }
 
             if (!e.updated) {
+                e.preUpdate(map);
                 e.update(map);
+                e.postUpdate(map);
                 e.updated = true;
             } else if (!map.isCamMoving()) {
+                e.preUpdate(map);
                 e.update(map);
+                e.postUpdate(map);
             }
         }
     }

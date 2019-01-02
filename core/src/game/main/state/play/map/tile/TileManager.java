@@ -130,7 +130,7 @@ public class TileManager {
      * @param z z coordinate
      * @return tile at given coordinates
      */
-    public Tile tileAt(int x, int y, int z) {
+    public Tile at(int x, int y, int z) {
         return inBounds(x, y, z) ? tiles[x][y][z] : null;
     }
 
@@ -142,7 +142,7 @@ public class TileManager {
      * @param y y coordinate
      * @param z z coordinate
      */
-    public void placeTile(Tile tile, int x, int y, int z) {
+    public void set(Tile tile, int x, int y, int z) {
         if (inBounds(x, y, z)) {
             tile.x = x;
             tile.y = y;
@@ -161,7 +161,7 @@ public class TileManager {
      * @param z0 lower z bound, inclusive
      * @param z1 upper z bound, exclusive
      */
-    public void erase(int x0, int x1, int y0, int y1, int z0, int z1) {
+    public void clear(int x0, int x1, int y0, int y1, int z0, int z1) {
         for (int x = x0; x < x1; x++) {
             for (int y = y0; y < y1; y++) {
                 for (int z = z0; z < z1; z++) {
@@ -174,14 +174,14 @@ public class TileManager {
     }
 
     /**
-     * Convenience implementation of {@link #erase(int, int, int, int, int, int)}.
+     * Convenience implementation of {@link #clear(int, int, int, int, int, int)}.
      * Erases all z tiles at one x and y coordinate.
      *
      * @param x x coordinate
      * @param y y coordinate
      */
-    public void erase(int x, int y) {
-        erase(x, x + 1, y, y + 1, 0, getDepth());
+    public void clear(int x, int y) {
+        clear(x, x + 1, y, y + 1, 0, getDepth());
     }
 
     /**
@@ -200,7 +200,7 @@ public class TileManager {
             for (int y = y0; y < y1; y++) {
                 for (int z = z0; z < z1; z++) {
                     if (inBounds(x, y, z)) {
-                        Tile t = tileAt(x, y, z);
+                        Tile t = at(x, y, z);
 
                         if (t != null && t.solid) {
                             return false;
