@@ -12,14 +12,14 @@ public class Tree extends Structure<Map> {
     public String middleTile;
     public String topTile;
 
-    public IntRange height;
+    public int[] height;
 
     @Override
     public void generate(Random rand, Map map, int x, int y, int z) {
         map.tiles.set(Game.TILES.load(bottomTile), x, y, z);
 
         z++;
-        for (int i = 0; i < height.pickRandom(rand); i++) {
+        for (int i = 0; i < height[rand.nextInt(height.length)]; i++) {
             map.tiles.set(Game.TILES.load(middleTile), x, y, z);
             z++;
         }
@@ -46,7 +46,7 @@ public class Tree extends Structure<Map> {
 
         JsonValue height = json.get("height");
         if (height != null) {
-            this.height = new IntRange(height);
+            this.height = height.asIntArray();
         }
     }
 
