@@ -43,8 +43,6 @@ public abstract class Map implements Serializable {
 
     public Array<Teleport> teleports;
 
-    public float screenShake;
-
     public Map() {
         tiles = new TileManager(this);
         entities = new EntityManager(this);
@@ -81,10 +79,8 @@ public abstract class Map implements Serializable {
         y0 = MathUtils.clamp(MathUtils.floor(play.cam.position.y / 8f) - Y_VIEW, 0, tiles.getHeight());
         y1 = MathUtils.clamp(y0 + Y_VIEW * 2, 0, tiles.getHeight());
 
-        if (screenShake <= 0) {
-            tiles.update(x0, x1, y0, y1);
-            entities.update();
-        }
+        tiles.update(x0, x1, y0, y1);
+        entities.update();
 
         if (player.onTeleport) {
             boolean onTeleport = false;

@@ -224,11 +224,6 @@ public class Entity implements Serializable {
     }
 
     public void onHit(Map map) {
-        if (!isDead()) {
-            map.screenShake += 1;
-        } else {
-            map.screenShake += 2;
-        }
     }
 
     public void onDeath(Map map) {
@@ -303,6 +298,10 @@ public class Entity implements Serializable {
         }
 
         return null;
+    }
+
+    public float getHealthPercentage() {
+        return health / stats.count(StatType.HEALTH);
     }
 
     @Override

@@ -36,18 +36,10 @@ public class Play extends GameState {
             nextMap = null;
         }
 
-        if (map.screenShake <= 0) {
-            map.update(this);
-        } else {
-            map.screenShake -= Game.getDelta() * 10f;
+        map.update(this);
 
-            if (map.screenShake < 0) {
-                map.screenShake = 0;
-            }
-        }
-
-        cam.position.x = map.camPosX + MathUtils.random(-map.screenShake, map.screenShake);
-        cam.position.y = map.camPosY + MathUtils.random(-map.screenShake, map.screenShake);
+        cam.position.x = map.camPosX;
+        cam.position.y = map.camPosY;
 
         cam.update();
     }

@@ -27,7 +27,7 @@
       "stats": [
         {
           "type": "HEALTH",
-          "absolute": 7
+          "absolute": 4
         },
         {
           "type": "SPEED",
@@ -42,7 +42,8 @@
       "feet": "HumanFeet",
       "body": "HumanBody",
       "head": "HumanHead",
-      "colors": ["Black", "Green"]
+      "colors": ["Black", "Green"],
+      "mainHand": "Club"
     }
   },
   "GreenSlime": {

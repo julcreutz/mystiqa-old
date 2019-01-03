@@ -440,8 +440,8 @@ public class World extends Map {
 
         h.mainHand = (MainHand) Game.ITEMS.load("Axe");
         h.offHand = (OffHand) Game.ITEMS.load("Shield");
-        h.feetArmor = (FeetArmor) Game.ITEMS.load("FeetArmor");
         h.bodyArmor = (BodyArmor) Game.ITEMS.load("BodyArmor");
+        h.feetArmor = (FeetArmor) Game.ITEMS.load("FeetArmor");
 
         h.x = biomes.length * 64 + 64;
         h.y = (biomes[0].length - 5) * 64 - 16;

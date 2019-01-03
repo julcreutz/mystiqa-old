@@ -47,6 +47,9 @@ public class Humanoid extends Entity {
     public float moveAngle;
     public float moveSpeed;
 
+    public float actionTime;
+    public float blockTime;
+
     public Humanoid() {
         hitbox.set(4, 2, 2, 1);
         attackHitbox = new Hitbox(this);
@@ -89,7 +92,7 @@ public class Humanoid extends Entity {
 
             if (dir.x != 0 || dir.y != 0) {
                 moveAngle = dir.angle();
-                moveSpeed = stats.count(StatType.SPEED);
+                moveSpeed = 1;
             } else {
                 moveSpeed = 0;
             }
@@ -98,7 +101,7 @@ public class Humanoid extends Entity {
 
             switch (state) {
                 case RANDOM_MOVEMENT:
-                    if (toPlayer.len() < 24) {
+                    if (toPlayer.len() < 32) {
                         state = HumanoidState.FOLLOW_PLAYER;
                         break;
                     }
@@ -110,7 +113,7 @@ public class Humanoid extends Entity {
 
                         if (MathUtils.randomBoolean(.5f)) {
                             moveAngle = MathUtils.random(360f);
-                            moveSpeed = stats.count(StatType.SPEED);
+                            moveSpeed = 1;
                         } else {
                             moveSpeed = 0;
                         }
@@ -118,36 +121,108 @@ public class Humanoid extends Entity {
 
                     break;
                 case FOLLOW_PLAYER:
-                    if (toPlayer.len() > 32) {
+                    if (toPlayer.len() > 64) {
                         state = HumanoidState.RANDOM_MOVEMENT;
                         break;
                     }
 
+                    actionTime -= Game.getDelta();
+
+                    if (actionTime <= 0) {
+                        if (toPlayer.len() < 16) {
+                            if (MathUtils.randomBoolean(getHealthPercentage())) {
+                                state = HumanoidState.ATTACK_PLAYER;
+                            } else {
+                                if (offHand != null) {
+                                    state = HumanoidState.BLOCK;
+                                } else {
+                                    state = HumanoidState.FLEE;
+                                }
+                            }
+
+                            break;
+                        }
+
+                        moveAngle = toPlayer.angle();
+                        moveSpeed = 1;
+                    } else {
+                        moveSpeed = 0;
+                    }
+
+                    break;
+                case ATTACK_PLAYER:
+                    if (toPlayer.len() < 12) {
+                        state = HumanoidState.FOLLOW_PLAYER;
+                        actionTime = MathUtils.random(.25f, .5f);
+                        break;
+                    }
+
+                    mainHand.use();
+
                     moveAngle = toPlayer.angle();
-                    moveSpeed = stats.count(StatType.SPEED);
+                    moveSpeed = 1;
+
+                    break;
+                case BLOCK:
+                    if (blockTime == 0) {
+                        blockTime = MathUtils.random(.5f, 1f);
+                    }
+
+                    offHand.use();
+
+                    moveSpeed = -1;
+
+                    blockTime -= Game.getDelta();
+
+                    if (blockTime < 0) {
+                        blockTime = 0;
+                        state = HumanoidState.FOLLOW_PLAYER;
+                        break;
+                    }
+
+                    break;
+                case FLEE:
+                    if (blockTime == 0) {
+                        blockTime = MathUtils.random(.5f, 1f);
+                    }
+
+                    moveSpeed = 1;
+                    moveAngle = toPlayer.angle() + 180;
+
+                    blockTime -= Game.getDelta();
+
+                    if (blockTime < 0) {
+                        blockTime = 0;
+                        state = HumanoidState.FOLLOW_PLAYER;
+                        break;
+                    }
 
                     break;
             }
         }
 
         if (moveSpeed != 0) {
-            velX = MathUtils.round(MathUtils.cosDeg(moveAngle) * moveSpeed);
-            velY = MathUtils.round(MathUtils.sinDeg(moveAngle) * moveSpeed);
+            velX = MathUtils.round(MathUtils.cosDeg(moveAngle) * moveSpeed * stats.count(StatType.SPEED));
+            velY = MathUtils.round(MathUtils.sinDeg(moveAngle) * moveSpeed * stats.count(StatType.SPEED));
 
             if (lastUsed > .01f) {
-                switch (MathUtils.floor((moveAngle + 360f) / 45f) % 8) {
-                    case 0:
-                        this.dir = 0;
-                        break;
-                    case 2:
-                        this.dir = 1;
-                        break;
-                    case 4:
-                        this.dir = 2;
-                        break;
-                    case 6:
-                        this.dir = 3;
-                        break;
+                if (controlledByPlayer) {
+                    switch (MathUtils.round((moveAngle + 360f) / 45f) % 8) {
+                        case 0:
+                            this.dir = 0;
+                            break;
+                        case 2:
+                            this.dir = 1;
+                            break;
+                        case 4:
+                            this.dir = 2;
+                            break;
+                        case 6:
+                            this.dir = 3;
+                            break;
+                    }
+                } else {
+                    this.dir = MathUtils.round((moveAngle + 360f) / 90f) % 4;
                 }
             }
 
@@ -468,20 +543,49 @@ public class Humanoid extends Entity {
     public void deserialize(JsonValue json) {
         super.deserialize(json);
 
-        if (json.has("feet")) {
-            feet = Game.SPRITE_SHEETS.load(json.getString("feet"));
+        JsonValue feet = json.get("feet");
+        if (feet != null) {
+            this.feet = Game.SPRITE_SHEETS.load(feet.asString());
         }
 
-        if (json.has("body")) {
-            body = Game.SPRITE_SHEETS.load(json.getString("body"));
+        JsonValue body = json.get("body");
+        if (body != null) {
+            this.body = Game.SPRITE_SHEETS.load(body.asString());
         }
 
-        if (json.has("head")) {
-            head = Game.SPRITE_SHEETS.load(json.getString("head"));
+        JsonValue head = json.get("head");
+        if (head != null) {
+            this.head = Game.SPRITE_SHEETS.load(head.asString());
         }
 
-        if (json.has("colors")) {
-            colors = json.get("colors").asStringArray();
+        JsonValue colors = json.get("colors");
+        if (colors != null) {
+            this.colors = colors.asStringArray();
+        }
+
+        JsonValue feetArmor = json.get("feetArmor");
+        if (feetArmor != null) {
+            this.feetArmor = (FeetArmor) Game.ITEMS.load(feetArmor.asString());
+        }
+
+        JsonValue bodyArmor = json.get("bodyArmor");
+        if (bodyArmor != null) {
+            this.bodyArmor = (BodyArmor) Game.ITEMS.load(bodyArmor.asString());
+        }
+
+        JsonValue headArmor = json.get("headArmor");
+        if (headArmor != null) {
+            this.headArmor = (HeadArmor) Game.ITEMS.load(headArmor.asString());
+        }
+
+        JsonValue mainHand = json.get("mainHand");
+        if (mainHand != null) {
+            this.mainHand = (MainHand) Game.ITEMS.load(mainHand.asString());
+        }
+
+        JsonValue offHand = json.get("offHand");
+        if (offHand != null) {
+            this.offHand = (OffHand) Game.ITEMS.load(offHand.asString());
         }
     }
 }
