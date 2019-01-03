@@ -2,6 +2,7 @@ package game.main.state.play;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.math.MathUtils;
 import game.main.Game;
 import game.main.state.GameState;
 import game.main.state.play.map.Map;
@@ -35,10 +36,19 @@ public class Play extends GameState {
             nextMap = null;
         }
 
-        map.update(this);
+        if (map.screenShake <= 0) {
+            map.update(this);
+        } else {
+            map.screenShake -= Game.getDelta() * 10f;
 
-        cam.position.x = map.camPosX;
-        cam.position.y = map.camPosY;
+            if (map.screenShake < 0) {
+                map.screenShake = 0;
+            }
+        }
+
+        cam.position.x = map.camPosX + MathUtils.random(-map.screenShake, map.screenShake);
+        cam.position.y = map.camPosY + MathUtils.random(-map.screenShake, map.screenShake);
+
         cam.update();
     }
 
