@@ -154,18 +154,20 @@ public class Entity implements Serializable {
 
         hitbox.position(velX * Game.getDelta(), 0);
 
-        for (int x = 0; x < map.tiles.getWidth(); x++) {
-            for (int y = 0; y < map.tiles.getHeight(); y++) {
-                Rectangle solidTile = map.tiles.solidTiles[x][y];
+        for (int x = map.x0; x < map.x1; x++) {
+            for (int y = map.y0; y < map.x1; y++) {
+                if (map.tiles.inBounds(x, y)) {
+                    Rectangle solidTile = map.tiles.solidTiles[x][y];
 
-                if (solidTile != null && hitbox.overlaps(solidTile)) {
-                    if (velX > 0) {
-                        this.x = solidTile.x - hitbox.getWidth() - hitbox.offsetX;
-                    } else if (velX < 0) {
-                        this.x = solidTile.x + solidTile.width - hitbox.offsetX;
+                    if (solidTile != null && hitbox.overlaps(solidTile)) {
+                        if (velX > 0) {
+                            this.x = solidTile.x - hitbox.getWidth() - hitbox.offsetX;
+                        } else if (velX < 0) {
+                            this.x = solidTile.x + solidTile.width - hitbox.offsetX;
+                        }
+
+                        velX = 0;
                     }
-
-                    velX = 0;
                 }
             }
         }
@@ -174,18 +176,20 @@ public class Entity implements Serializable {
 
         hitbox.position(0, velY * Game.getDelta());
 
-        for (int x = 0; x < map.tiles.getWidth(); x++) {
-            for (int y = 0; y < map.tiles.getHeight(); y++) {
-                Rectangle solidTile = map.tiles.solidTiles[x][y];
+        for (int x = map.x0; x < map.x1; x++) {
+            for (int y = map.y0; y < map.y1; y++) {
+                if (map.tiles.inBounds(x, y)) {
+                    Rectangle solidTile = map.tiles.solidTiles[x][y];
 
-                if (solidTile != null && hitbox.overlaps(solidTile)) {
-                    if (velY > 0) {
-                        this.y = solidTile.y - hitbox.getHeight() - hitbox.offsetY;
-                    } else if (velY < 0) {
-                        this.y = solidTile.y + solidTile.height - hitbox.offsetY;
+                    if (solidTile != null && hitbox.overlaps(solidTile)) {
+                        if (velY > 0) {
+                            this.y = solidTile.y - hitbox.getHeight() - hitbox.offsetY;
+                        } else if (velY < 0) {
+                            this.y = solidTile.y + solidTile.height - hitbox.offsetY;
+                        }
+
+                        velY = 0;
                     }
-
-                    velY = 0;
                 }
             }
         }

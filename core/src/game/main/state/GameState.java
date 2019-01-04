@@ -25,7 +25,7 @@ public abstract class GameState {
         viewport = new FitViewport(Game.WIDTH, Game.HEIGHT, cam);
         viewport.apply();
 
-        cam.zoom = 20;
+        cam.zoom = 5;
     }
 
     public void update(Game g) {

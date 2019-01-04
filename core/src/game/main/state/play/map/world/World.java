@@ -1,6 +1,7 @@
 package game.main.state.play.map.world;
 
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import game.main.state.play.map.entity.Entity;
@@ -11,12 +12,10 @@ import game.main.item.equipment.hand.main.MainHand;
 import game.main.item.equipment.hand.off.OffHand;
 import game.main.state.play.map.Map;
 import game.main.state.play.map.entity.Humanoid;
-import game.main.state.play.map.entity.Slime;
 import game.main.state.play.map.tile.Tile;
 import game.Noise;
 
 import java.awt.*;
-import java.util.Random;
 
 public class World extends Map {
     public static final int WIDTH = 16;
@@ -178,6 +177,20 @@ public class World extends Map {
             }
         }
 
+        rooms.first().index = 0;
+
+        for (Room r : rooms) {
+            for (Room children : r.children) {
+                if (children.index == -1) {
+                    if (Game.RANDOM.nextFloat() < .1f) {
+                        children.index = r.index + 1;
+                    } else {
+                        children.index = r.index;
+                    }
+                }
+            }
+        }
+
         rivers = new Array<River>();
 
         for (int i = 0; i < 2 + Game.RANDOM.nextInt(3); i++) {
@@ -231,28 +244,7 @@ public class World extends Map {
 
         tiles.initSize(WIDTH * 16, HEIGHT * 8, 8);
 
-        for (Room r : rooms) {
-            int x0 = r.getX0();
-            int x1 = r.getX1();
-
-            int y0 = r.getY0();
-            int y1 = r.getY1();
-
-            Biome b = biomes[r.x / 2][r.y / 2];
-
-            for (int x = x0; x < x1; x++) {
-                for (int y = y0; y < y1; y++) {
-                    tiles.set(Game.TILES.load(b.ground), x, y, 0);
-
-                    if (b.wall != null) {
-                        if ((x == x0 || x == x1 - 1 || y == y0 || y == y1 - 1)) {
-                            b.wall.generate(Game.RANDOM, this, x, y, 0);
-                        }
-                    }
-                }
-            }
-        }
-
+        // Apply templates
         for (Room r : rooms) {
             int x0 = r.getX0();
             int y1 = r.getY1();
@@ -292,6 +284,8 @@ public class World extends Map {
                         for (int x = 0; x < layout[0].length; x++) {
                             if (layout[y][x] == '#') {
                                 b.wall.generate(Game.RANDOM, this, x0 + x, y1 - 1 - y, 0);
+                            } else if (layout[y][x] == ' ') {
+                                tiles.set(Game.TILES.load(b.ground), x0 + x, y1 - 1 - y, 0);
                             }
                         }
                     }
@@ -299,6 +293,27 @@ public class World extends Map {
             }
         }
 
+        /*for (Room r : rooms) {
+            Biome b = biomes[r.x / 2][r.y / 2];
+            Noise.Parameters parameters = new Noise.Parameters(8, .01f, 1);
+
+            for (int x = r.getX0(); x < r.getX1(); x++) {
+                for (int y = r.getY0(); y < r.getY1(); y++) {
+                    float w = r.getX1() - r.getX0();
+                    float h = r.getY1() - r.getY0();
+
+                    float val = (float) (noise.at(x, y, parameters)
+                            * ((new Vector2(x, y).sub(r.getX0() + w * .5f, r.getY0() + h * .5f)).len() / (Math.sqrt(w * w + h * h) * .5f)));
+
+                    if (val > .15f && tiles.at(x, y, 0).name.equals(b.ground)) {
+                        tiles.clear(x, y);
+                        b.wall.generate(Game.RANDOM, this, x, y, 0);
+                    }
+                }
+            }
+        }*/
+
+        // Connect rooms
         for (Room r0 : rooms) {
             for (Room r1 : r0.children) {
                 Connection connection = getConnection(r0, r1);
@@ -319,6 +334,7 @@ public class World extends Map {
             }
         }
 
+        // Run rivers
         for (River river : rivers) {
             for (int i = 0; i < river.points.size - 1; i++) {
                 Point p0 = river.points.get(i);
@@ -346,6 +362,7 @@ public class World extends Map {
             }
         }
 
+        // Build bridges
         for (Room r0 : rooms) {
             Biome b = biomes[r0.x / 2][r0.y / 2];
 
@@ -365,12 +382,13 @@ public class World extends Map {
             }
         }
 
-        for (Room r : rooms) {
+        /*for (Room r : rooms) {
             if (r.w == 2 && r.h == 2 && r.x % 4 == 0 && r.y % 4 == 0 && r.x < biomes.length * 2 - 2 && r.y < biomes[0].length * 2 - 2 && Game.RANDOM.nextFloat() < .25f) {
                 Game.STRUCTURES.load("Village").generate(Game.RANDOM, this, r.getX0(), r.getY0(), 0);
             }
-        }
+        }*/
 
+        // Decorate
         for (Room r : rooms) {
             Biome b = biomeAt(r.x / 2, r.y / 2);
 
@@ -399,6 +417,7 @@ public class World extends Map {
 
         entities.clear();
 
+        // Spawn monsters
         for (Room r : rooms) {
             if (r.monsters != null) {
                 for (int i = 0; i < r.monsters.getRandomCount(Game.RANDOM); i++) {
@@ -419,17 +438,6 @@ public class World extends Map {
                 }
             }
         }
-
-        for (int x = 0; x < tiles.getWidth(); x++) {
-            for (int y = 0; y < tiles.getHeight(); y++) {
-                if (tiles.isFree(x, y, 0, 1) && Game.RANDOM.nextFloat() < .1f) {
-                    Slime s = (Slime) Game.ENTITIES.load("GreenSlime");
-                    s.x = x * 8;
-                    s.y = y * 8;
-                    entities.addEntity(s);
-                }
-            }
-        }
     }
 
     @Override
@@ -441,8 +449,16 @@ public class World extends Map {
         h.bodyArmor = (BodyArmor) Game.ITEMS.load("BodyArmor");
         h.feetArmor = (FeetArmor) Game.ITEMS.load("FeetArmor");
 
-        h.x = biomes.length * 64 + 64;
-        h.y = (biomes[0].length - 5) * 64 - 16;
+        int x;
+        int y;
+
+        do {
+            x = Game.RANDOM.nextInt(biomes.length * 2);
+            y = Game.RANDOM.nextInt(biomes[0].length * 2);
+        } while (roomAt(x, y).w == 1 || roomAt(x, y).h == 1);
+
+        h.x = x * 64 + 32;
+        h.y = y * 32 + 16;
 
         h.controlledByPlayer = true;
 
@@ -463,7 +479,7 @@ public class World extends Map {
     }
 
     public float elevationAt(int x, int y) {
-        return MathUtils.clamp((y / (float) biomes[0].length) * noise.noiseAt(x, y, ELEVATION) + (y / (float) biomes[0].length) * .25f, 0, 1);
+        return MathUtils.clamp((y / (float) biomes[0].length) * noise.at(x, y, ELEVATION) + (y / (float) biomes[0].length) * .25f, 0, 1);
     }
 
     public Biome biomeAt(int x, int y) {

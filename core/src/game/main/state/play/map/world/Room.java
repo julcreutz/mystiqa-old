@@ -14,6 +14,8 @@ public class Room {
 
     public MonsterComponent monsters;
 
+    public int index;
+
     public Room(int x, int y, int w, int h) {
         this.x = x;
         this.y = y;
@@ -21,6 +23,8 @@ public class Room {
         this.h = h;
 
         children = new Array<Room>();
+
+        index = -1;
     }
 
     public Room() {

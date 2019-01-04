@@ -7,7 +7,7 @@ import java.util.Random;
 
 /**
  * Two dimensional noise implementation based on Ken Perlin's original implementation called "Perlin Noise".
- * See {@link #noiseAt(float, float)} for algorithmic details.
+ * See {@link #at(float, float)} for algorithmic details.
  */
 public class Noise {
     /** Describes possible noise parameters. */
@@ -72,7 +72,7 @@ public class Noise {
      * @param params noise parameters
      * @return combined noise value
      */
-    public float noiseAt(float x, float y, Parameters params) {
+    public float at(float x, float y, Parameters params) {
         float val = 0;
         float total = 0;
 
@@ -80,7 +80,7 @@ public class Noise {
         float amp = 1;
 
         for (int i = 0; i < params.octaves; i++) {
-            val += noiseAt(x * freq, y * freq) * amp;
+            val += at(x * freq, y * freq) * amp;
             total += amp;
 
             freq *= 2;
@@ -103,7 +103,7 @@ public class Noise {
      * @param y y coordinate
      * @return calculated noise value
      */
-    private float noiseAt(float x, float y) {
+    private float at(float x, float y) {
         int x0 = MathUtils.floor(x);
         int y0 = MathUtils.floor(y);
 
