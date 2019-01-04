@@ -4,7 +4,7 @@
       "bottomTile": "TreeBottom",
       "middleTile": "TreeMiddle",
       "topTile": "TreeTop",
-      "height": [0, 1, 1, 2]
+      "height": [0]
     }
   },
   "Stone": {

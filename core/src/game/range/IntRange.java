@@ -19,6 +19,7 @@ public class IntRange implements Serializable {
      * @param json json value
      */
     public IntRange(JsonValue json) {
+        this();
         deserialize(json);
     }
 

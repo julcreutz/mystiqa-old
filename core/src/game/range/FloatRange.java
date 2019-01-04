@@ -19,6 +19,7 @@ public class FloatRange implements Serializable {
      * @param json json value
      */
     public FloatRange(JsonValue json) {
+        this();
         deserialize(json);
     }
 

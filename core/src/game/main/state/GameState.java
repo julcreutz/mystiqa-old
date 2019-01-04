@@ -24,6 +24,8 @@ public abstract class GameState {
         cam.setToOrtho(false, Game.WIDTH, Game.HEIGHT);
         viewport = new FitViewport(Game.WIDTH, Game.HEIGHT, cam);
         viewport.apply();
+
+        cam.zoom = 20;
     }
 
     public void update(Game g) {
@@ -31,7 +33,7 @@ public abstract class GameState {
     }
 
     public void render() {
-        buffer.begin();
+        //buffer.begin();
 
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -41,9 +43,9 @@ public abstract class GameState {
         renderToBuffer();
         batch.end();
 
-        buffer.end();
+        //buffer.end();
 
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        /*Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         Gdx.gl.glClearColor(0, 0, 0, 1);
 
         batch.setProjectionMatrix(cam.combined);
@@ -52,7 +54,7 @@ public abstract class GameState {
         batch.draw(buffer.getColorBufferTexture(),
                 cam.position.x - buffer.getWidth() * .5f, cam.position.y + buffer.getHeight() * .5f,
                 buffer.getWidth(), -buffer.getHeight());
-        batch.end();
+        batch.end();*/
     }
 
     public void renderToBuffer() {

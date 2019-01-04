@@ -49,6 +49,7 @@
       "colors": [
         ["Black", "Brown", "Brown"]
       ],
+      "solid": true,
       "connectWith": ["Tendril"],
       "spriteSheet": "Stone"
     }

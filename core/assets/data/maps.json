@@ -163,7 +163,7 @@
                 "max": 0
               },
               "absoluteDiffY": {
-                "min": 2
+                "min": 1
               },
               "wayThickness": {
                 "max": 1

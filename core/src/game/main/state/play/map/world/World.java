@@ -263,34 +263,36 @@ public class World extends Map {
             if (t != null) {
                 r.monsters = t.monsters;
 
-                char[][] layout = t.copyLayout();
+                if (t.layout != null) {
+                    char[][] layout = t.copyLayout();
 
-                // Flip vertically
-                if (Game.RANDOM.nextFloat() < t.verticalFlipChance) {
-                    for (int y = 0; y < layout.length / 2; y++) {
-                        char[] old = layout[y];
+                    // Flip vertically
+                    if (Game.RANDOM.nextFloat() < t.verticalFlipChance) {
+                        for (int y = 0; y < layout.length / 2; y++) {
+                            char[] old = layout[y];
 
-                        layout[y] = layout[layout.length - 1 - y];
-                        layout[layout.length - 1 - y] = old;
-                    }
-                }
-
-                // Flip horizontally
-                if (Game.RANDOM.nextFloat() < t.horizontalFlipChance) {
-                    for (int y = 0; y < layout.length; y++) {
-                        for (int x = 0; x < layout[0].length / 2; x++) {
-                            char old = layout[y][x];
-
-                            layout[y][x] = layout[y][layout[0].length - 1 - x];
-                            layout[y][layout[0].length - 1 - x] = old;
+                            layout[y] = layout[layout.length - 1 - y];
+                            layout[layout.length - 1 - y] = old;
                         }
                     }
-                }
 
-                for (int y = 0; y < layout.length; y++) {
-                    for (int x = 0; x < layout[0].length; x++) {
-                        if (layout[y][x] == '#') {
-                            b.wall.generate(Game.RANDOM, this, x0 + x, y1 - 1 - y, 0);
+                    // Flip horizontally
+                    if (Game.RANDOM.nextFloat() < t.horizontalFlipChance) {
+                        for (int y = 0; y < layout.length; y++) {
+                            for (int x = 0; x < layout[0].length / 2; x++) {
+                                char old = layout[y][x];
+
+                                layout[y][x] = layout[y][layout[0].length - 1 - x];
+                                layout[y][layout[0].length - 1 - x] = old;
+                            }
+                        }
+                    }
+
+                    for (int y = 0; y < layout.length; y++) {
+                        for (int x = 0; x < layout[0].length; x++) {
+                            if (layout[y][x] == '#') {
+                                b.wall.generate(Game.RANDOM, this, x0 + x, y1 - 1 - y, 0);
+                            }
                         }
                     }
                 }

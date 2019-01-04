@@ -13,7 +13,9 @@ public class Connector implements Serializable {
     public IntRange wayThickness;
 
     public boolean fits(Connection c) {
-        return (absoluteDiffX == null || absoluteDiffX.inRange(c.absoluteDiffX)) && (absoluteDiffY == null || absoluteDiffY.inRange(c.absoluteDiffY)) && (wayThickness == null || wayThickness.inRange(c.wayThickness));
+        return (absoluteDiffX == null || absoluteDiffX.inRange(c.absoluteDiffX))
+                && (absoluteDiffY == null || absoluteDiffY.inRange(c.absoluteDiffY))
+                && (wayThickness == null || wayThickness.inRange(c.wayThickness));
     }
 
     @Override
