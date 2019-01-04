@@ -31,8 +31,6 @@ public class World extends Map {
 
     public Array<Biome> allBiomes = new Array<Biome>();
 
-    public Random rand;
-
     public Noise noise;
 
     public Biome[][] biomes;
@@ -45,9 +43,7 @@ public class World extends Map {
     public void generate() {
         super.generate();
 
-        rand = new Random(MathUtils.random(Long.MAX_VALUE));
-
-        noise = new Noise(rand);
+        noise = new Noise(Game.RANDOM);
 
         biomes = new Biome[WIDTH][HEIGHT];
 
@@ -75,7 +71,7 @@ public class World extends Map {
                 room.h = 1;
 
                 for (RoomSize roomSize : b.roomSizes) {
-                    if (rand.nextFloat() < roomSize.chance) {
+                    if (Game.RANDOM.nextFloat() < roomSize.chance) {
                         room.w = roomSize.width;
                         room.h = roomSize.height;
                     }
@@ -83,10 +79,10 @@ public class World extends Map {
 
                 int dir;
 
-                if (rand.nextFloat() < biomeAt(r.x / 2, r.y / 2).horizontalChance) {
-                    dir = rand.nextFloat() < .5f ? 0 : 2;
+                if (Game.RANDOM.nextFloat() < biomeAt(r.x / 2, r.y / 2).horizontalChance) {
+                    dir = Game.RANDOM.nextFloat() < .5f ? 0 : 2;
                 } else {
-                    dir = rand.nextFloat() < .5f ? 1 : 3;
+                    dir = Game.RANDOM.nextFloat() < .5f ? 1 : 3;
                 }
 
                 switch (dir) {
@@ -176,7 +172,7 @@ public class World extends Map {
             for (int i = 0; i < rooms.length; i++) {
                 Room r1 = rooms[i];
 
-                if (r1 != null && r0.parent != r1 && !r0.children.contains(r1, true) && rand.nextFloat() < biomes[r0.x / 2][r0.y / 2].randomConnectChance) {
+                if (r1 != null && r0.parent != r1 && !r0.children.contains(r1, true) && Game.RANDOM.nextFloat() < biomes[r0.x / 2][r0.y / 2].randomConnectChance) {
                     r0.children.add(r1);
                 }
             }
@@ -184,13 +180,13 @@ public class World extends Map {
 
         rivers = new Array<River>();
 
-        for (int i = 0; i < 2 + rand.nextInt(3); i++) {
+        for (int i = 0; i < 2 + Game.RANDOM.nextInt(3); i++) {
             int x;
             int y;
 
             do {
-                x = rand.nextInt(biomes.length) * 2;
-                y = rand.nextInt(biomes[0].length) * 2;
+                x = Game.RANDOM.nextInt(biomes.length) * 2;
+                y = Game.RANDOM.nextInt(biomes[0].length) * 2;
             } while (!biomes[x / 2][y / 2].possibleRiverSource || (roomAt(x, y) != null && (roomAt(x, y).w == 1 || roomAt(x, y).h == 1)));
 
             Room r = roomAt(x, y);
@@ -203,10 +199,10 @@ public class World extends Map {
             boolean goneHorizontal = false;
 
             do {
-                if (rand.nextFloat() < biomes[x / 2][y / 2].riverHorizontalChance && !goneHorizontal) {
+                if (Game.RANDOM.nextFloat() < biomes[x / 2][y / 2].riverHorizontalChance && !goneHorizontal) {
                     goneHorizontal = true;
 
-                    if (rand.nextFloat() < .5f) {
+                    if (Game.RANDOM.nextFloat() < .5f) {
                         if (x >= 2) {
                             x -= 2;
                         }
@@ -250,7 +246,7 @@ public class World extends Map {
 
                     if (b.wall != null) {
                         if ((x == x0 || x == x1 - 1 || y == y0 || y == y1 - 1)) {
-                            b.wall.generate(rand, this, x, y, 0);
+                            b.wall.generate(Game.RANDOM, this, x, y, 0);
                         }
                     }
                 }
@@ -262,7 +258,7 @@ public class World extends Map {
             int y1 = r.getY1();
 
             Biome b = biomes[r.x / 2][r.y / 2];
-            RoomTemplate t = b.pickTemplate(r, rand);
+            RoomTemplate t = b.pickTemplate(r, Game.RANDOM);
 
             if (t != null) {
                 r.monsters = t.monsters;
@@ -270,7 +266,7 @@ public class World extends Map {
                 char[][] layout = t.copyLayout();
 
                 // Flip vertically
-                if (rand.nextFloat() < t.verticalFlipChance) {
+                if (Game.RANDOM.nextFloat() < t.verticalFlipChance) {
                     for (int y = 0; y < layout.length / 2; y++) {
                         char[] old = layout[y];
 
@@ -280,7 +276,7 @@ public class World extends Map {
                 }
 
                 // Flip horizontally
-                if (rand.nextFloat() < t.horizontalFlipChance) {
+                if (Game.RANDOM.nextFloat() < t.horizontalFlipChance) {
                     for (int y = 0; y < layout.length; y++) {
                         for (int x = 0; x < layout[0].length / 2; x++) {
                             char old = layout[y][x];
@@ -294,7 +290,7 @@ public class World extends Map {
                 for (int y = 0; y < layout.length; y++) {
                     for (int x = 0; x < layout[0].length; x++) {
                         if (layout[y][x] == '#') {
-                            b.wall.generate(rand, this, x0 + x, y1 - 1 - y, 0);
+                            b.wall.generate(Game.RANDOM, this, x0 + x, y1 - 1 - y, 0);
                         }
                     }
                 }
@@ -368,8 +364,8 @@ public class World extends Map {
         }
 
         for (Room r : rooms) {
-            if (r.w == 2 && r.h == 2 && r.x % 4 == 0 && r.y % 4 == 0 && r.x < biomes.length * 2 - 2 && r.y < biomes[0].length * 2 - 2 && rand.nextFloat() < .25f) {
-                Game.STRUCTURES.load("Village").generate(rand, this, r.getX0(), r.getY0(), 0);
+            if (r.w == 2 && r.h == 2 && r.x % 4 == 0 && r.y % 4 == 0 && r.x < biomes.length * 2 - 2 && r.y < biomes[0].length * 2 - 2 && Game.RANDOM.nextFloat() < .25f) {
+                Game.STRUCTURES.load("Village").generate(Game.RANDOM, this, r.getX0(), r.getY0(), 0);
             }
         }
 
@@ -385,13 +381,13 @@ public class World extends Map {
                             Decoration decoration = null;
 
                             for (Decoration d : b.decorations) {
-                                if (tiles.isFree(x, y, 0, d.freeRadius) && rand.nextFloat() < d.chance) {
+                                if (tiles.isFree(x, y, 0, d.freeRadius) && Game.RANDOM.nextFloat() < d.chance) {
                                     decoration = d;
                                 }
                             }
 
                             if (decoration != null) {
-                                decoration.structure.generate(rand, this, x, y, 0);
+                                decoration.structure.generate(Game.RANDOM, this, x, y, 0);
                             }
                         }
                     }
@@ -403,16 +399,16 @@ public class World extends Map {
 
         for (Room r : rooms) {
             if (r.monsters != null) {
-                for (int i = 0; i < r.monsters.getRandomCount(rand); i++) {
+                for (int i = 0; i < r.monsters.getRandomCount(Game.RANDOM); i++) {
                     int x;
                     int y;
 
                     do {
-                        x = r.getX0() + rand.nextInt(r.getX1() - r.getX0());
-                        y = r.getY0() + rand.nextInt(r.getY1() - r.getY0());
+                        x = r.getX0() + Game.RANDOM.nextInt(r.getX1() - r.getX0());
+                        y = r.getY0() + Game.RANDOM.nextInt(r.getY1() - r.getY0());
                     } while (!tiles.isFree(x, y, 0, 0));
 
-                    Entity monster = r.monsters.getRandomMonster(rand);
+                    Entity monster = r.monsters.getRandomMonster(Game.RANDOM);
 
                     monster.x = x * 8;
                     monster.y = y * 8;
@@ -424,7 +420,7 @@ public class World extends Map {
 
         for (int x = 0; x < tiles.getWidth(); x++) {
             for (int y = 0; y < tiles.getHeight(); y++) {
-                if (tiles.isFree(x, y, 0, 1) && rand.nextFloat() < .1f) {
+                if (tiles.isFree(x, y, 0, 1) && Game.RANDOM.nextFloat() < .1f) {
                     Slime s = (Slime) Game.ENTITIES.load("GreenSlime");
                     s.x = x * 8;
                     s.y = y * 8;
@@ -556,7 +552,7 @@ public class World extends Map {
         }
 
         Biome b = biomes[r0.x / 2][r0.y / 2];
-        c.wayThickness = b.wayThickness[rand.nextInt(b.wayThickness.length)];
+        c.wayThickness = b.wayThickness[Game.RANDOM.nextInt(b.wayThickness.length)];
 
         if (diffX != 0) {
             int[] xx = new int[] {smaller.x * 8 + smaller.w * 4, smaller.x * 8 + smaller.w * 4 + Math.max(r0.w, r1.w) * 8 * diffX};

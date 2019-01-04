@@ -125,11 +125,6 @@
               "chance": 0.05,
               "freeRadius": 1,
               "structure": "Rock"
-            },
-            {
-              "chance": 0.05,
-              "freeRadius": 1,
-              "structure": "Rock2"
             }
           ]
         },
@@ -243,11 +238,6 @@
               "chance": 0.1,
               "freeRadius": 1,
               "structure": "MountainsRock"
-            },
-            {
-              "chance": 0.1,
-              "freeRadius": 1,
-              "structure": "MountainsRock2"
             }
           ]
         }

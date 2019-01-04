@@ -18,6 +18,8 @@ import game.loader.instance.TileLoader;
 import game.main.state.play.Play;
 import game.main.state.GameState;
 
+import java.util.Random;
+
 public class Game extends ApplicationAdapter {
 	public static final String TITLE = "Mystiqa";
 	public static final String VERSION = "0.0";
@@ -25,6 +27,8 @@ public class Game extends ApplicationAdapter {
 	public static final int WIDTH = 128;
 	public static final int HEIGHT = 72;
 	public static final int SCALE = 12;
+
+	public static final Random RANDOM = new Random();
 
 	public static final PaletteShaderLoader PALETTES = new PaletteShaderLoader();
 	public static final SpriteSheetLoader SPRITE_SHEETS = new SpriteSheetLoader();

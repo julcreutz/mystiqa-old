@@ -17,19 +17,9 @@
       "tile": "Rock"
     }
   },
-  "Rock2": {
-    "SingleTile": {
-      "tile": "Rock2"
-    }
-  },
   "MountainsRock": {
     "SingleTile": {
       "tile": "MountainsRock"
-    }
-  },
-  "MountainsRock2": {
-    "SingleTile": {
-      "tile": "MountainsRock2"
     }
   },
   "TallGrass": {

@@ -8,17 +8,11 @@ import game.loader.Serializable;
 import game.main.Game;
 import game.main.state.play.map.Map;
 
-public class Tile implements Serializable {
+public abstract class Tile implements Serializable {
     public String name;
-
-    public TextureRegion[][] spriteSheet;
 
     public ShaderProgram[] colors;
     public float colorSwitchSpeed;
-
-    public boolean autoTile;
-
-    public String[] connectWith;
 
     public boolean solid;
 
@@ -42,78 +36,7 @@ public class Tile implements Serializable {
     }
 
     public void update(Map map) {
-        if (autoTile) {
-            int n = 0;
 
-            if (connectsWith(map, x + 1, y, z)) {
-                n++;
-            }
-
-            if (connectsWith(map, x, y + 1, z)) {
-                n += 2;
-            }
-
-            if (connectsWith(map, x - 1, y, z)) {
-                n += 4;
-            }
-
-            if (connectsWith(map, x, y - 1, z)) {
-                n += 8;
-            }
-
-            switch (n) {
-                case 0:
-                    image = spriteSheet[3][3];
-                    break;
-                case 1:
-                    image = spriteSheet[0][3];
-                    break;
-                case 2:
-                    image = spriteSheet[3][2];
-                    break;
-                case 3:
-                    image = spriteSheet[0][2];
-                    break;
-                case 4:
-                    image = spriteSheet[2][3];
-                    break;
-                case 5:
-                    image = spriteSheet[1][3];
-                    break;
-                case 6:
-                    image = spriteSheet[2][2];
-                    break;
-                case 7:
-                    image = spriteSheet[1][2];
-                    break;
-                case 8:
-                    image = spriteSheet[3][0];
-                    break;
-                case 9:
-                    image = spriteSheet[0][0];
-                    break;
-                case 10:
-                    image = spriteSheet[3][1];
-                    break;
-                case 11:
-                    image = spriteSheet[0][1];
-                    break;
-                case 12:
-                    image = spriteSheet[2][0];
-                    break;
-                case 13:
-                    image = spriteSheet[1][0];
-                    break;
-                case 14:
-                    image = spriteSheet[2][1];
-                    break;
-                case 15:
-                    image = spriteSheet[1][1];
-                    break;
-            }
-        } else {
-            image = spriteSheet[0][0];
-        }
     }
 
     public void render(SpriteBatch batch) {
@@ -123,36 +46,11 @@ public class Tile implements Serializable {
         batch.setShader(null);
     }
 
-    public boolean connectsWith(Map map, int x, int y, int z) {
-        if (map.tiles.inBounds(x, y, z)) {
-            Tile tile = map.tiles.at(x, y, z);
-
-            if (tile != null) {
-                if (connectWith != null) {
-                    for (String _connect : connectWith) {
-                        if (_connect.equals(tile.name)) {
-                            return true;
-                        }
-                    }
-                }
-
-                return name.equals(tile.name);
-            }
-        }
-
-        return true;
-    }
-
     @Override
     public void deserialize(JsonValue json) {
         JsonValue name = json.get("name");
         if (name != null) {
             this.name = name.asString();
-        }
-
-        JsonValue spriteSheet = json.get("spriteSheet");
-        if (spriteSheet != null) {
-            this.spriteSheet = Game.SPRITE_SHEETS.load(spriteSheet.asString()).sheet;
         }
 
         JsonValue palettes = json.get("colors");
@@ -167,16 +65,6 @@ public class Tile implements Serializable {
         JsonValue paletteSpeed = json.get("colorSwitchSpeed");
         if (paletteSpeed != null) {
             this.colorSwitchSpeed = paletteSpeed.asFloat();
-        }
-
-        JsonValue autoTile = json.get("autoTile");
-        if (autoTile != null) {
-            this.autoTile = autoTile.asBoolean();
-        }
-
-        JsonValue connect = json.get("connectWith");
-        if (connect != null) {
-            this.connectWith = connect.asStringArray();
         }
 
         JsonValue solid = json.get("solid");

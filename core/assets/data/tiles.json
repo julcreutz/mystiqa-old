@@ -1,209 +1,177 @@
 {
   "Grass": {
-    "Tile": {
+    "ConnectedTile": {
       "name": "Grass",
-      "spriteSheet": "Grass",
       "colors": [
         ["Black", "Green"]
       ],
-      "autoTile": true,
-      "connectWith": ["TreeBottom", "Stone", "Bridge", "HouseWall", "HouseEntrance", "Rock", "Rock2", "TallGrass", "Flowers"]
+      "connectWith": ["TreeBottom", "Stone", "Bridge", "HouseWall", "HouseEntrance", "Rock", "Rock2", "TallGrass", "Flowers"],
+      "spriteSheet": "Grass"
     }
   },
   "Path": {
-    "Tile": {
+    "ConnectedTile": {
       "name": "Path",
-      "spriteSheet": "Grass",
       "colors": [
         ["Black", "Brown"]
       ],
-      "autoTile": true,
-      "connectWith": ["TreeBottom", "Stone", "Bridge", "HouseWall", "HouseEntrance", "Grass"]
+      "connectWith": ["TreeBottom", "Stone", "Bridge", "HouseWall", "HouseEntrance", "Grass"],
+      "spriteSheet": "Grass"
     }
   },
   "Water": {
-    "Tile": {
+    "ConnectedTile": {
       "name": "Water",
-      "spriteSheet": "Water",
+      "solid": true,
       "colors": [
         ["Black", "Blue", "Brown"]
       ],
-      "autoTile": true,
       "connectWith": ["Stone", "Waterfall", "Bridge"],
-      "solid": true
+      "spriteSheet": "Water"
     }
   },
   "Waterfall": {
-    "Tile": {
+    "UnconnectedTile": {
       "name": "Waterfall",
-      "spriteSheet": "Waterfall",
+      "solid": true,
       "colors": [
         ["Blue", "Blue", "White"],
         ["Blue", "White", "Blue"],
         ["White", "Blue", "Blue"]
       ],
       "colorSwitchSpeed": 10,
-      "connectWith": ["Water"],
-      "solid": true
+      "spriteSheet": "Waterfall"
     }
   },
   "Stone": {
-    "Tile": {
+    "ConnectedTile": {
       "name": "Stone",
-      "spriteSheet": "Stone",
       "colors": [
         ["Black", "Brown", "Brown"]
       ],
       "connectWith": ["Tendril"],
-      "autoTile": true,
-      "solid": true
+      "spriteSheet": "Stone"
     }
   },
   "Tendril": {
-    "Tile": {
+    "UnconnectedTile": {
       "name": "Tendril",
-      "spriteSheet": "Tendril",
       "colors": [
         ["Black", "Green", "Brown"]
       ],
-      "connectWith": ["Stone"],
       "moveSpeed": 0.5,
-      "forcedDirection": 1
+      "forcedDirection": 1,
+      "spriteSheet": "Tendril"
     }
   },
   "Dirt": {
-    "Tile": {
+    "ConnectedTile": {
       "name": "Dirt",
-      "spriteSheet": "Grass",
       "colors": [
         ["Black", "Brown"]
       ],
       "connectWith": ["Stone", "Tendril", "Bridge", "MountainsRock", "MountainsRock2"],
-      "autoTile": true
+      "spriteSheet": "Grass"
     }
   },
   "Bridge": {
-    "Tile": {
+    "ConnectedTile": {
       "name": "Bridge",
-      "spriteSheet": "Bridge",
       "colors": [
         ["Black", "Brown"]
       ],
-      "autoTile": true
+      "spriteSheet": "Bridge"
     }
   },
   "TreeBottom": {
-    "Tile": {
+    "UnconnectedTile": {
       "name": "TreeBottom",
-      "spriteSheet": "TreeBottom",
       "colors": [
         ["Black", "Green", "Brown", "Green"]
       ],
-      "solid": true
+      "solid": true,
+      "spriteSheet": "TreeBottom"
     }
   },
   "TreeMiddle": {
-    "Tile": {
+    "UnconnectedTile": {
       "name": "TreeMiddle",
-      "spriteSheet": "TreeMiddle",
       "colors": [
         ["Black", "Green"]
-      ]
+      ],
+      "spriteSheet": "TreeMiddle"
     }
   },
   "TreeTop": {
-    "Tile": {
+    "UnconnectedTile": {
       "name": "TreeTop",
-      "spriteSheet": "TreeTop",
       "colors": [
         ["Black", "Green"]
-      ]
+      ],
+      "spriteSheet": "TreeTop"
     }
   },
   "HouseEntrance": {
-    "Tile": {
+    "UnconnectedTile": {
       "name": "HouseEntrance",
-      "spriteSheet": "HouseEntrance",
       "colors": [
         ["Black", "Brown"]
-      ]
+      ],
+      "spriteSheet": "HouseEntrance"
     }
   },
   "HouseWall": {
-    "Tile": {
+    "ConnectedTile": {
       "name": "HouseWall",
-      "spriteSheet": "HouseWall",
       "colors": [
         ["Black","Brown"]
       ],
-      "autoTile": true,
-      "connectWith": ["HouseEntrance"],
-      "solid": true
+      "solid": true,
+      "spriteSheet": "HouseWall",
+      "connectWith": ["HouseEntrance"]
     }
   },
   "HouseRoof": {
-    "Tile": {
+    "ConnectedTile": {
       "name": "HouseRoof",
-      "spriteSheet": "HouseRoof",
       "colors": [
         ["Black", "Brown", "Yellow"]
       ],
-      "autoTile": true
+      "spriteSheet": "HouseRoof"
     }
   },
   "Rock": {
-    "Tile": {
+    "UnconnectedTile": {
       "name": "Rock",
-      "spriteSheet": "Rock",
       "colors": [
         ["Black", "Green", "Gray"]
       ],
-      "solid": true
-    }
-  },
-  "Rock2": {
-    "Tile": {
-      "name": "Rock2",
-      "spriteSheet": "Rock2",
-      "colors": [
-        ["Black", "Green", "Gray"]
-      ],
-      "solid": true
+      "solid": true,
+      "spriteSheet": "Rock"
     }
   },
   "MountainsRock": {
-    "Tile": {
+    "UnconnectedTile": {
       "name": "MountainsRock",
-      "spriteSheet": "Rock",
       "colors": [
         ["Black", "Brown", "Gray"]
       ],
-      "solid": true
-    }
-  },
-  "MountainsRock2": {
-    "Tile": {
-      "name": "MountainsRock2",
-      "spriteSheet": "Rock2",
-      "colors": [
-        ["Black", "Brown", "Gray"]
-      ],
-      "solid": true
+      "solid": true,
+      "spriteSheet": "Rock"
     }
   },
   "TallGrass": {
-    "Tile": {
+    "ConnectedTile": {
       "name": "TallGrass",
-      "spriteSheet": "TallGrass",
       "colors": [
         ["Black", "Green"]
       ],
-      "autoTile": true,
       "moveSpeed": 0.75,
       "overlay": {
         "image": "TallGrassOverlay",
         "colors": ["Black", "Green"]
-      }
+      },
+      "spriteSheet": "TallGrass"
     }
   }
 }
