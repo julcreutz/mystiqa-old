@@ -380,11 +380,11 @@ public class World extends Map {
             }
         }
 
-        /*for (Room r : rooms) {
+        for (Room r : rooms) {
             if (r.w == 2 && r.h == 2 && r.x % 4 == 0 && r.y % 4 == 0 && r.x < biomes.length * 2 - 2 && r.y < biomes[0].length * 2 - 2 && Game.RANDOM.nextFloat() < .25f) {
                 Game.STRUCTURES.load("Village").generate(Game.RANDOM, this, r.getX0(), r.getY0(), 0);
             }
-        }*/
+        }
 
         // Decorate
         for (Room r : rooms) {

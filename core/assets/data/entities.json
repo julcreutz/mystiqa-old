@@ -43,7 +43,10 @@
       "body": "HumanBody",
       "head": "HumanHead",
       "colors": ["Black", "Green"],
-      "mainHand": "Club"
+      "mainHand": "Sword",
+      "offHand": "Shield",
+      "bodyArmor": "BodyArmor",
+      "feetArmor": "FeetArmor"
     }
   },
   "GreenSlime": {
