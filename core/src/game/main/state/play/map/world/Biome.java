@@ -35,6 +35,8 @@ public class Biome implements Serializable {
 
     public Decoration[] decorations;
 
+    public String[] monsters;
+
     public RoomTemplate pickTemplate(Room r, Random rand) {
         RoomTemplate t = null;
 
@@ -142,6 +144,11 @@ public class Biome implements Serializable {
             for (int i = 0; i < decorations.size; i++) {
                 this.decorations[i] = new Decoration(decorations.get(i));
             }
+        }
+
+        JsonValue monsters = json.get("monsters");
+        if (monsters != null) {
+            this.monsters = monsters.asStringArray();
         }
     }
 }

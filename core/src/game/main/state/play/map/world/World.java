@@ -253,8 +253,6 @@ public class World extends Map {
             RoomTemplate t = b.pickTemplate(r, Game.RANDOM);
 
             if (t != null) {
-                r.monsters = t.monsters;
-
                 if (t.layout != null) {
                     char[][] layout = t.copyLayout();
 
@@ -419,8 +417,10 @@ public class World extends Map {
 
         // Spawn monsters
         for (Room r : rooms) {
-            if (r.monsters != null) {
-                for (int i = 0; i < r.monsters.getRandomCount(Game.RANDOM); i++) {
+            Biome b = biomes[r.x / 2][r.y / 2];
+
+            if (b.monsters != null) {
+                for (int i = 0; i < Game.RANDOM.nextInt(r.w * r.h); i++) {
                     int x;
                     int y;
 
@@ -429,7 +429,7 @@ public class World extends Map {
                         y = r.getY0() + Game.RANDOM.nextInt(r.getY1() - r.getY0());
                     } while (!tiles.isFree(x, y, 0, 0));
 
-                    Entity monster = r.monsters.getRandomMonster(Game.RANDOM);
+                    Entity monster = Game.ENTITIES.load(b.monsters[Game.RANDOM.nextInt(b.monsters.length)]);
 
                     monster.x = x * 8;
                     monster.y = y * 8;

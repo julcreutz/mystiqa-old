@@ -12,8 +12,6 @@ public class Room {
     public Room parent;
     public Array<Room> children;
 
-    public MonsterComponent monsters;
-
     public int index;
 
     public Room(int x, int y, int w, int h) {

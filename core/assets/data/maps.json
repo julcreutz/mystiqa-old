@@ -30,7 +30,7 @@
               "height": 2
             }
           ],
-          "randomConnectChance": 0.25,
+          "randomConnectChance": 0.1,
           "ground": "Grass",
           "wall": "OakTree",
           "river": "Water",
@@ -57,11 +57,7 @@
                 ["#", "#", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "#", "#", "#"],
                 ["#", "#", "#", " ", " ", "#", " ", " ", "#", " ", "#", " ", "#", "#", "#", "#"],
                 ["#", "#", "#", "#", "#", "#", "#", "#", "#", "#", "#", "#", "#", "#", "#", "#"]
-              ],
-              "monsters": {
-                "monsters": ["GreenSlime", "Orc"],
-                "count": [1, 2, 3, 3]
-              }
+              ]
             },
             {
               "chance": 1,
@@ -91,11 +87,7 @@
                 ["#", "#", " ", " ", " ", " ", "#", "#"],
                 ["#", "#", "#", " ", "#", " ", "#", "#"],
                 ["#", "#", "#", "#", "#", "#", "#", "#"]
-              ],
-              "monsters": {
-                "monsters": ["GreenSlime"],
-                "count": [1, 1, 2]
-              }
+              ]
             },
             {
               "chance": 1,
@@ -126,7 +118,8 @@
               "freeRadius": 1,
               "structure": "Rock"
             }
-          ]
+          ],
+          "monsters": ["GreenSlime", "SmallGreenSlime", "Orc"]
         },
         {
           "elevation": {
