@@ -43,6 +43,8 @@ public abstract class Map implements Serializable {
 
     public Array<Teleport> teleports;
 
+    public float screenShake;
+
     public Map() {
         tiles = new TileManager(this);
         entities = new EntityManager(this);

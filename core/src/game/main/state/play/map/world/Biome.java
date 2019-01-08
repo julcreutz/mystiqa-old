@@ -5,6 +5,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import game.loader.Serializable;
 import game.main.Game;
 import game.main.state.play.map.structure.Structure;
+import game.main.state.play.map.tile.Tile;
 import game.range.FloatRange;
 import game.range.IntRange;
 
@@ -51,11 +52,11 @@ public class Biome implements Serializable {
         return t;
     }
 
-    public Connector getConnector(Connection connection) {
+    public Connector getConnector(Connection connection, Tile t) {
         Connector c = null;
 
         for (Connector connector : connectors) {
-            if (connector.fits(connection)) {
+            if (connector.fits(connection, t)) {
                 c = connector;
             }
         }

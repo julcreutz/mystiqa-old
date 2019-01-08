@@ -9,21 +9,29 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import game.loader.Serializable;
 import game.main.Game;
+import game.main.stat.Stat;
 import game.main.stat.StatManager;
-import game.main.stat.StatType;
 import game.main.state.play.map.Map;
 import game.main.state.play.map.tile.TileOverlay;
 import game.main.state.play.map.tile.Tile;
 
 public class Entity implements Serializable {
+    /** Map instance the entity is currently in. Always update if map is changed. */
+    public Map map;
+
+    /** Current x position in pixels. */
     public float x;
+    /** Current y position in pixels. */
     public float y;
 
+    /** Current x velocity in pixels per second. */
     public float velX;
+    /** Current y velocity in pixels per second. */
     public float velY;
 
     public String[] colors;
 
+    /** Represents entity physical dimensions mainly used for collision detection. */
     public Hitbox hitbox;
 
     public boolean updated;
@@ -50,15 +58,15 @@ public class Entity implements Serializable {
         hit = new Array<Entity>();
     }
 
-    public void preUpdate(Map map) {
+    public void preUpdate() {
 
     }
 
-    public void update(Map map) {
+    public void update() {
 
     }
 
-    public void postUpdate(Map map) {
+    public void postUpdate() {
         Hitbox attackHitbox = getAttackHitbox();
         Hitbox blockHitbox = getBlockHitbox();
 
@@ -89,9 +97,9 @@ public class Entity implements Serializable {
                                         e.hitAngle = new Vector2(e.x, e.y).sub(x, y).angle();
                                         e.hitSpeed = 48f;
 
-                                        e.health -= stats.count(StatType.PHYSICAL_DAMAGE);
+                                        e.health -= stats.count(Stat.Type.PHYSICAL_DAMAGE);
 
-                                        e.onHit(map);
+                                        e.onHit();
 
                                         hit.add(e);
                                     }
@@ -125,14 +133,14 @@ public class Entity implements Serializable {
             }
         } else {
             if (isDead()) {
-                onDeath(map);
+                onDeath();
                 map.entities.entities.removeValue(this, true);
             }
         }
 
-        if (isOnGround()) {
+        if (isPushing() && isOnGround()) {
             for (Entity e : map.entities.entities) {
-                if (e != this && hitbox.overlaps(e) && e.isOnGround()) {
+                if (e != this && e.isPushable() && hitbox.overlaps(e) && e.isOnGround()) {
                     float a = new Vector2(e.x, e.y).sub(x, y).angle();
 
                     velX += MathUtils.cosDeg(a + 180) * 16f;
@@ -141,7 +149,7 @@ public class Entity implements Serializable {
             }
         }
 
-        Tile t = tileAt(map);
+        Tile t = tileAt();
         float moveSpeed = 1;
 
         if (t != null) {
@@ -155,7 +163,7 @@ public class Entity implements Serializable {
         hitbox.position(velX * Game.getDelta(), 0);
 
         for (int x = map.x0; x < map.x1; x++) {
-            for (int y = map.y0; y < map.x1; y++) {
+            for (int y = map.y0; y < map.y1; y++) {
                 if (map.tiles.inBounds(x, y)) {
                     Rectangle solidTile = map.tiles.solidTiles[x][y];
 
@@ -197,7 +205,7 @@ public class Entity implements Serializable {
         y += velY * Game.getDelta();
 
         if (velX != 0 || velY != 0) {
-            onMove(map);
+            onMove();
         }
 
         velX = 0;
@@ -218,63 +226,53 @@ public class Entity implements Serializable {
         }
     }
 
-    public void onAdded(Map map) {
+    /** Called when entity is added to a map. */
+    public void onAdded() {
         hitbox.position();
-        health = stats.count(StatType.HEALTH);
+        health = stats.count(Stat.Type.HEALTH);
     }
 
-    public void onMove(Map map) {
+    /** Called when entity moves. */
+    public void onMove() {
 
     }
 
-    public void onHit(Map map) {
+    /** Called when entity is hit. */
+    public void onHit() {
+        map.screenShake += isDead() ? 1f : .5f;
     }
 
-    public void onDeath(Map map) {
+    /** Called when entity dies. */
+    public void onDeath() {
     }
 
+    /** @return whether entity is attacking */
     public boolean isAttacking() {
         return false;
     }
 
+    /** @return whether entity is blocking */
     public boolean isBlocking() {
         return false;
     }
 
+    /** @return whether entity is currently hit */
     public boolean isHit() {
         return hitTime > 0;
     }
 
+    /** @return whether entity is dead */
     public boolean isDead() {
         return health <= 0;
     }
 
+    /** @return whether entity is standing on ground */
     public boolean isOnGround() {
         return true;
     }
 
-    public String[] reverseColors(String[] colors) {
-        String[] newColors = new String[colors.length];
-
-        System.arraycopy(colors, 0, newColors, 0, colors.length);
-
-        for (int i = 0; i < newColors.length / 2; i++) {
-            int j = newColors.length - 1 - i;
-
-            String color = newColors[j];
-            newColors[j] = newColors[i];
-            newColors[i] = color;
-        }
-
-        return newColors;
-    }
-
-    public String[] reverseColors() {
-        return reverseColors(colors);
-    }
-
     public String[] getColors() {
-        return isHit() ? reverseColors() : colors;
+        return isHit() ? new String[] {"White", "White"} : colors;
     }
 
     public ShaderProgram getColorShader() {
@@ -293,7 +291,7 @@ public class Entity implements Serializable {
         return alignment.isHostile(e.alignment);
     }
 
-    public Tile tileAt(Map map) {
+    public Tile tileAt() {
         int x = MathUtils.floor((hitbox.getCenterX()) / 8f);
         int y = MathUtils.floor(hitbox.getY() / 8f);
 
@@ -305,7 +303,17 @@ public class Entity implements Serializable {
     }
 
     public float getHealthPercentage() {
-        return health / stats.count(StatType.HEALTH);
+        return health / stats.count(Stat.Type.HEALTH);
+    }
+
+    /** @return whether entity is able to push other entities away */
+    public boolean isPushing() {
+        return true;
+    }
+
+    /** @return whether entity is able to be pushed away by other entities. */
+    public boolean isPushable() {
+        return true;
     }
 
     @Override

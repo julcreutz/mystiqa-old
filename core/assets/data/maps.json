@@ -37,6 +37,7 @@
           "riverBridge": "Bridge",
           "connectors": [
             {
+              "replace": "TreeBottom",
               "tile": "Grass"
             }
           ],
@@ -232,7 +233,8 @@
               "freeRadius": 1,
               "structure": "MountainsRock"
             }
-          ]
+          ],
+          "monsters": ["GreenSlime"]
         }
       ]
     }

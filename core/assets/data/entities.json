@@ -42,7 +42,7 @@
       "feet": "HumanFeet",
       "body": "HumanBody",
       "head": "HumanHead",
-      "colors": ["Black", "Green"],
+      "colors": ["Black", "Olive"],
       "mainHand": "Sword",
       "offHand": "Shield",
       "bodyArmor": "BodyArmor",
@@ -94,7 +94,10 @@
       ],
       "alignment": "EVIL",
       "sheet": "SmallSlime",
-      "colors": ["Black", "Green"]
+      "colors": [
+        "Black",
+        "Green"
+      ]
     }
   }
 }

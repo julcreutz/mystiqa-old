@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.MathUtils;
 import game.main.Game;
 import game.main.state.GameState;
 import game.main.state.play.map.Map;
+import game.main.state.play.map.dungeon.Dungeon;
 
 public class Play extends GameState {
     public Map map;
@@ -25,7 +26,7 @@ public class Play extends GameState {
         super.update(g);
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
-            nextMap = Game.MAPS.load("Overworld");
+            nextMap = new Dungeon();
             nextMap.generate();
             nextMap.placePlayer();
         }
@@ -36,10 +37,23 @@ public class Play extends GameState {
             nextMap = null;
         }
 
-        map.update(this);
+        if (map.screenShake == 0) {
+            map.update(this);
+        } else {
+            map.screenShake -= Game.getDelta() * 10f;
+
+            if (map.screenShake < 0) {
+                map.screenShake = 0;
+            }
+        }
 
         cam.position.x = map.camPosX;
         cam.position.y = map.camPosY;
+
+        if (map.screenShake > 0) {
+            cam.position.x += MathUtils.random(-1, 1);
+            cam.position.y += MathUtils.random(-1, 1);
+        }
 
         cam.update();
     }

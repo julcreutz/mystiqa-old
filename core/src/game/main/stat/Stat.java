@@ -4,12 +4,18 @@ import com.badlogic.gdx.utils.JsonValue;
 import game.loader.Serializable;
 
 public class Stat implements Serializable {
-    public StatType type;
+    public enum Type {
+        HEALTH,
+        SPEED,
+        PHYSICAL_DAMAGE
+    }
+
+    public Type type;
 
     public float absolute;
     public float relative;
 
-    public Stat(StatType type, float absolute, float relative) {
+    public Stat(Type type, float absolute, float relative) {
         this.type = type;
         this.absolute = absolute;
         this.relative = relative;
@@ -23,7 +29,7 @@ public class Stat implements Serializable {
     public void deserialize(JsonValue json) {
         JsonValue type = json.get("type");
         if (type != null) {
-            this.type = StatType.valueOf(type.asString());
+            this.type = Stat.Type.valueOf(type.asString());
         }
 
         JsonValue absolute = json.get("absolute");

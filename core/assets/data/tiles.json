@@ -5,7 +5,7 @@
       "colors": [
         ["Black", "Green"]
       ],
-      "connectWith": ["TreeBottom", "Stone", "Bridge", "HouseWall", "HouseEntrance", "Rock", "Rock2", "TallGrass", "Flowers"],
+      "connectWith": ["TreeBottom", "Stone", "Bridge", "HouseWall", "HouseEntrance", "Rock", "Rock2", "TallGrass", "Flowers", "BrickGround", "PillarBottom"],
       "spriteSheet": "Grass"
     }
   },
@@ -165,7 +165,7 @@
     "ConnectedTile": {
       "name": "TallGrass",
       "colors": [
-        ["Black", "Green"]
+        ["Black", "Green", "Green"]
       ],
       "moveSpeed": 0.75,
       "overlay": {

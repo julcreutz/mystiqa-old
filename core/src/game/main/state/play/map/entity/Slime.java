@@ -7,13 +7,22 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import game.main.Game;
-import game.main.stat.StatType;
+import game.main.stat.Stat;
+import game.main.stat.Stat.Type;
 import game.main.state.play.map.Map;
 
 public class Slime extends Entity {
+    public enum State {
+        RANDOM_MOVEMENT,
+        FOLLOW_PLAYER,
+        JUMP_BEGIN,
+        JUMP,
+        JUMP_END
+    }
+
     public TextureRegion[][] sheet;
 
-    public SlimeState state;
+    public State state;
 
     public float time;
 
@@ -28,15 +37,15 @@ public class Slime extends Entity {
 
     public Slime() {
         hitbox.set(6, 4, 1, 1);
-        state = SlimeState.RANDOM_MOVEMENT;
+        state = State.RANDOM_MOVEMENT;
     }
 
     @Override
-    public void update(Map map) {
+    public void update() {
         switch (state) {
             case RANDOM_MOVEMENT:
                 if (new Vector2(map.player.x, map.player.y).sub(x, y).len() < 24) {
-                    state = SlimeState.FOLLOW_PLAYER;
+                    state = State.FOLLOW_PLAYER;
                     break;
                 }
 
@@ -66,7 +75,7 @@ public class Slime extends Entity {
                 jumpTime -= Game.getDelta();
 
                 if (jumpTime < 0) {
-                    state = SlimeState.JUMP;
+                    state = State.JUMP;
                 }
 
                 break;
@@ -83,7 +92,7 @@ public class Slime extends Entity {
 
                     jumpSpeed = 0;
 
-                    state = SlimeState.JUMP_END;
+                    state = State.JUMP_END;
                 }
 
                 break;
@@ -95,7 +104,7 @@ public class Slime extends Entity {
                 jumpTime -= Game.getDelta();
 
                 if (jumpTime < 0) {
-                    state = SlimeState.RANDOM_MOVEMENT;
+                    state = State.RANDOM_MOVEMENT;
                 }
 
                 break;
@@ -135,21 +144,21 @@ public class Slime extends Entity {
 
         velZ = 90;
 
-        this.time = time / stats.count(StatType.SPEED);
+        this.time = time / stats.count(Stat.Type.SPEED);
 
-        state = SlimeState.JUMP_BEGIN;
+        state = State.JUMP_BEGIN;
     }
 
     @Override
-    public void onAdded(Map map) {
-        super.onAdded(map);
+    public void onAdded() {
+        super.onAdded();
 
         jump(MathUtils.random(360f), MathUtils.random(24f, 32f), MathUtils.random(1f, 2f));
     }
 
     @Override
-    public void onDeath(Map map) {
-        super.onDeath(map);
+    public void onDeath() {
+        super.onDeath();
 
         if (splitInto != null) {
             String[] splitInto = this.splitInto.get(MathUtils.random(this.splitInto.size - 1));
@@ -172,7 +181,7 @@ public class Slime extends Entity {
 
     @Override
     public boolean isAttacking() {
-        return state == SlimeState.JUMP_END;
+        return state == State.JUMP_END;
     }
 
     @Override

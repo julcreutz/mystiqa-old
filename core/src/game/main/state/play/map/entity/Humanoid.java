@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonValue;
 import game.loader.resource.sprite_sheet.SpriteSheet;
@@ -14,11 +13,19 @@ import game.main.item.equipment.hand.main.MainHand;
 import game.main.item.equipment.armor.BodyArmor;
 import game.main.item.equipment.armor.FeetArmor;
 import game.main.item.equipment.armor.HeadArmor;
-import game.main.stat.StatType;
+import game.main.stat.Stat;
 import game.main.state.play.map.Map;
 import game.main.state.play.map.tile.Tile;
 
 public class Humanoid extends Entity {
+    public enum State {
+        RANDOM_MOVEMENT,
+        FOLLOW_PLAYER,
+        ATTACK_PLAYER,
+        BLOCK,
+        FLEE
+    }
+
     public SpriteSheet feet;
     public SpriteSheet body;
     public SpriteSheet head;
@@ -41,7 +48,7 @@ public class Humanoid extends Entity {
 
     public boolean controlledByPlayer;
 
-    public HumanoidState state;
+    public State state;
     public float stateTime;
 
     public float moveAngle;
@@ -51,15 +58,17 @@ public class Humanoid extends Entity {
     public float blockTime;
 
     public Humanoid() {
+        super();
+
         hitbox.set(4, 2, 2, 1);
         attackHitbox = new Hitbox(this);
         blockHitbox = new Hitbox(this);
 
-        state = HumanoidState.RANDOM_MOVEMENT;
+        state = State.RANDOM_MOVEMENT;
     }
 
     @Override
-    public void update(Map map) {
+    public void update() {
         Vector2 dir = new Vector2();
 
         boolean useMainHand = false;
@@ -102,7 +111,7 @@ public class Humanoid extends Entity {
             switch (state) {
                 case RANDOM_MOVEMENT:
                     if (toPlayer.len() < 32) {
-                        state = HumanoidState.FOLLOW_PLAYER;
+                        state = State.FOLLOW_PLAYER;
                         break;
                     }
 
@@ -122,7 +131,7 @@ public class Humanoid extends Entity {
                     break;
                 case FOLLOW_PLAYER:
                     if (toPlayer.len() > 64) {
-                        state = HumanoidState.RANDOM_MOVEMENT;
+                        state = State.RANDOM_MOVEMENT;
                         break;
                     }
 
@@ -131,12 +140,12 @@ public class Humanoid extends Entity {
                     if (actionTime <= 0) {
                         if (toPlayer.len() < 16) {
                             if (MathUtils.randomBoolean(getHealthPercentage())) {
-                                state = HumanoidState.ATTACK_PLAYER;
+                                state = State.ATTACK_PLAYER;
                             } else {
                                 if (offHand != null) {
-                                    state = HumanoidState.BLOCK;
+                                    state = State.BLOCK;
                                 } else {
-                                    state = HumanoidState.FLEE;
+                                    state = State.FLEE;
                                 }
                             }
 
@@ -152,7 +161,7 @@ public class Humanoid extends Entity {
                     break;
                 case ATTACK_PLAYER:
                     if (toPlayer.len() < 12) {
-                        state = HumanoidState.FOLLOW_PLAYER;
+                        state = State.FOLLOW_PLAYER;
                         actionTime = MathUtils.random(.25f, .5f);
                         break;
                     }
@@ -176,7 +185,7 @@ public class Humanoid extends Entity {
 
                     if (blockTime < 0) {
                         blockTime = 0;
-                        state = HumanoidState.FOLLOW_PLAYER;
+                        state = State.FOLLOW_PLAYER;
                         break;
                     }
 
@@ -193,7 +202,7 @@ public class Humanoid extends Entity {
 
                     if (blockTime < 0) {
                         blockTime = 0;
-                        state = HumanoidState.FOLLOW_PLAYER;
+                        state = State.FOLLOW_PLAYER;
                         break;
                     }
 
@@ -202,8 +211,8 @@ public class Humanoid extends Entity {
         }
 
         if (moveSpeed != 0) {
-            velX = MathUtils.round(MathUtils.cosDeg(moveAngle) * moveSpeed * stats.count(StatType.SPEED));
-            velY = MathUtils.round(MathUtils.sinDeg(moveAngle) * moveSpeed * stats.count(StatType.SPEED));
+            velX = MathUtils.round(MathUtils.cosDeg(moveAngle) * moveSpeed * stats.count(Stat.Type.SPEED));
+            velY = MathUtils.round(MathUtils.sinDeg(moveAngle) * moveSpeed * stats.count(Stat.Type.SPEED));
 
             if (lastUsed > .01f) {
                 if (controlledByPlayer) {
@@ -226,7 +235,7 @@ public class Humanoid extends Entity {
                 }
             }
 
-            Tile t = tileAt(map);
+            Tile t = tileAt();
 
             if (t != null && t.forcedDirection != -1) {
                 this.dir = t.forcedDirection;
@@ -514,8 +523,9 @@ public class Humanoid extends Entity {
     }
 
     @Override
-    public void onMove(Map map) {
-        super.onMove(map);
+    public void onMove() {
+        super.onMove();
+
         time += Game.getDelta() * (new Vector2(velX, velY).len() / 24f);
     }
 

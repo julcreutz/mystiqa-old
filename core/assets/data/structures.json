@@ -4,7 +4,15 @@
       "bottomTile": "TreeBottom",
       "middleTile": "TreeMiddle",
       "topTile": "TreeTop",
-      "height": [0, 1, 1, 2]
+      "height": [0, 1, 1]
+    }
+  },
+  "Pillar": {
+    "Tree": {
+      "bottomTile": "PillarBottom",
+      "middleTile": "PillarMiddle",
+      "topTile": "PillarTop",
+      "height": [0]
     }
   },
   "Stone": {
@@ -25,6 +33,11 @@
   "TallGrass": {
     "SingleTile": {
       "tile": "TallGrass"
+    }
+  },
+  "BrickGround": {
+    "SingleTile": {
+      "tile": "BrickGround"
     }
   },
   "HouseExterior": {

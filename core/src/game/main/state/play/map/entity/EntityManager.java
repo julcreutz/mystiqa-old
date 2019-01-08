@@ -40,14 +40,14 @@ public class EntityManager {
             }
 
             if (!e.updated) {
-                e.preUpdate(map);
-                e.update(map);
-                e.postUpdate(map);
+                e.preUpdate();
+                e.update();
+                e.postUpdate();
                 e.updated = true;
             } else if (!map.isCamMoving()) {
-                e.preUpdate(map);
-                e.update(map);
-                e.postUpdate(map);
+                e.preUpdate();
+                e.update();
+                e.postUpdate();
             }
         }
     }
@@ -61,8 +61,10 @@ public class EntityManager {
     }
 
     public void addEntity(Entity e) {
+        e.map = map;
+
         invisibleEntities.add(e);
-        e.onAdded(map);
+        e.onAdded();
     }
 
     public void clear() {
