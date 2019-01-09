@@ -1,28 +1,55 @@
 package game.main.state.play.map.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.JsonValue;
 import game.loader.resource.sprite_sheet.SpriteSheet;
 import game.main.Game;
 import game.main.state.play.map.dungeon.Lock;
 
 public class Door extends Entity {
+    public static float OPEN_SPEED = 2.5f;
+
     public SpriteSheet spriteSheet;
 
     public boolean horizontal;
     public boolean visible;
+    public float openTime;
 
     public Lock lock;
 
     public Door() {
-        hitbox.set(16, 16, 0, 0);
-
         visible = true;
     }
 
     @Override
     public void update() {
         super.update();
+
+        if (horizontal) {
+            hitbox.set(16, 8, 0, 0);
+        } else {
+            hitbox.set(8, 16, 0, 0);
+        }
+
+        if (visible) {
+            if (openTime < 1) {
+                openTime += Game.getDelta() * OPEN_SPEED;
+
+                if (openTime >= 1) {
+                    openTime = 1;
+                }
+            }
+        } else {
+            if (openTime > 0) {
+                openTime -= Game.getDelta() * OPEN_SPEED;
+
+                if (openTime <= 0) {
+                    openTime = 0;
+                }
+            }
+        }
 
         lock.update();
     }
@@ -31,18 +58,18 @@ public class Door extends Entity {
     public void render(SpriteBatch batch) {
         super.render(batch);
 
-        if (visible) {
-            if (horizontal) {
-                batch.draw(spriteSheet.sheet[0][0], x, y, 4, 4, 8, 8, 1, -1, 90);
-                batch.draw(spriteSheet.sheet[0][0], x, y + 8, 4, 4, 8, 8, -1, -1, 90);
-                batch.draw(spriteSheet.sheet[0][0], x + 8, y, 4, 4, 8, 8, 1, 1, 90);
-                batch.draw(spriteSheet.sheet[0][0], x + 8, y + 8, 4, 4, 8, 8, -1, 1, 90);
-            } else {
-                batch.draw(spriteSheet.sheet[0][0], x, y, 4, 4, 8, 8, 1, 1, 0);
-                batch.draw(spriteSheet.sheet[0][0], x + 8, y, 4, 4, 8, 8, -1, 1, 0);
-                batch.draw(spriteSheet.sheet[0][0], x, y + 8, 4, 4, 8, 8, 1, -1, 0);
-                batch.draw(spriteSheet.sheet[0][0], x + 8, y + 8, 4, 4, 8, 8, -1, -1, 0);
-            }
+        TextureRegion image = spriteSheet.sheet[MathUtils.floor(openTime * (spriteSheet.sheet.length - 1))][0];
+
+        if (horizontal) {
+            batch.draw(image, x, y, 4, 4, 8, 8, -1, 1, 270);
+            batch.draw(image, x, y + 8, 4, 4, 8, 8, 1, 1, 270);
+            batch.draw(image, x + 8, y, 4, 4, 8, 8, 1, 1, 90);
+            batch.draw(image, x + 8, y + 8, 4, 4, 8, 8, -1, 1, 90);
+        } else {
+            batch.draw(image, x, y, 4, 4, 8, 8, 1, 1, 0);
+            batch.draw(image, x + 8, y, 4, 4, 8, 8, -1, 1, 0);
+            batch.draw(image, x, y + 8, 4, 4, 8, 8, -1, 1, 180);
+            batch.draw(image, x + 8, y + 8, 4, 4, 8, 8, 1, 1, 180);
         }
     }
 

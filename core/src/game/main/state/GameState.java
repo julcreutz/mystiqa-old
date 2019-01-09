@@ -34,7 +34,7 @@ public abstract class GameState {
         buffer.begin();
 
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClearColor(0, 0, 0, 0);
 
         batch.setProjectionMatrix(cam.combined);
         batch.begin();
@@ -44,7 +44,7 @@ public abstract class GameState {
         buffer.end();
 
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClearColor(0, 0, 0, 0);
 
         batch.setProjectionMatrix(cam.combined);
 
