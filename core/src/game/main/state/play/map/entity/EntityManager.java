@@ -5,6 +5,7 @@ import com.badlogic.gdx.utils.Array;
 import game.main.state.play.map.Map;
 import game.main.state.play.map.entity.Entity;
 
+import java.util.Comparator;
 import java.util.Iterator;
 
 public class EntityManager {
@@ -50,6 +51,14 @@ public class EntityManager {
                 e.postUpdate();
             }
         }
+
+        // Sort entities by y to create perspective
+        entities.sort(new Comparator<Entity>() {
+            @Override
+            public int compare(Entity o1, Entity o2) {
+                return Float.compare(o2.getSortLevel(), o1.getSortLevel());
+            }
+        });
     }
 
     public void render(SpriteBatch batch) {

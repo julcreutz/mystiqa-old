@@ -13,7 +13,7 @@ import game.main.stat.StatManager;
 import game.main.state.play.map.Map;
 import game.main.state.play.map.tile.Tile;
 
-public class Entity implements Serializable {
+public abstract class Entity implements Serializable {
     /**
      * Describes a rectangle offset by specified x and y values relative to
      * a given entity. Uses {@link Rectangle} class to represent the rectangle itself.
@@ -65,7 +65,7 @@ public class Entity implements Serializable {
          * @return whether rectangle overlaps
          */
         public boolean overlaps(Rectangle rect) {
-            return width() > 0 && height() > 0 && rect.width > 0 && rect.height > 0 && this.rect.overlaps(rect);
+            return getWidth() > 0 && getHeight() > 0 && rect.width > 0 && rect.height > 0 && this.rect.overlaps(rect);
         }
 
         /**
@@ -91,33 +91,33 @@ public class Entity implements Serializable {
         }
 
         /** @return x position of rectangle */
-        public float x() {
+        public float getX() {
             return rect.x;
         }
 
         /** @return y position of rectangle */
-        public float y() {
+        public float getY() {
             return rect.y;
         }
 
         /** @return width of rectangle */
-        public float width() {
+        public float getWidth() {
             return rect.width;
         }
 
         /** @return height of rectangle */
-        public float height() {
+        public float getHeight() {
             return rect.height;
         }
 
         /** @return x center position of rectangle */
-        public float centerX() {
-            return x() + width() * .5f;
+        public float getCenterX() {
+            return getX() + getWidth() * .5f;
         }
 
         /** @return y center position of rectangle */
-        public float centerY() {
-            return y() + height() * .5f;
+        public float getCenterY() {
+            return getY() + getHeight() * .5f;
         }
 
         /**
@@ -159,6 +159,9 @@ public class Entity implements Serializable {
 
     /** Represents entity physical dimensions mainly used for collision detection. */
     public Hitbox hitbox;
+
+    /** Entity name used in checking. */
+    public String name;
 
     public boolean updated;
 
@@ -202,7 +205,7 @@ public class Entity implements Serializable {
             if (isAttacking() && isOnGround()) {
                 for (Entity e : map.entities.entities) {
                     if (e != this) {
-                        if (!e.isHit() && e.isOnGround() && isHostile(e)) {
+                        if (!e.isHit() && e.isOnGround() && isHostile(e) && e.isAttackable()) {
                             boolean contains = hit.contains(e, true);
 
                             if (e.isBlocking()) {
@@ -264,9 +267,9 @@ public class Entity implements Serializable {
             }
         }
 
-        if (isPushing() && isOnGround()) {
+        if (isPushable() && isOnGround()) {
             for (Entity e : map.entities.entities) {
-                if (e != this && e.isPushable() && hitbox.overlaps(e) && e.isOnGround()) {
+                if (e != this && e.isPushing() && hitbox.overlaps(e) && e.isOnGround()) {
                     float a = new Vector2(e.x, e.y).sub(x, y).angle();
 
                     velX += MathUtils.cosDeg(a + 180) * 16f;
@@ -295,7 +298,7 @@ public class Entity implements Serializable {
 
                     if (solidTile != null && hitbox.overlaps(solidTile)) {
                         if (velX > 0) {
-                            this.x = solidTile.x - hitbox.width() - hitbox.offsetX;
+                            this.x = solidTile.x - hitbox.getWidth() - hitbox.offsetX;
                         } else if (velX < 0) {
                             this.x = solidTile.x + solidTile.width - hitbox.offsetX;
                         }
@@ -303,6 +306,18 @@ public class Entity implements Serializable {
                         velX = 0;
                     }
                 }
+            }
+        }
+
+        for (Entity e : map.entities.entities) {
+            if (e != this && e.isSolid() && e.hitbox.overlaps(this)) {
+                if (velX > 0) {
+                    this.x = e.hitbox.getX() - hitbox.getWidth() - hitbox.offsetX;
+                } else if (velX < 0) {
+                    this.x = e.hitbox.getX() + e.hitbox.getWidth() - hitbox.offsetX;
+                }
+
+                velX = 0;
             }
         }
 
@@ -317,7 +332,7 @@ public class Entity implements Serializable {
 
                     if (solidTile != null && hitbox.overlaps(solidTile)) {
                         if (velY > 0) {
-                            this.y = solidTile.y - hitbox.height() - hitbox.offsetY;
+                            this.y = solidTile.y - hitbox.getHeight() - hitbox.offsetY;
                         } else if (velY < 0) {
                             this.y = solidTile.y + solidTile.height - hitbox.offsetY;
                         }
@@ -325,6 +340,18 @@ public class Entity implements Serializable {
                         velY = 0;
                     }
                 }
+            }
+        }
+
+        for (Entity e : map.entities.entities) {
+            if (e != this && e.isSolid() && e.hitbox.overlaps(this)) {
+                if (velY > 0) {
+                    this.y = e.hitbox.getY() - hitbox.getHeight() - hitbox.offsetY;
+                } else if (velY < 0) {
+                    this.y = e.hitbox.getY() + e.hitbox.getHeight() - hitbox.offsetY;
+                }
+
+                velY = 0;
             }
         }
 
@@ -391,9 +418,13 @@ public class Entity implements Serializable {
         return hitTime > 0;
     }
 
-    /** @return whether entity is dead */
+    /**
+     * Returns whether entity is dead. If max health is zero, false is always returned.
+     *
+     * @return whether entity is dead
+     */
     public boolean isDead() {
-        return health <= 0;
+        return stats.count(Stat.Type.HEALTH) > 0 && health <= 0;
     }
 
     /** @return whether entity is standing on ground */
@@ -414,8 +445,8 @@ public class Entity implements Serializable {
     }
 
     public Tile tileAt() {
-        int x = MathUtils.floor((hitbox.centerX()) / 8f);
-        int y = MathUtils.floor(hitbox.y() / 8f);
+        int x = MathUtils.floor((hitbox.getCenterX()) / 8f);
+        int y = MathUtils.floor(hitbox.getY() / 8f);
 
         if (map.tiles.inBounds(x, y)) {
             return map.tiles.at(x, y, 0);
@@ -438,8 +469,41 @@ public class Entity implements Serializable {
         return true;
     }
 
+    /**
+     * Returns whether entity is solid. Being solid means other entities pushed out similarly to how solid tiles
+     * function.
+     *
+     * @return whether entity is solid
+     */
+    public boolean isSolid() {
+        return false;
+    }
+
+    /** @return whether entity is able to be attacked by other entities */
+    public boolean isAttackable() {
+        return true;
+    }
+
+    /**
+     * Returns entity sorting value to create perspective. Sorting is done by {@link EntityManager}.
+     * See {@link EntityManager#update()} for more details on sorting.
+     *
+     * To have entity below all other entities, use {@link Float#MAX_VALUE} or other large values.
+     * To have entity above all other entities, use {@link Float#MIN_VALUE} or other small values.
+     *
+     * @return entity sort level
+     */
+    public float getSortLevel() {
+        return hitbox.getY();
+    }
+
     @Override
     public void deserialize(JsonValue json) {
+        JsonValue name = json.get("name");
+        if (name != null) {
+            this.name = name.asString();
+        }
+
         JsonValue stats = json.get("stats");
         if (stats != null) {
             this.stats.deserialize(stats);

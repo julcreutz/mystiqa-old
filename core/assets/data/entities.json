@@ -1,6 +1,7 @@
 {
   "Human": {
     "Humanoid": {
+      "name": "Human",
       "stats": [
         {
           "type": "HEALTH",
@@ -23,6 +24,7 @@
   },
   "Orc": {
     "Humanoid": {
+      "name": "Orc",
       "stats": [
         {
           "type": "HEALTH",
@@ -49,6 +51,7 @@
   },
   "GreenSlime": {
     "Slime": {
+      "name": "GreenSlime",
       "stats": [
         {
           "type": "HEALTH",
@@ -75,6 +78,7 @@
   },
   "SmallGreenSlime": {
     "Slime": {
+      "name": "SmallGreenSlime",
       "stats": [
         {
           "type": "HEALTH",
@@ -91,6 +95,12 @@
       ],
       "alignment": "EVIL",
       "spriteSheet": "SmallGreenSlime"
+    }
+  },
+  "DungeonDoor": {
+    "Door": {
+      "name": "DungeonDoor",
+      "spriteSheet": "DungeonDoor"
     }
   }
 }

@@ -6,7 +6,13 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import game.loader.Serializable;
 import game.main.Game;
+import game.main.item.equipment.armor.BodyArmor;
+import game.main.item.equipment.armor.FeetArmor;
+import game.main.item.equipment.hand.main.MainHand;
+import game.main.item.equipment.hand.off.OffHand;
+import game.main.state.play.Play;
 import game.main.state.play.map.Map;
+import game.main.state.play.map.entity.Door;
 import game.main.state.play.map.entity.Entity;
 import game.main.state.play.map.entity.Humanoid;
 import game.main.state.play.map.tile.Tile;
@@ -18,18 +24,36 @@ public class Dungeon extends Map {
             VERTICAL
         }
 
+        public Dungeon map;
+
         public Rectangle rect;
 
         public Room parent;
         public Array<Room> children;
 
-        public Room(int x, int y, int w, int h) {
+        public Rectangle bounds;
+        public Array<Entity> monsters;
+
+        public Room(Dungeon map, int x, int y, int w, int h) {
+            this.map = map;
+
             this.rect = new Rectangle(x, y, w, h);
             children = new Array<Room>();
+
+            bounds = new Rectangle(0, 0, Game.WIDTH - 8, Game.HEIGHT - 8);
+            monsters = new Array<Entity>();
         }
 
-        public Room() {
-            this(0, 0, 0, 0);
+        public Room(Dungeon map) {
+            this(map, 0, 0, 0, 0);
+        }
+
+        public void update() {
+            for (Entity e : map.entities.entities) {
+                if (monsters.contains(e, true) && e.isDead() && !e.isHit()) {
+                    monsters.removeValue(e, true);
+                }
+            }
         }
 
         public int x0() {
@@ -107,6 +131,10 @@ public class Dungeon extends Map {
 
             return null;
         }
+
+        public Rectangle getBounds() {
+            return bounds.setPosition(x0() * 8 + 4, y0() * 8 + 4);
+        }
     }
 
     public static class Template implements Serializable {
@@ -150,14 +178,25 @@ public class Dungeon extends Map {
 
     public int[] roomCount;
 
-    public String groundTile;
-    public String wallTile;
+    public String ground;
+    public String wall;
+
+    public String door;
 
     public String[] monsters;
 
     public Template[] templates;
 
     public Array<Room> rooms;
+
+    @Override
+    public void update(Play play) {
+        super.update(play);
+
+        if (getCurrentRoom() != null) {
+            getCurrentRoom().update();
+        }
+    }
 
     @Override
     public void generate() {
@@ -168,7 +207,7 @@ public class Dungeon extends Map {
 
         rooms = new Array<Room>();
 
-        rooms.add(new Room(Game.RANDOM.nextInt(WIDTH), Game.RANDOM.nextInt(HEIGHT), 1, 1));
+        rooms.add(new Room(this, Game.RANDOM.nextInt(WIDTH), Game.RANDOM.nextInt(HEIGHT), 1, 1));
 
         while (true) {
             int size = rooms.size;
@@ -182,7 +221,7 @@ public class Dungeon extends Map {
 
                 Room r = rooms.get(i);
 
-                Room room = new Room();
+                Room room = new Room(this);
 
                 room.rect.width = 1;
                 room.rect.height = 1;
@@ -263,18 +302,22 @@ public class Dungeon extends Map {
 
                         switch (t.template[x][y]) {
                             case '#':
-                                tiles.set(Game.TILES.load(wallTile), xx, yy, 0);
+                                tiles.set(Game.TILES.load(wall), xx, yy, 0);
                                 break;
                             case ' ':
-                                tiles.set(Game.TILES.load(groundTile), xx, yy, 0);
+                                tiles.set(Game.TILES.load(ground), xx, yy, 0);
                                 break;
                             case 'm':
-                                tiles.set(Game.TILES.load(groundTile), xx, yy, 0);
+                                tiles.set(Game.TILES.load(ground), xx, yy, 0);
 
                                 Entity e = Game.ENTITIES.load(monsters[Game.RANDOM.nextInt(monsters.length)]);
+
                                 e.x = xx * 8;
                                 e.y = yy * 8;
+
                                 entities.addEntity(e);
+
+                                r.monsters.add(e);
 
                                 break;
                         }
@@ -301,12 +344,49 @@ public class Dungeon extends Map {
 
                             Tile t = tiles.at(xxx, yyy, 0);
 
-                            if (t != null && t.name.equals(wallTile)) {
-                                tiles.set(Game.TILES.load(groundTile), xxx, yyy, 0);
+                            if (t != null && t.name.equals(wall)) {
+                                tiles.set(Game.TILES.load(ground), xxx, yyy, 0);
                             }
                         }
                     }
                 }
+            }
+        }
+
+        // Add doors and lock them
+        for (Room r : rooms) {
+            for (Room child : r.children) {
+                Door d = (Door) Game.ENTITIES.load(door);
+
+                if (child.x0() != r.x0()) {
+                    d.y = r.getCenterY() * 8 - 8;
+                    d.horizontal = true;
+
+                    if (child.x0() > r.x0()) {
+                        d.x = r.x1() * 8 - 8;
+                    } else {
+                        d.x = r.x0() * 8 - 8;
+                    }
+                }
+
+                if (child.y0() != r.y0()) {
+                    d.x = r.getCenterX() * 8 - 8;
+
+                    if (child.y0() > r.y0()) {
+                        d.y = r.y1() * 8 - 8;
+                    } else {
+                        d.y = r.y0() * 8 - 8;
+                    }
+                }
+
+                Lock l = new MonsterLock();
+
+                l.door = d;
+                l.room = r;
+
+                d.lock = l;
+
+                entities.addEntity(d);
             }
         }
     }
@@ -320,8 +400,24 @@ public class Dungeon extends Map {
         player.x = r.getCenterX() * 8 - 4;
         player.y = r.getCenterY() * 8 - 4;
 
+        player.feetArmor = (FeetArmor) Game.ITEMS.load("FeetArmor");
+        player.bodyArmor = (BodyArmor) Game.ITEMS.load("BodyArmor");
+
+        player.mainHand = (MainHand) Game.ITEMS.load("Sword");
+        player.offHand = (OffHand) Game.ITEMS.load("Shield");
+
         this.player = player;
         entities.addEntity(player);
+    }
+
+    public Room getCurrentRoom() {
+        for (Room r : rooms) {
+            if (player.hitbox.overlaps(r.getBounds())) {
+                return r;
+            }
+        }
+
+        return null;
     }
 
     @Override
@@ -331,14 +427,19 @@ public class Dungeon extends Map {
             this.roomCount = roomCount.asIntArray();
         }
 
-        JsonValue groundTile = json.get("groundTile");
-        if (groundTile != null) {
-            this.groundTile = groundTile.asString();
+        JsonValue ground = json.get("ground");
+        if (ground != null) {
+            this.ground = ground.asString();
         }
 
-        JsonValue wallTile = json.get("wallTile");
-        if (wallTile != null) {
-            this.wallTile = wallTile.asString();
+        JsonValue wall = json.get("wall");
+        if (wall != null) {
+            this.wall = wall.asString();
+        }
+
+        JsonValue door = json.get("door");
+        if (door != null) {
+            this.door = door.asString();
         }
 
         JsonValue monsters = json.get("monsters");

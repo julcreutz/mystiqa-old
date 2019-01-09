@@ -36,7 +36,7 @@ public abstract class Tile implements Serializable {
          * @param e entity to render relative to
          */
         public void render(SpriteBatch batch, Entity e) {
-            batch.draw(image, e.hitbox.centerX() - image.getRegionWidth() * .5f, e.hitbox.y() - image.getRegionHeight() * .5f);
+            batch.draw(image, e.hitbox.getCenterX() - image.getRegionWidth() * .5f, e.hitbox.getY() - image.getRegionHeight() * .5f);
         }
 
         @Override
