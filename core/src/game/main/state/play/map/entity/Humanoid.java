@@ -469,8 +469,6 @@ public class Humanoid extends Entity {
         if (offHand != null && !offHand.renderBehind) {
             offHand.render(batch, this);
         }
-
-        batch.setShader(null);
     }
 
     @Override

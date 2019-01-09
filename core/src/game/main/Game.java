@@ -11,6 +11,7 @@ import game.loader.instance.EntityLoader;
 import game.loader.instance.ItemLoader;
 import game.loader.instance.MapLoader;
 import game.loader.resource.color.ColorLoader;
+import game.loader.resource.shader.ShaderLoader;
 import game.loader.resource.sprite_sheet.SpriteSheetLoader;
 import game.loader.instance.TileLoader;
 import game.main.state.play.Play;
@@ -28,6 +29,7 @@ public class Game extends ApplicationAdapter {
 
 	public static final Random RANDOM = new Random();
 
+	public static final ShaderLoader SHADERS = new ShaderLoader();
 	public static final SpriteSheetLoader SPRITE_SHEETS = new SpriteSheetLoader();
 	public static final ColorLoader COLORS = new ColorLoader();
 	public static final TileLoader TILES = new TileLoader();
@@ -52,6 +54,7 @@ public class Game extends ApplicationAdapter {
 	public void create() {
 		ShaderProgram.pedantic = false;
 
+		SHADERS.load(Gdx.files.internal("data/shaders.json"));
 		SPRITE_SHEETS.load(Gdx.files.internal("data/sprite_sheets.json"));
 		COLORS.load(Gdx.files.internal("data/colors.json"));
 		TILES.load(Gdx.files.internal("data/tiles.json"));

@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import game.loader.Serializable;
 import game.main.Game;
 import game.main.state.play.map.Map;
+import game.main.state.play.map.entity.Entity;
 import game.main.state.play.map.entity.Humanoid;
 import game.main.state.play.map.tile.Tile;
 
@@ -147,16 +148,24 @@ public class Dungeon extends Map {
     public static final int WIDTH = 16;
     public static final int HEIGHT = 8;
 
-    public static final int ROOMS = 10;
+    public int[] roomCount;
+
+    public String groundTile;
+    public String wallTile;
+
+    public String[] monsters;
+
+    public Template[] templates;
 
     public Array<Room> rooms;
-    public Template[] templates;
 
     @Override
     public void generate() {
         super.generate();
 
         // Generate room layout
+        int roomCount = this.roomCount[Game.RANDOM.nextInt(this.roomCount.length)];
+
         rooms = new Array<Room>();
 
         rooms.add(new Room(Game.RANDOM.nextInt(WIDTH), Game.RANDOM.nextInt(HEIGHT), 1, 1));
@@ -166,7 +175,7 @@ public class Dungeon extends Map {
             boolean done = false;
 
             for (int i = 0; i < size; i++) {
-                if (rooms.size >= ROOMS) {
+                if (rooms.size >= roomCount) {
                     done = true;
                     break;
                 }
@@ -233,6 +242,7 @@ public class Dungeon extends Map {
         }
 
         tiles.initSize(WIDTH * 16, HEIGHT * 8, 8);
+        entities.clear();
 
         // Apply templates
         for (Room r : rooms) {
@@ -253,10 +263,19 @@ public class Dungeon extends Map {
 
                         switch (t.template[x][y]) {
                             case '#':
-                                tiles.set(Game.TILES.load("DungeonWall"), xx, yy, 0);
+                                tiles.set(Game.TILES.load(wallTile), xx, yy, 0);
                                 break;
                             case ' ':
-                                tiles.set(Game.TILES.load("DungeonGround"), xx, yy, 0);
+                                tiles.set(Game.TILES.load(groundTile), xx, yy, 0);
+                                break;
+                            case 'm':
+                                tiles.set(Game.TILES.load(groundTile), xx, yy, 0);
+
+                                Entity e = Game.ENTITIES.load(monsters[Game.RANDOM.nextInt(monsters.length)]);
+                                e.x = xx * 8;
+                                e.y = yy * 8;
+                                entities.addEntity(e);
+
                                 break;
                         }
                     }
@@ -282,8 +301,8 @@ public class Dungeon extends Map {
 
                             Tile t = tiles.at(xxx, yyy, 0);
 
-                            if (t != null && t.name.equals("DungeonWall")) {
-                                tiles.set(Game.TILES.load("DungeonGround"), xxx, yyy, 0);
+                            if (t != null && t.name.equals(wallTile)) {
+                                tiles.set(Game.TILES.load(groundTile), xxx, yyy, 0);
                             }
                         }
                     }
@@ -298,8 +317,8 @@ public class Dungeon extends Map {
 
         Humanoid player = (Humanoid) Game.ENTITIES.load("Human");
         player.controlledByPlayer = true;
-        player.x = (r.rect.x + r.rect.width * .5f) * 16f * 8f;
-        player.y = (r.rect.y + r.rect.height * .5f) * 8f * 8f;
+        player.x = r.getCenterX() * 8 - 4;
+        player.y = r.getCenterY() * 8 - 4;
 
         this.player = player;
         entities.addEntity(player);
@@ -307,6 +326,26 @@ public class Dungeon extends Map {
 
     @Override
     public void deserialize(JsonValue json) {
+        JsonValue roomCount = json.get("roomCount");
+        if (roomCount != null) {
+            this.roomCount = roomCount.asIntArray();
+        }
+
+        JsonValue groundTile = json.get("groundTile");
+        if (groundTile != null) {
+            this.groundTile = groundTile.asString();
+        }
+
+        JsonValue wallTile = json.get("wallTile");
+        if (wallTile != null) {
+            this.wallTile = wallTile.asString();
+        }
+
+        JsonValue monsters = json.get("monsters");
+        if (monsters != null) {
+            this.monsters = monsters.asStringArray();
+        }
+
         JsonValue templates = json.get("templates");
         if (templates != null) {
             this.templates = new Template[templates.size];

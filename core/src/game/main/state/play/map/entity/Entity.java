@@ -11,10 +11,130 @@ import game.main.Game;
 import game.main.stat.Stat;
 import game.main.stat.StatManager;
 import game.main.state.play.map.Map;
-import game.main.state.play.map.tile.TileOverlay;
 import game.main.state.play.map.tile.Tile;
 
 public class Entity implements Serializable {
+    /**
+     * Describes a rectangle offset by specified x and y values relative to
+     * a given entity. Uses {@link Rectangle} class to represent the rectangle itself.
+     *
+     * @see Rectangle
+     */
+    public class Hitbox {
+        /** Holds reference of entity this applies to. */
+        public Entity e;
+
+        /** The rectangle itself. */
+        public Rectangle rect;
+
+        /** Value the rectangle is offset by on x axis relative to an entity. */
+        public float offsetX;
+
+        /** Value of the rectangle is offset by on y axis relative to an entity. */
+        public float offsetY;
+
+        /**
+         * Constructs hitbox initializing rectangle to prevent
+         * potential {@link java.lang.NullPointerException}.
+         */
+        public Hitbox(Entity e) {
+            this.e = e;
+            rect = new Rectangle();
+        }
+
+        /**
+         * Positions rectangle relative to entity using offsets and two additional offset values.
+         *
+         * @param offsetX additional x offset
+         * @param offsetY additional y offset
+         */
+        public void position(float offsetX, float offsetY) {
+            rect.setPosition(e.x + this.offsetX + offsetX, e.y + this.offsetY + offsetY);
+        }
+
+        /** Positions rectangle relative to entity using offsets. */
+        public void position() {
+            position(0, 0);
+        }
+
+        /**
+         * Checks whether specified rectangle overlaps.
+         * Only works if both rectangle's width and height are greater than zero.
+         *
+         * @param rect rectangle to check overlap
+         * @return whether rectangle overlaps
+         */
+        public boolean overlaps(Rectangle rect) {
+            return width() > 0 && height() > 0 && rect.width > 0 && rect.height > 0 && this.rect.overlaps(rect);
+        }
+
+        /**
+         * Convenience method to check whether specified hitbox overlaps.
+         * See {@link #overlaps(Rectangle)} for more details.
+         *
+         * @param hitbox hitbox to check overlap
+         * @return whether hitbox overlaps
+         */
+        public boolean overlaps(Hitbox hitbox) {
+            return overlaps(hitbox.rect);
+        }
+
+        /**
+         * Convenience method to check whether specified entity's hitbox overlaps.
+         * See {@link #overlaps(Rectangle)} for more details.
+         *
+         * @param e entity to check overlap
+         * @return whether hitbox overlaps
+         */
+        public boolean overlaps(Entity e) {
+            return overlaps(e.hitbox);
+        }
+
+        /** @return x position of rectangle */
+        public float x() {
+            return rect.x;
+        }
+
+        /** @return y position of rectangle */
+        public float y() {
+            return rect.y;
+        }
+
+        /** @return width of rectangle */
+        public float width() {
+            return rect.width;
+        }
+
+        /** @return height of rectangle */
+        public float height() {
+            return rect.height;
+        }
+
+        /** @return x center position of rectangle */
+        public float centerX() {
+            return x() + width() * .5f;
+        }
+
+        /** @return y center position of rectangle */
+        public float centerY() {
+            return y() + height() * .5f;
+        }
+
+        /**
+         * Convenience method to initialize all important values at once.
+         *
+         * @param width width of rectangle
+         * @param height height of rectangle
+         * @param offsetX x offset of rectangle relative to entity
+         * @param offsetY y offset of rectangle relative to entity
+         */
+        public void set(float width, float height, float offsetX, float offsetY) {
+            rect.setSize(width, height);
+            this.offsetX = offsetX;
+            this.offsetY = offsetY;
+        }
+    }
+
     public enum Alignment {
         GOOD,
         EVIL;
@@ -56,7 +176,7 @@ public class Entity implements Serializable {
 
     public boolean onTeleport;
 
-    public TileOverlay overlay;
+    public Tile.Overlay overlay;
 
     public Entity() {
         hitbox = new Hitbox(this);
@@ -219,6 +339,9 @@ public class Entity implements Serializable {
     }
 
     public void preRender(SpriteBatch batch) {
+        if (isHit()) {
+            batch.setShader(Game.SHADERS.load("HitFlash").shader);
+        }
     }
 
     public void render(SpriteBatch batch) {
@@ -226,6 +349,8 @@ public class Entity implements Serializable {
     }
 
     public void postRender(SpriteBatch batch) {
+        batch.setShader(null);
+
         if (overlay != null) {
             overlay.render(batch, this);
         }

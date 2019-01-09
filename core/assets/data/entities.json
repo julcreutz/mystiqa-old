@@ -18,8 +18,7 @@
       "alignment": "GOOD",
       "feet": "HumanFeet",
       "body": "HumanBody",
-      "head": "HumanHead",
-      "colors": ["Black", "Peach"]
+      "head": "HumanHead"
     }
   },
   "Orc": {
@@ -42,7 +41,6 @@
       "feet": "HumanFeet",
       "body": "HumanBody",
       "head": "HumanHead",
-      "colors": ["Black", "Olive"],
       "mainHand": "Sword",
       "offHand": "Shield",
       "bodyArmor": "BodyArmor",
@@ -66,8 +64,7 @@
         }
       ],
       "alignment": "EVIL",
-      "sheet": "Slime",
-      "colors": ["Black", "Green"],
+      "spriteSheet": "GreenSlime",
       "splitInto": [
         ["SmallGreenSlime"],
         ["SmallGreenSlime", "SmallGreenSlime"],
@@ -93,11 +90,7 @@
         }
       ],
       "alignment": "EVIL",
-      "sheet": "SmallSlime",
-      "colors": [
-        "Black",
-        "Green"
-      ]
+      "spriteSheet": "SmallGreenSlime"
     }
   }
 }

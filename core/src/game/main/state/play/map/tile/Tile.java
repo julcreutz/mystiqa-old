@@ -2,13 +2,52 @@ package game.main.state.play.map.tile;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.JsonValue;
 import game.loader.Serializable;
 import game.main.Game;
 import game.main.state.play.map.Map;
+import game.main.state.play.map.entity.Entity;
 
 public abstract class Tile implements Serializable {
+    /**
+     * Represents a property of a {@link Tile}. Overlays are rendered when an {@link Entity} walks
+     * over the tile this belongs to.
+     *
+     * This can create interesting effects, e.g. tall grass.
+     */
+    public class Overlay implements Serializable {
+        /** Image to be rendered. */
+        public TextureRegion image;
+
+        /**
+         * Constructs new instance and directly deserializes it with given json value.
+         *
+         * @param json json value to deserialize from
+         */
+        public Overlay(JsonValue json) {
+            deserialize(json);
+        }
+
+        /**
+         * Renders colored overlay image relative to specified entity. It's positioned
+         * relative to the entity's hitbox center.
+         *
+         * @param batch sprite batch to render to
+         * @param e entity to render relative to
+         */
+        public void render(SpriteBatch batch, Entity e) {
+            batch.draw(image, e.hitbox.centerX() - image.getRegionWidth() * .5f, e.hitbox.y() - image.getRegionHeight() * .5f);
+        }
+
+        @Override
+        public void deserialize(JsonValue json) {
+            JsonValue image = json.get("image");
+            if (image != null) {
+                this.image = Game.SPRITE_SHEETS.load(image.asString()).sheet[0][0];
+            }
+        }
+    }
+
     public String name;
 
     public boolean solid;
@@ -17,7 +56,7 @@ public abstract class Tile implements Serializable {
 
     public int forcedDirection;
 
-    public TileOverlay overlay;
+    public Overlay overlay;
 
     public TextureRegion image;
 
@@ -64,7 +103,7 @@ public abstract class Tile implements Serializable {
 
         JsonValue overlay = json.get("overlay");
         if (overlay != null) {
-            this.overlay = new TileOverlay(overlay);
+            this.overlay = new Overlay(overlay);
         }
     }
 }

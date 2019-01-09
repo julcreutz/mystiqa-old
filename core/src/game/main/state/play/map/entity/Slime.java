@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
+import game.loader.resource.sprite_sheet.SpriteSheet;
 import game.main.Game;
 import game.main.stat.Stat;
 
@@ -18,7 +19,7 @@ public class Slime extends Entity {
         JUMP_END
     }
 
-    public TextureRegion[][] sheet;
+    public SpriteSheet spriteSheet;
 
     public State state;
 
@@ -114,7 +115,7 @@ public class Slime extends Entity {
         super.render(batch);
 
         if (z > 0) {
-            batch.draw(sheet[1][1], x, y);
+            batch.draw(spriteSheet.sheet[1][1], x, y);
         }
 
         TextureRegion image = null;
@@ -122,14 +123,14 @@ public class Slime extends Entity {
         switch (state) {
             case RANDOM_MOVEMENT:
             case FOLLOW_PLAYER:
-                image = sheet[0][0];
+                image = spriteSheet.sheet[0][0];
                 break;
             case JUMP:
-                image = sheet[0][1];
+                image = spriteSheet.sheet[0][1];
                 break;
             case JUMP_BEGIN:
             case JUMP_END:
-                image = sheet[1][0];
+                image = spriteSheet.sheet[1][0];
                 break;
         }
 
@@ -191,8 +192,8 @@ public class Slime extends Entity {
     public void deserialize(JsonValue json) {
         super.deserialize(json);
 
-        if (json.has("sheet")) {
-            sheet = Game.SPRITE_SHEETS.load(json.getString("sheet")).sheet;
+        if (json.has("spriteSheet")) {
+            spriteSheet = Game.SPRITE_SHEETS.load(json.getString("spriteSheet"));
         }
 
         JsonValue splitInto = json.get("splitInto");
