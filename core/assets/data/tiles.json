@@ -174,5 +174,18 @@
       },
       "spriteSheet": "TallGrass"
     }
+  },
+  "DungeonWall": {
+    "ConnectedTile": {
+      "name": "DungeonWall",
+      "solid": true,
+      "spriteSheet": "DungeonWall"
+    }
+  },
+  "DungeonGround": {
+    "UnconnectedTile": {
+      "name": "DungeonGround",
+      "spriteSheet": "DungeonGround"
+    }
   }
 }

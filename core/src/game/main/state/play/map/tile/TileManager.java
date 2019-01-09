@@ -223,7 +223,7 @@ public class TileManager {
      * @param y y coordinate
      * @param z z coordinate
      * @param r area radius
-     * @return
+     * @return whether area is free
      */
     public boolean isFree(int x, int y, int z, int r) {
         return isFree(x - r, x + 1 + r, y - r, y + 1 + r, z, z + 1);

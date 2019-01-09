@@ -50,7 +50,6 @@ public abstract class Hand extends Equipment {
     }
 
     public void render(SpriteBatch batch, Humanoid h) {
-        batch.setShader(palette);
     }
 
     public boolean isUsing() {

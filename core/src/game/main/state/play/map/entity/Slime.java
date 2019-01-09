@@ -8,8 +8,6 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import game.main.Game;
 import game.main.stat.Stat;
-import game.main.stat.Stat.Type;
-import game.main.state.play.map.Map;
 
 public class Slime extends Entity {
     public enum State {
@@ -195,10 +193,6 @@ public class Slime extends Entity {
 
         if (json.has("sheet")) {
             sheet = Game.SPRITE_SHEETS.load(json.getString("sheet")).sheet;
-        }
-
-        if (json.has("colors")) {
-            colors = json.get("colors").asStringArray();
         }
 
         JsonValue splitInto = json.get("splitInto");

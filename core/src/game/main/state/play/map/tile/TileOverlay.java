@@ -2,7 +2,6 @@ package game.main.state.play.map.tile;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.JsonValue;
 import game.loader.Serializable;
 import game.main.Game;
@@ -17,8 +16,6 @@ import game.main.state.play.map.entity.Entity;
 public class TileOverlay implements Serializable {
     /** Image to be rendered. */
     public TextureRegion image;
-    /** Colors to be applied to rendered image. */
-    public ShaderProgram colors;
 
     /**
      * Constructs new instance and directly deserializes it with given json value.
@@ -37,8 +34,7 @@ public class TileOverlay implements Serializable {
      * @param e entity to render relative to
      */
     public void render(SpriteBatch batch, Entity e) {
-        batch.setShader(colors);
-        batch.draw(image, e.hitbox.getCenterX() - image.getRegionWidth() * .5f, e.hitbox.getY() - image.getRegionHeight() * .5f);
+        batch.draw(image, e.hitbox.centerX() - image.getRegionWidth() * .5f, e.hitbox.y() - image.getRegionHeight() * .5f);
     }
 
     @Override
@@ -46,11 +42,6 @@ public class TileOverlay implements Serializable {
         JsonValue image = json.get("image");
         if (image != null) {
             this.image = Game.SPRITE_SHEETS.load(image.asString()).sheet[0][0];
-        }
-
-        JsonValue colors = json.get("colors");
-        if (colors != null) {
-            this.colors = Game.PALETTES.load(colors.asStringArray());
         }
     }
 }

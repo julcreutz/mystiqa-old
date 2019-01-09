@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.MathUtils;
 import game.main.Game;
 import game.main.state.GameState;
 import game.main.state.play.map.Map;
-import game.main.state.play.map.dungeon.Dungeon;
 
 public class Play extends GameState {
     public Map map;
@@ -16,7 +15,7 @@ public class Play extends GameState {
     public void create() {
         super.create();
 
-        nextMap = Game.MAPS.load("Overworld");
+        nextMap = Game.MAPS.load("Dungeon");
         nextMap.generate();
         nextMap.placePlayer();
     }
@@ -26,7 +25,7 @@ public class Play extends GameState {
         super.update(g);
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
-            nextMap = new Dungeon();
+            nextMap = Game.MAPS.load("Dungeon");
             nextMap.generate();
             nextMap.placePlayer();
         }

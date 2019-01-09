@@ -1,7 +1,6 @@
 package game.main.state.play.map.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -16,6 +15,15 @@ import game.main.state.play.map.tile.TileOverlay;
 import game.main.state.play.map.tile.Tile;
 
 public class Entity implements Serializable {
+    public enum Alignment {
+        GOOD,
+        EVIL;
+
+        public boolean isHostile(Alignment a) {
+            return a != this;
+        }
+    }
+
     /** Map instance the entity is currently in. Always update if map is changed. */
     public Map map;
 
@@ -28,8 +36,6 @@ public class Entity implements Serializable {
     public float velX;
     /** Current y velocity in pixels per second. */
     public float velY;
-
-    public String[] colors;
 
     /** Represents entity physical dimensions mainly used for collision detection. */
     public Hitbox hitbox;
@@ -169,7 +175,7 @@ public class Entity implements Serializable {
 
                     if (solidTile != null && hitbox.overlaps(solidTile)) {
                         if (velX > 0) {
-                            this.x = solidTile.x - hitbox.getWidth() - hitbox.offsetX;
+                            this.x = solidTile.x - hitbox.width() - hitbox.offsetX;
                         } else if (velX < 0) {
                             this.x = solidTile.x + solidTile.width - hitbox.offsetX;
                         }
@@ -191,7 +197,7 @@ public class Entity implements Serializable {
 
                     if (solidTile != null && hitbox.overlaps(solidTile)) {
                         if (velY > 0) {
-                            this.y = solidTile.y - hitbox.getHeight() - hitbox.offsetY;
+                            this.y = solidTile.y - hitbox.height() - hitbox.offsetY;
                         } else if (velY < 0) {
                             this.y = solidTile.y + solidTile.height - hitbox.offsetY;
                         }
@@ -213,7 +219,6 @@ public class Entity implements Serializable {
     }
 
     public void preRender(SpriteBatch batch) {
-        batch.setShader(getColorShader());
     }
 
     public void render(SpriteBatch batch) {
@@ -271,14 +276,6 @@ public class Entity implements Serializable {
         return true;
     }
 
-    public String[] getColors() {
-        return isHit() ? new String[] {"White", "White"} : colors;
-    }
-
-    public ShaderProgram getColorShader() {
-        return Game.PALETTES.load(getColors());
-    }
-
     public Hitbox getAttackHitbox() {
         return null;
     }
@@ -292,8 +289,8 @@ public class Entity implements Serializable {
     }
 
     public Tile tileAt() {
-        int x = MathUtils.floor((hitbox.getCenterX()) / 8f);
-        int y = MathUtils.floor(hitbox.getY() / 8f);
+        int x = MathUtils.floor((hitbox.centerX()) / 8f);
+        int y = MathUtils.floor(hitbox.y() / 8f);
 
         if (map.tiles.inBounds(x, y)) {
             return map.tiles.at(x, y, 0);

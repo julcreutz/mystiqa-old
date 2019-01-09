@@ -15,19 +15,27 @@ public class ConnectedTile extends Tile {
 
         int n = 0;
 
-        if (connectsWith(map, x + 1, y, z)) {
+        boolean r = connectsWith(map, x + 1, y, z);
+
+        if (r) {
             n++;
         }
 
-        if (connectsWith(map, x, y + 1, z)) {
+        boolean l = connectsWith(map, x, y + 1, z);
+
+        if (l) {
             n += 2;
         }
 
-        if (connectsWith(map, x - 1, y, z)) {
+        boolean d = connectsWith(map, x - 1, y, z);
+
+        if (d) {
             n += 4;
         }
 
-        if (connectsWith(map, x, y - 1, z)) {
+        boolean u = connectsWith(map, x, y - 1, z);
+
+        if (u) {
             n += 8;
         }
 
@@ -80,6 +88,28 @@ public class ConnectedTile extends Tile {
             case 15:
                 image = spriteSheet[1][1];
                 break;
+        }
+
+        // Corner cases
+        boolean rd = connectsWith(map, x + 1, y - 1, 0);
+        boolean ld = connectsWith(map, x - 1, y - 1, 0);
+        boolean ru = connectsWith(map, x + 1, y + 1, 0);
+        boolean lu = connectsWith(map, x - 1, y + 1, 0);
+
+        if (r && l && d && u && !rd && ld && ru && lu) {
+            image = spriteSheet[4][0];
+        }
+
+        if (r && l && d && u && rd && !ld && ru && lu) {
+            image = spriteSheet[4][1];
+        }
+
+        if (r && l && d && u && rd && ld && !ru && lu) {
+            image = spriteSheet[4][2];
+        }
+
+        if (r && l && d && u && rd && ld && ru && !lu) {
+            image = spriteSheet[4][3];
         }
     }
 

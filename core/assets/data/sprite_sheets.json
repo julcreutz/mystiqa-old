@@ -129,18 +129,28 @@
     "splitW": 8,
     "splitH": 8
   },
-  "Slime": {
-    "path": "graphics/slime.png",
+  "GreenSlime": {
+    "path": "graphics/green_slime.png",
     "splitW": 8,
     "splitH": 8
   },
-  "SmallSlime": {
-    "path": "graphics/small_slime.png",
+  "SmallGreenSlime": {
+    "path": "graphics/small_green_slime.png",
     "splitW": 8,
     "splitH": 8
   },
   "Club": {
     "path": "graphics/club.png",
+    "splitW": 8,
+    "splitH": 8
+  },
+  "DungeonWall": {
+    "path": "graphics/dungeon_wall.png",
+    "splitW": 8,
+    "splitH": 8
+  },
+  "DungeonGround": {
+    "path": "graphics/dungeon_ground.png",
     "splitW": 8,
     "splitH": 8
   }

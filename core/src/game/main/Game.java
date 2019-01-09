@@ -10,8 +10,6 @@ import game.loader.*;
 import game.loader.instance.EntityLoader;
 import game.loader.instance.ItemLoader;
 import game.loader.instance.MapLoader;
-import game.loader.instance.StructureLoader;
-import game.loader.palette.PaletteShaderLoader;
 import game.loader.resource.color.ColorLoader;
 import game.loader.resource.sprite_sheet.SpriteSheetLoader;
 import game.loader.instance.TileLoader;
@@ -30,17 +28,15 @@ public class Game extends ApplicationAdapter {
 
 	public static final Random RANDOM = new Random();
 
-	public static final PaletteShaderLoader PALETTES = new PaletteShaderLoader();
 	public static final SpriteSheetLoader SPRITE_SHEETS = new SpriteSheetLoader();
 	public static final ColorLoader COLORS = new ColorLoader();
 	public static final TileLoader TILES = new TileLoader();
-	public static final StructureLoader STRUCTURES = new StructureLoader();
 	public static final ItemLoader ITEMS = new ItemLoader();
 	public static final EntityLoader ENTITIES = new EntityLoader();
 	public static final MapLoader MAPS = new MapLoader();
 
 	public static final Loader[] LOADERS = new Loader[] {
-			SPRITE_SHEETS, COLORS, TILES, STRUCTURES, ITEMS, ENTITIES, MAPS
+			SPRITE_SHEETS, COLORS, TILES, ITEMS, ENTITIES, MAPS
 	};
 
     public final Play PLAY = new Play();
@@ -59,7 +55,6 @@ public class Game extends ApplicationAdapter {
 		SPRITE_SHEETS.load(Gdx.files.internal("data/sprite_sheets.json"));
 		COLORS.load(Gdx.files.internal("data/colors.json"));
 		TILES.load(Gdx.files.internal("data/tiles.json"));
-		STRUCTURES.load(Gdx.files.internal("data/structures.json"));
 		ITEMS.load(Gdx.files.internal("data/items.json"));
 		ENTITIES.load(Gdx.files.internal("data/entities.json"));
 		MAPS.load(Gdx.files.internal("data/maps.json"));
