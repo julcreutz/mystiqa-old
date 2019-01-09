@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.JsonValue;
 import game.loader.resource.sprite_sheet.SpriteSheet;
 import game.main.Game;
-import game.main.state.play.map.dungeon.Lock;
+import game.main.state.play.map.dungeon.lock.Lock;
 
 public class Door extends Entity {
     public static float OPEN_SPEED = 2.5f;
@@ -20,18 +20,13 @@ public class Door extends Entity {
     public Lock lock;
 
     public Door() {
-        visible = true;
+        hitbox.set(16, 16, 0, 0);
+        visible = false;
     }
 
     @Override
     public void update() {
         super.update();
-
-        if (horizontal) {
-            hitbox.set(16, 8, 0, 0);
-        } else {
-            hitbox.set(8, 16, 0, 0);
-        }
 
         if (visible) {
             if (openTime < 1) {

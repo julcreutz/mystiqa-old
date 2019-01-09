@@ -12,6 +12,8 @@ import game.main.item.equipment.hand.main.MainHand;
 import game.main.item.equipment.hand.off.OffHand;
 import game.main.state.play.Play;
 import game.main.state.play.map.Map;
+import game.main.state.play.map.dungeon.lock.Lock;
+import game.main.state.play.map.dungeon.lock.MonsterLock;
 import game.main.state.play.map.entity.Door;
 import game.main.state.play.map.entity.Entity;
 import game.main.state.play.map.entity.Humanoid;
@@ -31,7 +33,10 @@ public class Dungeon extends Map {
         public Room parent;
         public Array<Room> children;
 
+        public Door doorToParent;
+
         public Rectangle bounds;
+        public Rectangle enterBounds;
         public Array<Entity> monsters;
 
         public Room(Dungeon map, int x, int y, int w, int h) {
@@ -40,7 +45,8 @@ public class Dungeon extends Map {
             this.rect = new Rectangle(x, y, w, h);
             children = new Array<Room>();
 
-            bounds = new Rectangle(0, 0, Game.WIDTH - 8, Game.HEIGHT - 8);
+            bounds = new Rectangle(0, 0, Game.WIDTH - 8, Game.HEIGHT - 8 - 8);
+            enterBounds = new Rectangle(0, 0, Game.WIDTH - 24, Game.HEIGHT - 8 - 24);
             monsters = new Array<Entity>();
         }
 
@@ -49,9 +55,19 @@ public class Dungeon extends Map {
         }
 
         public void update() {
+            // Remove dead monsters from tracking list
             for (Entity e : map.entities.entities) {
                 if (monsters.contains(e, true) && e.isDead() && !e.isHit()) {
                     monsters.removeValue(e, true);
+                }
+            }
+
+            // Close door behind player
+            if (containsPlayer() && doorToParent != null) {
+                if (monsters.size > 0 && !doorToParent.visible) {
+                    doorToParent.visible = true;
+                } else if (monsters.size == 0 && doorToParent.visible) {
+                    doorToParent.visible = false;
                 }
             }
         }
@@ -135,6 +151,14 @@ public class Dungeon extends Map {
         public Rectangle getBounds() {
             return bounds.setPosition(x0() * 8 + 4, y0() * 8 + 4);
         }
+
+        public Rectangle getEnterBounds() {
+            return enterBounds.setPosition(x0() * 8 + 12, y0() * 8 + 12);
+        }
+
+        public boolean containsPlayer() {
+            return map.player.hitbox.overlaps(getEnterBounds());
+        }
     }
 
     public static class Template implements Serializable {
@@ -202,7 +226,7 @@ public class Dungeon extends Map {
     public void generate() {
         super.generate();
 
-        // Generate room layout
+        // Generate parent layout
         int roomCount = this.roomCount[Game.RANDOM.nextInt(this.roomCount.length)];
 
         rooms = new Array<Room>();
@@ -382,11 +406,15 @@ public class Dungeon extends Map {
                 Lock l = new MonsterLock();
 
                 l.door = d;
-                l.room = r;
+
+                l.parent = r;
+                l.child = child;
 
                 d.lock = l;
 
                 entities.addEntity(d);
+
+                child.doorToParent = d;
             }
         }
     }
