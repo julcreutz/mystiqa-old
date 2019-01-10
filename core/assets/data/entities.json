@@ -102,5 +102,11 @@
       "name": "DungeonDoor",
       "spriteSheet": "DungeonDoor"
     }
+  },
+  "DungeonBlock": {
+    "Block": {
+      "name": "DungeonBlock",
+      "spriteSheet": "DungeonBlock"
+    }
   }
 }

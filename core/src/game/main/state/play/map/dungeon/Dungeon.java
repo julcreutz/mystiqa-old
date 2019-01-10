@@ -11,6 +11,7 @@ import game.main.item.equipment.hand.main.MainHand;
 import game.main.item.equipment.hand.off.OffHand;
 import game.main.state.play.Play;
 import game.main.state.play.map.Map;
+import game.main.state.play.map.dungeon.lock.BlockPushLock;
 import game.main.state.play.map.dungeon.lock.Lock;
 import game.main.state.play.map.dungeon.lock.MonsterLock;
 import game.main.state.play.map.entity.Door;
@@ -202,7 +203,8 @@ public class Dungeon extends Map {
     public int[] roomCount;
 
     public String ground;
-    public String wall;
+    public String outerWall;
+    public String innerWall;
 
     public String door;
 
@@ -325,23 +327,13 @@ public class Dungeon extends Map {
 
                         switch (t.template[x][y]) {
                             case '#':
-                                tiles.set(Game.TILES.load(wall), xx, yy, 0);
+                                tiles.set(Game.TILES.load(outerWall), xx, yy, 0);
+                                break;
+                            case '.':
+                                tiles.set(Game.TILES.load(innerWall), xx, yy, 0);
                                 break;
                             case ' ':
                                 tiles.set(Game.TILES.load(ground), xx, yy, 0);
-                                break;
-                            case 'm':
-                                tiles.set(Game.TILES.load(ground), xx, yy, 0);
-
-                                Entity e = Game.ENTITIES.load(monsters[Game.RANDOM.nextInt(monsters.length)]);
-
-                                e.x = xx * 8;
-                                e.y = yy * 8;
-
-                                entities.addEntity(e);
-
-                                r.monsters.add(e);
-
                                 break;
                         }
                     }
@@ -368,7 +360,7 @@ public class Dungeon extends Map {
 
                                     Tile t = tiles.at(xxx, yyy, 0);
 
-                                    if (t != null && t.name.equals(wall)) {
+                                    if (t != null && t.name.equals(outerWall)) {
                                         tiles.set(Game.TILES.load(ground), xxx, yyy, 0);
                                     }
                                 }
@@ -385,7 +377,7 @@ public class Dungeon extends Map {
 
                                     Tile t = tiles.at(xxx, yyy, 0);
 
-                                    if (t != null && t.name.equals(wall)) {
+                                    if (t != null && t.name.equals(outerWall)) {
                                         tiles.set(Game.TILES.load(ground), xxx, yyy, 0);
                                     }
                                 }
@@ -406,7 +398,7 @@ public class Dungeon extends Map {
 
                                     Tile t = tiles.at(xxx, yyy, 0);
 
-                                    if (t != null && t.name.equals(wall)) {
+                                    if (t != null && t.name.equals(outerWall)) {
                                         tiles.set(Game.TILES.load(ground), xxx, yyy, 0);
                                     }
                                 }
@@ -423,7 +415,7 @@ public class Dungeon extends Map {
 
                                     Tile t = tiles.at(xxx, yyy, 0);
 
-                                    if (t != null && t.name.equals(wall)) {
+                                    if (t != null && t.name.equals(outerWall)) {
                                         tiles.set(Game.TILES.load(ground), xxx, yyy, 0);
                                     }
                                 }
@@ -460,18 +452,25 @@ public class Dungeon extends Map {
                     }
                 }
 
-                Lock l = new MonsterLock();
+                Lock l;
 
+                if (Game.RANDOM.nextFloat() < 0) {
+                    l = new MonsterLock();
+                } else {
+                    l = new BlockPushLock();
+                }
+
+                l.dungeon = this;
                 l.door = d;
-
-                l.parent = r;
-                l.child = child;
+                l.room = r;
 
                 d.lock = l;
 
                 entities.addEntity(d);
 
                 child.doorToParent = d;
+
+                l.onLock();
             }
         }
     }
@@ -516,9 +515,14 @@ public class Dungeon extends Map {
             this.ground = ground.asString();
         }
 
-        JsonValue wall = json.get("wall");
-        if (wall != null) {
-            this.wall = wall.asString();
+        JsonValue outerWall = json.get("outerWall");
+        if (outerWall != null) {
+            this.outerWall = outerWall.asString();
+        }
+
+        JsonValue innerWall = json.get("innerWall");
+        if (innerWall != null) {
+            this.innerWall = innerWall.asString();
         }
 
         JsonValue door = json.get("door");

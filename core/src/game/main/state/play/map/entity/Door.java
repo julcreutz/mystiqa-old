@@ -84,7 +84,7 @@ public class Door extends Entity {
     }
 
     @Override
-    public boolean isAttackable() {
+    public boolean isVulnerable() {
         return false;
     }
 

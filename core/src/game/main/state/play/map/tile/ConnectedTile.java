@@ -1,5 +1,6 @@
 package game.main.state.play.map.tile;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.JsonValue;
 import game.main.Game;
@@ -8,6 +9,8 @@ import game.main.state.play.map.Map;
 public class ConnectedTile extends Tile {
     public TextureRegion[][] spriteSheet;
     public String[] connectWith;
+
+    public TextureRegion corner;
 
     @Override
     public void update(Map map) {
@@ -21,21 +24,21 @@ public class ConnectedTile extends Tile {
             n++;
         }
 
-        boolean l = connectsWith(map, x, y + 1, z);
+        boolean u = connectsWith(map, x, y + 1, z);
 
-        if (l) {
+        if (u) {
             n += 2;
         }
 
-        boolean d = connectsWith(map, x - 1, y, z);
+        boolean l = connectsWith(map, x - 1, y, z);
 
-        if (d) {
+        if (l) {
             n += 4;
         }
 
-        boolean u = connectsWith(map, x, y - 1, z);
+        boolean d = connectsWith(map, x, y - 1, z);
 
-        if (u) {
+        if (d) {
             n += 8;
         }
 
@@ -91,25 +94,36 @@ public class ConnectedTile extends Tile {
         }
 
         // Corner cases
+        corner = null;
+
         boolean rd = connectsWith(map, x + 1, y - 1, 0);
         boolean ld = connectsWith(map, x - 1, y - 1, 0);
         boolean ru = connectsWith(map, x + 1, y + 1, 0);
         boolean lu = connectsWith(map, x - 1, y + 1, 0);
 
-        if (r && l && d && u && !rd && ld && ru && lu) {
-            image = spriteSheet[4][0];
+        if (r && d && !rd) {
+            corner = spriteSheet[4][0];
         }
 
-        if (r && l && d && u && rd && !ld && ru && lu) {
-            image = spriteSheet[4][1];
+        if (l && d && !ld) {
+            corner = spriteSheet[4][1];
         }
 
-        if (r && l && d && u && rd && ld && !ru && lu) {
-            image = spriteSheet[4][2];
+        if (r && u && !ru) {
+            corner = spriteSheet[4][2];
         }
 
-        if (r && l && d && u && rd && ld && ru && !lu) {
-            image = spriteSheet[4][3];
+        if (l && u && !lu) {
+            corner = spriteSheet[4][3];
+        }
+    }
+
+    @Override
+    public void render(SpriteBatch batch) {
+        super.render(batch);
+
+        if (corner != null) {
+            batch.draw(corner, x * 8, y * 8 + z * 8);
         }
     }
 

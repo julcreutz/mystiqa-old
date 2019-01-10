@@ -187,5 +187,12 @@
       "name": "DungeonGround",
       "spriteSheet": "DungeonGround"
     }
+  },
+  "DungeonBlock": {
+    "ConnectedTile": {
+      "name": "DungeonBlock",
+      "solid": true,
+      "spriteSheet": "DungeonBlock"
+    }
   }
 }

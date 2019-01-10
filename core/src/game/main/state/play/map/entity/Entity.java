@@ -205,7 +205,7 @@ public abstract class Entity implements Serializable {
             if (isAttacking() && isOnGround()) {
                 for (Entity e : map.entities.entities) {
                     if (e != this) {
-                        if (!e.isHit() && e.isOnGround() && isHostile(e) && e.isAttackable()) {
+                        if (!e.isHit() && e.isOnGround() && isHostile(e) && e.isVulnerable()) {
                             boolean contains = hit.contains(e, true);
 
                             if (e.isBlocking()) {
@@ -267,13 +267,13 @@ public abstract class Entity implements Serializable {
             }
         }
 
-        if (isPushable() && isOnGround()) {
+        if (isPushing() && isOnGround()) {
             for (Entity e : map.entities.entities) {
-                if (e != this && e.isPushing() && hitbox.overlaps(e) && e.isOnGround()) {
+                if (e != this && e.isPushable() && hitbox.overlaps(e) && e.isOnGround()) {
                     float a = new Vector2(e.x, e.y).sub(x, y).angle();
 
-                    velX += MathUtils.cosDeg(a + 180) * 16f;
-                    velY += MathUtils.sinDeg(a + 180) * 16f;
+                    e.velX += MathUtils.cosDeg(a) * 16f;
+                    e.velY += MathUtils.sinDeg(a) * 16f;
                 }
             }
         }
@@ -480,7 +480,7 @@ public abstract class Entity implements Serializable {
     }
 
     /** @return whether entity is able to be attacked by other entities */
-    public boolean isAttackable() {
+    public boolean isVulnerable() {
         return true;
     }
 
