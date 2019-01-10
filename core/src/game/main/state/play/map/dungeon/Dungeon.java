@@ -6,8 +6,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import game.loader.Serializable;
 import game.main.Game;
-import game.main.item.equipment.armor.BodyArmor;
-import game.main.item.equipment.armor.FeetArmor;
+import game.main.item.equipment.armor.Armor;
 import game.main.item.equipment.hand.main.MainHand;
 import game.main.item.equipment.hand.off.OffHand;
 import game.main.state.play.Play;
@@ -357,19 +356,77 @@ public class Dungeon extends Map {
             for (int j = 0; j < r0.children.size; j++) {
                 Room r1 = r0.children.get(j);
 
-                for (float p = 0; p < 1; p += .01f) {
-                    int x = (int) MathUtils.lerp(r0.getCenterX(), r1.getCenterX(), p);
-                    int y = (int) MathUtils.lerp(r0.getCenterY(), r1.getCenterY(), p);
+                if (r1.x0() != r0.x0()) {
+                    if (r1.x0() > r0.x0()) {
+                        for (float p = 0; p < 1; p += .01f) {
+                            int x = (int) MathUtils.lerp(r0.x1(), r1.x0(), p);
 
-                    for (int xx = -1; xx <= 0; xx++) {
-                        for (int yy = -1; yy <= 0; yy++) {
-                            int xxx = x + xx;
-                            int yyy = y + yy;
+                            for (int xx = -1; xx <= 0; xx++) {
+                                for (int yy = -1; yy <= 0; yy++) {
+                                    int xxx = x + xx;
+                                    int yyy = r0.getCenterY() + yy;
 
-                            Tile t = tiles.at(xxx, yyy, 0);
+                                    Tile t = tiles.at(xxx, yyy, 0);
 
-                            if (t != null && t.name.equals(wall)) {
-                                tiles.set(Game.TILES.load(ground), xxx, yyy, 0);
+                                    if (t != null && t.name.equals(wall)) {
+                                        tiles.set(Game.TILES.load(ground), xxx, yyy, 0);
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        for (float p = 0; p < 1; p += .01f) {
+                            int x = (int) MathUtils.lerp(r1.x1(), r0.x0(), p);
+
+                            for (int xx = -1; xx <= 0; xx++) {
+                                for (int yy = -1; yy <= 0; yy++) {
+                                    int xxx = x + xx;
+                                    int yyy = r0.getCenterY() + yy;
+
+                                    Tile t = tiles.at(xxx, yyy, 0);
+
+                                    if (t != null && t.name.equals(wall)) {
+                                        tiles.set(Game.TILES.load(ground), xxx, yyy, 0);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (r1.y0() != r0.y0()) {
+                    if (r1.y0() > r0.y0()) {
+                        for (float p = 0; p < 1; p += .01f) {
+                            int y = (int) MathUtils.lerp(r0.y1(), r1.y0(), p);
+
+                            for (int xx = -1; xx <= 0; xx++) {
+                                for (int yy = -1; yy <= 0; yy++) {
+                                    int xxx = r0.getCenterX() + xx;
+                                    int yyy = y + yy;
+
+                                    Tile t = tiles.at(xxx, yyy, 0);
+
+                                    if (t != null && t.name.equals(wall)) {
+                                        tiles.set(Game.TILES.load(ground), xxx, yyy, 0);
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        for (float p = 0; p < 1; p += .01f) {
+                            int y = (int) MathUtils.lerp(r1.y1(), r0.y0(), p);
+
+                            for (int xx = -1; xx <= 0; xx++) {
+                                for (int yy = -1; yy <= 0; yy++) {
+                                    int xxx = r0.getCenterX() + xx;
+                                    int yyy = y + yy;
+
+                                    Tile t = tiles.at(xxx, yyy, 0);
+
+                                    if (t != null && t.name.equals(wall)) {
+                                        tiles.set(Game.TILES.load(ground), xxx, yyy, 0);
+                                    }
+                                }
                             }
                         }
                     }
@@ -428,8 +485,7 @@ public class Dungeon extends Map {
         player.x = r.getCenterX() * 8 - 4;
         player.y = r.getCenterY() * 8 - 4;
 
-        player.feetArmor = (FeetArmor) Game.ITEMS.load("FeetArmor");
-        player.bodyArmor = (BodyArmor) Game.ITEMS.load("BodyArmor");
+        player.armor = (Armor) Game.ITEMS.load("Armor");
 
         player.mainHand = (MainHand) Game.ITEMS.load("Sword");
         player.offHand = (OffHand) Game.ITEMS.load("Shield");

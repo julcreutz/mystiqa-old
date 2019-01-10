@@ -2,7 +2,6 @@
   "Axe": {
     "MeleeWeapon": {
       "name": "Axe",
-      "palette": ["Black", "Brown", "Gray"],
       "spriteSheet": "Axe",
       "angle": 180,
       "speed": 0.67
@@ -11,7 +10,6 @@
   "Sword": {
     "MeleeWeapon": {
       "name": "Sword",
-      "palette": ["Black", "Gray"],
       "spriteSheet": "Sword",
       "angle": 135,
       "speed": 1
@@ -20,7 +18,6 @@
   "Club": {
     "MeleeWeapon": {
       "name": "Club",
-      "palette": ["Black", "Brown", "Peach"],
       "spriteSheet": "Club",
       "angle": 135,
       "speed": 0.75
@@ -29,22 +26,14 @@
   "Shield": {
     "Shield": {
       "name": "Shield",
-      "palette": ["Black", "Gray"],
       "spriteSheet": "Shield"
     }
   },
-  "FeetArmor": {
-    "FeetArmor": {
-      "name": "FeetArmor",
-      "palette": ["Black", "Gray"],
-      "spriteSheet": "FeetArmor"
-    }
-  },
-  "BodyArmor": {
-    "BodyArmor": {
-      "name": "BodyArmor",
-      "palette": ["Black", "Gray"],
-      "spriteSheet": "BodyArmor"
+  "Armor": {
+    "Armor": {
+      "name": "Armor",
+      "feet": "FeetArmor",
+      "body": "BodyArmor"
     }
   }
 }

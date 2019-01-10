@@ -8,11 +8,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonValue;
 import game.loader.resource.sprite_sheet.SpriteSheet;
 import game.main.Game;
+import game.main.item.equipment.armor.Armor;
 import game.main.item.equipment.hand.off.OffHand;
 import game.main.item.equipment.hand.main.MainHand;
-import game.main.item.equipment.armor.BodyArmor;
-import game.main.item.equipment.armor.FeetArmor;
-import game.main.item.equipment.armor.HeadArmor;
 import game.main.stat.Stat;
 import game.main.state.play.map.tile.Tile;
 
@@ -35,9 +33,7 @@ public class Humanoid extends Entity {
     public MainHand mainHand;
     public OffHand offHand;
 
-    public FeetArmor feetArmor;
-    public BodyArmor bodyArmor;
-    public HeadArmor headArmor;
+    public Armor armor;
 
     public int step;
     public int dir;
@@ -288,43 +284,43 @@ public class Humanoid extends Entity {
                 // Left foot
                 batch.draw(feet.sheet[(step + 2) % feet.sheet.length][dir], x, y);
 
-                if (feetArmor != null) {
-                    batch.draw(feetArmor.spriteSheet.sheet[(step + 2) % feet.sheet.length][dir], x, y);
+                if (armor != null && armor.feet != null) {
+                    batch.draw(armor.feet.sheet[(step + 2) % feet.sheet.length][dir], x, y);
                 }
 
                 // Left arm
                 batch.draw(body.sheet[1 + leftArmIndex % (body.sheet.length - 1)][dir], x, y);
 
-                if (bodyArmor != null) {
-                    batch.draw(bodyArmor.spriteSheet.sheet[1 + leftArmIndex % (body.sheet.length - 1)][dir], x, y);
+                if (armor != null && armor.body != null) {
+                    batch.draw(armor.body.sheet[1 + leftArmIndex % (body.sheet.length - 1)][dir], x, y);
                 }
 
                 // Torso
                 batch.draw(body.sheet[0][dir], x, y);
 
-                if (bodyArmor != null) {
-                    batch.draw(bodyArmor.spriteSheet.sheet[0][dir], x, y);
+                if (armor != null && armor.body != null) {
+                    batch.draw(armor.body.sheet[0][dir], x, y);
                 }
 
                 // Right foot
                 batch.draw(feet.sheet[step % feet.sheet.length][dir], x, y);
 
-                if (feetArmor != null) {
-                    batch.draw(feetArmor.spriteSheet.sheet[step % feet.sheet.length][dir], x, y);
+                if (armor != null && armor.feet != null) {
+                    batch.draw(armor.feet.sheet[step % feet.sheet.length][dir], x, y);
                 }
 
                 // Head
                 batch.draw(head.sheet[step % head.sheet.length][dir], x, y);
 
-                if (headArmor != null) {
-                    batch.draw(headArmor.spriteSheet.sheet[step % head.sheet.length][dir], x, y);
+                if (armor != null && armor.head != null) {
+                    batch.draw(armor.head.sheet[step % head.sheet.length][dir], x, y);
                 }
 
                 // Right arm
                 batch.draw(body.sheet[1 + (rightArmIndex + 2) % (body.sheet.length - 1)][dir], x, y);
 
-                if (bodyArmor != null) {
-                    batch.draw(bodyArmor.spriteSheet.sheet[1 + (rightArmIndex + 2) % (body.sheet.length - 1)][dir], x, y);
+                if (armor != null && armor.body != null) {
+                    batch.draw(armor.body.sheet[1 + (rightArmIndex + 2) % (body.sheet.length - 1)][dir], x, y);
                 }
 
                 break;
@@ -332,43 +328,43 @@ public class Humanoid extends Entity {
                 // Right foot
                 batch.draw(feet.sheet[step % feet.sheet.length][dir], x, y);
 
-                if (feetArmor != null) {
-                    batch.draw(feetArmor.spriteSheet.sheet[step % feet.sheet.length][dir], x, y);
+                if (armor != null && armor.feet != null) {
+                    batch.draw(armor.feet.sheet[step % feet.sheet.length][dir], x, y);
                 }
 
                 // Right arm
                 batch.draw(body.sheet[1 + (rightArmIndex + 2) % (body.sheet.length - 1)][dir], x, y);
 
-                if (bodyArmor != null) {
-                    batch.draw(bodyArmor.spriteSheet.sheet[1 + (rightArmIndex + 2) % (body.sheet.length - 1)][dir], x, y);
+                if (armor != null && armor.body != null) {
+                    batch.draw(armor.body.sheet[1 + (rightArmIndex + 2) % (body.sheet.length - 1)][dir], x, y);
                 }
 
                 // Torso
                 batch.draw(body.sheet[0][dir], x, y);
 
-                if (bodyArmor != null) {
-                    batch.draw(bodyArmor.spriteSheet.sheet[0][dir], x, y);
+                if (armor != null && armor.body != null) {
+                    batch.draw(armor.body.sheet[0][dir], x, y);
                 }
 
                 // Left foot
                 batch.draw(feet.sheet[(step + 2) % feet.sheet.length][dir], x, y);
 
-                if (feetArmor != null) {
-                    batch.draw(feetArmor.spriteSheet.sheet[(step + 2) % feet.sheet.length][dir], x, y);
+                if (armor != null && armor.feet != null) {
+                    batch.draw(armor.feet.sheet[(step + 2) % feet.sheet.length][dir], x, y);
                 }
 
                 // Head
                 batch.draw(head.sheet[step % head.sheet.length][dir], x, y);
 
-                if (headArmor != null) {
-                    batch.draw(headArmor.spriteSheet.sheet[step % head.sheet.length][dir], x, y);
+                if (armor != null && armor.head != null) {
+                    batch.draw(armor.head.sheet[step % head.sheet.length][dir], x, y);
                 }
 
                 // Left arm
                 batch.draw(body.sheet[1 + leftArmIndex % (body.sheet.length - 1)][dir], x, y);
 
-                if (bodyArmor != null) {
-                    batch.draw(bodyArmor.spriteSheet.sheet[1 + leftArmIndex % (body.sheet.length - 1)][dir], x, y);
+                if (armor != null && armor.body != null) {
+                    batch.draw(armor.body.sheet[1 + leftArmIndex % (body.sheet.length - 1)][dir], x, y);
                 }
 
                 break;
@@ -376,43 +372,43 @@ public class Humanoid extends Entity {
                 // Left foot
                 batch.draw(feet.sheet[(step + 2) % feet.sheet.length][dir], x, y);
 
-                if (feetArmor != null) {
-                    batch.draw(feetArmor.spriteSheet.sheet[(step + 2) % feet.sheet.length][dir], x, y);
+                if (armor != null && armor.feet != null) {
+                    batch.draw(armor.feet.sheet[(step + 2) % feet.sheet.length][dir], x, y);
                 }
 
                 // Right foot
                 batch.draw(feet.sheet[step % feet.sheet.length][dir], x, y, 4, 4, 8, 8, -1, 1, 0);
 
-                if (feetArmor != null) {
-                    batch.draw(feetArmor.spriteSheet.sheet[step % feet.sheet.length][dir], x, y, 4, 4, 8, 8, -1, 1, 0);
+                if (armor != null && armor.feet != null) {
+                    batch.draw(armor.feet.sheet[step % feet.sheet.length][dir], x, y, 4, 4, 8, 8, -1, 1, 0);
                 }
 
                 // Torso
                 batch.draw(body.sheet[0][dir], x, y);
 
-                if (bodyArmor != null) {
-                    batch.draw(bodyArmor.spriteSheet.sheet[0][dir], x, y);
+                if (armor != null && armor.body != null) {
+                    batch.draw(armor.body.sheet[0][dir], x, y);
                 }
 
                 // Left arm
                 batch.draw(body.sheet[1 + (leftArmIndex + 2) % (body.sheet.length - 1)][dir], x, y);
 
-                if (bodyArmor != null) {
-                    batch.draw(bodyArmor.spriteSheet.sheet[1 + (leftArmIndex + 2) % (body.sheet.length - 1)][dir], x, y);
+                if (armor != null && armor.body != null) {
+                    batch.draw(armor.body.sheet[1 + (leftArmIndex + 2) % (body.sheet.length - 1)][dir], x, y);
                 }
 
                 // Right arm
                 batch.draw(body.sheet[1 + (rightArmIndex) % (body.sheet.length - 1)][dir], x, y, 4, 4, 8, 8, -1, 1, 0);
 
-                if (bodyArmor != null) {
-                    batch.draw(bodyArmor.spriteSheet.sheet[1 + (rightArmIndex) % (body.sheet.length - 1)][dir], x, y, 4, 4, 8, 8, -1, 1, 0);
+                if (armor != null && armor.body != null) {
+                    batch.draw(armor.body.sheet[1 + (rightArmIndex) % (body.sheet.length - 1)][dir], x, y, 4, 4, 8, 8, -1, 1, 0);
                 }
 
                 // Head
                 batch.draw(head.sheet[step % head.sheet.length][dir], x, y);
 
-                if (headArmor != null) {
-                    batch.draw(headArmor.spriteSheet.sheet[step % head.sheet.length][dir], x, y);
+                if (armor != null && armor.head != null) {
+                    batch.draw(armor.head.sheet[step % head.sheet.length][dir], x, y);
                 }
 
                 break;
@@ -420,43 +416,43 @@ public class Humanoid extends Entity {
                 // Left foot
                 batch.draw(feet.sheet[(step + 2) % feet.sheet.length][dir], x, y, 4, 4, 8, 8, -1, 1, 0);
 
-                if (feetArmor != null) {
-                    batch.draw(feetArmor.spriteSheet.sheet[(step + 2) % feet.sheet.length][dir], x, y, 4, 4, 8, 8, -1, 1, 0);
+                if (armor != null && armor.feet != null) {
+                    batch.draw(armor.feet.sheet[(step + 2) % feet.sheet.length][dir], x, y, 4, 4, 8, 8, -1, 1, 0);
                 }
 
                 // Right foot
                 batch.draw(feet.sheet[step % feet.sheet.length][dir], x, y);
 
-                if (feetArmor != null) {
-                    batch.draw(feetArmor.spriteSheet.sheet[step % feet.sheet.length][dir], x, y);
+                if (armor != null && armor.feet != null) {
+                    batch.draw(armor.feet.sheet[step % feet.sheet.length][dir], x, y);
                 }
 
                 // Torso
                 batch.draw(body.sheet[0][dir], x, y);
 
-                if (bodyArmor != null) {
-                    batch.draw(bodyArmor.spriteSheet.sheet[0][dir], x, y);
+                if (armor != null && armor.body != null) {
+                    batch.draw(armor.body.sheet[0][dir], x, y);
                 }
 
                 // Left arm
                 batch.draw(body.sheet[1 + (leftArmIndex) % (body.sheet.length - 1)][dir], x, y, 4, 4, 8, 8, -1, 1, 0);
 
-                if (bodyArmor != null) {
-                    batch.draw(bodyArmor.spriteSheet.sheet[1 + (leftArmIndex) % (body.sheet.length - 1)][dir], x, y, 4, 4, 8, 8, -1, 1, 0);
+                if (armor != null && armor.body != null) {
+                    batch.draw(armor.body.sheet[1 + (leftArmIndex) % (body.sheet.length - 1)][dir], x, y, 4, 4, 8, 8, -1, 1, 0);
                 }
 
                 // Right arm
                 batch.draw(body.sheet[1 + (rightArmIndex + 2) % (body.sheet.length - 1)][dir], x, y);
 
-                if (bodyArmor != null) {
-                    batch.draw(bodyArmor.spriteSheet.sheet[1 + (rightArmIndex + 2) % (body.sheet.length - 1)][dir], x, y);
+                if (armor != null && armor.body != null) {
+                    batch.draw(armor.body.sheet[1 + (rightArmIndex + 2) % (body.sheet.length - 1)][dir], x, y);
                 }
 
                 // Head
                 batch.draw(head.sheet[step % head.sheet.length][dir], x, y);
 
-                if (headArmor != null) {
-                    batch.draw(headArmor.spriteSheet.sheet[step % head.sheet.length][dir], x, y);
+                if (armor != null && armor.head != null) {
+                    batch.draw(armor.head.sheet[step % head.sheet.length][dir], x, y);
                 }
 
                 break;
@@ -517,19 +513,9 @@ public class Humanoid extends Entity {
             this.head = Game.SPRITE_SHEETS.load(head.asString());
         }
 
-        JsonValue feetArmor = json.get("feetArmor");
-        if (feetArmor != null) {
-            this.feetArmor = (FeetArmor) Game.ITEMS.load(feetArmor.asString());
-        }
-
-        JsonValue bodyArmor = json.get("bodyArmor");
-        if (bodyArmor != null) {
-            this.bodyArmor = (BodyArmor) Game.ITEMS.load(bodyArmor.asString());
-        }
-
-        JsonValue headArmor = json.get("headArmor");
-        if (headArmor != null) {
-            this.headArmor = (HeadArmor) Game.ITEMS.load(headArmor.asString());
+        JsonValue armor = json.get("armor");
+        if (this.armor != null && this.armor.feet != null) {
+            this.armor = (Armor) Game.ITEMS.load(armor.asString());
         }
 
         JsonValue mainHand = json.get("mainHand");
