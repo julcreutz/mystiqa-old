@@ -13,12 +13,11 @@ public abstract class Lock {
     public Door door;
 
     public void update() {
-        if (room.containsPlayer()) {
-            if (!isLocked() && door.visible) {
-                door.visible = false;
-            } else if (isLocked() && !door.visible) {
-                door.visible = true;
-            }
+        // Lock and open doors according to lock status
+        if (isLocked() && !door.visible) {
+            door.visible = true;
+        } else if (!isLocked() && door.visible) {
+            door.visible = false;
         }
     }
 

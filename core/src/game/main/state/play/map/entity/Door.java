@@ -46,7 +46,9 @@ public class Door extends Entity {
             }
         }
 
-        lock.update();
+        if (lock != null) {
+            lock.update();
+        }
     }
 
     @Override

@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import game.loader.Serializable;
 import game.main.Game;
+import game.main.item.Item;
 import game.main.stat.Stat;
 import game.main.stat.StatManager;
 import game.main.state.play.map.Map;
@@ -181,10 +182,15 @@ public abstract class Entity implements Serializable {
 
     public Tile.Overlay overlay;
 
+    public Array<Item> inventory;
+
     public Entity() {
         hitbox = new Hitbox(this);
         stats = new StatManager();
         hit = new Array<Entity>();
+
+        inventory = new Array<Item>();
+        inventory = new Array<Item>();
     }
 
     public void preUpdate() {
@@ -401,6 +407,7 @@ public abstract class Entity implements Serializable {
 
     /** Called when entity dies. */
     public void onDeath() {
+        map.player.inventory.addAll(inventory);
     }
 
     /** @return whether entity is attacking */

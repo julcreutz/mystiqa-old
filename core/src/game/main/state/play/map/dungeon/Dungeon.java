@@ -12,6 +12,7 @@ import game.main.item.equipment.hand.off.OffHand;
 import game.main.state.play.Play;
 import game.main.state.play.map.Map;
 import game.main.state.play.map.dungeon.lock.BlockPushLock;
+import game.main.state.play.map.dungeon.lock.KeyLock;
 import game.main.state.play.map.dungeon.lock.Lock;
 import game.main.state.play.map.dungeon.lock.MonsterLock;
 import game.main.state.play.map.entity.Door;
@@ -72,28 +73,44 @@ public class Dungeon extends Map {
             }
         }
 
-        public int x0() {
+        public int getTileX() {
             return (int) (rect.x * 16);
         }
 
-        public int x1() {
-            return (int) (rect.x * 16 + rect.width * 16);
-        }
-
-        public int getCenterX() {
-            return x0() + (x1() - x0()) / 2;
-        }
-
-        public int y0() {
+        public int getTileY() {
             return (int) (rect.y * 8);
         }
 
-        public int y1() {
-            return (int) (rect.y * 8 + rect.height * 8);
+        public int getTileWidth() {
+            return (int) (rect.width * 16);
+        }
+
+        public int getTileHeight() {
+            return (int) (rect.height * 8);
+        }
+
+        public int getCenterX() {
+            return getTileX() + getTileWidth() / 2;
         }
 
         public int getCenterY() {
-            return y0() + (y1() - y0()) / 2;
+            return getTileY() + getTileHeight() / 2;
+        }
+
+        public int x0() {
+            return getTileX();
+        }
+
+        public int x1() {
+            return getTileX() + getTileWidth();
+        }
+
+        public int y0() {
+            return getTileY();
+        }
+
+        public int y1() {
+            return getTileY() + getTileHeight();
         }
 
         public boolean isOpenRight() {
@@ -209,6 +226,8 @@ public class Dungeon extends Map {
     public String door;
 
     public String[] monsters;
+
+    public String key;
 
     public Template[] templates;
 
@@ -426,6 +445,28 @@ public class Dungeon extends Map {
             }
         }
 
+        // Place monsters randomly
+        for (Room r : rooms) {
+            for (int i = 0; i < 1 + Game.RANDOM.nextInt(4); i++) {
+                Entity monster = Game.ENTITIES.load(monsters[Game.RANDOM.nextInt(monsters.length)]);
+
+                int x;
+                int y;
+
+                do {
+                    x = r.getTileX() + Game.RANDOM.nextInt(r.getTileWidth());
+                    y = r.getTileY() + Game.RANDOM.nextInt(r.getTileHeight());
+                } while (tiles.at(x, y, 0) != null && !tiles.at(x, y, 0).name.equals(ground));
+
+                monster.x = x * 8;
+                monster.y = y * 8;
+
+                r.monsters.add(monster);
+
+                entities.addEntity(monster);
+            }
+        }
+
         // Add doors and lock them
         for (Room r : rooms) {
             for (Room child : r.children) {
@@ -452,25 +493,32 @@ public class Dungeon extends Map {
                     }
                 }
 
-                Lock l;
-
-                if (Game.RANDOM.nextFloat() < 0) {
-                    l = new MonsterLock();
-                } else {
-                    l = new BlockPushLock();
-                }
-
-                l.dungeon = this;
-                l.door = d;
-                l.room = r;
-
-                d.lock = l;
+                child.doorToParent = d;
 
                 entities.addEntity(d);
 
-                child.doorToParent = d;
+                if (Game.RANDOM.nextFloat() < .25f) {
+                    Lock l;
 
-                l.onLock();
+                    float chance = Game.RANDOM.nextFloat();
+
+                    if (chance < 0) {
+                        l = new MonsterLock();
+                    } else if (chance < 1) {
+                        l = new KeyLock();
+                    } else {
+                        l = new BlockPushLock();
+                    }
+
+                    l.dungeon = this;
+                    l.door = d;
+
+                    l.room = r;
+
+                    d.lock = l;
+
+                    l.onLock();
+                }
             }
         }
     }
@@ -533,6 +581,11 @@ public class Dungeon extends Map {
         JsonValue monsters = json.get("monsters");
         if (monsters != null) {
             this.monsters = monsters.asStringArray();
+        }
+
+        JsonValue key = json.get("key");
+        if (key != null) {
+            this.key = key.asString();
         }
 
         JsonValue templates = json.get("templates");

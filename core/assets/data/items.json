@@ -35,5 +35,10 @@
       "feet": "FeetArmor",
       "body": "BodyArmor"
     }
+  },
+  "DungeonKey": {
+    "Collectable": {
+      "name": "Key"
+    }
   }
 }
