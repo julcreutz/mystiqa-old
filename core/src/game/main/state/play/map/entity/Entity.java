@@ -202,6 +202,12 @@ public abstract class Entity implements Serializable {
     }
 
     public void postUpdate() {
+        for (Entity e : map.entities.entities) {
+            if (hitbox.overlaps(e)) {
+                onCollision(e);
+            }
+        }
+
         Hitbox attackHitbox = getAttackHitbox();
         Hitbox blockHitbox = getBlockHitbox();
 
@@ -407,7 +413,23 @@ public abstract class Entity implements Serializable {
 
     /** Called when entity dies. */
     public void onDeath() {
-        map.player.inventory.addAll(inventory);
+        for (Item i : inventory) {
+            ItemDrop drop = new ItemDrop(i);
+
+            drop.x = x;
+            drop.y = y;
+
+            map.entities.addEntity(drop);
+        }
+    }
+
+    /**
+     * Called on collision with another entity.
+     *
+     * @param e collided entity
+     */
+    public void onCollision(Entity e) {
+
     }
 
     /** @return whether entity is attacking */

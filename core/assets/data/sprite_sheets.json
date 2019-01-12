@@ -163,5 +163,10 @@
     "path": "graphics/dungeon_block.png",
     "splitW": 8,
     "splitH": 8
+  },
+  "DungeonKey": {
+    "path": "graphics/key.png",
+    "splitW": 8,
+    "splitH": 8
   }
 }

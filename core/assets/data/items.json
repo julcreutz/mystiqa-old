@@ -38,7 +38,8 @@
   },
   "DungeonKey": {
     "Collectable": {
-      "name": "Key"
+      "name": "Key",
+      "icon": "DungeonKey"
     }
   }
 }
