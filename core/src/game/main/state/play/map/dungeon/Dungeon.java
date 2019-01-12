@@ -64,8 +64,8 @@ public class Dungeon extends Map {
             }
 
             // Close door behind player
-            if (containsPlayer() && doorToParent != null) {
-                if (monsters.size > 0 && !doorToParent.visible) {
+            if (doorToParent != null) {
+                if (containsPlayer() && monsters.size > 0 && !doorToParent.visible) {
                     doorToParent.visible = true;
                 } else if (monsters.size == 0 && doorToParent.visible) {
                     doorToParent.visible = false;
@@ -502,20 +502,21 @@ public class Dungeon extends Map {
 
                     float chance = Game.RANDOM.nextFloat();
 
-                    if (chance < 0) {
+                    if (chance < .5f) {
                         l = new MonsterLock();
-                    } else if (chance < 1) {
+                    } else if (chance < .75f) {
                         l = new KeyLock();
                     } else {
                         l = new BlockPushLock();
                     }
 
                     l.dungeon = this;
+
                     l.door = d;
-
-                    l.room = r;
-
                     d.lock = l;
+
+                    Array<Room> rooms = getRoomsUntil(child);
+                    l.room = rooms.get(Game.RANDOM.nextInt(rooms.size));
 
                     l.onLock();
                 }
@@ -549,6 +550,26 @@ public class Dungeon extends Map {
         }
 
         return null;
+    }
+
+    public Array<Room> getRoomsUntil(Room stop) {
+        Array<Room> rooms = new Array<Room>();
+        getRoomsUntil(this.rooms.first(), stop, rooms);
+        return rooms;
+    }
+
+    public void getRoomsUntil(Room room, Room stop, Array<Room> rooms) {
+        rooms.add(room);
+
+        for (int i = 0; i < room.children.size; i++) {
+            Room child = room.children.get(i);
+
+            // Stop at specified room or when room already locked off
+            if (child != stop && (child.doorToParent != null && child.doorToParent.lock == null)) {
+                rooms.add(child);
+                getRoomsUntil(child, stop, rooms);
+            }
+        }
     }
 
     @Override
