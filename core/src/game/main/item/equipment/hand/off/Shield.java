@@ -16,12 +16,8 @@ public class Shield extends OffHand {
     public float x;
     public float y;
 
-    public Stat slowdown;
-
-    public Shield() {
-        slowdown = new Stat(Stat.Type.SPEED, 0, .5f);
-        armIndex = 3;
-    }
+    public int armIndex;
+    public boolean renderBehind;
 
     @Override
     public void update(Humanoid h) {
@@ -29,8 +25,10 @@ public class Shield extends OffHand {
 
         int dir;
 
-        if (isUsing()) {
+        if (!h.isAttacking()) {
             dir = h.dir;
+
+            armIndex = 3;
 
             switch (dir) {
                 case 0:
@@ -60,6 +58,8 @@ public class Shield extends OffHand {
             }
         } else {
             dir = (h.dir + 1) % 4;
+
+            armIndex = 1;
 
             switch (dir) {
                 case 0:
@@ -93,28 +93,20 @@ public class Shield extends OffHand {
     }
 
     @Override
-    public void onStartUse(Humanoid h) {
-        super.onStartUse(h);
-
-        if (!h.stats.stats.contains(slowdown, true)) {
-            h.stats.stats.add(slowdown);
-        }
-    }
-
-    @Override
-    public void onFinishUse(Humanoid h) {
-        super.onFinishUse(h);
-
-        if (h.stats.stats.contains(slowdown, true)) {
-            h.stats.stats.removeValue(slowdown, true);
-        }
-    }
-
-    @Override
     public void render(SpriteBatch batch, Humanoid h) {
         super.render(batch, h);
 
         batch.draw(image, x, y);
+    }
+
+    @Override
+    public int getArmIndex() {
+        return armIndex;
+    }
+
+    @Override
+    public boolean renderBehind() {
+        return renderBehind;
     }
 
     @Override

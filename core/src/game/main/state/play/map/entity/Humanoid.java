@@ -52,6 +52,13 @@ public class Humanoid extends Entity {
     public float actionTime;
     public float blockTime;
 
+    public float attackTime;
+
+    public boolean attackStarted;
+    public int attackState;
+
+    public float yOffset;
+
     public Humanoid() {
         super();
 
@@ -103,6 +110,7 @@ public class Humanoid extends Entity {
         } else {
             Vector2 toPlayer = new Vector2(map.player.x, map.player.y).sub(x, y);
 
+            /*
             switch (state) {
                 case RANDOM_MOVEMENT:
                     if (toPlayer.len() < 32) {
@@ -203,6 +211,7 @@ public class Humanoid extends Entity {
 
                     break;
             }
+            */
         }
 
         if (moveSpeed != 0) {
@@ -239,25 +248,39 @@ public class Humanoid extends Entity {
 
         if (mainHand != null) {
             if (useMainHand) {
-                mainHand.use();
+                attack();
             }
 
             mainHand.update(this);
         }
 
         if (offHand != null) {
-            if (useOffHand && (mainHand == null || !mainHand.isUsing())) {
-                offHand.use();
+            offHand.update(this);
+        }
+
+        if (attackTime > 0) {
+            if (!attackStarted) {
+                onStartAttack();
+                attackStarted = true;
             }
 
-            offHand.update(this);
+            onAttack();
+
+            attackState--;
+
+            if (attackState < 0) {
+                attackStarted = false;
+                onFinishAttack();
+                attackState = 0;
+                attackTime = 0;
+            }
         }
 
         step = MathUtils.floor(time * 7.5f) % 4;
 
         lastUsed += Game.getDelta();
 
-        if ((mainHand != null && mainHand.isUsing()) || (offHand != null && offHand.isUsing())) {
+        if (isAttacking()) {
             lastUsed = 0;
         }
     }
@@ -266,204 +289,227 @@ public class Humanoid extends Entity {
     public void render(SpriteBatch batch) {
         super.render(batch);
 
-        float y = this.y + (step % 2 != 0 ? -1 : 0);
+        yOffset = this.y + (step % 2 != 0 ? -1 : 0);
 
-        int rightArmIndex = mainHand != null && mainHand.isUsing() ? mainHand.armIndex : step;
-        int leftArmIndex = offHand != null && offHand.isUsing() ? offHand.armIndex : step;
+        int rightArmIndex = mainHand != null ? mainHand.getArmIndex() : step;
+        int leftArmIndex = offHand != null ? offHand.getArmIndex() : step;
 
-        if (mainHand != null && mainHand.renderBehind) {
+        if (mainHand != null && mainHand.renderBehind()) {
             mainHand.render(batch, this);
         }
 
-        if (offHand != null && offHand.renderBehind) {
+        if (offHand != null && offHand.renderBehind()) {
             offHand.render(batch, this);
         }
 
         switch (dir) {
             case 0:
                 // Left foot
-                batch.draw(feet.sheet[(step + 2) % feet.sheet.length][dir], x, y);
+                batch.draw(feet.sheet[(step + 2) % feet.sheet.length][dir], x, yOffset);
 
                 if (armor != null && armor.feet != null) {
-                    batch.draw(armor.feet.sheet[(step + 2) % feet.sheet.length][dir], x, y);
+                    batch.draw(armor.feet.sheet[(step + 2) % feet.sheet.length][dir], x, yOffset);
                 }
 
                 // Left arm
-                batch.draw(body.sheet[1 + leftArmIndex % (body.sheet.length - 1)][dir], x, y);
+                batch.draw(body.sheet[1 + leftArmIndex % (body.sheet.length - 1)][dir], x, yOffset);
 
                 if (armor != null && armor.body != null) {
-                    batch.draw(armor.body.sheet[1 + leftArmIndex % (body.sheet.length - 1)][dir], x, y);
+                    batch.draw(armor.body.sheet[1 + leftArmIndex % (body.sheet.length - 1)][dir], x, yOffset);
                 }
 
                 // Torso
-                batch.draw(body.sheet[0][dir], x, y);
+                batch.draw(body.sheet[0][dir], x, yOffset);
 
                 if (armor != null && armor.body != null) {
-                    batch.draw(armor.body.sheet[0][dir], x, y);
+                    batch.draw(armor.body.sheet[0][dir], x, yOffset);
                 }
 
                 // Right foot
-                batch.draw(feet.sheet[step % feet.sheet.length][dir], x, y);
+                batch.draw(feet.sheet[step % feet.sheet.length][dir], x, yOffset);
 
                 if (armor != null && armor.feet != null) {
-                    batch.draw(armor.feet.sheet[step % feet.sheet.length][dir], x, y);
+                    batch.draw(armor.feet.sheet[step % feet.sheet.length][dir], x, yOffset);
                 }
 
                 // Head
-                batch.draw(head.sheet[step % head.sheet.length][dir], x, y);
+                batch.draw(head.sheet[step % head.sheet.length][dir], x, yOffset);
 
                 if (armor != null && armor.head != null) {
-                    batch.draw(armor.head.sheet[step % head.sheet.length][dir], x, y);
+                    batch.draw(armor.head.sheet[step % head.sheet.length][dir], x, yOffset);
                 }
 
                 // Right arm
-                batch.draw(body.sheet[1 + (rightArmIndex + 2) % (body.sheet.length - 1)][dir], x, y);
+                batch.draw(body.sheet[1 + (rightArmIndex + 2) % (body.sheet.length - 1)][dir], x, yOffset);
 
                 if (armor != null && armor.body != null) {
-                    batch.draw(armor.body.sheet[1 + (rightArmIndex + 2) % (body.sheet.length - 1)][dir], x, y);
+                    batch.draw(armor.body.sheet[1 + (rightArmIndex + 2) % (body.sheet.length - 1)][dir], x, yOffset);
                 }
 
                 break;
             case 2:
                 // Right foot
-                batch.draw(feet.sheet[step % feet.sheet.length][dir], x, y);
+                batch.draw(feet.sheet[step % feet.sheet.length][dir], x, yOffset);
 
                 if (armor != null && armor.feet != null) {
-                    batch.draw(armor.feet.sheet[step % feet.sheet.length][dir], x, y);
+                    batch.draw(armor.feet.sheet[step % feet.sheet.length][dir], x, yOffset);
                 }
 
                 // Right arm
-                batch.draw(body.sheet[1 + (rightArmIndex + 2) % (body.sheet.length - 1)][dir], x, y);
+                batch.draw(body.sheet[1 + (rightArmIndex + 2) % (body.sheet.length - 1)][dir], x, yOffset);
 
                 if (armor != null && armor.body != null) {
-                    batch.draw(armor.body.sheet[1 + (rightArmIndex + 2) % (body.sheet.length - 1)][dir], x, y);
+                    batch.draw(armor.body.sheet[1 + (rightArmIndex + 2) % (body.sheet.length - 1)][dir], x, yOffset);
                 }
 
                 // Torso
-                batch.draw(body.sheet[0][dir], x, y);
+                batch.draw(body.sheet[0][dir], x, yOffset);
 
                 if (armor != null && armor.body != null) {
-                    batch.draw(armor.body.sheet[0][dir], x, y);
+                    batch.draw(armor.body.sheet[0][dir], x, yOffset);
                 }
 
                 // Left foot
-                batch.draw(feet.sheet[(step + 2) % feet.sheet.length][dir], x, y);
+                batch.draw(feet.sheet[(step + 2) % feet.sheet.length][dir], x, yOffset);
 
                 if (armor != null && armor.feet != null) {
-                    batch.draw(armor.feet.sheet[(step + 2) % feet.sheet.length][dir], x, y);
+                    batch.draw(armor.feet.sheet[(step + 2) % feet.sheet.length][dir], x, yOffset);
                 }
 
                 // Head
-                batch.draw(head.sheet[step % head.sheet.length][dir], x, y);
+                batch.draw(head.sheet[step % head.sheet.length][dir], x, yOffset);
 
                 if (armor != null && armor.head != null) {
-                    batch.draw(armor.head.sheet[step % head.sheet.length][dir], x, y);
+                    batch.draw(armor.head.sheet[step % head.sheet.length][dir], x, yOffset);
                 }
 
                 // Left arm
-                batch.draw(body.sheet[1 + leftArmIndex % (body.sheet.length - 1)][dir], x, y);
+                batch.draw(body.sheet[1 + leftArmIndex % (body.sheet.length - 1)][dir], x, yOffset);
 
                 if (armor != null && armor.body != null) {
-                    batch.draw(armor.body.sheet[1 + leftArmIndex % (body.sheet.length - 1)][dir], x, y);
+                    batch.draw(armor.body.sheet[1 + leftArmIndex % (body.sheet.length - 1)][dir], x, yOffset);
                 }
 
                 break;
             case 1:
                 // Left foot
-                batch.draw(feet.sheet[(step + 2) % feet.sheet.length][dir], x, y);
+                batch.draw(feet.sheet[(step + 2) % feet.sheet.length][dir], x, yOffset);
 
                 if (armor != null && armor.feet != null) {
-                    batch.draw(armor.feet.sheet[(step + 2) % feet.sheet.length][dir], x, y);
+                    batch.draw(armor.feet.sheet[(step + 2) % feet.sheet.length][dir], x, yOffset);
                 }
 
                 // Right foot
-                batch.draw(feet.sheet[step % feet.sheet.length][dir], x, y, 4, 4, 8, 8, -1, 1, 0);
+                batch.draw(feet.sheet[step % feet.sheet.length][dir], x, yOffset, 4, 4, 8, 8, -1, 1, 0);
 
                 if (armor != null && armor.feet != null) {
-                    batch.draw(armor.feet.sheet[step % feet.sheet.length][dir], x, y, 4, 4, 8, 8, -1, 1, 0);
+                    batch.draw(armor.feet.sheet[step % feet.sheet.length][dir], x, yOffset, 4, 4, 8, 8, -1, 1, 0);
                 }
 
                 // Torso
-                batch.draw(body.sheet[0][dir], x, y);
+                batch.draw(body.sheet[0][dir], x, yOffset);
 
                 if (armor != null && armor.body != null) {
-                    batch.draw(armor.body.sheet[0][dir], x, y);
+                    batch.draw(armor.body.sheet[0][dir], x, yOffset);
                 }
 
                 // Left arm
-                batch.draw(body.sheet[1 + (leftArmIndex + 2) % (body.sheet.length - 1)][dir], x, y);
+                batch.draw(body.sheet[1 + (leftArmIndex + 2) % (body.sheet.length - 1)][dir], x, yOffset);
 
                 if (armor != null && armor.body != null) {
-                    batch.draw(armor.body.sheet[1 + (leftArmIndex + 2) % (body.sheet.length - 1)][dir], x, y);
+                    batch.draw(armor.body.sheet[1 + (leftArmIndex + 2) % (body.sheet.length - 1)][dir], x, yOffset);
                 }
 
                 // Right arm
-                batch.draw(body.sheet[1 + (rightArmIndex) % (body.sheet.length - 1)][dir], x, y, 4, 4, 8, 8, -1, 1, 0);
+                batch.draw(body.sheet[1 + (rightArmIndex) % (body.sheet.length - 1)][dir], x, yOffset, 4, 4, 8, 8, -1, 1, 0);
 
                 if (armor != null && armor.body != null) {
-                    batch.draw(armor.body.sheet[1 + (rightArmIndex) % (body.sheet.length - 1)][dir], x, y, 4, 4, 8, 8, -1, 1, 0);
+                    batch.draw(armor.body.sheet[1 + (rightArmIndex) % (body.sheet.length - 1)][dir], x, yOffset, 4, 4, 8, 8, -1, 1, 0);
                 }
 
                 // Head
-                batch.draw(head.sheet[step % head.sheet.length][dir], x, y);
+                batch.draw(head.sheet[step % head.sheet.length][dir], x, yOffset);
 
                 if (armor != null && armor.head != null) {
-                    batch.draw(armor.head.sheet[step % head.sheet.length][dir], x, y);
+                    batch.draw(armor.head.sheet[step % head.sheet.length][dir], x, yOffset);
                 }
 
                 break;
             case 3:
                 // Left foot
-                batch.draw(feet.sheet[(step + 2) % feet.sheet.length][dir], x, y, 4, 4, 8, 8, -1, 1, 0);
+                batch.draw(feet.sheet[(step + 2) % feet.sheet.length][dir], x, yOffset, 4, 4, 8, 8, -1, 1, 0);
 
                 if (armor != null && armor.feet != null) {
-                    batch.draw(armor.feet.sheet[(step + 2) % feet.sheet.length][dir], x, y, 4, 4, 8, 8, -1, 1, 0);
+                    batch.draw(armor.feet.sheet[(step + 2) % feet.sheet.length][dir], x, yOffset, 4, 4, 8, 8, -1, 1, 0);
                 }
 
                 // Right foot
-                batch.draw(feet.sheet[step % feet.sheet.length][dir], x, y);
+                batch.draw(feet.sheet[step % feet.sheet.length][dir], x, yOffset);
 
                 if (armor != null && armor.feet != null) {
-                    batch.draw(armor.feet.sheet[step % feet.sheet.length][dir], x, y);
+                    batch.draw(armor.feet.sheet[step % feet.sheet.length][dir], x, yOffset);
                 }
 
                 // Torso
-                batch.draw(body.sheet[0][dir], x, y);
+                batch.draw(body.sheet[0][dir], x, yOffset);
 
                 if (armor != null && armor.body != null) {
-                    batch.draw(armor.body.sheet[0][dir], x, y);
+                    batch.draw(armor.body.sheet[0][dir], x, yOffset);
                 }
 
                 // Left arm
-                batch.draw(body.sheet[1 + (leftArmIndex) % (body.sheet.length - 1)][dir], x, y, 4, 4, 8, 8, -1, 1, 0);
+                batch.draw(body.sheet[1 + (leftArmIndex) % (body.sheet.length - 1)][dir], x, yOffset, 4, 4, 8, 8, -1, 1, 0);
 
                 if (armor != null && armor.body != null) {
-                    batch.draw(armor.body.sheet[1 + (leftArmIndex) % (body.sheet.length - 1)][dir], x, y, 4, 4, 8, 8, -1, 1, 0);
+                    batch.draw(armor.body.sheet[1 + (leftArmIndex) % (body.sheet.length - 1)][dir], x, yOffset, 4, 4, 8, 8, -1, 1, 0);
                 }
 
                 // Right arm
-                batch.draw(body.sheet[1 + (rightArmIndex + 2) % (body.sheet.length - 1)][dir], x, y);
+                batch.draw(body.sheet[1 + (rightArmIndex + 2) % (body.sheet.length - 1)][dir], x, yOffset);
 
                 if (armor != null && armor.body != null) {
-                    batch.draw(armor.body.sheet[1 + (rightArmIndex + 2) % (body.sheet.length - 1)][dir], x, y);
+                    batch.draw(armor.body.sheet[1 + (rightArmIndex + 2) % (body.sheet.length - 1)][dir], x, yOffset);
                 }
 
                 // Head
-                batch.draw(head.sheet[step % head.sheet.length][dir], x, y);
+                batch.draw(head.sheet[step % head.sheet.length][dir], x, yOffset);
 
                 if (armor != null && armor.head != null) {
-                    batch.draw(armor.head.sheet[step % head.sheet.length][dir], x, y);
+                    batch.draw(armor.head.sheet[step % head.sheet.length][dir], x, yOffset);
                 }
 
                 break;
         }
 
-        if (mainHand != null && !mainHand.renderBehind) {
+        if (mainHand != null && !mainHand.renderBehind()) {
             mainHand.render(batch, this);
         }
 
-        if (offHand != null && !offHand.renderBehind) {
+        if (offHand != null && !offHand.renderBehind()) {
             offHand.render(batch, this);
+        }
+    }
+
+    public void attack() {
+        attackTime += Game.getDelta();
+        attackState++;
+    }
+
+    public void onStartAttack() {
+        if (mainHand != null) {
+            mainHand.onStartAttack(this);
+        }
+    }
+
+    public void onAttack() {
+        if (mainHand != null) {
+            mainHand.onAttack(this);
+        }
+    }
+
+    public void onFinishAttack() {
+        if (mainHand != null) {
+            mainHand.onFinishAttack(this);
         }
     }
 
@@ -476,12 +522,12 @@ public class Humanoid extends Entity {
 
     @Override
     public boolean isAttacking() {
-        return mainHand != null && mainHand.isUsing();
+        return attackTime > 0 || mainHand.isAttacking();
     }
 
     @Override
     public boolean isBlocking() {
-        return offHand != null && offHand.isUsing();
+        return false;
     }
 
     @Override

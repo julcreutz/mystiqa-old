@@ -49,6 +49,9 @@ public class MeleeWeapon extends MainHand {
 
     public boolean attacking;
 
+    public int armIndex;
+    public boolean renderBehind;
+
     public MeleeWeapon() {
         slowdown = new Stat(Stat.Type.SPEED, 0, 0);
     }
@@ -66,17 +69,11 @@ public class MeleeWeapon extends MainHand {
             dist = 6 + MathUtils.sin(attackTime * MathUtils.PI) * 2f;
 
             x = h.x + MathUtils.cosDeg(a) * dist;
-            y = h.y + MathUtils.sinDeg(a) * dist;
+            y = h.y + MathUtils.sinDeg(a) * dist + (h.yOffset - h.y);
 
             rot = MathUtils.round(a / 45f) * 45f;
 
             renderBehind = y > h.y + 4;
-
-            if (attacking) {
-                h.attackHitbox.set(8, 8, x - h.x, y - h.y);
-            } else {
-                h.attackHitbox.set(0, 0, 0, 0);
-            }
 
             if (attackTime < 0) {
                 attackTime = 0;
@@ -98,6 +95,8 @@ public class MeleeWeapon extends MainHand {
                 armIndex = 1;
             }
         } else {
+            armIndex = h.step;
+
             x = h.x + X[h.dir][h.step];
             y = h.y + Y[h.dir][h.step];
             rot = ROT[h.dir][h.step];
@@ -105,12 +104,18 @@ public class MeleeWeapon extends MainHand {
             renderBehind = h.dir == 2 || h.dir == 1;
         }
 
+        if (attacking) {
+            h.attackHitbox.set(8, 8, x - h.x, y - h.y);
+        } else {
+            h.attackHitbox.set(0, 0, 0, 0);
+        }
+
         image = spriteSheet.sheet[0][0];
     }
 
     @Override
-    public void onUse(Humanoid h) {
-        super.onUse(h);
+    public void onAttack(Humanoid h) {
+        super.onAttack(h);
 
         if (!attacking) {
             attackTime = 1;
@@ -123,8 +128,8 @@ public class MeleeWeapon extends MainHand {
     }
 
     @Override
-    public void onFinishUse(Humanoid h) {
-        super.onStartUse(h);
+    public void onFinishAttack(Humanoid h) {
+        super.onFinishAttack(h);
 
         if (attackTime > 0) {
             attacking = true;
@@ -144,8 +149,13 @@ public class MeleeWeapon extends MainHand {
     }
 
     @Override
-    public boolean isUsing() {
-        return super.isUsing() || isAttacking();
+    public int getArmIndex() {
+        return armIndex;
+    }
+
+    @Override
+    public boolean renderBehind() {
+        return renderBehind;
     }
 
     @Override

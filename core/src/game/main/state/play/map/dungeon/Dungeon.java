@@ -529,7 +529,6 @@ public class Dungeon extends Map {
         Room r = rooms.first();
 
         Humanoid player = (Humanoid) Game.ENTITIES.load("Human");
-        player.controlledByPlayer = true;
         player.x = r.getCenterX() * 8 - 4;
         player.y = r.getCenterY() * 8 - 4;
 
@@ -537,6 +536,8 @@ public class Dungeon extends Map {
 
         player.mainHand = (MainHand) Game.ITEMS.load("Sword");
         player.offHand = (OffHand) Game.ITEMS.load("Shield");
+
+        player.controlledByPlayer = true;
 
         this.player = player;
         entities.addEntity(player);
