@@ -9,6 +9,7 @@ import game.main.Game;
 import game.main.state.play.Play;
 import game.main.state.play.map.entity.Entity;
 import game.main.state.play.map.entity.EntityManager;
+import game.main.state.play.map.entity.Humanoid;
 import game.main.state.play.map.tile.Tile;
 import game.main.state.play.map.tile.TileManager;
 
@@ -18,12 +19,14 @@ public abstract class Map implements Serializable {
     public static final int X_VIEW = 10;
     public static final int Y_VIEW = 8;
 
+    public Play play;
+
     public boolean generated;
 
     public TileManager tiles;
 
     public EntityManager entities;
-    public Entity player;
+    public Humanoid player;
 
     public int x0;
     public int x1;
@@ -52,7 +55,7 @@ public abstract class Map implements Serializable {
         teleports = new Array<Teleport>();
     }
 
-    public void update(Play play) {
+    public void update() {
         toCamX = Game.WIDTH * .5f + MathUtils.floor((player.x + 4) / Game.WIDTH) * Game.WIDTH;
         toCamY = Game.HEIGHT * .5f + MathUtils.floor((player.y + 4) / (Game.HEIGHT - 8)) * (Game.HEIGHT - 8);
 
@@ -136,7 +139,12 @@ public abstract class Map implements Serializable {
 
         tiles.render(batch, x0, x1, y0, y1, 1, tiles.getDepth());
 
-        batch.draw(Game.SPRITE_SHEETS.load("GuiLayer").sheet[0][0], camPosX - Game.WIDTH * .5f, camPosY + Game.HEIGHT * .5f - 8, Game.WIDTH, 8);
+        // GUI
+        batch.draw(Game.SPRITE_SHEETS.load("GuiLayer").sheet[0][0],
+                 play.cam.position.x - Game.WIDTH * .5f, play.cam.position.y + Game.HEIGHT * .5f - 8, Game.WIDTH, 8);
+
+        batch.draw(player.mainHand.icon.sheet[0][0],
+                play.cam.position.x - Game.WIDTH * .5f + 8, play.cam.position.y + Game.HEIGHT * .5f - 8);
     }
 
     public void positionCamera() {

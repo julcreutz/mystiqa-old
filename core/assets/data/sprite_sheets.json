@@ -119,8 +119,13 @@
     "splitW": 8,
     "splitH": 8
   },
-  "Axe": {
-    "path": "graphics/axe.png",
+  "BattleAxe": {
+    "path": "graphics/battle_axe.png",
+    "splitW": 8,
+    "splitH": 8
+  },
+  "BattleAxeIcon": {
+    "path": "graphics/battle_axe_icon.png",
     "splitW": 8,
     "splitH": 8
   },

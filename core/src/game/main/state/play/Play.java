@@ -35,12 +35,13 @@ public class Play extends GameState {
 
         if (nextMap != null) {
             map = nextMap;
+            map.play = this;
             map.positionCamera();
             nextMap = null;
         }
 
         if (map.screenShake == 0) {
-            map.update(this);
+            map.update();
         } else {
             map.screenShake -= Game.getDelta() * 10f;
 
