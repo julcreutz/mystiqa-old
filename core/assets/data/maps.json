@@ -8,10 +8,10 @@
       "door": "DungeonDoor",
       "monsters": ["GreenSlime"],
       "key": "DungeonKey",
-      "lockChance": 1,
-      "killMonsterChance": 0,
-      "keyChance": 1,
-      "pushBlockChance": 0,
+      "lockChance": 0.5,
+      "killMonsterChance": 0.5,
+      "keyChance": 0.5,
+      "pushBlockChance": 0.25,
       "templates": [
         {
           "template": [

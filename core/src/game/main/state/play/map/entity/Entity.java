@@ -149,6 +149,10 @@ public abstract class Entity implements Serializable {
         void onCollision(Entity e);
     }
 
+    public interface DeathListener {
+        void onDeath();
+    }
+
     /** Map instance the entity is currently in. Always update if map is changed. */
     public Map map;
 
@@ -189,6 +193,7 @@ public abstract class Entity implements Serializable {
     public Array<Item> inventory;
 
     public Array<CollisionListener> collisionListeners;
+    public Array<DeathListener> deathListeners;
 
     public Entity() {
         hitbox = new Hitbox(this);
@@ -199,6 +204,7 @@ public abstract class Entity implements Serializable {
         inventory = new Array<Item>();
 
         collisionListeners = new Array<CollisionListener>();
+        deathListeners = new Array<DeathListener>();
     }
 
     public void preUpdate() {
@@ -309,19 +315,21 @@ public abstract class Entity implements Serializable {
 
         hitbox.position(velX * Game.getDelta(), 0);
 
-        for (int x = map.x0; x < map.x1; x++) {
-            for (int y = map.y0; y < map.y1; y++) {
-                if (map.tiles.inBounds(x, y)) {
-                    Rectangle solidTile = map.tiles.solidTiles[x][y];
+        if (collidesWithSolidTiles()) {
+            for (int x = map.x0; x < map.x1; x++) {
+                for (int y = map.y0; y < map.y1; y++) {
+                    if (map.tiles.inBounds(x, y)) {
+                        Rectangle solidTile = map.tiles.solidTiles[x][y];
 
-                    if (solidTile != null && hitbox.overlaps(solidTile)) {
-                        if (velX > 0) {
-                            this.x = solidTile.x - hitbox.getWidth() - hitbox.offsetX;
-                        } else if (velX < 0) {
-                            this.x = solidTile.x + solidTile.width - hitbox.offsetX;
+                        if (solidTile != null && hitbox.overlaps(solidTile)) {
+                            if (velX > 0) {
+                                this.x = solidTile.x - hitbox.getWidth() - hitbox.offsetX;
+                            } else if (velX < 0) {
+                                this.x = solidTile.x + solidTile.width - hitbox.offsetX;
+                            }
+
+                            velX = 0;
                         }
-
-                        velX = 0;
                     }
                 }
             }
@@ -343,19 +351,21 @@ public abstract class Entity implements Serializable {
 
         hitbox.position(0, velY * Game.getDelta());
 
-        for (int x = map.x0; x < map.x1; x++) {
-            for (int y = map.y0; y < map.y1; y++) {
-                if (map.tiles.inBounds(x, y)) {
-                    Rectangle solidTile = map.tiles.solidTiles[x][y];
+        if (collidesWithSolidTiles()) {
+            for (int x = map.x0; x < map.x1; x++) {
+                for (int y = map.y0; y < map.y1; y++) {
+                    if (map.tiles.inBounds(x, y)) {
+                        Rectangle solidTile = map.tiles.solidTiles[x][y];
 
-                    if (solidTile != null && hitbox.overlaps(solidTile)) {
-                        if (velY > 0) {
-                            this.y = solidTile.y - hitbox.getHeight() - hitbox.offsetY;
-                        } else if (velY < 0) {
-                            this.y = solidTile.y + solidTile.height - hitbox.offsetY;
+                        if (solidTile != null && hitbox.overlaps(solidTile)) {
+                            if (velY > 0) {
+                                this.y = solidTile.y - hitbox.getHeight() - hitbox.offsetY;
+                            } else if (velY < 0) {
+                                this.y = solidTile.y + solidTile.height - hitbox.offsetY;
+                            }
+
+                            velY = 0;
                         }
-
-                        velY = 0;
                     }
                 }
             }
@@ -419,6 +429,10 @@ public abstract class Entity implements Serializable {
 
     /** Called when entity dies. */
     public void onDeath() {
+        for (DeathListener death : deathListeners) {
+            death.onDeath();
+        }
+
         for (Item i : inventory) {
             ItemDrop drop = new ItemDrop(i);
 
@@ -494,6 +508,11 @@ public abstract class Entity implements Serializable {
 
     public float getHealthPercentage() {
         return health / stats.count(Stat.Type.HEALTH);
+    }
+
+    /** @return whether entity collides with solid tiles */
+    public boolean collidesWithSolidTiles() {
+        return true;
     }
 
     /** @return whether entity is able to push other entities away */

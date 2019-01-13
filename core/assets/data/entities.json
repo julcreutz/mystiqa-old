@@ -108,5 +108,19 @@
       "name": "DungeonBlock",
       "spriteSheet": "DungeonBlock"
     }
+  },
+  "Dragon": {
+    "Dragon": {
+      "name": "Dragon",
+      "stats": [
+        {
+          "type": "HEALTH",
+          "absolute": 3
+        }
+      ],
+      "body": "DragonBody",
+      "neck": "DragonNeck",
+      "head": "DragonHead"
+    }
   }
 }

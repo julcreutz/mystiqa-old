@@ -13,6 +13,8 @@ public class EntityLoader extends InstanceLoader<Entity> {
             return new Door();
         } else if (name.equals("Block")) {
             return new Block();
+        } else if (name.equals("Dragon")) {
+            return new Dragon();
         }
 
         return null;

@@ -16,6 +16,7 @@ import game.main.state.play.map.dungeon.lock.KeyLock;
 import game.main.state.play.map.dungeon.lock.Lock;
 import game.main.state.play.map.dungeon.lock.KillMonsterLock;
 import game.main.state.play.map.entity.Door;
+import game.main.state.play.map.entity.Dragon;
 import game.main.state.play.map.entity.Entity;
 import game.main.state.play.map.entity.Humanoid;
 import game.main.state.play.map.tile.Tile;
@@ -434,6 +435,13 @@ public class Dungeon extends Map {
 
         this.player = player;
         entities.addEntity(player);
+
+        Dragon dragon = (Dragon) Game.ENTITIES.load("Dragon");
+
+        dragon.x = first.getCenterX() * 8 - 8;
+        dragon.y = first.getCenterY() * 8 - 4 + 16;
+
+        entities.addEntity(dragon);
 
         // Place monsters randomly
         for (Room r : rooms) {
