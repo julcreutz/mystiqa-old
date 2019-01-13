@@ -294,14 +294,6 @@ public class Humanoid extends Entity {
         int rightArmIndex = mainHand != null ? mainHand.getArmIndex() : step;
         int leftArmIndex = offHand != null ? offHand.getArmIndex() : step;
 
-        if (mainHand != null && mainHand.renderBehind()) {
-            mainHand.render(batch, this);
-        }
-
-        if (offHand != null && offHand.renderBehind()) {
-            offHand.render(batch, this);
-        }
-
         switch (dir) {
             case 0:
                 // Left foot
@@ -311,11 +303,19 @@ public class Humanoid extends Entity {
                     batch.draw(armor.feet.sheet[(step + 2) % feet.sheet.length][dir], x, yOffset);
                 }
 
+                if (offHand != null && offHand.renderBehind()) {
+                    offHand.render(batch, this);
+                }
+
                 // Left arm
                 batch.draw(body.sheet[1 + leftArmIndex % (body.sheet.length - 1)][dir], x, yOffset);
 
                 if (armor != null && armor.body != null) {
                     batch.draw(armor.body.sheet[1 + leftArmIndex % (body.sheet.length - 1)][dir], x, yOffset);
+                }
+
+                if (offHand != null && !offHand.renderBehind()) {
+                    offHand.render(batch, this);
                 }
 
                 // Torso
@@ -339,11 +339,19 @@ public class Humanoid extends Entity {
                     batch.draw(armor.head.sheet[step % head.sheet.length][dir], x, yOffset);
                 }
 
+                if (mainHand != null && mainHand.renderBehind()) {
+                    mainHand.render(batch, this);
+                }
+
                 // Right arm
                 batch.draw(body.sheet[1 + (rightArmIndex + 2) % (body.sheet.length - 1)][dir], x, yOffset);
 
                 if (armor != null && armor.body != null) {
                     batch.draw(armor.body.sheet[1 + (rightArmIndex + 2) % (body.sheet.length - 1)][dir], x, yOffset);
+                }
+
+                if (mainHand != null && !mainHand.renderBehind()) {
+                    mainHand.render(batch, this);
                 }
 
                 break;
@@ -355,11 +363,19 @@ public class Humanoid extends Entity {
                     batch.draw(armor.feet.sheet[step % feet.sheet.length][dir], x, yOffset);
                 }
 
+                if (mainHand != null && mainHand.renderBehind()) {
+                    mainHand.render(batch, this);
+                }
+
                 // Right arm
                 batch.draw(body.sheet[1 + (rightArmIndex + 2) % (body.sheet.length - 1)][dir], x, yOffset);
 
                 if (armor != null && armor.body != null) {
                     batch.draw(armor.body.sheet[1 + (rightArmIndex + 2) % (body.sheet.length - 1)][dir], x, yOffset);
+                }
+
+                if (mainHand != null && !mainHand.renderBehind()) {
+                    mainHand.render(batch, this);
                 }
 
                 // Torso
@@ -383,11 +399,19 @@ public class Humanoid extends Entity {
                     batch.draw(armor.head.sheet[step % head.sheet.length][dir], x, yOffset);
                 }
 
+                if (offHand != null && offHand.renderBehind()) {
+                    offHand.render(batch, this);
+                }
+
                 // Left arm
                 batch.draw(body.sheet[1 + leftArmIndex % (body.sheet.length - 1)][dir], x, yOffset);
 
                 if (armor != null && armor.body != null) {
                     batch.draw(armor.body.sheet[1 + leftArmIndex % (body.sheet.length - 1)][dir], x, yOffset);
+                }
+
+                if (offHand != null && !offHand.renderBehind()) {
+                    offHand.render(batch, this);
                 }
 
                 break;
@@ -406,11 +430,8 @@ public class Humanoid extends Entity {
                     batch.draw(armor.feet.sheet[step % feet.sheet.length][dir], x, yOffset, 4, 4, 8, 8, -1, 1, 0);
                 }
 
-                // Torso
-                batch.draw(body.sheet[0][dir], x, yOffset);
-
-                if (armor != null && armor.body != null) {
-                    batch.draw(armor.body.sheet[0][dir], x, yOffset);
+                if (offHand != null && offHand.renderBehind()) {
+                    offHand.render(batch, this);
                 }
 
                 // Left arm
@@ -420,11 +441,30 @@ public class Humanoid extends Entity {
                     batch.draw(armor.body.sheet[1 + (leftArmIndex + 2) % (body.sheet.length - 1)][dir], x, yOffset);
                 }
 
+                // Torso
+                batch.draw(body.sheet[0][dir], x, yOffset);
+
+                if (armor != null && armor.body != null) {
+                    batch.draw(armor.body.sheet[0][dir], x, yOffset);
+                }
+
+                if (offHand != null && !offHand.renderBehind()) {
+                    offHand.render(batch, this);
+                }
+
+                if (mainHand != null && mainHand.renderBehind()) {
+                    mainHand.render(batch, this);
+                }
+
                 // Right arm
                 batch.draw(body.sheet[1 + (rightArmIndex) % (body.sheet.length - 1)][dir], x, yOffset, 4, 4, 8, 8, -1, 1, 0);
 
                 if (armor != null && armor.body != null) {
                     batch.draw(armor.body.sheet[1 + (rightArmIndex) % (body.sheet.length - 1)][dir], x, yOffset, 4, 4, 8, 8, -1, 1, 0);
+                }
+
+                if (mainHand != null && !mainHand.renderBehind()) {
+                    mainHand.render(batch, this);
                 }
 
                 // Head
@@ -457,11 +497,19 @@ public class Humanoid extends Entity {
                     batch.draw(armor.body.sheet[0][dir], x, yOffset);
                 }
 
+                if (offHand != null && offHand.renderBehind()) {
+                    offHand.render(batch, this);
+                }
+
                 // Left arm
                 batch.draw(body.sheet[1 + (leftArmIndex) % (body.sheet.length - 1)][dir], x, yOffset, 4, 4, 8, 8, -1, 1, 0);
 
                 if (armor != null && armor.body != null) {
                     batch.draw(armor.body.sheet[1 + (leftArmIndex) % (body.sheet.length - 1)][dir], x, yOffset, 4, 4, 8, 8, -1, 1, 0);
+                }
+
+                if (mainHand != null && mainHand.renderBehind()) {
+                    mainHand.render(batch, this);
                 }
 
                 // Right arm
@@ -478,16 +526,18 @@ public class Humanoid extends Entity {
                     batch.draw(armor.head.sheet[step % head.sheet.length][dir], x, yOffset);
                 }
 
+                if (offHand != null && !offHand.renderBehind()) {
+                    offHand.render(batch, this);
+                }
+
+                if (mainHand != null && !mainHand.renderBehind()) {
+                    mainHand.render(batch, this);
+                }
+
                 break;
         }
 
-        if (mainHand != null && !mainHand.renderBehind()) {
-            mainHand.render(batch, this);
-        }
-
-        if (offHand != null && !offHand.renderBehind()) {
-            offHand.render(batch, this);
-        }
+        //getAttackHitbox().render(batch);
     }
 
     public void attack() {

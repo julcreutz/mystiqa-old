@@ -36,6 +36,7 @@ public class MeleeWeapon extends MainHand {
 
     public float angle;
     public float speed;
+    public float range;
 
     public Stat slowdown;
 
@@ -66,7 +67,7 @@ public class MeleeWeapon extends MainHand {
             }
 
             float a = h.dir * 90 - 135 + (1 - attackTime) * angle;
-            dist = 6 + MathUtils.sin(attackTime * MathUtils.PI) * 2f;
+            dist = 6 + MathUtils.sin(attackTime * MathUtils.PI) * (2f + range * 4);
 
             x = h.x + MathUtils.cosDeg(a) * dist;
             y = h.y + MathUtils.sinDeg(a) * dist + (h.yOffset - h.y);
@@ -101,7 +102,7 @@ public class MeleeWeapon extends MainHand {
             y = h.y + Y[h.dir][h.step];
             rot = ROT[h.dir][h.step];
 
-            renderBehind = h.dir == 2 || h.dir == 1;
+            renderBehind = true;
         }
 
         if (attacking) {
@@ -141,7 +142,8 @@ public class MeleeWeapon extends MainHand {
     public void render(SpriteBatch batch, Humanoid h) {
         super.render(batch, h);
 
-        batch.draw(image, x, y, 4, 4, 8, 8, 1, 1, rot);
+        batch.draw(image, x - MathUtils.cosDeg(rot) * (range * 4), y - MathUtils.sinDeg(rot) * (range * 4),
+                4, 4, image.getRegionWidth(), 8, 1, 1, rot);
     }
 
     public boolean isAttacking() {
@@ -162,16 +164,24 @@ public class MeleeWeapon extends MainHand {
     public void deserialize(JsonValue json) {
         super.deserialize(json);
 
-        if (json.has("spriteSheet")) {
-            spriteSheet = Game.SPRITE_SHEETS.load(json.getString("spriteSheet"));
+        JsonValue spriteSheet = json.get("spriteSheet");
+        if (spriteSheet != null) {
+            this.spriteSheet = Game.SPRITE_SHEETS.load(spriteSheet.asString());
         }
 
-        if (json.has("angle")) {
-            angle = json.getFloat("angle");
+        JsonValue angle = json.get("angle");
+        if (angle != null) {
+            this.angle = angle.asFloat();
         }
 
-        if (json.has("speed")) {
-            speed = json.getFloat("speed");
+        JsonValue speed = json.get("speed");
+        if (speed != null) {
+            this.speed = speed.asFloat();
+        }
+
+        JsonValue range = json.get("range");
+        if (range != null) {
+            this.range = range.asFloat();
         }
     }
 }

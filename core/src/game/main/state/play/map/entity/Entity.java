@@ -134,6 +134,10 @@ public abstract class Entity implements Serializable {
             this.offsetX = offsetX;
             this.offsetY = offsetY;
         }
+
+        public void render(SpriteBatch batch) {
+            batch.draw(Game.SPRITE_SHEETS.load("GuiLayer").sheet[0][0], getX(), getY(), getWidth(), getHeight());
+        }
     }
 
     public enum Alignment {

@@ -16,6 +16,15 @@
       "speed": 1
     }
   },
+  "Spear": {
+    "MeleeWeapon": {
+      "name": "Spear",
+      "icon": "BattleAxeIcon",
+      "spriteSheet": "Spear",
+      "speed": 0.75,
+      "range": 1
+    }
+  },
   "Club": {
     "MeleeWeapon": {
       "name": "Club",

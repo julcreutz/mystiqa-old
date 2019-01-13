@@ -139,8 +139,8 @@
     "splitW": 8,
     "splitH": 8
   },
-  "SmallGreenSlime": {
-    "path": "graphics/small_green_slime.png",
+  "GreenSlimeSmall": {
+    "path": "graphics/green_slime_small.png",
     "splitW": 8,
     "splitH": 8
   },
@@ -187,6 +187,11 @@
   "DragonHead": {
     "path": "graphics/dragon_head.png",
     "splitW": 8,
+    "splitH": 8
+  },
+  "Spear": {
+    "path": "graphics/spear.png",
+    "splitW": 16,
     "splitH": 8
   }
 }

@@ -69,16 +69,16 @@
       "alignment": "EVIL",
       "spriteSheet": "GreenSlime",
       "splitInto": [
-        ["SmallGreenSlime"],
-        ["SmallGreenSlime", "SmallGreenSlime"],
-        ["SmallGreenSlime", "SmallGreenSlime"],
-        ["SmallGreenSlime", "SmallGreenSlime", "SmallGreenSlime"]
+        ["GreenSlimeSmall"],
+        ["GreenSlimeSmall", "GreenSlimeSmall"],
+        ["GreenSlimeSmall", "GreenSlimeSmall"],
+        ["GreenSlimeSmall", "GreenSlimeSmall", "GreenSlimeSmall"]
       ]
     }
   },
-  "SmallGreenSlime": {
+  "GreenSlimeSmall": {
     "Slime": {
-      "name": "SmallGreenSlime",
+      "name": "GreenSlimeSmall",
       "stats": [
         {
           "type": "HEALTH",
@@ -94,7 +94,7 @@
         }
       ],
       "alignment": "EVIL",
-      "spriteSheet": "SmallGreenSlime"
+      "spriteSheet": "GreenSlimeSmall"
     }
   },
   "DungeonDoor": {
