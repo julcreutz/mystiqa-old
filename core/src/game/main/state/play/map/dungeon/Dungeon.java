@@ -11,10 +11,10 @@ import game.main.item.equipment.hand.main.MainHand;
 import game.main.item.equipment.hand.off.OffHand;
 import game.main.state.play.Play;
 import game.main.state.play.map.Map;
-import game.main.state.play.map.dungeon.lock.BlockPushLock;
+import game.main.state.play.map.dungeon.lock.PushBlockLock;
 import game.main.state.play.map.dungeon.lock.KeyLock;
 import game.main.state.play.map.dungeon.lock.Lock;
-import game.main.state.play.map.dungeon.lock.MonsterLock;
+import game.main.state.play.map.dungeon.lock.KillMonsterLock;
 import game.main.state.play.map.entity.Door;
 import game.main.state.play.map.entity.Entity;
 import game.main.state.play.map.entity.Humanoid;
@@ -22,11 +22,6 @@ import game.main.state.play.map.tile.Tile;
 
 public class Dungeon extends Map {
     public static class Room {
-        public enum Type {
-            HORIZONTAL,
-            VERTICAL
-        }
-
         public Dungeon map;
 
         public Rectangle rect;
@@ -153,18 +148,6 @@ public class Dungeon extends Map {
             return false;
         }
 
-        public Type getType() {
-            if (isOpenRight() && isOpenLeft() && !isOpenUp() && !isOpenDown()) {
-                return Type.HORIZONTAL;
-            }
-
-            if (isOpenUp() && isOpenDown() && !isOpenRight() && !isOpenLeft()) {
-                return Type.VERTICAL;
-            }
-
-            return null;
-        }
-
         public Rectangle getBounds() {
             return bounds.setPosition(x0() * 8 + 4, y0() * 8 + 4);
         }
@@ -179,7 +162,6 @@ public class Dungeon extends Map {
     }
 
     public static class Template implements Serializable {
-        public Room.Type roomType;
         public char[][] template;
 
         public Template(JsonValue json) {
@@ -188,11 +170,6 @@ public class Dungeon extends Map {
 
         @Override
         public void deserialize(JsonValue json) {
-            JsonValue roomType = json.get("roomType");
-            if (roomType != null) {
-                this.roomType = Room.Type.valueOf(roomType.asString());
-            }
-
             JsonValue template = json.get("template");
             if (template != null) {
                 this.template = new char[16][8];
@@ -228,6 +205,11 @@ public class Dungeon extends Map {
     public String[] monsters;
 
     public String key;
+
+    public float lockChance;
+    public float killMonsterChance;
+    public float keyChance;
+    public float pushBlockChance;
 
     public Template[] templates;
 
@@ -329,32 +311,23 @@ public class Dungeon extends Map {
 
         // Apply templates
         for (Room r : rooms) {
-            Room.Type roomType = r.getType();
-            Template t = null;
+            Template t = templates[Game.RANDOM.nextInt(templates.length)];
 
-            for (Template template : templates) {
-                if (roomType == template.roomType) {
-                    t = template;
-                }
-            }
+            for (int x = 0; x < t.template.length; x++) {
+                for (int y = 0; y < t.template[0].length; y++) {
+                    int xx = r.x0() + x;
+                    int yy = r.y0() + y;
 
-            if (t != null) {
-                for (int x = 0; x < t.template.length; x++) {
-                    for (int y = 0; y < t.template[0].length; y++) {
-                        int xx = r.x0() + x;
-                        int yy = r.y0() + y;
-
-                        switch (t.template[x][y]) {
-                            case '#':
-                                tiles.set(Game.TILES.load(outerWall), xx, yy, 0);
-                                break;
-                            case '.':
-                                tiles.set(Game.TILES.load(innerWall), xx, yy, 0);
-                                break;
-                            case ' ':
-                                tiles.set(Game.TILES.load(ground), xx, yy, 0);
-                                break;
-                        }
+                    switch (t.template[x][y]) {
+                        case '#':
+                            tiles.set(Game.TILES.load(outerWall), xx, yy, 0);
+                            break;
+                        case '.':
+                            tiles.set(Game.TILES.load(innerWall), xx, yy, 0);
+                            break;
+                        case ' ':
+                            tiles.set(Game.TILES.load(ground), xx, yy, 0);
+                            break;
                     }
                 }
             }
@@ -445,6 +418,23 @@ public class Dungeon extends Map {
             }
         }
 
+        // Place player
+        Room first = rooms.first();
+
+        Humanoid player = (Humanoid) Game.ENTITIES.load("Human");
+        player.x = first.getCenterX() * 8 - 4;
+        player.y = first.getCenterY() * 8 - 4;
+
+        player.armor = (Armor) Game.ITEMS.load("Armor");
+
+        player.mainHand = (MainHand) Game.ITEMS.load("Sword");
+        player.offHand = (OffHand) Game.ITEMS.load("Shield");
+
+        player.controlledByPlayer = true;
+
+        this.player = player;
+        entities.addEntity(player);
+
         // Place monsters randomly
         for (Room r : rooms) {
             for (int i = 0; i < 1 + Game.RANDOM.nextInt(4); i++) {
@@ -454,8 +444,8 @@ public class Dungeon extends Map {
                 int y;
 
                 do {
-                    x = r.getTileX() + Game.RANDOM.nextInt(r.getTileWidth());
-                    y = r.getTileY() + Game.RANDOM.nextInt(r.getTileHeight());
+                    x = r.getTileX() + 1 + Game.RANDOM.nextInt(r.getTileWidth() - 2);
+                    y = r.getTileY() + 1 + Game.RANDOM.nextInt(r.getTileHeight() - 2);
                 } while (tiles.at(x, y, 0) != null && !tiles.at(x, y, 0).name.equals(ground));
 
                 monster.x = x * 8;
@@ -497,28 +487,36 @@ public class Dungeon extends Map {
 
                 entities.addEntity(d);
 
-                if (Game.RANDOM.nextFloat() < .25f) {
-                    Lock l;
+                if (Game.RANDOM.nextFloat() < lockChance) {
+                    Lock l = null;
 
-                    float chance = Game.RANDOM.nextFloat();
-
-                    if (chance < .5f) {
-                        l = new MonsterLock();
-                    } else if (chance < .75f) {
-                        l = new KeyLock();
-                    } else {
-                        l = new BlockPushLock();
+                    if (Game.RANDOM.nextFloat() < killMonsterChance) {
+                        l = new KillMonsterLock();
                     }
 
-                    l.dungeon = this;
+                    if (Game.RANDOM.nextFloat() < keyChance) {
+                        l = new KeyLock();
+                    }
 
-                    l.door = d;
-                    d.lock = l;
+                    if (Game.RANDOM.nextFloat() < pushBlockChance) {
+                        l = new PushBlockLock();
+                    }
 
-                    Array<Room> rooms = getRoomsUntil(child);
-                    l.room = rooms.get(Game.RANDOM.nextInt(rooms.size));
+                    if (l != null) {
+                        l.dungeon = this;
 
-                    l.onLock();
+                        l.door = d;
+                        d.lock = l;
+
+                        Array<Room> rooms = getRoomsUntil(child);
+                        if (l.takeSameRoom()) {
+                            l.room = r;
+                        } else {
+                            l.room = rooms.get(Game.RANDOM.nextInt(rooms.size));
+                        }
+
+                        l.onLock();
+                    }
                 }
             }
         }
@@ -526,21 +524,7 @@ public class Dungeon extends Map {
 
     @Override
     public void placePlayer() {
-        Room r = rooms.first();
 
-        Humanoid player = (Humanoid) Game.ENTITIES.load("Human");
-        player.x = r.getCenterX() * 8 - 4;
-        player.y = r.getCenterY() * 8 - 4;
-
-        player.armor = (Armor) Game.ITEMS.load("Armor");
-
-        player.mainHand = (MainHand) Game.ITEMS.load("Sword");
-        player.offHand = (OffHand) Game.ITEMS.load("Shield");
-
-        player.controlledByPlayer = true;
-
-        this.player = player;
-        entities.addEntity(player);
     }
 
     public Room getCurrentRoom() {
@@ -608,6 +592,26 @@ public class Dungeon extends Map {
         JsonValue key = json.get("key");
         if (key != null) {
             this.key = key.asString();
+        }
+
+        JsonValue lockChance = json.get("lockChance");
+        if (lockChance != null) {
+            this.lockChance = lockChance.asFloat();
+        }
+
+        JsonValue killMonsterChance = json.get("killMonsterChance");
+        if (killMonsterChance != null) {
+            this.killMonsterChance = killMonsterChance.asFloat();
+        }
+
+        JsonValue keyChance = json.get("keyChance");
+        if (keyChance != null) {
+            this.keyChance = keyChance.asFloat();
+        }
+
+        JsonValue pushBlockChance = json.get("pushBlockChance");
+        if (pushBlockChance != null) {
+            this.pushBlockChance = pushBlockChance.asFloat();
         }
 
         JsonValue templates = json.get("templates");

@@ -145,6 +145,10 @@ public abstract class Entity implements Serializable {
         }
     }
 
+    public interface CollisionListener {
+        void onCollision(Entity e);
+    }
+
     /** Map instance the entity is currently in. Always update if map is changed. */
     public Map map;
 
@@ -184,6 +188,8 @@ public abstract class Entity implements Serializable {
 
     public Array<Item> inventory;
 
+    public Array<CollisionListener> collisionListeners;
+
     public Entity() {
         hitbox = new Hitbox(this);
         stats = new StatManager();
@@ -191,6 +197,8 @@ public abstract class Entity implements Serializable {
 
         inventory = new Array<Item>();
         inventory = new Array<Item>();
+
+        collisionListeners = new Array<CollisionListener>();
     }
 
     public void preUpdate() {
@@ -202,11 +210,15 @@ public abstract class Entity implements Serializable {
     }
 
     public void postUpdate() {
+        hitbox.position(velX * Game.getDelta(), velY * Game.getDelta());
+
         for (Entity e : map.entities.entities) {
             if (hitbox.overlaps(e)) {
                 onCollision(e);
             }
         }
+
+        hitbox.position();
 
         Hitbox attackHitbox = getAttackHitbox();
         Hitbox blockHitbox = getBlockHitbox();
@@ -423,7 +435,9 @@ public abstract class Entity implements Serializable {
      * @param e collided entity
      */
     public void onCollision(Entity e) {
-
+        for (CollisionListener collision : collisionListeners) {
+            collision.onCollision(e);
+        }
     }
 
     /** @return whether entity is attacking */

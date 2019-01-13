@@ -49,7 +49,7 @@ public class Shield extends OffHand {
                     x = h.x - 2;
                     y = h.y + 1;
                     renderBehind = true;
-                    h.blockHitbox.set(8, 1, 0, 7);
+                    h.blockHitbox.set(8, 4, 0, 4);
                     break;
                 case 3:
                     x = h.x + 2;

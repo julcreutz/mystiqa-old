@@ -3,7 +3,7 @@ package game.main.state.play.map.dungeon.lock;
 import game.main.Game;
 import game.main.state.play.map.entity.Block;
 
-public class BlockPushLock extends Lock {
+public class PushBlockLock extends Lock {
     public Block block;
 
     @Override
@@ -30,6 +30,6 @@ public class BlockPushLock extends Lock {
 
     @Override
     public boolean isLocked() {
-        return block.getStartDistance() < 8;
+        return block != null && block.getStartDistance() < 8;
     }
 }

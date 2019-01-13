@@ -22,8 +22,11 @@ public abstract class Lock {
     }
 
     public void onLock() {
-
     }
 
     public abstract boolean isLocked();
+
+    public boolean takeSameRoom() {
+        return false;
+    }
 }
