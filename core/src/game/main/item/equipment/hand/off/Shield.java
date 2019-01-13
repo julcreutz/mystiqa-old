@@ -19,6 +19,8 @@ public class Shield extends OffHand {
     public int armIndex;
     public boolean renderBehind;
 
+    public boolean blocking;
+
     @Override
     public void update(Humanoid h) {
         super.update(h);
@@ -56,6 +58,8 @@ public class Shield extends OffHand {
                     h.blockHitbox.set(8, 1, 0, 0);
                     break;
             }
+
+            blocking = true;
         } else {
             dir = (h.dir + 1) % 4;
 
@@ -83,6 +87,8 @@ public class Shield extends OffHand {
                     renderBehind = false;
                     break;
             }
+
+            blocking = false;
         }
 
         image = spriteSheet.sheet[0][dir];
@@ -107,6 +113,11 @@ public class Shield extends OffHand {
     @Override
     public boolean renderBehind() {
         return renderBehind;
+    }
+
+    @Override
+    public boolean isBlocking() {
+        return blocking;
     }
 
     @Override

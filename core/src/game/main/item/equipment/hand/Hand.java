@@ -19,4 +19,8 @@ public abstract class Hand extends Equipment {
     public boolean renderBehind() {
         return false;
     }
+
+    public boolean isBlocking() {
+        return false;
+    }
 }

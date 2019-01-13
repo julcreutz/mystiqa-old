@@ -527,7 +527,7 @@ public class Humanoid extends Entity {
 
     @Override
     public boolean isBlocking() {
-        return false;
+        return (mainHand != null && mainHand.isBlocking()) || (offHand != null && offHand.isBlocking());
     }
 
     @Override

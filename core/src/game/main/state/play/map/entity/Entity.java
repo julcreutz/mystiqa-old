@@ -220,15 +220,9 @@ public abstract class Entity implements Serializable {
                         if (!e.isHit() && e.isOnGround() && isHostile(e) && e.isVulnerable()) {
                             boolean contains = hit.contains(e, true);
 
-                            if (e.isBlocking()) {
-                                if (attackHitbox.overlaps(e.getBlockHitbox())) {
-                                    if (!contains) {
-                                        hit.add(e);
-                                    }
-                                } else {
-                                    if (contains) {
-                                        hit.removeValue(e, true);
-                                    }
+                            if (e.isBlocking() && attackHitbox.overlaps(e.getBlockHitbox())) {
+                                if (!contains) {
+                                    hit.add(e);
                                 }
                             } else {
                                 if (attackHitbox.overlaps(e)) {
