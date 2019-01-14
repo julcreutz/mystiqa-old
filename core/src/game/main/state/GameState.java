@@ -34,7 +34,7 @@ public abstract class GameState {
         buffer.begin();
 
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        Gdx.gl.glClearColor(0, 0, 0, 0);
+        Gdx.gl.glClearColor(0, 0, 0, 1);
 
         batch.setProjectionMatrix(cam.combined);
         batch.begin();
@@ -44,14 +44,12 @@ public abstract class GameState {
         buffer.end();
 
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        Gdx.gl.glClearColor(0, 0, 0, 0);
+        Gdx.gl.glClearColor(0, 0, 0, 1);
 
         batch.setProjectionMatrix(cam.combined);
 
         batch.begin();
-        batch.draw(buffer.getColorBufferTexture(),
-                cam.position.x - buffer.getWidth() * .5f, cam.position.y + buffer.getHeight() * .5f,
-                buffer.getWidth(), -buffer.getHeight());
+        renderBuffer(buffer);
         batch.end();
     }
 
@@ -61,12 +59,24 @@ public abstract class GameState {
     public void resize(int w, int h) {
         viewport.update(w, h);
 
-        buffer = new FrameBuffer(Pixmap.Format.RGBA8888, Game.WIDTH, Game.HEIGHT, false);
-        buffer.getColorBufferTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        buffer = createFrameBuffer();
     }
 
     public void dispose() {
         batch.dispose();
         buffer.dispose();
+    }
+
+    public FrameBuffer createFrameBuffer() {
+        FrameBuffer buffer = new FrameBuffer(Pixmap.Format.RGBA8888, Game.WIDTH, Game.HEIGHT, false);
+        buffer.getColorBufferTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+
+        return buffer;
+    }
+
+    public void renderBuffer(FrameBuffer buffer) {
+        batch.draw(buffer.getColorBufferTexture(),
+                cam.position.x - buffer.getWidth() * .5f, cam.position.y + buffer.getHeight() * .5f,
+                buffer.getWidth(), -buffer.getHeight());
     }
 }

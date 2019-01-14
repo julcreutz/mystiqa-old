@@ -66,7 +66,14 @@ public class MeleeWeapon extends MainHand {
                 attackTime -= Game.getDelta() * 4f * speed;
             }
 
-            float a = h.dir * 90 - 135 + (1 - attackTime) * angle;
+            float a;
+
+            if (angle == 0) {
+                a = h.dir * 90;
+            } else {
+                a = h.dir * 90 - 135 + (1 - attackTime) * angle;
+            }
+
             dist = 6 + MathUtils.sin(attackTime * MathUtils.PI) * (2f + range * 4);
 
             x = h.x + MathUtils.cosDeg(a) * dist;
@@ -74,7 +81,16 @@ public class MeleeWeapon extends MainHand {
 
             rot = MathUtils.round(a / 45f) * 45f;
 
-            renderBehind = y > h.y + 4;
+            switch (h.dir) {
+                case 0:
+                case 2:
+                    renderBehind = true;
+                    break;
+                case 1:
+                case 3:
+                    renderBehind = y > h.y + 4;
+                    break;
+            }
 
             if (attackTime < 0) {
                 attackTime = 0;

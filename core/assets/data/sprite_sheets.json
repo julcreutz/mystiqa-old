@@ -193,5 +193,10 @@
     "path": "graphics/spear.png",
     "splitW": 16,
     "splitH": 8
+  },
+  "LightCircle": {
+    "path": "graphics/light_circle.png",
+    "splitW": 256,
+    "splitH": 256
   }
 }

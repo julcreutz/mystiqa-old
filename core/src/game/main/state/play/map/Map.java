@@ -143,8 +143,10 @@ public abstract class Map implements Serializable {
         batch.draw(Game.SPRITE_SHEETS.load("GuiLayer").sheet[0][0],
                  play.cam.position.x - Game.WIDTH * .5f, play.cam.position.y + Game.HEIGHT * .5f - 8, Game.WIDTH, 8);
 
+        /*
         batch.draw(player.mainHand.icon.sheet[0][0],
                 play.cam.position.x - Game.WIDTH * .5f + 8, play.cam.position.y + Game.HEIGHT * .5f - 8);
+        */
     }
 
     public void positionCamera() {
