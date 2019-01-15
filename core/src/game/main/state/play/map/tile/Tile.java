@@ -29,11 +29,11 @@ public abstract class Tile implements Serializable {
         }
 
         /**
-         * Renders colored overlay image relative to specified entity. It's positioned
-         * relative to the entity's hitbox center.
+         * Renders colored overlay image multiplier to specified entity. It's positioned
+         * multiplier to the entity's hitbox center.
          *
          * @param batch sprite batch to render to
-         * @param e entity to render relative to
+         * @param e entity to render multiplier to
          */
         public void render(SpriteBatch batch, Entity e) {
             batch.draw(image, e.hitbox.getCenterX() - image.getRegionWidth() * .5f, e.hitbox.getY() - image.getRegionHeight() * .5f);

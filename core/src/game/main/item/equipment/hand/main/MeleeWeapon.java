@@ -54,7 +54,7 @@ public class MeleeWeapon extends MainHand {
     public boolean renderBehind;
 
     public MeleeWeapon() {
-        slowdown = new Stat(Stat.Type.SPEED, 0, 0);
+        slowdown = new Stat(Stat.Type.SPEED);
     }
 
     @Override
@@ -140,7 +140,7 @@ public class MeleeWeapon extends MainHand {
             if (!h.stats.stats.contains(slowdown, true)) {
                 h.stats.stats.add(slowdown);
             }
-            slowdown.relative = .5f;
+            slowdown.multiplier = -.5f;
         }
     }
 
@@ -150,7 +150,7 @@ public class MeleeWeapon extends MainHand {
 
         if (attackTime > 0) {
             attacking = true;
-            slowdown.relative = 0;
+            slowdown.multiplier = -1;
         }
     }
 

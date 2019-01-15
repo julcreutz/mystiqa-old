@@ -7,22 +7,27 @@ public class Stat implements Serializable {
     public enum Type {
         HEALTH,
         SPEED,
-        PHYSICAL_DAMAGE
+        MIN_PHYSICAL_DAMAGE,
+        MAX_PHYSICAL_DAMAGE
     }
 
     public Type type;
 
-    public float absolute;
-    public float relative;
+    public float value;
+    public float multiplier;
 
-    public Stat(Type type, float absolute, float relative) {
+    public Stat(Type type, float value, float multiplier) {
         this.type = type;
-        this.absolute = absolute;
-        this.relative = relative;
+        this.value = value;
+        this.multiplier = multiplier;
+    }
+
+    public Stat(Type type) {
+        this(type, 0, 0);
     }
 
     public Stat() {
-        this(null, 0, 1);
+        this(null, 0, 0);
     }
 
     @Override
@@ -32,14 +37,14 @@ public class Stat implements Serializable {
             this.type = Stat.Type.valueOf(type.asString());
         }
 
-        JsonValue absolute = json.get("absolute");
+        JsonValue absolute = json.get("value");
         if (absolute != null) {
-            this.absolute = absolute.asFloat();
+            this.value = absolute.asFloat();
         }
 
-        JsonValue relative = json.get("relative");
+        JsonValue relative = json.get("multiplier");
         if (relative != null) {
-            this.relative = relative.asFloat();
+            this.multiplier = relative.asFloat();
         }
     }
 }

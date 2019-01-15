@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.MathUtils;
 import game.main.Game;
 import game.main.state.GameState;
 import game.main.state.play.map.Map;
+import game.main.state.play.map.entity.Entity;
 
 public class Play extends GameState {
     public Map map;
@@ -101,7 +102,7 @@ public class Play extends GameState {
     public void renderLighting() {
         lighting.begin();
 
-        Gdx.gl.glClearColor(0, 0, 0, 0);
+        Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         batch.setProjectionMatrix(cam.combined);
@@ -110,7 +111,7 @@ public class Play extends GameState {
         batch.setColor(1, 1, 1, 1);
         batch.draw(Game.SPRITE_SHEETS.load("LightCircle").sheet[0][0],
                 MathUtils.round(map.player.x + 4 - 128), MathUtils.round(map.player.y + 4 - 128),
-                128, 128, 256, 256, 0.125f, 0.125f, 0);
+                128, 128, 256, 256, 0.125f * .5f, 0.125f * .5f, 0);
         batch.setColor(1, 1, 1, 1);
 
         batch.end();

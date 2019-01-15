@@ -12,6 +12,8 @@ import game.main.item.equipment.armor.Armor;
 import game.main.item.equipment.hand.off.OffHand;
 import game.main.item.equipment.hand.main.MainHand;
 import game.main.stat.Stat;
+import game.main.stat.StatCounter;
+import game.main.stat.StatManager;
 import game.main.state.play.map.tile.Tile;
 
 public class Humanoid extends Entity {
@@ -588,6 +590,25 @@ public class Humanoid extends Entity {
     @Override
     public Hitbox getBlockHitbox() {
         return blockHitbox;
+    }
+
+    @Override
+    public float count(Stat.Type type) {
+        float value = 0;
+        float multiplier = 0;
+
+        StatCounter[] counters = new StatCounter[] {this, mainHand, offHand, armor};
+
+        for (StatCounter counter : counters) {
+            for (Stat s : counter.getStats().stats) {
+                if (s.type == type) {
+                    value += s.value;
+                    multiplier += s.multiplier;
+                }
+            }
+        }
+
+        return value * (1 + multiplier);
     }
 
     @Override

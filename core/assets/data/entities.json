@@ -5,15 +5,11 @@
       "stats": [
         {
           "type": "HEALTH",
-          "absolute": 10
+          "value": 10
         },
         {
           "type": "SPEED",
-          "absolute": 24
-        },
-        {
-          "type": "PHYSICAL_DAMAGE",
-          "absolute": 1
+          "value": 24
         }
       ],
       "alignment": "GOOD",
@@ -28,15 +24,11 @@
       "stats": [
         {
           "type": "HEALTH",
-          "absolute": 4
+          "value": 4
         },
         {
           "type": "SPEED",
-          "absolute": 20
-        },
-        {
-          "type": "PHYSICAL_DAMAGE",
-          "absolute": 1
+          "value": 20
         }
       ],
       "alignment": "EVIL",
@@ -55,15 +47,19 @@
       "stats": [
         {
           "type": "HEALTH",
-          "absolute": 3
+          "value": 11
         },
         {
-          "type": "PHYSICAL_DAMAGE",
-          "absolute": 1
+          "type": "MIN_PHYSICAL_DAMAGE",
+          "value": 1
+        },
+        {
+          "type": "MAX_PHYSICAL_DAMAGE",
+          "value": 2
         },
         {
           "type": "SPEED",
-          "absolute": 1
+          "value": 1
         }
       ],
       "alignment": "EVIL",
@@ -82,15 +78,19 @@
       "stats": [
         {
           "type": "HEALTH",
-          "absolute": 2
+          "value": 2
         },
         {
-          "type": "PHYSICAL_DAMAGE",
-          "absolute": 1
+          "type": "MIN_PHYSICAL_DAMAGE",
+          "value": 1
+        },
+        {
+          "type": "MAX_PHYSICAL_DAMAGE",
+          "value": 1
         },
         {
           "type": "SPEED",
-          "absolute": 2
+          "value": 2
         }
       ],
       "alignment": "EVIL",
@@ -115,7 +115,7 @@
       "stats": [
         {
           "type": "HEALTH",
-          "absolute": 3
+          "value": 3
         }
       ],
       "body": "DragonBody",

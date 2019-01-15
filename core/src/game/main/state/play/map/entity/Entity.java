@@ -10,13 +10,14 @@ import game.loader.Serializable;
 import game.main.Game;
 import game.main.item.Item;
 import game.main.stat.Stat;
+import game.main.stat.StatCounter;
 import game.main.stat.StatManager;
 import game.main.state.play.map.Map;
 import game.main.state.play.map.tile.Tile;
 
-public abstract class Entity implements Serializable {
+public abstract class Entity implements StatCounter, Serializable {
     /**
-     * Describes a rectangle offset by specified x and y values relative to
+     * Describes a rectangle offset by specified x and y values multiplier to
      * a given entity. Uses {@link Rectangle} class to represent the rectangle itself.
      *
      * @see Rectangle
@@ -28,10 +29,10 @@ public abstract class Entity implements Serializable {
         /** The rectangle itself. */
         public Rectangle rect;
 
-        /** Value the rectangle is offset by on x axis relative to an entity. */
+        /** Value the rectangle is offset by on x axis multiplier to an entity. */
         public float offsetX;
 
-        /** Value of the rectangle is offset by on y axis relative to an entity. */
+        /** Value of the rectangle is offset by on y axis multiplier to an entity. */
         public float offsetY;
 
         /**
@@ -44,7 +45,7 @@ public abstract class Entity implements Serializable {
         }
 
         /**
-         * Positions rectangle relative to entity using offsets and two additional offset values.
+         * Positions rectangle multiplier to entity using offsets and two additional offset values.
          *
          * @param offsetX additional x offset
          * @param offsetY additional y offset
@@ -53,7 +54,7 @@ public abstract class Entity implements Serializable {
             rect.setPosition(e.x + this.offsetX + offsetX, e.y + this.offsetY + offsetY);
         }
 
-        /** Positions rectangle relative to entity using offsets. */
+        /** Positions rectangle multiplier to entity using offsets. */
         public void position() {
             position(0, 0);
         }
@@ -126,8 +127,8 @@ public abstract class Entity implements Serializable {
          *
          * @param width width of rectangle
          * @param height height of rectangle
-         * @param offsetX x offset of rectangle relative to entity
-         * @param offsetY y offset of rectangle relative to entity
+         * @param offsetX x offset of rectangle multiplier to entity
+         * @param offsetY y offset of rectangle multiplier to entity
          */
         public void set(float width, float height, float offsetX, float offsetY) {
             rect.setSize(width, height);
@@ -254,7 +255,8 @@ public abstract class Entity implements Serializable {
                                         e.hitAngle = new Vector2(e.x, e.y).sub(x, y).angle();
                                         e.hitSpeed = 48f;
 
-                                        e.health -= stats.count(Stat.Type.PHYSICAL_DAMAGE);
+                                        e.health -= MathUtils.round(MathUtils.lerp(count(Stat.Type.MIN_PHYSICAL_DAMAGE),
+                                                count(Stat.Type.MAX_PHYSICAL_DAMAGE), Game.RANDOM.nextFloat()));
 
                                         e.onHit();
 
@@ -418,7 +420,7 @@ public abstract class Entity implements Serializable {
     /** Called when entity is added to a map. */
     public void onAdded() {
         hitbox.position();
-        health = stats.count(Stat.Type.HEALTH);
+        health = count(Stat.Type.HEALTH);
     }
 
     /** Called when entity moves. */
@@ -479,7 +481,7 @@ public abstract class Entity implements Serializable {
      * @return whether entity is dead
      */
     public boolean isDead() {
-        return stats.count(Stat.Type.HEALTH) > 0 && health <= 0;
+        return count(Stat.Type.HEALTH) > 0 && health <= 0;
     }
 
     /** @return whether entity is standing on ground */
@@ -511,7 +513,7 @@ public abstract class Entity implements Serializable {
     }
 
     public float getHealthPercentage() {
-        return health / stats.count(Stat.Type.HEALTH);
+        return health / count(Stat.Type.HEALTH);
     }
 
     /** @return whether entity collides with solid tiles */
@@ -555,6 +557,16 @@ public abstract class Entity implements Serializable {
      */
     public float getSortLevel() {
         return hitbox.getY();
+    }
+
+    @Override
+    public float count(Stat.Type type) {
+        return stats.count(type);
+    }
+
+    @Override
+    public StatManager getStats() {
+        return stats;
     }
 
     @Override
