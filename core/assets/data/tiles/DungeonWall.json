@@ -1,7 +1,0 @@
-{
-  "ConnectedTile": {
-    "name": "DungeonWall",
-    "solid": true,
-    "spriteSheet": "DungeonWall"
-  }
-}

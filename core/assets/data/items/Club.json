@@ -1,8 +1,0 @@
-{
-  "MeleeWeapon": {
-    "name": "Club",
-    "spriteSheet": "Club",
-    "angle": 135,
-    "speed": 0.75
-  }
-}

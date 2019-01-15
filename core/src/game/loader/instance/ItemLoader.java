@@ -1,6 +1,5 @@
 package game.loader.instance;
 
-import com.badlogic.gdx.files.FileHandle;
 import game.main.item.Item;
 import game.main.item.collectable.Collectable;
 import game.main.item.equipment.armor.Armor;
@@ -8,10 +7,6 @@ import game.main.item.equipment.hand.main.MeleeWeapon;
 import game.main.item.equipment.hand.off.Shield;
 
 public class ItemLoader extends InstanceLoader<Item> {
-    public ItemLoader(String root) {
-        super(root);
-    }
-
     @Override
     public Item newInstance(String name) {
         if (name.equals("MeleeWeapon")) {

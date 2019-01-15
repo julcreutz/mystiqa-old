@@ -1,0 +1,65 @@
+{
+  "BattleAxe": {
+    "MeleeWeapon": {
+      "name": "BattleAxe",
+      "icon": "BattleAxeIcon",
+      "stats": [
+        {
+          "type": "MIN_PHYSICAL_DAMAGE",
+          "value": 5
+        },
+        {
+          "type": "MAX_PHYSICAL_DAMAGE",
+          "value": 7
+        }
+      ],
+      "spriteSheet": "BattleAxe",
+      "angle": 180,
+      "speed": 0.67
+    }
+  },
+  "Sword": {
+    "MeleeWeapon": {
+      "name": "Sword",
+      "spriteSheet": "Sword",
+      "angle": 135,
+      "speed": 1
+    }
+  },
+  "Spear": {
+    "MeleeWeapon": {
+      "name": "Spear",
+      "icon": "BattleAxeIcon",
+      "spriteSheet": "Spear",
+      "speed": 0.75,
+      "range": 1
+    }
+  },
+  "Club": {
+    "MeleeWeapon": {
+      "name": "Club",
+      "spriteSheet": "Club",
+      "angle": 135,
+      "speed": 0.75
+    }
+  },
+  "Shield": {
+    "Shield": {
+      "name": "Shield",
+      "spriteSheet": "Shield"
+    }
+  },
+  "Armor": {
+    "Armor": {
+      "name": "Armor",
+      "feet": "FeetArmor",
+      "body": "BodyArmor"
+    }
+  },
+  "DungeonKey": {
+    "Collectable": {
+      "name": "Key",
+      "icon": "DungeonKey"
+    }
+  }
+}
