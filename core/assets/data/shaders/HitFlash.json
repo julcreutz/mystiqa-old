@@ -1,0 +1,4 @@
+{
+  "vertexPath": "shaders/hit_flash/hit_flash.vert",
+  "fragmentPath": "shaders/hit_flash/hit_flash.frag"
+}

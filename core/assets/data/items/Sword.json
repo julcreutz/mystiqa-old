@@ -1,0 +1,8 @@
+{
+  "MeleeWeapon": {
+    "name": "Sword",
+    "spriteSheet": "Sword",
+    "angle": 135,
+    "speed": 1
+  }
+}

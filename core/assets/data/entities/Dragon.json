@@ -1,0 +1,14 @@
+{
+  "Dragon": {
+    "name": "Dragon",
+    "stats": [
+      {
+        "type": "HEALTH",
+        "value": 3
+      }
+    ],
+    "body": "DragonBody",
+    "neck": "DragonNeck",
+    "head": "DragonHead"
+  }
+}

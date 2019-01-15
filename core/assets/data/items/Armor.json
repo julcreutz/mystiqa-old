@@ -1,0 +1,7 @@
+{
+  "Armor": {
+    "name": "Armor",
+    "feet": "FeetArmor",
+    "body": "BodyArmor"
+  }
+}

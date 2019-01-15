@@ -1,0 +1,4 @@
+{
+  "vertexPath": "shaders/lighting/lighting.vert",
+  "fragmentPath": "shaders/lighting/lighting.frag"
+}

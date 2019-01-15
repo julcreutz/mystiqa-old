@@ -1,0 +1,25 @@
+{
+  "Slime": {
+    "name": "GreenSlimeSmall",
+    "stats": [
+      {
+        "type": "HEALTH",
+        "value": 2
+      },
+      {
+        "type": "MIN_PHYSICAL_DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "MAX_PHYSICAL_DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "SPEED",
+        "value": 2
+      }
+    ],
+    "alignment": "EVIL",
+    "spriteSheet": "GreenSlimeSmall"
+  }
+}

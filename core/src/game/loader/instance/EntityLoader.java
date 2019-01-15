@@ -3,6 +3,10 @@ package game.loader.instance;
 import game.main.state.play.map.entity.*;
 
 public class EntityLoader extends InstanceLoader<Entity> {
+    public EntityLoader(String root) {
+        super(root);
+    }
+
     @Override
     public Entity newInstance(String name) {
         if (name.equals("Humanoid")) {

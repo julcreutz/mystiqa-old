@@ -1,0 +1,19 @@
+{
+  "Humanoid": {
+    "name": "Human",
+    "stats": [
+      {
+        "type": "HEALTH",
+        "value": 10
+      },
+      {
+        "type": "SPEED",
+        "value": 24
+      }
+    ],
+    "alignment": "GOOD",
+    "feet": "HumanFeet",
+    "body": "HumanBody",
+    "head": "HumanHead"
+  }
+}
