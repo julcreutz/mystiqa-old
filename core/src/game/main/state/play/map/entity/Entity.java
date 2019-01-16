@@ -428,6 +428,12 @@ public abstract class Entity implements StatCounter, Serializable {
         return true;
     }
 
+    /** @return correctly positioned hitbox of entity */
+    public Hitbox getHitbox() {
+        hitbox.position();
+        return hitbox;
+    }
+
     public Hitbox getAttackHitbox() {
         return null;
     }

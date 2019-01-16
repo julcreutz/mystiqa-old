@@ -133,6 +133,10 @@ public class Dungeon extends Map {
                 if (monsters.contains(e.e, true)) {
                     monsters.removeValue(e.e, true);
                 }
+            } else if (e instanceof AddedEvent) {
+                if (e.e.getHitbox().overlaps(getBounds()) && e.e.isMonster) {
+                    monsters.add(e.e);
+                }
             }
         }
     }
@@ -529,7 +533,7 @@ public class Dungeon extends Map {
                 monster.x = x * 8;
                 monster.y = y * 8;
 
-                r.monsters.add(monster);
+                //r.monsters.add(monster);
 
                 entities.addEntity(monster);
             }
