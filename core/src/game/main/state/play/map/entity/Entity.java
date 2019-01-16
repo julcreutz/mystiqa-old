@@ -13,13 +13,10 @@ import game.main.stat.Stat;
 import game.main.stat.StatCounter;
 import game.main.stat.StatManager;
 import game.main.state.play.map.Map;
-import game.main.state.play.map.entity.event.CollisionEvent;
-import game.main.state.play.map.entity.event.DeathEvent;
-import game.main.state.play.map.entity.event.EntityEvent;
-import game.main.state.play.map.entity.event.EntityListener;
+import game.main.state.play.map.entity.event.*;
 import game.main.state.play.map.tile.Tile;
 
-public abstract class Entity implements EntityListener, StatCounter, Serializable {
+public abstract class Entity implements StatCounter, Serializable {
     /**
      * Describes a rectangle offset by specified x and y values multiplier to
      * a given entity. Uses {@link Rectangle} class to represent the rectangle itself.
@@ -251,9 +248,11 @@ public abstract class Entity implements EntityListener, StatCounter, Serializabl
                                         e.health -= MathUtils.round(MathUtils.lerp(count(Stat.Type.MIN_PHYSICAL_DAMAGE),
                                                 count(Stat.Type.MAX_PHYSICAL_DAMAGE), Game.RANDOM.nextFloat()));
 
-                                        e.onHit();
+                                        map.screenShake += isDead() ? 1f : .5f;
 
                                         hit.add(e);
+
+                                        e.onHit(this);
                                     }
                                 } else {
                                     if (contains) {
@@ -286,7 +285,6 @@ public abstract class Entity implements EntityListener, StatCounter, Serializabl
         } else {
             if (isDead()) {
                 onDeath();
-                map.entities.entities.removeValue(this, true);
             }
         }
 
@@ -410,45 +408,6 @@ public abstract class Entity implements EntityListener, StatCounter, Serializabl
         }
     }
 
-    /** Called when entity is added to a map. */
-    public void onAdded() {
-        hitbox.position();
-        health = count(Stat.Type.HEALTH);
-    }
-
-    /** Called when entity moves. */
-    public void onMove() {
-
-    }
-
-    /** Called when entity is hit. */
-    public void onHit() {
-        map.screenShake += isDead() ? 1f : .5f;
-    }
-
-    /** Called when entity dies. */
-    public void onDeath() {
-        entities.sendEvent(new DeathEvent(this));
-
-        for (Item i : inventory) {
-            ItemDrop drop = new ItemDrop(i);
-
-            drop.x = x;
-            drop.y = y;
-
-            map.entities.addEntity(drop);
-        }
-    }
-
-    /**
-     * Called on collision with another entity.
-     *
-     * @param e collided entity
-     */
-    public void onCollision(Entity e) {
-        sendEvent(new CollisionEvent(this, e));
-    }
-
     /** @return whether entity is attacking */
     public boolean isAttacking() {
         return false;
@@ -505,6 +464,40 @@ public abstract class Entity implements EntityListener, StatCounter, Serializabl
         return health / count(Stat.Type.HEALTH);
     }
 
+    public void onAdded() {
+        sendEvent(new AddEvent(this));
+
+        hitbox.position();
+        health = count(Stat.Type.HEALTH);
+    }
+
+    public void onCollision(Entity e) {
+        sendEvent(new CollisionEvent(this, e));
+    }
+
+    public void onHit(Entity by) {
+        sendEvent(new HitEvent(this, by));
+    }
+
+    public void onDeath() {
+        sendEvent(new DeathEvent(this));
+
+        map.entities.entities.removeValue(this, true);
+
+        for (Item i : inventory) {
+            ItemDrop drop = new ItemDrop(i);
+
+            drop.x = x;
+            drop.y = y;
+
+            map.entities.addEntity(drop);
+        }
+    }
+
+    public void onMove() {
+        sendEvent(new MoveEvent(this));
+    }
+
     /** @return whether entity collides with solid tiles */
     public boolean collidesWithSolidTiles() {
         return true;
@@ -550,11 +543,6 @@ public abstract class Entity implements EntityListener, StatCounter, Serializabl
 
     public void sendEvent(EntityEvent e) {
         entities.sendEvent(e);
-    }
-
-    @Override
-    public void onEvent(EntityEvent e) {
-
     }
 
     @Override

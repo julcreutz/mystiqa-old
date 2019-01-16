@@ -13,6 +13,8 @@ import game.main.item.equipment.hand.right.RightHand;
 import game.main.item.equipment.hand.left.LeftHand;
 import game.main.stat.Stat;
 import game.main.stat.StatCounter;
+import game.main.state.play.map.entity.event.EntityEvent;
+import game.main.state.play.map.entity.event.MoveEvent;
 import game.main.state.play.map.tile.Tile;
 
 public class Humanoid extends Entity {
@@ -537,8 +539,6 @@ public class Humanoid extends Entity {
 
                 break;
         }
-
-        //getAttackHitbox().render(batch);
     }
 
     public void attack() {

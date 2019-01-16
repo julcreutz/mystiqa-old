@@ -2,6 +2,8 @@ package game.main.state.play.map.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import game.main.item.Item;
+import game.main.state.play.map.entity.event.CollisionEvent;
+import game.main.state.play.map.entity.event.EntityEvent;
 
 public class ItemDrop extends Entity {
     public Item i;

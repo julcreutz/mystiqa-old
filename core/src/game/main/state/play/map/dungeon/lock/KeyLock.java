@@ -2,7 +2,6 @@ package game.main.state.play.map.dungeon.lock;
 
 import game.main.Game;
 import game.main.item.Item;
-import game.main.state.play.map.entity.Entity;
 import game.main.state.play.map.entity.event.CollisionEvent;
 import game.main.state.play.map.entity.event.EntityEvent;
 
@@ -33,8 +32,8 @@ public class KeyLock extends Lock {
     }
 
     @Override
-    public void onEvent(EntityEvent e) {
-        super.onEvent(e);
+    public void eventReceived(EntityEvent e) {
+        super.eventReceived(e);
 
         if (e instanceof CollisionEvent) {
             if (e.e == dungeon.player && ((CollisionEvent) e).other == door && e.e.inventory.contains(key, true)) {

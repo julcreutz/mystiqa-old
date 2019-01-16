@@ -54,7 +54,7 @@ public abstract class Lock implements EntityListener {
     }
 
     @Override
-    public void onEvent(EntityEvent e) {
+    public void eventReceived(EntityEvent e) {
 
     }
 }

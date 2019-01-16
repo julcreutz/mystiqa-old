@@ -129,7 +129,7 @@ public class Dungeon extends Map {
         }
 
         @Override
-        public void onEvent(EntityEvent e) {
+        public void eventReceived(EntityEvent e) {
             if (e instanceof DeathEvent) {
                 if (monsters.contains(e.e, true)) {
                     monsters.removeValue(e.e, true);
@@ -243,7 +243,8 @@ public class Dungeon extends Map {
     public static final int WIDTH = 16;
     public static final int HEIGHT = 8;
 
-    public int[] roomCount;
+    public int minRooms;
+    public int maxRooms;
 
     public String ground;
     public String outerWall;
@@ -280,7 +281,7 @@ public class Dungeon extends Map {
         super.generate();
 
         // Generate parent layout
-        int roomCount = this.roomCount[Game.RANDOM.nextInt(this.roomCount.length)];
+        int roomCount = minRooms + Game.RANDOM.nextInt(maxRooms - minRooms + 1);
 
         rooms = new Array<Room>();
 
@@ -634,9 +635,14 @@ public class Dungeon extends Map {
 
     @Override
     public void deserialize(JsonValue json) {
-        JsonValue roomCount = json.get("roomCount");
-        if (roomCount != null) {
-            this.roomCount = roomCount.asIntArray();
+        JsonValue minRooms = json.get("minRooms");
+        if (minRooms != null) {
+            this.minRooms = minRooms.asInt();
+        }
+
+        JsonValue maxRooms = json.get("maxRooms");
+        if (maxRooms != null) {
+            this.maxRooms = maxRooms.asInt();
         }
 
         JsonValue ground = json.get("ground");

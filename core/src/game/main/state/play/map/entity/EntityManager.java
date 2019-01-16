@@ -3,6 +3,7 @@ package game.main.state.play.map.entity;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import game.main.state.play.map.Map;
+import game.main.state.play.map.entity.event.AddEvent;
 import game.main.state.play.map.entity.event.EntityEvent;
 import game.main.state.play.map.entity.event.EntityListener;
 
@@ -78,9 +79,8 @@ public class EntityManager {
         e.map = map;
         e.entities = this;
 
-        addListener(e);
-
         invisibleEntities.add(e);
+
         e.onAdded();
     }
 
@@ -90,8 +90,8 @@ public class EntityManager {
     }
 
     public void sendEvent(EntityEvent e) {
-        for (EntityListener l : listeners) {
-            l.onEvent(e);
+        for (int i = 0; i < listeners.size; i++) {
+            listeners.get(i).eventReceived(e);
         }
     }
 

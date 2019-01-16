@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import game.loader.resource.sprite_sheet.SpriteSheet;
 import game.main.Game;
+import game.main.state.play.map.entity.event.AddEvent;
 import game.main.state.play.map.entity.event.DeathEvent;
 import game.main.state.play.map.entity.event.EntityEvent;
 
@@ -57,6 +58,13 @@ public class Dragon extends Entity {
         }
 
         @Override
+        public void onDeath() {
+            super.onDeath();
+
+            body.heads.removeValue(this, true);
+        }
+
+        @Override
         public float getSortLevel() {
             return Float.MIN_VALUE;
         }
@@ -74,15 +82,6 @@ public class Dragon extends Entity {
         @Override
         public boolean collidesWithSolidTiles() {
             return false;
-        }
-
-        @Override
-        public void onEvent(EntityEvent e) {
-            super.onEvent(e);
-
-            if (e instanceof DeathEvent) {
-                body.heads.removeValue(this, true);
-            }
         }
     }
 
