@@ -1,4 +1,4 @@
-package game.main.item.equipment.hand.main;
+package game.main.item.equipment.hand.right;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -9,7 +9,7 @@ import game.main.Game;
 import game.main.state.play.map.entity.Humanoid;
 import game.main.stat.Stat;
 
-public class MeleeWeapon extends MainHand {
+public class MeleeWeapon extends RightHand {
     public static final float[][] X = new float[][] {
             {5, 6, 5, 3},
             {3, 0, 3, 4},

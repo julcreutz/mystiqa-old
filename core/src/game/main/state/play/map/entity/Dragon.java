@@ -7,6 +7,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import game.loader.resource.sprite_sheet.SpriteSheet;
 import game.main.Game;
+import game.main.state.play.map.entity.event.DeathEvent;
+import game.main.state.play.map.entity.event.EntityEvent;
 
 public class Dragon extends Entity {
     public static class Head extends Entity {
@@ -73,6 +75,15 @@ public class Dragon extends Entity {
         public boolean collidesWithSolidTiles() {
             return false;
         }
+
+        @Override
+        public void onEvent(EntityEvent e) {
+            super.onEvent(e);
+
+            if (e instanceof DeathEvent) {
+                body.heads.removeValue(this, true);
+            }
+        }
     }
 
     public SpriteSheet body;
@@ -125,13 +136,6 @@ public class Dragon extends Entity {
 
             h.x = x + 4;
             h.y = y + 2;
-
-            h.deathListeners.add(new DeathListener() {
-                @Override
-                public void onDeath() {
-                    heads.removeValue(h, true);
-                }
-            });
 
             heads.add(h);
             map.entities.addEntity(h);

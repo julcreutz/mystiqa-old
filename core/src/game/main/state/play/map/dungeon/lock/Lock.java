@@ -2,12 +2,12 @@ package game.main.state.play.map.dungeon.lock;
 
 import game.main.state.play.map.dungeon.Dungeon;
 import game.main.state.play.map.entity.Door;
+import game.main.state.play.map.entity.event.EntityEvent;
+import game.main.state.play.map.entity.event.EntityListener;
 
-public abstract class Lock {
+public abstract class Lock implements EntityListener {
     public enum Type {
-        KILL_MONSTER,
-        KEY,
-        PUSH_BLOCK;
+        KILL_MONSTER, KEY, PUSH_BLOCK, INVISIBLE_DOOR;
 
         public Lock newInstance() {
             switch (this) {
@@ -17,6 +17,8 @@ public abstract class Lock {
                     return new KeyLock();
                 case PUSH_BLOCK:
                     return new PushBlockLock();
+                case INVISIBLE_DOOR:
+                    return new InvisibleDoorLock();
             }
 
             return null;
@@ -43,9 +45,16 @@ public abstract class Lock {
     public void onLock() {
     }
 
+    public abstract boolean isRoomValid();
+
     public abstract boolean isLocked();
 
     public boolean takeSameRoom() {
         return false;
+    }
+
+    @Override
+    public void onEvent(EntityEvent e) {
+
     }
 }

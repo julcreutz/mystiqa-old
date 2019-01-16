@@ -100,7 +100,8 @@
   "DungeonDoor": {
     "Door": {
       "name": "DungeonDoor",
-      "spriteSheet": "DungeonDoor"
+      "spriteSheet": "DungeonDoor",
+      "wall": "DungeonWall"
     }
   },
   "DungeonBlock": {

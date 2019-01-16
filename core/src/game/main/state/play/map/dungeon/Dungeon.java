@@ -7,24 +7,20 @@ import com.badlogic.gdx.utils.JsonValue;
 import game.loader.Serializable;
 import game.main.Game;
 import game.main.item.equipment.armor.Armor;
-import game.main.item.equipment.hand.main.MainHand;
-import game.main.item.equipment.hand.off.OffHand;
-import game.main.state.play.Play;
+import game.main.item.equipment.hand.right.RightHand;
+import game.main.item.equipment.hand.left.LeftHand;
 import game.main.state.play.map.Map;
-import game.main.state.play.map.dungeon.lock.PushBlockLock;
-import game.main.state.play.map.dungeon.lock.KeyLock;
 import game.main.state.play.map.dungeon.lock.Lock;
-import game.main.state.play.map.dungeon.lock.KillMonsterLock;
 import game.main.state.play.map.entity.Door;
-import game.main.state.play.map.entity.Dragon;
 import game.main.state.play.map.entity.Entity;
 import game.main.state.play.map.entity.Humanoid;
+import game.main.state.play.map.entity.event.DeathEvent;
+import game.main.state.play.map.entity.event.EntityEvent;
+import game.main.state.play.map.entity.event.EntityListener;
 import game.main.state.play.map.tile.Tile;
 
-import java.util.Arrays;
-
 public class Dungeon extends Map {
-    public static class Room {
+    public static class Room implements EntityListener {
         public Dungeon map;
 
         public Rectangle rect;
@@ -39,6 +35,8 @@ public class Dungeon extends Map {
         public Array<Entity> monsters;
 
         public boolean containsPlayer;
+
+        public float difficulty;
 
         public Room(Dungeon map, int x, int y, int w, int h) {
             this.map = map;
@@ -56,13 +54,6 @@ public class Dungeon extends Map {
         }
 
         public void update() {
-            // Remove dead monsters from tracking list
-            for (Entity e : map.entities.entities) {
-                if (monsters.contains(e, true) && e.isDead() && !e.isHit()) {
-                    monsters.removeValue(e, true);
-                }
-            }
-
             if (!containsPlayer && containsPlayer()) {
                 containsPlayer = true;
             }
@@ -125,46 +116,6 @@ public class Dungeon extends Map {
             return getTileY() + getTileHeight();
         }
 
-        public boolean isOpenRight() {
-            for (Room child : children) {
-                if (child.x0() > x0()) {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        public boolean isOpenUp() {
-            for (Room child : children) {
-                if (child.y0() > y0()) {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        public boolean isOpenLeft() {
-            for (Room child : children) {
-                if (child.x0() < x0()) {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        public boolean isOpenDown() {
-            for (Room child : children) {
-                if (child.y0() < y0()) {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
         public Rectangle getBounds() {
             return bounds.setPosition(x0() * 8 + 4, y0() * 8 + 4);
         }
@@ -175,6 +126,15 @@ public class Dungeon extends Map {
 
         public boolean containsPlayer() {
             return map.player.hitbox.overlaps(getEnterBounds());
+        }
+
+        @Override
+        public void onEvent(EntityEvent e) {
+            if (e instanceof DeathEvent) {
+                if (monsters.contains(e.e, true)) {
+                    monsters.removeValue(e.e, true);
+                }
+            }
         }
     }
 
@@ -387,6 +347,9 @@ public class Dungeon extends Map {
                         room.parent = r;
                         r.children.add(room);
 
+                        room.difficulty = r.difficulty + Game.RANDOM.nextFloat();
+                        entities.addListener(room);
+
                         rooms.add(room);
                     }
                 }
@@ -395,6 +358,19 @@ public class Dungeon extends Map {
             if (done) {
                 break;
             }
+        }
+
+        // Normalize difficulty
+        float maxDifficulty = 0;
+
+        for (Room r : rooms) {
+            if (r.difficulty > maxDifficulty) {
+                maxDifficulty = r.difficulty;
+            }
+        }
+
+        for (Room r : rooms) {
+            r.difficulty /= maxDifficulty;
         }
 
         tiles.initSize(WIDTH * 16, HEIGHT * 8, 8);
@@ -518,8 +494,8 @@ public class Dungeon extends Map {
 
         player.armor = (Armor) Game.ITEMS.load("Armor");
 
-        player.mainHand = (MainHand) Game.ITEMS.load("BattleAxe");
-        player.offHand = (OffHand) Game.ITEMS.load("Shield");
+        player.rightHand = (RightHand) Game.ITEMS.load("BattleAxe");
+        player.leftHand = (LeftHand) Game.ITEMS.load("Shield");
 
         player.controlledByPlayer = true;
 
@@ -536,9 +512,9 @@ public class Dungeon extends Map {
         */
 
         // Place monsters randomly
-        for (Room r : rooms) {
-            for (int i = 0; i < 1 + Game.RANDOM.nextInt(4); i++) {
-                Entity monster = Game.ENTITIES.load(monsters[Game.RANDOM.nextInt(monsters.length)]);
+        for (final Room r : rooms) {
+            for (int i = 0; i < MathUtils.round(r.difficulty * 5f); i++) {
+                final Entity monster = Game.ENTITIES.load(monsters[Game.RANDOM.nextInt(monsters.length)]);
 
                 int x;
                 int y;
@@ -588,19 +564,32 @@ public class Dungeon extends Map {
                 entities.addEntity(d);
 
                 if (Game.RANDOM.nextFloat() < lockChance) {
-                    Lock l = Lock.Type.valueOf(locks[Game.RANDOM.nextInt(locks.length)]).newInstance();
+                    Lock l;
 
-                    l.dungeon = this;
+                    do {
+                        l = Lock.Type.valueOf(locks[Game.RANDOM.nextInt(locks.length)]).newInstance();
+
+                        l.dungeon = this;
+
+                        Array<Room> rooms = getRoomsUntil(child);
+                        if (l.takeSameRoom()) {
+                            l.room = r;
+                        } else {
+                            l.room = rooms.first();
+
+                            // Take room with highest difficulty
+                            for (Room room : rooms) {
+                                if (room.difficulty > l.room.difficulty) {
+                                    l.room = room;
+                                }
+                            }
+                        }
+                    } while (!l.isRoomValid());
 
                     l.door = d;
                     d.lock = l;
 
-                    Array<Room> rooms = getRoomsUntil(child);
-                    if (l.takeSameRoom()) {
-                        l.room = r;
-                    } else {
-                        l.room = rooms.get(Game.RANDOM.nextInt(rooms.size));
-                    }
+                    entities.addListener(l);
 
                     l.onLock();
                 }

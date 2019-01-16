@@ -3,10 +3,10 @@ package game.main.state.play.map.entity;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import game.main.state.play.map.Map;
-import game.main.state.play.map.entity.Entity;
+import game.main.state.play.map.entity.event.EntityEvent;
+import game.main.state.play.map.entity.event.EntityListener;
 
 import java.util.Comparator;
-import java.util.Iterator;
 
 public class EntityManager {
     public Map map;
@@ -14,11 +14,15 @@ public class EntityManager {
     public Array<Entity> entities;
     public Array<Entity> invisibleEntities;
 
+    public Array<EntityListener> listeners;
+
     public EntityManager(Map map) {
         this.map = map;
 
         entities = new Array<Entity>();
         invisibleEntities = new Array<Entity>();
+
+        listeners = new Array<EntityListener>();
     }
 
     public void update() {
@@ -37,6 +41,7 @@ public class EntityManager {
             if (!map.isVisible(e)) {
                 invisibleEntities.add(e);
                 entities.removeIndex(i);
+
                 continue;
             }
 
@@ -71,6 +76,9 @@ public class EntityManager {
 
     public void addEntity(Entity e) {
         e.map = map;
+        e.entities = this;
+
+        addListener(e);
 
         invisibleEntities.add(e);
         e.onAdded();
@@ -79,5 +87,15 @@ public class EntityManager {
     public void clear() {
         entities.clear();
         invisibleEntities.clear();
+    }
+
+    public void sendEvent(EntityEvent e) {
+        for (EntityListener l : listeners) {
+            l.onEvent(e);
+        }
+    }
+
+    public void addListener(EntityListener listener) {
+        listeners.add(listener);
     }
 }

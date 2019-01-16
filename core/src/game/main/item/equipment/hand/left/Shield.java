@@ -1,15 +1,13 @@
-package game.main.item.equipment.hand.off;
+package game.main.item.equipment.hand.left;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.JsonValue;
 import game.loader.resource.sprite_sheet.SpriteSheet;
 import game.main.Game;
-import game.main.stat.Stat.Type;
 import game.main.state.play.map.entity.Humanoid;
-import game.main.stat.Stat;
 
-public class Shield extends OffHand {
+public class Shield extends LeftHand {
     public SpriteSheet spriteSheet;
     public TextureRegion image;
 

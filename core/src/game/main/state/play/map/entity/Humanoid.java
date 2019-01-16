@@ -9,11 +9,10 @@ import com.badlogic.gdx.utils.JsonValue;
 import game.loader.resource.sprite_sheet.SpriteSheet;
 import game.main.Game;
 import game.main.item.equipment.armor.Armor;
-import game.main.item.equipment.hand.off.OffHand;
-import game.main.item.equipment.hand.main.MainHand;
+import game.main.item.equipment.hand.right.RightHand;
+import game.main.item.equipment.hand.left.LeftHand;
 import game.main.stat.Stat;
 import game.main.stat.StatCounter;
-import game.main.stat.StatManager;
 import game.main.state.play.map.tile.Tile;
 
 public class Humanoid extends Entity {
@@ -32,8 +31,8 @@ public class Humanoid extends Entity {
     public Hitbox attackHitbox;
     public Hitbox blockHitbox;
 
-    public MainHand mainHand;
-    public OffHand offHand;
+    public RightHand rightHand;
+    public LeftHand leftHand;
 
     public Armor armor;
 
@@ -147,7 +146,7 @@ public class Humanoid extends Entity {
                             if (MathUtils.randomBoolean(getHealthPercentage())) {
                                 state = State.ATTACK_PLAYER;
                             } else {
-                                if (offHand != null) {
+                                if (leftHand != null) {
                                     state = State.BLOCK;
                                 } else {
                                     state = State.FLEE;
@@ -171,7 +170,7 @@ public class Humanoid extends Entity {
                         break;
                     }
 
-                    mainHand.use();
+                    rightHand.use();
 
                     moveAngle = toPlayer.angle();
                     moveSpeed = 1;
@@ -182,7 +181,7 @@ public class Humanoid extends Entity {
                         blockTime = MathUtils.random(.5f, 1f);
                     }
 
-                    offHand.use();
+                    leftHand.use();
 
                     moveSpeed = -1;
 
@@ -248,16 +247,16 @@ public class Humanoid extends Entity {
             }
         }
 
-        if (mainHand != null) {
+        if (rightHand != null) {
             if (useMainHand) {
                 attack();
             }
 
-            mainHand.update(this);
+            rightHand.update(this);
         }
 
-        if (offHand != null) {
-            offHand.update(this);
+        if (leftHand != null) {
+            leftHand.update(this);
         }
 
         if (attackTime > 0) {
@@ -293,8 +292,8 @@ public class Humanoid extends Entity {
 
         yOffset = this.y + (step % 2 != 0 ? -1 : 0);
 
-        int rightArmIndex = mainHand != null ? mainHand.getArmIndex() : step;
-        int leftArmIndex = offHand != null ? offHand.getArmIndex() : step;
+        int rightArmIndex = rightHand != null ? rightHand.getArmIndex() : step;
+        int leftArmIndex = leftHand != null ? leftHand.getArmIndex() : step;
 
         switch (dir) {
             case 0:
@@ -305,8 +304,8 @@ public class Humanoid extends Entity {
                     batch.draw(armor.feet.sheet[(step + 2) % feet.sheet.length][dir], x, yOffset);
                 }
 
-                if (offHand != null && offHand.renderBehind()) {
-                    offHand.render(batch, this);
+                if (leftHand != null && leftHand.renderBehind()) {
+                    leftHand.render(batch, this);
                 }
 
                 // Left arm
@@ -316,8 +315,8 @@ public class Humanoid extends Entity {
                     batch.draw(armor.body.sheet[1 + leftArmIndex % (body.sheet.length - 1)][dir], x, yOffset);
                 }
 
-                if (offHand != null && !offHand.renderBehind()) {
-                    offHand.render(batch, this);
+                if (leftHand != null && !leftHand.renderBehind()) {
+                    leftHand.render(batch, this);
                 }
 
                 // Torso
@@ -341,8 +340,8 @@ public class Humanoid extends Entity {
                     batch.draw(armor.head.sheet[step % head.sheet.length][dir], x, yOffset);
                 }
 
-                if (mainHand != null && mainHand.renderBehind()) {
-                    mainHand.render(batch, this);
+                if (rightHand != null && rightHand.renderBehind()) {
+                    rightHand.render(batch, this);
                 }
 
                 // Right arm
@@ -352,8 +351,8 @@ public class Humanoid extends Entity {
                     batch.draw(armor.body.sheet[1 + (rightArmIndex + 2) % (body.sheet.length - 1)][dir], x, yOffset);
                 }
 
-                if (mainHand != null && !mainHand.renderBehind()) {
-                    mainHand.render(batch, this);
+                if (rightHand != null && !rightHand.renderBehind()) {
+                    rightHand.render(batch, this);
                 }
 
                 break;
@@ -365,8 +364,8 @@ public class Humanoid extends Entity {
                     batch.draw(armor.feet.sheet[step % feet.sheet.length][dir], x, yOffset);
                 }
 
-                if (mainHand != null && mainHand.renderBehind()) {
-                    mainHand.render(batch, this);
+                if (rightHand != null && rightHand.renderBehind()) {
+                    rightHand.render(batch, this);
                 }
 
                 // Right arm
@@ -376,8 +375,8 @@ public class Humanoid extends Entity {
                     batch.draw(armor.body.sheet[1 + (rightArmIndex + 2) % (body.sheet.length - 1)][dir], x, yOffset);
                 }
 
-                if (mainHand != null && !mainHand.renderBehind()) {
-                    mainHand.render(batch, this);
+                if (rightHand != null && !rightHand.renderBehind()) {
+                    rightHand.render(batch, this);
                 }
 
                 // Torso
@@ -401,8 +400,8 @@ public class Humanoid extends Entity {
                     batch.draw(armor.head.sheet[step % head.sheet.length][dir], x, yOffset);
                 }
 
-                if (offHand != null && offHand.renderBehind()) {
-                    offHand.render(batch, this);
+                if (leftHand != null && leftHand.renderBehind()) {
+                    leftHand.render(batch, this);
                 }
 
                 // Left arm
@@ -412,8 +411,8 @@ public class Humanoid extends Entity {
                     batch.draw(armor.body.sheet[1 + leftArmIndex % (body.sheet.length - 1)][dir], x, yOffset);
                 }
 
-                if (offHand != null && !offHand.renderBehind()) {
-                    offHand.render(batch, this);
+                if (leftHand != null && !leftHand.renderBehind()) {
+                    leftHand.render(batch, this);
                 }
 
                 break;
@@ -432,8 +431,8 @@ public class Humanoid extends Entity {
                     batch.draw(armor.feet.sheet[step % feet.sheet.length][dir], x, yOffset, 4, 4, 8, 8, -1, 1, 0);
                 }
 
-                if (offHand != null && offHand.renderBehind()) {
-                    offHand.render(batch, this);
+                if (leftHand != null && leftHand.renderBehind()) {
+                    leftHand.render(batch, this);
                 }
 
                 // Left arm
@@ -450,12 +449,12 @@ public class Humanoid extends Entity {
                     batch.draw(armor.body.sheet[0][dir], x, yOffset);
                 }
 
-                if (offHand != null && !offHand.renderBehind()) {
-                    offHand.render(batch, this);
+                if (leftHand != null && !leftHand.renderBehind()) {
+                    leftHand.render(batch, this);
                 }
 
-                if (mainHand != null && mainHand.renderBehind()) {
-                    mainHand.render(batch, this);
+                if (rightHand != null && rightHand.renderBehind()) {
+                    rightHand.render(batch, this);
                 }
 
                 // Right arm
@@ -465,8 +464,8 @@ public class Humanoid extends Entity {
                     batch.draw(armor.body.sheet[1 + (rightArmIndex) % (body.sheet.length - 1)][dir], x, yOffset, 4, 4, 8, 8, -1, 1, 0);
                 }
 
-                if (mainHand != null && !mainHand.renderBehind()) {
-                    mainHand.render(batch, this);
+                if (rightHand != null && !rightHand.renderBehind()) {
+                    rightHand.render(batch, this);
                 }
 
                 // Head
@@ -499,8 +498,8 @@ public class Humanoid extends Entity {
                     batch.draw(armor.body.sheet[0][dir], x, yOffset);
                 }
 
-                if (offHand != null && offHand.renderBehind()) {
-                    offHand.render(batch, this);
+                if (leftHand != null && leftHand.renderBehind()) {
+                    leftHand.render(batch, this);
                 }
 
                 // Left arm
@@ -510,8 +509,8 @@ public class Humanoid extends Entity {
                     batch.draw(armor.body.sheet[1 + (leftArmIndex) % (body.sheet.length - 1)][dir], x, yOffset, 4, 4, 8, 8, -1, 1, 0);
                 }
 
-                if (mainHand != null && mainHand.renderBehind()) {
-                    mainHand.render(batch, this);
+                if (rightHand != null && rightHand.renderBehind()) {
+                    rightHand.render(batch, this);
                 }
 
                 // Right arm
@@ -528,12 +527,12 @@ public class Humanoid extends Entity {
                     batch.draw(armor.head.sheet[step % head.sheet.length][dir], x, yOffset);
                 }
 
-                if (offHand != null && !offHand.renderBehind()) {
-                    offHand.render(batch, this);
+                if (leftHand != null && !leftHand.renderBehind()) {
+                    leftHand.render(batch, this);
                 }
 
-                if (mainHand != null && !mainHand.renderBehind()) {
-                    mainHand.render(batch, this);
+                if (rightHand != null && !rightHand.renderBehind()) {
+                    rightHand.render(batch, this);
                 }
 
                 break;
@@ -548,20 +547,20 @@ public class Humanoid extends Entity {
     }
 
     public void onStartAttack() {
-        if (mainHand != null) {
-            mainHand.onStartAttack(this);
+        if (rightHand != null) {
+            rightHand.onStartAttack(this);
         }
     }
 
     public void onAttack() {
-        if (mainHand != null) {
-            mainHand.onAttack(this);
+        if (rightHand != null) {
+            rightHand.onAttack(this);
         }
     }
 
     public void onFinishAttack() {
-        if (mainHand != null) {
-            mainHand.onFinishAttack(this);
+        if (rightHand != null) {
+            rightHand.onFinishAttack(this);
         }
     }
 
@@ -574,12 +573,12 @@ public class Humanoid extends Entity {
 
     @Override
     public boolean isAttacking() {
-        return attackTime > 0 || mainHand.isAttacking();
+        return attackTime > 0 || rightHand.isAttacking();
     }
 
     @Override
     public boolean isBlocking() {
-        return (mainHand != null && mainHand.isBlocking()) || (offHand != null && offHand.isBlocking());
+        return (rightHand != null && rightHand.isBlocking()) || (leftHand != null && leftHand.isBlocking());
     }
 
     @Override
@@ -597,7 +596,7 @@ public class Humanoid extends Entity {
         float value = 0;
         float multiplier = 0;
 
-        StatCounter[] counters = new StatCounter[] {this, mainHand, offHand, armor};
+        StatCounter[] counters = new StatCounter[] {this, rightHand, leftHand, armor};
 
         for (StatCounter counter : counters) {
             for (Stat s : counter.getStats().stats) {
@@ -635,14 +634,14 @@ public class Humanoid extends Entity {
             this.armor = (Armor) Game.ITEMS.load(armor.asString());
         }
 
-        JsonValue mainHand = json.get("mainHand");
+        JsonValue mainHand = json.get("rightHand");
         if (mainHand != null) {
-            this.mainHand = (MainHand) Game.ITEMS.load(mainHand.asString());
+            this.rightHand = (RightHand) Game.ITEMS.load(mainHand.asString());
         }
 
-        JsonValue offHand = json.get("offHand");
+        JsonValue offHand = json.get("leftHand");
         if (offHand != null) {
-            this.offHand = (OffHand) Game.ITEMS.load(offHand.asString());
+            this.leftHand = (LeftHand) Game.ITEMS.load(offHand.asString());
         }
     }
 }

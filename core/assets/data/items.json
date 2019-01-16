@@ -29,7 +29,16 @@
   "Spear": {
     "MeleeWeapon": {
       "name": "Spear",
-      "icon": "BattleAxeIcon",
+      "stats": [
+        {
+          "type": "MIN_PHYSICAL_DAMAGE",
+          "value": 2
+        },
+        {
+          "type": "MIN_PHYSICAL_DAMAGE",
+          "value": 4
+        }
+      ],
       "spriteSheet": "Spear",
       "speed": 0.75,
       "range": 1

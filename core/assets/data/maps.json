@@ -8,7 +8,7 @@
       "door": "DungeonDoor",
       "monsters": ["GreenSlime"],
       "key": "DungeonKey",
-      "locks": ["KILL_MONSTER", "KEY", "PUSH_BLOCK"],
+      "locks": ["KILL_MONSTER", "KEY", "PUSH_BLOCK", "INVISIBLE_DOOR"],
       "lockChance": 0.5,
       "templates": [
         {

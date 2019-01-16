@@ -10,6 +10,8 @@ import game.main.state.play.Play;
 import game.main.state.play.map.entity.Entity;
 import game.main.state.play.map.entity.EntityManager;
 import game.main.state.play.map.entity.Humanoid;
+import game.main.state.play.map.entity.event.EntityEvent;
+import game.main.state.play.map.entity.event.EntityListener;
 import game.main.state.play.map.tile.Tile;
 import game.main.state.play.map.tile.TileManager;
 
@@ -144,7 +146,7 @@ public abstract class Map implements Serializable {
                  play.cam.position.x - Game.WIDTH * .5f, play.cam.position.y + Game.HEIGHT * .5f - 8, Game.WIDTH, 8);
 
         /*
-        batch.draw(player.mainHand.icon.sheet[0][0],
+        batch.draw(player.rightHand.icon.sheet[0][0],
                 play.cam.position.x - Game.WIDTH * .5f + 8, play.cam.position.y + Game.HEIGHT * .5f - 8);
         */
     }

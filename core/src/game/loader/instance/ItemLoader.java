@@ -3,8 +3,8 @@ package game.loader.instance;
 import game.main.item.Item;
 import game.main.item.collectable.Collectable;
 import game.main.item.equipment.armor.Armor;
-import game.main.item.equipment.hand.main.MeleeWeapon;
-import game.main.item.equipment.hand.off.Shield;
+import game.main.item.equipment.hand.right.MeleeWeapon;
+import game.main.item.equipment.hand.left.Shield;
 
 public class ItemLoader extends InstanceLoader<Item> {
     @Override

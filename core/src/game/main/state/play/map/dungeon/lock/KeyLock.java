@@ -3,6 +3,8 @@ package game.main.state.play.map.dungeon.lock;
 import game.main.Game;
 import game.main.item.Item;
 import game.main.state.play.map.entity.Entity;
+import game.main.state.play.map.entity.event.CollisionEvent;
+import game.main.state.play.map.entity.event.EntityEvent;
 
 public class KeyLock extends Lock {
     public Item key;
@@ -18,20 +20,27 @@ public class KeyLock extends Lock {
 
         key = Game.ITEMS.load(dungeon.key);
         room.monsters.get(Game.RANDOM.nextInt(room.monsters.size)).inventory.add(key);
+    }
 
-        dungeon.player.collisionListeners.add(new Entity.CollisionListener() {
-            @Override
-            public void onCollision(Entity e) {
-                if (e == door && dungeon.player.inventory.contains(key, true)) {
-                    locked = false;
-                    dungeon.player.inventory.removeValue(key, true);
-                }
-            }
-        });
+    @Override
+    public boolean isRoomValid() {
+        return room.monsters.size > 0;
     }
 
     @Override
     public boolean isLocked() {
         return locked;
+    }
+
+    @Override
+    public void onEvent(EntityEvent e) {
+        super.onEvent(e);
+
+        if (e instanceof CollisionEvent) {
+            if (e.e == dungeon.player && ((CollisionEvent) e).other == door && e.e.inventory.contains(key, true)) {
+                locked = false;
+                e.e.inventory.removeValue(key, true);
+            }
+        }
     }
 }

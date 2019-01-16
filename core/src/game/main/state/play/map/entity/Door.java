@@ -19,6 +19,9 @@ public class Door extends Entity {
 
     public Lock lock;
 
+    public boolean invisible;
+    public SpriteSheet wall;
+
     public Door() {
         hitbox.set(16, 16, 0, 0);
         visible = false;
@@ -55,18 +58,52 @@ public class Door extends Entity {
     public void render(SpriteBatch batch) {
         super.render(batch);
 
-        TextureRegion image = spriteSheet.sheet[MathUtils.floor(openTime * (spriteSheet.sheet.length - 1))][0];
+        if (!invisible) {
+            TextureRegion image = spriteSheet.sheet[MathUtils.floor(openTime * (spriteSheet.sheet.length - 1))][0];
 
-        if (horizontal) {
-            batch.draw(image, x, y, 4, 4, 8, 8, -1, 1, 270);
-            batch.draw(image, x, y + 8, 4, 4, 8, 8, 1, 1, 270);
-            batch.draw(image, x + 8, y, 4, 4, 8, 8, 1, 1, 90);
-            batch.draw(image, x + 8, y + 8, 4, 4, 8, 8, -1, 1, 90);
+            if (horizontal) {
+                // Bottom left door
+                batch.draw(image, x, y, 4, 4, 8, 8, -1, 1, 270);
+                // Top left door
+                batch.draw(image, x, y + 8, 4, 4, 8, 8, 1, 1, 270);
+                // Bottom right door
+                batch.draw(image, x + 8, y, 4, 4, 8, 8, 1, 1, 90);
+                // Top right door
+                batch.draw(image, x + 8, y + 8, 4, 4, 8, 8, -1, 1, 90);
+            } else {
+                // Bottom left door
+                batch.draw(image, x, y, 4, 4, 8, 8, 1, 1, 0);
+                // Bottom right door
+                batch.draw(image, x + 8, y, 4, 4, 8, 8, -1, 1, 0);
+                // Top left door
+                batch.draw(image, x, y + 8, 4, 4, 8, 8, -1, 1, 180);
+                // Top right door
+                batch.draw(image, x + 8, y + 8, 4, 4, 8, 8, 1, 1, 180);
+            }
         } else {
-            batch.draw(image, x, y, 4, 4, 8, 8, 1, 1, 0);
-            batch.draw(image, x + 8, y, 4, 4, 8, 8, -1, 1, 0);
-            batch.draw(image, x, y + 8, 4, 4, 8, 8, -1, 1, 180);
-            batch.draw(image, x + 8, y + 8, 4, 4, 8, 8, 1, 1, 180);
+            if (horizontal) {
+                // Left walls
+                batch.draw(wall.sheet[0][1], x, y + 16);
+                batch.draw(wall.sheet[0][1], x, y + 8);
+                batch.draw(wall.sheet[0][1], x, y);
+                batch.draw(wall.sheet[0][1], x, y - 8);
+                // Right walls
+                batch.draw(wall.sheet[2][1], x + 8, y + 16);
+                batch.draw(wall.sheet[2][1], x + 8, y + 8);
+                batch.draw(wall.sheet[2][1], x + 8, y);
+                batch.draw(wall.sheet[2][1], x + 8, y - 8);
+            } else {
+                // Bottom walls
+                batch.draw(wall.sheet[1][2], x - 8, y);
+                batch.draw(wall.sheet[1][2], x, y);
+                batch.draw(wall.sheet[1][2], x + 8, y);
+                batch.draw(wall.sheet[1][2], x + 16, y);
+                // Top walls
+                batch.draw(wall.sheet[1][0], x - 8, y + 8);
+                batch.draw(wall.sheet[1][0], x, y + 8);
+                batch.draw(wall.sheet[1][0], x + 8, y + 8);
+                batch.draw(wall.sheet[1][0], x + 16, y + 8);
+            }
         }
     }
 
@@ -102,6 +139,11 @@ public class Door extends Entity {
         JsonValue spriteSheet = json.get("spriteSheet");
         if (spriteSheet != null) {
             this.spriteSheet = Game.SPRITE_SHEETS.load(spriteSheet.asString());
+        }
+
+        JsonValue wall = json.get("wall");
+        if (wall != null) {
+            this.wall = Game.SPRITE_SHEETS.load(wall.asString());
         }
     }
 }

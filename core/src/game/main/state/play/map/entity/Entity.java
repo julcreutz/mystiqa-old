@@ -13,9 +13,13 @@ import game.main.stat.Stat;
 import game.main.stat.StatCounter;
 import game.main.stat.StatManager;
 import game.main.state.play.map.Map;
+import game.main.state.play.map.entity.event.CollisionEvent;
+import game.main.state.play.map.entity.event.DeathEvent;
+import game.main.state.play.map.entity.event.EntityEvent;
+import game.main.state.play.map.entity.event.EntityListener;
 import game.main.state.play.map.tile.Tile;
 
-public abstract class Entity implements StatCounter, Serializable {
+public abstract class Entity implements EntityListener, StatCounter, Serializable {
     /**
      * Describes a rectangle offset by specified x and y values multiplier to
      * a given entity. Uses {@link Rectangle} class to represent the rectangle itself.
@@ -150,13 +154,8 @@ public abstract class Entity implements StatCounter, Serializable {
         }
     }
 
-    public interface CollisionListener {
-        void onCollision(Entity e);
-    }
-
-    public interface DeathListener {
-        void onDeath();
-    }
+    /** Holds reference of entity manager. */
+    public EntityManager entities;
 
     /** Map instance the entity is currently in. Always update if map is changed. */
     public Map map;
@@ -197,9 +196,6 @@ public abstract class Entity implements StatCounter, Serializable {
 
     public Array<Item> inventory;
 
-    public Array<CollisionListener> collisionListeners;
-    public Array<DeathListener> deathListeners;
-
     public Entity() {
         hitbox = new Hitbox(this);
         stats = new StatManager();
@@ -207,9 +203,6 @@ public abstract class Entity implements StatCounter, Serializable {
 
         inventory = new Array<Item>();
         inventory = new Array<Item>();
-
-        collisionListeners = new Array<CollisionListener>();
-        deathListeners = new Array<DeathListener>();
     }
 
     public void preUpdate() {
@@ -435,9 +428,7 @@ public abstract class Entity implements StatCounter, Serializable {
 
     /** Called when entity dies. */
     public void onDeath() {
-        for (DeathListener death : deathListeners) {
-            death.onDeath();
-        }
+        entities.sendEvent(new DeathEvent(this));
 
         for (Item i : inventory) {
             ItemDrop drop = new ItemDrop(i);
@@ -455,9 +446,7 @@ public abstract class Entity implements StatCounter, Serializable {
      * @param e collided entity
      */
     public void onCollision(Entity e) {
-        for (CollisionListener collision : collisionListeners) {
-            collision.onCollision(e);
-        }
+        sendEvent(new CollisionEvent(this, e));
     }
 
     /** @return whether entity is attacking */
@@ -557,6 +546,15 @@ public abstract class Entity implements StatCounter, Serializable {
      */
     public float getSortLevel() {
         return hitbox.getY();
+    }
+
+    public void sendEvent(EntityEvent e) {
+        entities.sendEvent(e);
+    }
+
+    @Override
+    public void onEvent(EntityEvent e) {
+
     }
 
     @Override
