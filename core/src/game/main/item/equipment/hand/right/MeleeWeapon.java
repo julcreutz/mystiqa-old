@@ -74,12 +74,12 @@ public class MeleeWeapon extends RightHand {
                 a = h.dir * 90 - 135 + (1 - attackTime) * angle;
             }
 
-            dist = 6 + MathUtils.sin(attackTime * MathUtils.PI) * (2f + range * 4);
+            dist = 6 + MathUtils.sin(attackTime * MathUtils.PI) * (2f);
 
             x = h.x + MathUtils.cosDeg(a) * dist;
             y = h.y + MathUtils.sinDeg(a) * dist + (h.yOffset - h.y);
 
-            rot = MathUtils.round(a / 45f) * 45f;
+            rot = a;
 
             switch (h.dir) {
                 case 0:
@@ -118,11 +118,15 @@ public class MeleeWeapon extends RightHand {
             y = h.y + Y[h.dir][h.step];
             rot = ROT[h.dir][h.step];
 
+            x -= MathUtils.cosDeg(rot) * (range * 4f);
+            y -= MathUtils.sinDeg(rot) * (range * 4f);
+
             renderBehind = true;
         }
 
         if (attacking) {
-            h.attackHitbox.set(8, 8, x - h.x, y - h.y);
+            h.attackHitbox.set(8, 8,
+                    x + MathUtils.cosDeg(rot) * range * 8f - h.x, y + MathUtils.sinDeg(rot) * range * 8f - h.y);
         } else {
             h.attackHitbox.set(0, 0, 0, 0);
         }
@@ -158,7 +162,7 @@ public class MeleeWeapon extends RightHand {
     public void render(SpriteBatch batch, Humanoid h) {
         super.render(batch, h);
 
-        batch.draw(image, x - MathUtils.cosDeg(rot) * (range * 4), y - MathUtils.sinDeg(rot) * (range * 4),
+        batch.draw(image, x, y,
                 4, 4, image.getRegionWidth(), 8, 1, 1, rot);
     }
 

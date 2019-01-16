@@ -44,6 +44,25 @@
       "range": 1
     }
   },
+  "Halberd": {
+    "MeleeWeapon": {
+      "name": "Halberd",
+      "stats": [
+        {
+          "type": "MIN_PHYSICAL_DAMAGE",
+          "value": 3
+        },
+        {
+          "type": "MIN_PHYSICAL_DAMAGE",
+          "value": 5
+        }
+      ],
+      "spriteSheet": "Halberd",
+      "speed": 0.75,
+      "angle": 135,
+      "range": 1
+    }
+  },
   "Club": {
     "MeleeWeapon": {
       "name": "Club",

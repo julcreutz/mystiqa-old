@@ -198,5 +198,10 @@
     "path": "graphics/light_circle.png",
     "splitW": 256,
     "splitH": 256
+  },
+  "Halberd": {
+    "path": "graphics/halberd.png",
+    "splitW": 16,
+    "splitH": 8
   }
 }
