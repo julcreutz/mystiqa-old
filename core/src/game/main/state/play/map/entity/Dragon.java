@@ -7,9 +7,6 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import game.loader.resource.sprite_sheet.SpriteSheet;
 import game.main.Game;
-import game.main.state.play.map.entity.event.AddEvent;
-import game.main.state.play.map.entity.event.DeathEvent;
-import game.main.state.play.map.entity.event.EntityEvent;
 
 public class Dragon extends Entity {
     public static class Head extends Entity {
@@ -128,6 +125,8 @@ public class Dragon extends Entity {
             final Head h = new Head();
 
             h.stats.stats.addAll(stats.stats);
+
+            h.isMonster = isMonster;
 
             h.body = this;
 

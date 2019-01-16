@@ -1,5 +1,7 @@
 package game.main.state.play.map.dungeon.lock;
 
+import game.main.state.play.map.dungeon.Dungeon;
+
 public class InvisibleDoorLock extends Lock {
     @Override
     public void onLock() {
@@ -9,7 +11,7 @@ public class InvisibleDoorLock extends Lock {
     }
 
     @Override
-    public boolean isRoomValid() {
+    public boolean isRoomValid(Dungeon.Room r) {
         return true;
     }
 

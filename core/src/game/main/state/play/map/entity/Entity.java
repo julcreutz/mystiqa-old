@@ -142,15 +142,6 @@ public abstract class Entity implements StatCounter, Serializable {
         }
     }
 
-    public enum Alignment {
-        GOOD,
-        EVIL;
-
-        public boolean isHostile(Alignment a) {
-            return a != this;
-        }
-    }
-
     /** Holds reference of entity manager. */
     public EntityManager entities;
 
@@ -185,7 +176,7 @@ public abstract class Entity implements StatCounter, Serializable {
 
     public float health;
 
-    public Alignment alignment;
+    public boolean isMonster;
 
     public boolean onTeleport;
 
@@ -248,7 +239,7 @@ public abstract class Entity implements StatCounter, Serializable {
                                         e.health -= MathUtils.round(MathUtils.lerp(count(Stat.Type.MIN_PHYSICAL_DAMAGE),
                                                 count(Stat.Type.MAX_PHYSICAL_DAMAGE), Game.RANDOM.nextFloat()));
 
-                                        map.screenShake += isDead() ? 1f : .5f;
+                                        map.screenShake += e.isDead() ? 1f : .5f;
 
                                         hit.add(e);
 
@@ -446,7 +437,7 @@ public abstract class Entity implements StatCounter, Serializable {
     }
 
     public boolean isHostile(Entity e) {
-        return alignment.isHostile(e.alignment);
+        return isMonster != e.isMonster;
     }
 
     public Tile tileAt() {
@@ -464,8 +455,16 @@ public abstract class Entity implements StatCounter, Serializable {
         return health / count(Stat.Type.HEALTH);
     }
 
+    public void onDisabled() {
+        sendEvent(new DisabledEvent(this));
+    }
+
+    public void onEnabled() {
+        sendEvent(new EnabledEvent(this));
+    }
+
     public void onAdded() {
-        sendEvent(new AddEvent(this));
+        sendEvent(new AddedEvent(this));
 
         hitbox.position();
         health = count(Stat.Type.HEALTH);
@@ -567,9 +566,9 @@ public abstract class Entity implements StatCounter, Serializable {
             this.stats.deserialize(stats);
         }
 
-        JsonValue alignment = json.get("alignment");
-        if (alignment != null) {
-            this.alignment = Alignment.valueOf(alignment.asString());
+        JsonValue isMonster = json.get("isMonster");
+        if (isMonster != null) {
+            this.isMonster = isMonster.asBoolean();
         }
     }
 }

@@ -3,7 +3,6 @@ package game.main.state.play.map.entity;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import game.main.state.play.map.Map;
-import game.main.state.play.map.entity.event.AddEvent;
 import game.main.state.play.map.entity.event.EntityEvent;
 import game.main.state.play.map.entity.event.EntityListener;
 
@@ -33,6 +32,8 @@ public class EntityManager {
             if (map.isVisible(e)) {
                 entities.add(e);
                 invisibleEntities.removeIndex(i);
+
+                e.onEnabled();
             }
         }
 
@@ -42,6 +43,8 @@ public class EntityManager {
             if (!map.isVisible(e)) {
                 invisibleEntities.add(e);
                 entities.removeIndex(i);
+
+                e.onDisabled();
 
                 continue;
             }

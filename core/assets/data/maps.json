@@ -9,8 +9,24 @@
       "door": "DungeonDoor",
       "monsters": ["GreenSlime"],
       "key": "DungeonKey",
-      "locks": ["KILL_MONSTER", "KEY", "PUSH_BLOCK", "INVISIBLE_DOOR"],
-      "lockChance": 0.5,
+      "locks": [
+        {
+          "type": "KILL_MONSTER",
+          "chance": 0.75
+        },
+        {
+          "type": "KEY",
+          "chance": 0.5
+        },
+        {
+          "type": "PUSH_BLOCK",
+          "chance": 0.33
+        },
+        {
+          "type": "INVISIBLE_DOOR",
+          "chance": 0.25
+        }
+      ],
       "templates": [
         {
           "template": [

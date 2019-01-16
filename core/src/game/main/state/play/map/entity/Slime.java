@@ -9,9 +9,6 @@ import com.badlogic.gdx.utils.JsonValue;
 import game.loader.resource.sprite_sheet.SpriteSheet;
 import game.main.Game;
 import game.main.stat.Stat;
-import game.main.state.play.map.entity.event.AddEvent;
-import game.main.state.play.map.entity.event.DeathEvent;
-import game.main.state.play.map.entity.event.EntityEvent;
 
 public class Slime extends Entity {
     public enum State {

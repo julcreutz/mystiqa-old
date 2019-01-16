@@ -1,6 +1,7 @@
 package game.main.state.play.map.dungeon.lock;
 
 import game.main.Game;
+import game.main.state.play.map.dungeon.Dungeon;
 import game.main.state.play.map.entity.Block;
 
 public class PushBlockLock extends Lock {
@@ -29,9 +30,9 @@ public class PushBlockLock extends Lock {
     }
 
     @Override
-    public boolean isRoomValid() {
-        for (int x = room.x0(); x < room.x1(); x++) {
-            for (int y = room.y0(); y < room.y1(); y++) {
+    public boolean isRoomValid(Dungeon.Room r) {
+        for (int x = r.x0(); x < r.x1(); x++) {
+            for (int y = r.y0(); y < r.y1(); y++) {
                 if (dungeon.tiles.at(x, y, 0).name.equals(dungeon.innerWall)) {
                     return true;
                 }

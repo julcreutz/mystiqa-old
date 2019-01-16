@@ -12,7 +12,6 @@
           "value": 24
         }
       ],
-      "alignment": "GOOD",
       "feet": "HumanFeet",
       "body": "HumanBody",
       "head": "HumanHead"
@@ -31,7 +30,7 @@
           "value": 20
         }
       ],
-      "alignment": "EVIL",
+      "isMonster": true,
       "feet": "HumanFeet",
       "body": "HumanBody",
       "head": "HumanHead",
@@ -62,7 +61,7 @@
           "value": 1
         }
       ],
-      "alignment": "EVIL",
+      "isMonster": true,
       "spriteSheet": "GreenSlime",
       "splitInto": [
         ["GreenSlimeSmall"],
@@ -93,7 +92,7 @@
           "value": 2
         }
       ],
-      "alignment": "EVIL",
+      "isMonster": true,
       "spriteSheet": "GreenSlimeSmall"
     }
   },
@@ -119,6 +118,7 @@
           "value": 3
         }
       ],
+      "isMonster": true,
       "body": "DragonBody",
       "neck": "DragonNeck",
       "head": "DragonHead"

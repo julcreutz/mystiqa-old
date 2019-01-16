@@ -21,6 +21,16 @@
   "Sword": {
     "MeleeWeapon": {
       "name": "Sword",
+      "stats": [
+        {
+          "type": "MIN_PHYSICAL_DAMAGE",
+          "value": 3
+        },
+        {
+          "type": "MAX_PHYSICAL_DAMAGE",
+          "value": 5
+        }
+      ],
       "spriteSheet": "Sword",
       "angle": 135,
       "speed": 1
