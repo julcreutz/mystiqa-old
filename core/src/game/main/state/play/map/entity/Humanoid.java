@@ -19,11 +19,7 @@ import game.main.state.play.map.tile.Tile;
 
 public class Humanoid extends Entity {
     public enum State {
-        RANDOM_MOVEMENT,
-        FOLLOW_PLAYER,
-        ATTACK_PLAYER,
-        BLOCK,
-        FLEE
+        RANDOM_MOVEMENT, FOLLOW_PLAYER, ATTACK_PLAYER
     }
 
     public SpriteSheet feet;
@@ -53,7 +49,6 @@ public class Humanoid extends Entity {
     public float moveSpeed;
 
     public float actionTime;
-    public float blockTime;
 
     public float attackTime;
 
@@ -61,6 +56,8 @@ public class Humanoid extends Entity {
     public int attackState;
 
     public float yOffset;
+
+    public float blockTime;
 
     public Humanoid() {
         super();
@@ -74,10 +71,17 @@ public class Humanoid extends Entity {
 
     @Override
     public void update() {
+        if (blockTime > 0) {
+            blockTime -= Game.getDelta();
+        } else {
+            if (blockTime < 0) {
+                blockTime = 0;
+            }
+        }
+
         Vector2 dir = new Vector2();
 
-        boolean useMainHand = false;
-        boolean useOffHand = false;
+        boolean useRightHand = false;
 
         if (controlledByPlayer) {
             if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
@@ -97,11 +101,7 @@ public class Humanoid extends Entity {
             }
 
             if (Gdx.input.isKeyPressed(Input.Keys.F)) {
-                useMainHand = true;
-            }
-
-            if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-                useOffHand = true;
+                useRightHand = true;
             }
 
             if (dir.x != 0 || dir.y != 0) {
@@ -113,7 +113,6 @@ public class Humanoid extends Entity {
         } else {
             Vector2 toPlayer = new Vector2(map.player.x, map.player.y).sub(x, y);
 
-            /*
             switch (state) {
                 case RANDOM_MOVEMENT:
                     if (toPlayer.len() < 32) {
@@ -145,15 +144,7 @@ public class Humanoid extends Entity {
 
                     if (actionTime <= 0) {
                         if (toPlayer.len() < 16) {
-                            if (MathUtils.randomBoolean(getHealthPercentage())) {
-                                state = State.ATTACK_PLAYER;
-                            } else {
-                                if (leftHand != null) {
-                                    state = State.BLOCK;
-                                } else {
-                                    state = State.FLEE;
-                                }
-                            }
+                            state = State.ATTACK_PLAYER;
 
                             break;
                         }
@@ -166,55 +157,22 @@ public class Humanoid extends Entity {
 
                     break;
                 case ATTACK_PLAYER:
-                    if (toPlayer.len() < 12) {
-                        state = State.FOLLOW_PLAYER;
-                        actionTime = MathUtils.random(.25f, .5f);
-                        break;
+                    if (toPlayer.len() < 24) {
+                        useRightHand = true;
                     }
 
-                    rightHand.use();
+                    if (toPlayer.len() < 12) {
+                        state = State.FOLLOW_PLAYER;
+                        actionTime = MathUtils.random(.5f, 1f);
+
+                        break;
+                    }
 
                     moveAngle = toPlayer.angle();
                     moveSpeed = 1;
 
                     break;
-                case BLOCK:
-                    if (blockTime == 0) {
-                        blockTime = MathUtils.random(.5f, 1f);
-                    }
-
-                    leftHand.use();
-
-                    moveSpeed = -1;
-
-                    blockTime -= Game.getDelta();
-
-                    if (blockTime < 0) {
-                        blockTime = 0;
-                        state = State.FOLLOW_PLAYER;
-                        break;
-                    }
-
-                    break;
-                case FLEE:
-                    if (blockTime == 0) {
-                        blockTime = MathUtils.random(.5f, 1f);
-                    }
-
-                    moveSpeed = 1;
-                    moveAngle = toPlayer.angle() + 180;
-
-                    blockTime -= Game.getDelta();
-
-                    if (blockTime < 0) {
-                        blockTime = 0;
-                        state = State.FOLLOW_PLAYER;
-                        break;
-                    }
-
-                    break;
             }
-            */
         }
 
         if (moveSpeed != 0) {
@@ -250,7 +208,7 @@ public class Humanoid extends Entity {
         }
 
         if (rightHand != null) {
-            if (useMainHand) {
+            if (useRightHand) {
                 attack();
             }
 
@@ -572,8 +530,15 @@ public class Humanoid extends Entity {
     }
 
     @Override
+    public void onBlock(Entity e) {
+        super.onBlock(e);
+
+        blockTime = .1f;
+    }
+
+    @Override
     public boolean isAttacking() {
-        return attackTime > 0 || rightHand.isAttacking();
+        return attackTime > 0 || (rightHand != null && rightHand.isAttacking());
     }
 
     @Override
@@ -583,11 +548,13 @@ public class Humanoid extends Entity {
 
     @Override
     public Hitbox getAttackHitbox() {
+        attackHitbox.position();
         return attackHitbox;
     }
 
     @Override
     public Hitbox getBlockHitbox() {
+        blockHitbox.position();
         return blockHitbox;
     }
 
@@ -599,10 +566,12 @@ public class Humanoid extends Entity {
         StatCounter[] counters = new StatCounter[] {this, rightHand, leftHand, armor};
 
         for (StatCounter counter : counters) {
-            for (Stat s : counter.getStats().stats) {
-                if (s.type == type) {
-                    value += s.value;
-                    multiplier += s.multiplier;
+            if (counter != null) {
+                for (Stat s : counter.getStats().stats) {
+                    if (s.type == type) {
+                        value += s.value;
+                        multiplier += s.multiplier;
+                    }
                 }
             }
         }

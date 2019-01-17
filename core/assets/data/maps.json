@@ -7,7 +7,25 @@
       "outerWall": "DungeonWall",
       "innerWall": "DungeonBlock",
       "door": "DungeonDoor",
-      "monsters": ["GreenSlime"],
+      "minMonsters": 0,
+      "maxMonsters": 7,
+      "monsters": [
+        {
+          "difficulty": 0,
+          "chance": 1,
+          "monster": "GreenSlimeSmall"
+        },
+        {
+          "difficulty": 0.5,
+          "chance": 0.75,
+          "monster": "GreenSlime"
+        },
+        {
+          "difficulty": 0.9,
+          "chance": 0.5,
+          "monster": "Orc"
+        }
+      ],
       "key": "DungeonKey",
       "locks": [
         {

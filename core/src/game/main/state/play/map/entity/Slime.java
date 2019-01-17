@@ -185,7 +185,7 @@ public class Slime extends Entity {
 
     @Override
     public Hitbox getAttackHitbox() {
-        return hitbox;
+        return getHitbox();
     }
 
     @Override

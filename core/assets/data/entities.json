@@ -23,7 +23,7 @@
       "stats": [
         {
           "type": "HEALTH",
-          "value": 4
+          "value": 10
         },
         {
           "type": "SPEED",
@@ -31,13 +31,11 @@
         }
       ],
       "isMonster": true,
-      "feet": "HumanFeet",
-      "body": "HumanBody",
-      "head": "HumanHead",
-      "mainHand": "Sword",
-      "offHand": "Shield",
-      "bodyArmor": "BodyArmor",
-      "feetArmor": "FeetArmor"
+      "feet": "OrcFeet",
+      "body": "OrcBody",
+      "head": "OrcHead",
+      "armor": "Armor",
+      "rightHand": "Sword"
     }
   },
   "GreenSlime": {
@@ -115,13 +113,15 @@
       "stats": [
         {
           "type": "HEALTH",
-          "value": 3
+          "value": 20
         }
       ],
       "isMonster": true,
       "body": "DragonBody",
       "neck": "DragonNeck",
-      "head": "DragonHead"
+      "head": "DragonHead",
+      "minHeads": 1,
+      "maxHeads": 1
     }
   }
 }

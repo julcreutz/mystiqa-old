@@ -2,6 +2,7 @@ package game.main.item.equipment.hand.left;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.JsonValue;
 import game.loader.resource.sprite_sheet.SpriteSheet;
 import game.main.Game;
@@ -100,7 +101,12 @@ public class Shield extends LeftHand {
     public void render(SpriteBatch batch, Humanoid h) {
         super.render(batch, h);
 
+        ShaderProgram lastShader = batch.getShader();
+        if (h.blockTime > 0) {
+            batch.setShader(Game.SHADERS.load("HitFlash").shader);
+        }
         batch.draw(image, x, y);
+        batch.setShader(lastShader);
     }
 
     @Override

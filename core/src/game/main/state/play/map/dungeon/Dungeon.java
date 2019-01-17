@@ -13,6 +13,7 @@ import game.main.item.equipment.hand.left.LeftHand;
 import game.main.state.play.map.Map;
 import game.main.state.play.map.dungeon.lock.Lock;
 import game.main.state.play.map.entity.Door;
+import game.main.state.play.map.entity.Dragon;
 import game.main.state.play.map.entity.Entity;
 import game.main.state.play.map.entity.Humanoid;
 import game.main.state.play.map.entity.event.*;
@@ -243,6 +244,35 @@ public class Dungeon extends Map {
         }
     }
 
+    public static class Monster implements Serializable {
+        public float chance;
+        public float difficulty;
+
+        public String monster;
+
+        public Monster(JsonValue json) {
+            deserialize(json);
+        }
+
+        @Override
+        public void deserialize(JsonValue json) {
+            JsonValue chance = json.get("chance");
+            if (chance != null) {
+                this.chance = chance.asFloat();
+            }
+
+            JsonValue difficulty = json.get("difficulty");
+            if (difficulty != null) {
+                this.difficulty = difficulty.asFloat();
+            }
+
+            JsonValue monster = json.get("monster");
+            if (monster != null) {
+                this.monster = monster.asString();
+            }
+        }
+    }
+
     public static final int WIDTH = 16;
     public static final int HEIGHT = 8;
 
@@ -255,7 +285,10 @@ public class Dungeon extends Map {
 
     public String door;
 
-    public String[] monsters;
+    public int minMonsters;
+    public int maxMonsters;
+
+    public Monster[] monsters;
 
     public String key;
 
@@ -508,19 +541,26 @@ public class Dungeon extends Map {
         this.player = player;
         entities.addEntity(player);
 
-        /*
         Dragon dragon = (Dragon) Game.ENTITIES.load("Dragon");
 
         dragon.x = first.getCenterX() * 8 - 8;
         dragon.y = first.getCenterY() * 8 - 4 + 16;
 
         entities.addEntity(dragon);
-        */
 
         // Place monsters randomly
-        for (final Room r : rooms) {
-            for (int i = 0; i < MathUtils.round(r.difficulty * 5f); i++) {
-                final Entity monster = Game.ENTITIES.load(monsters[Game.RANDOM.nextInt(monsters.length)]);
+        for (Room r : rooms) {
+            for (int i = 0; i < MathUtils.lerp(minMonsters, maxMonsters, r.difficulty); i++) {
+                Entity monster = null;
+
+                do {
+                    for (Monster m : monsters) {
+                        if (Game.RANDOM.nextFloat() < MathUtils.clamp(1 - Math.abs(r.difficulty - m.difficulty), 0, 1)
+                                && Game.RANDOM.nextFloat() < m.chance) {
+                            monster = Game.ENTITIES.load(m.monster);
+                        }
+                    }
+                } while (monster == null);
 
                 int x;
                 int y;
@@ -532,8 +572,6 @@ public class Dungeon extends Map {
 
                 monster.x = x * 8;
                 monster.y = y * 8;
-
-                //r.monsters.add(monster);
 
                 entities.addEntity(monster);
             }
@@ -679,9 +717,23 @@ public class Dungeon extends Map {
             this.door = door.asString();
         }
 
+        JsonValue minMonsters = json.get("minMonsters");
+        if (minMonsters != null) {
+            this.minMonsters = minMonsters.asInt();
+        }
+
+        JsonValue maxMonsters = json.get("maxMonsters");
+        if (maxMonsters != null) {
+            this.maxMonsters = maxMonsters.asInt();
+        }
+
         JsonValue monsters = json.get("monsters");
         if (monsters != null) {
-            this.monsters = monsters.asStringArray();
+            this.monsters = new Monster[monsters.size];
+
+            for (int i = 0; i < monsters.size; i++) {
+                this.monsters[i] = new Monster(monsters.get(i));
+            }
         }
 
         JsonValue key = json.get("key");

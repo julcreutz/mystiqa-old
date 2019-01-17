@@ -203,5 +203,20 @@
     "path": "graphics/halberd.png",
     "splitW": 16,
     "splitH": 8
+  },
+  "OrcFeet": {
+    "path": "graphics/orc_feet.png",
+    "splitW": 8,
+    "splitH": 8
+  },
+  "OrcBody": {
+    "path": "graphics/orc_body.png",
+    "splitW": 8,
+    "splitH": 8
+  },
+  "OrcHead": {
+    "path": "graphics/orc_head.png",
+    "splitW": 8,
+    "splitH": 8
   }
 }

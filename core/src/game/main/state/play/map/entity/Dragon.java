@@ -86,6 +86,9 @@ public class Dragon extends Entity {
     public SpriteSheet neck;
     public SpriteSheet head;
 
+    public int minHeads;
+    public int maxHeads;
+
     public Array<Head> heads;
 
     public Dragon() {
@@ -121,7 +124,7 @@ public class Dragon extends Entity {
     public void onAdded() {
         super.onAdded();
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < minHeads + Game.RANDOM.nextInt(maxHeads - minHeads + 1); i++) {
             final Head h = new Head();
 
             h.stats.stats.addAll(stats.stats);
@@ -162,6 +165,16 @@ public class Dragon extends Entity {
         JsonValue head = json.get("head");
         if (head != null) {
             this.head = Game.SPRITE_SHEETS.load(head.asString());
+        }
+
+        JsonValue minHeads = json.get("minHeads");
+        if (minHeads != null) {
+            this.minHeads = minHeads.asInt();
+        }
+
+        JsonValue maxHeads = json.get("maxHeads");
+        if (maxHeads != null) {
+            this.maxHeads = maxHeads.asInt();
         }
     }
 }

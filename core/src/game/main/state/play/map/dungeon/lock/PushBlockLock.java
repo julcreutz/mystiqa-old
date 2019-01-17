@@ -11,20 +11,21 @@ public class PushBlockLock extends Lock {
     public void onLock() {
         super.onLock();
 
-        for (int x = room.x0(); x < room.x1(); x++) {
-            for (int y = room.y0(); y < room.y1(); y++) {
-                if (dungeon.tiles.at(x, y, 0).name.equals(dungeon.innerWall)) {
-                    dungeon.tiles.set(Game.TILES.load(dungeon.ground), x, y, 0);
+        while (true) {
+            int x = room.getTileX() + Game.RANDOM.nextInt(room.getTileWidth());
+            int y = room.getTileY() + Game.RANDOM.nextInt(room.getTileHeight());
 
-                    block = (Block) Game.ENTITIES.load("DungeonBlock");
+            if (dungeon.tiles.at(x, y, 0).name.equals(dungeon.innerWall)) {
+                dungeon.tiles.set(Game.TILES.load(dungeon.ground), x, y, 0);
 
-                    block.x = x * 8;
-                    block.y = y * 8;
+                block = (Block) Game.ENTITIES.load("DungeonBlock");
 
-                    dungeon.entities.addEntity(block);
+                block.x = x * 8;
+                block.y = y * 8;
 
-                    return;
-                }
+                dungeon.entities.addEntity(block);
+
+                return;
             }
         }
     }
