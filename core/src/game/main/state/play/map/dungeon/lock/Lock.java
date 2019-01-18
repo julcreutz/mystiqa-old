@@ -45,8 +45,6 @@ public abstract class Lock implements EntityListener {
     public void onLock() {
     }
 
-    public abstract boolean isRoomValid(Dungeon.Room r);
-
     public abstract boolean isLocked();
 
     @Override

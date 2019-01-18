@@ -13,7 +13,6 @@ import game.main.item.equipment.hand.left.LeftHand;
 import game.main.state.play.map.Map;
 import game.main.state.play.map.dungeon.lock.Lock;
 import game.main.state.play.map.entity.Door;
-import game.main.state.play.map.entity.Dragon;
 import game.main.state.play.map.entity.Entity;
 import game.main.state.play.map.entity.Humanoid;
 import game.main.state.play.map.entity.event.*;
@@ -37,6 +36,9 @@ public class Dungeon extends Map {
         public boolean containsPlayer;
 
         public float difficulty;
+
+        public Room unlocks;
+        public Lock.Type lock;
 
         public Room(Dungeon map, int x, int y, int w, int h) {
             this.map = map;
@@ -147,6 +149,8 @@ public class Dungeon extends Map {
             HORIZONTAL, VERTICAL, BOTH
         }
 
+        public Array<Lock.Type> locks;
+
         public Flip flip;
         public char[][] template;
 
@@ -218,6 +222,15 @@ public class Dungeon extends Map {
 
         @Override
         public void deserialize(JsonValue json) {
+            JsonValue locks = json.get("locks");
+            if (locks != null) {
+                this.locks = new Array<Lock.Type>();
+
+                for (JsonValue lock : locks) {
+                    this.locks.add(Lock.Type.valueOf(lock.asString()));
+                }
+            }
+
             JsonValue flip = json.get("flip");
             if (flip != null) {
                 this.flip = Flip.valueOf(flip.asString());
@@ -415,9 +428,95 @@ public class Dungeon extends Map {
         tiles.initSize(WIDTH * 16, HEIGHT * 8, 8);
         entities.clear();
 
+        // Add doors and lock them
+        Array<Lock> allLocks = new Array<Lock>();
+
+        for (Room r : rooms) {
+            for (Room child : r.children) {
+                Door d = (Door) Game.ENTITIES.load(door);
+
+                if (child.x0() != r.x0()) {
+                    d.y = r.getCenterY() * 8 - 8;
+                    d.horizontal = true;
+
+                    if (child.x0() > r.x0()) {
+                        d.x = r.x1() * 8 - 8;
+                    } else {
+                        d.x = r.x0() * 8 - 8;
+                    }
+                }
+
+                if (child.y0() != r.y0()) {
+                    d.x = r.getCenterX() * 8 - 8;
+
+                    if (child.y0() > r.y0()) {
+                        d.y = r.y1() * 8 - 8;
+                    } else {
+                        d.y = r.y0() * 8 - 8;
+                    }
+                }
+
+                child.doorToParent = d;
+
+                entities.addEntity(d);
+
+                String lock = null;
+
+                // Pick random lock; if null, don't lock door
+                for (String type : locks.keys()) {
+                    if (Game.RANDOM.nextFloat() < locks.get(type, 0)) {
+                        lock = type;
+                    }
+                }
+
+                if (lock != null) {
+                    Lock l = Lock.Type.valueOf(lock).newInstance();
+
+                    l.dungeon = this;
+
+                    Array<Room> valid = new Array<Room>();
+
+                    // Get valid rooms and make sure room has only one room it unlocks
+                    for (Room room : getRoomsUntil(child)) {
+                        if (room.unlocks == null) {
+                            valid.add(room);
+                        }
+                    }
+
+                    if (valid.size > 0) {
+                        // Pick room with highest difficulty
+                        l.room = valid.first();
+
+                        for (Room room : valid) {
+                            if (room.difficulty > l.room.difficulty) {
+                                l.room = room;
+                            }
+                        }
+
+                        l.room.unlocks = r;
+
+                        l.room.lock = Lock.Type.valueOf(lock);
+
+                        l.door = d;
+                        d.lock = l;
+
+                        entities.addListener(l);
+
+                        allLocks.add(l);
+                    }
+                }
+            }
+        }
+
         // Apply templates
         for (Room r : rooms) {
-            char[][] template = templates[Game.RANDOM.nextInt(templates.length)].getTemplate();
+            Template t;
+
+            do {
+                t = templates[Game.RANDOM.nextInt(templates.length)];
+            } while (r.lock != null && !t.locks.contains(r.lock, true));
+
+            char[][] template = t.getTemplate();
 
             for (int x = 0; x < template.length; x++) {
                 for (int y = 0; y < template[0].length; y++) {
@@ -541,12 +640,14 @@ public class Dungeon extends Map {
         this.player = player;
         entities.addEntity(player);
 
+        /*
         Dragon dragon = (Dragon) Game.ENTITIES.load("Dragon");
 
         dragon.x = first.getCenterX() * 8 - 8;
         dragon.y = first.getCenterY() * 8 - 4 + 16;
 
         entities.addEntity(dragon);
+        */
 
         // Place monsters randomly
         for (Room r : rooms) {
@@ -577,76 +678,8 @@ public class Dungeon extends Map {
             }
         }
 
-        // Add doors and lock them
-        for (Room r : rooms) {
-            for (Room child : r.children) {
-                Door d = (Door) Game.ENTITIES.load(door);
-
-                if (child.x0() != r.x0()) {
-                    d.y = r.getCenterY() * 8 - 8;
-                    d.horizontal = true;
-
-                    if (child.x0() > r.x0()) {
-                        d.x = r.x1() * 8 - 8;
-                    } else {
-                        d.x = r.x0() * 8 - 8;
-                    }
-                }
-
-                if (child.y0() != r.y0()) {
-                    d.x = r.getCenterX() * 8 - 8;
-
-                    if (child.y0() > r.y0()) {
-                        d.y = r.y1() * 8 - 8;
-                    } else {
-                        d.y = r.y0() * 8 - 8;
-                    }
-                }
-
-                child.doorToParent = d;
-
-                entities.addEntity(d);
-
-                Lock l = null;
-
-                // Pick random lock; if null, don't lock door
-                for (String type : locks.keys()) {
-                    if (Game.RANDOM.nextFloat() < locks.get(type, 0)) {
-                        l = Lock.Type.valueOf(type).newInstance();
-                    }
-                }
-
-                if (l != null) {
-                    l.dungeon = this;
-
-                    Array<Room> valid = new Array<Room>();
-
-                    // Get valid rooms
-                    for (Room room : getRoomsUntil(child)) {
-                        if (l.isRoomValid(room)) {
-                            valid.add(room);
-                        }
-                    }
-
-                    if (valid.size > 0) {
-                        // Pick room with highest difficulty
-                        l.room = valid.first();
-
-                        for (Room room : valid) {
-                            if (room.difficulty > l.room.difficulty) {
-                                l.room = room;
-                            }
-                        }
-
-                        l.door = d;
-                        d.lock = l;
-
-                        entities.addListener(l);
-
-                        l.onLock();
-                    }
-                }
-            }
+        for (Lock l : allLocks) {
+            l.onLock();
         }
     }
 

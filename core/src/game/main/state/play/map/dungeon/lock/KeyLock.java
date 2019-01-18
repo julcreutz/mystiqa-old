@@ -3,6 +3,7 @@ package game.main.state.play.map.dungeon.lock;
 import game.main.Game;
 import game.main.item.Item;
 import game.main.state.play.map.dungeon.Dungeon;
+import game.main.state.play.map.entity.ItemDrop;
 import game.main.state.play.map.entity.event.CollisionEvent;
 import game.main.state.play.map.entity.event.EntityEvent;
 
@@ -19,12 +20,11 @@ public class KeyLock extends Lock {
         super.onLock();
 
         key = Game.ITEMS.load(dungeon.key);
-        room.monsters.get(Game.RANDOM.nextInt(room.monsters.size)).inventory.add(key);
-    }
-
-    @Override
-    public boolean isRoomValid(Dungeon.Room r) {
-        return r.monsters.size > 0;
+        if (room.monsters.size > 0) {
+            room.monsters.get(Game.RANDOM.nextInt(room.monsters.size)).inventory.add(key);
+        } else {
+            dungeon.entities.addEntity(new ItemDrop(key));
+        }
     }
 
     @Override

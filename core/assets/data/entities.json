@@ -34,8 +34,7 @@
       "feet": "OrcFeet",
       "body": "OrcBody",
       "head": "OrcHead",
-      "armor": "Armor",
-      "rightHand": "Sword"
+      "rightHand": "Club"
     }
   },
   "GreenSlime": {

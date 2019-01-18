@@ -31,19 +31,6 @@ public class PushBlockLock extends Lock {
     }
 
     @Override
-    public boolean isRoomValid(Dungeon.Room r) {
-        for (int x = r.x0(); x < r.x1(); x++) {
-            for (int y = r.y0(); y < r.y1(); y++) {
-                if (dungeon.tiles.at(x, y, 0).name.equals(dungeon.innerWall)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    @Override
     public boolean isLocked() {
         return block != null && block.getStartDistance() < 8;
     }
