@@ -122,5 +122,41 @@
       "minHeads": 1,
       "maxHeads": 1
     }
+  },
+  "Smoke": {
+    "Particle": {
+      "image": "ParticleCircle",
+      "dir": {
+        "min": 0,
+        "max": 360
+      },
+      "speed": {
+        "min": 8,
+        "max": 32
+      },
+      "scale": {
+        "min": 0.5,
+        "max": 0.75,
+        "gain": -1
+      }
+    }
+  },
+  "Cut": {
+    "Particle": {
+      "image": "ParticleLine",
+      "dir": {
+        "min": 0,
+        "max": 360
+      },
+      "scale": {
+        "min": 2.5,
+        "max": 3,
+        "gain": -15
+      },
+      "rot": {
+        "min": 0,
+        "max": 360
+      }
+    }
   }
 }

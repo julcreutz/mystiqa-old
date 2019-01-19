@@ -131,6 +131,7 @@ public class Play extends GameState {
     public void dispose() {
         super.dispose();
 
+        game.dispose();
         lighting.dispose();
     }
 }

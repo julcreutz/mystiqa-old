@@ -82,7 +82,7 @@ public class EntityManager {
         e.map = map;
         e.entities = this;
 
-        invisibleEntities.add(e);
+        entities.add(e);
 
         e.onAdded();
     }

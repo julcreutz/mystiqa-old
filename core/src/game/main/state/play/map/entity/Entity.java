@@ -184,6 +184,8 @@ public abstract class Entity implements StatCounter, Serializable {
 
     public Array<Item> inventory;
 
+    public Entity attachTo;
+
     public Entity() {
         hitbox = new Hitbox(this);
         stats = new StatManager();
@@ -202,6 +204,11 @@ public abstract class Entity implements StatCounter, Serializable {
     }
 
     public void postUpdate() {
+        if (attachTo != null) {
+            x = attachTo.x;
+            y = attachTo.y;
+        }
+
         hitbox.position(velX * Game.getDelta(), velY * Game.getDelta());
 
         for (Entity e : map.entities.entities) {
@@ -235,15 +242,15 @@ public abstract class Entity implements StatCounter, Serializable {
                             } else {
                                 if (attackHitbox.overlaps(e)) {
                                     if (!contains) {
-                                        e.hitTime = .1f;
-
-                                        e.hitAngle = new Vector2(e.x, e.y).sub(x, y).angle();
-                                        e.hitSpeed = 48f;
-
                                         e.health -= MathUtils.round(MathUtils.lerp(count(Stat.Type.MIN_PHYSICAL_DAMAGE),
                                                 count(Stat.Type.MAX_PHYSICAL_DAMAGE), Game.RANDOM.nextFloat()));
 
-                                        map.screenShake += e.isDead() ? 1f : .5f;
+                                        e.hitTime = .1f;
+
+                                        e.hitAngle = new Vector2(e.x, e.y).sub(x, y).angle();
+                                        e.hitSpeed = e.isDead() ? 96f : 48f;
+
+                                        map.screenShake += e.isDead() ? 2f : 1f;
 
                                         hit.add(e);
 
@@ -488,6 +495,15 @@ public abstract class Entity implements StatCounter, Serializable {
 
     public void onHit(Entity by) {
         sendEvent(new HitEvent(this, by));
+
+        Particle p = (Particle) Game.ENTITIES.load("Cut");
+
+        p.x = x;
+        p.y = y;
+
+        p.attachTo = this;
+
+        map.entities.addEntity(p);
     }
 
     public void onBlock(Entity blocked) {
@@ -506,6 +522,15 @@ public abstract class Entity implements StatCounter, Serializable {
             drop.y = y;
 
             map.entities.addEntity(drop);
+        }
+
+        for (int i = 0; i < MathUtils.random(5, 10); i++) {
+            Particle p = (Particle) Game.ENTITIES.load("Smoke");
+
+            p.x = x;
+            p.y = y;
+
+            map.entities.addEntity(p);
         }
     }
 

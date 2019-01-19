@@ -1,6 +1,7 @@
 package game.loader.instance;
 
 import game.main.state.play.map.entity.*;
+import game.main.state.play.map.entity.Particle;
 
 public class EntityLoader extends InstanceLoader<Entity> {
     @Override
@@ -15,6 +16,8 @@ public class EntityLoader extends InstanceLoader<Entity> {
             return new Block();
         } else if (name.equals("Dragon")) {
             return new Dragon();
+        } else if (name.equals("Particle")) {
+            return new Particle();
         }
 
         return null;

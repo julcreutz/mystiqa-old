@@ -13,6 +13,7 @@ import game.main.item.equipment.hand.left.LeftHand;
 import game.main.state.play.map.Map;
 import game.main.state.play.map.dungeon.lock.Lock;
 import game.main.state.play.map.entity.Door;
+import game.main.state.play.map.entity.Dragon;
 import game.main.state.play.map.entity.Entity;
 import game.main.state.play.map.entity.Humanoid;
 import game.main.state.play.map.entity.event.*;
@@ -675,6 +676,8 @@ public class Dungeon extends Map {
                 monster.y = y * 8;
 
                 entities.addEntity(monster);
+
+                r.monsters.add(monster);
             }
         }
 

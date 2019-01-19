@@ -20,6 +20,7 @@ public class KeyLock extends Lock {
         super.onLock();
 
         key = Game.ITEMS.load(dungeon.key);
+
         if (room.monsters.size > 0) {
             room.monsters.get(Game.RANDOM.nextInt(room.monsters.size)).inventory.add(key);
         } else {

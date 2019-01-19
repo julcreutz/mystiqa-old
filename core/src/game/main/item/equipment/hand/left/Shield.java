@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.JsonValue;
 import game.loader.resource.sprite_sheet.SpriteSheet;
 import game.main.Game;
+import game.main.stat.Stat;
 import game.main.state.play.map.entity.Humanoid;
 
 public class Shield extends LeftHand {
@@ -19,6 +20,12 @@ public class Shield extends LeftHand {
     public boolean renderBehind;
 
     public boolean blocking;
+
+    public Stat slowdown;
+
+    public Shield() {
+        slowdown = new Stat(Stat.Type.SPEED, 0, -.5f);
+    }
 
     @Override
     public void update(Humanoid h) {

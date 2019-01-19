@@ -218,5 +218,15 @@
     "path": "graphics/orc_head.png",
     "splitW": 8,
     "splitH": 8
+  },
+  "ParticleCircle": {
+    "path": "graphics/particle_circle.png",
+    "splitW": 8,
+    "splitH": 8
+  },
+  "ParticleLine": {
+    "path": "graphics/particle_line.png",
+    "splitW": 8,
+    "splitH": 8
   }
 }
