@@ -8,13 +8,13 @@ import com.badlogic.gdx.utils.ObjectFloatMap;
 import game.loader.Serializable;
 import game.loader.resource.sprite_sheet.SpriteSheet;
 import game.main.Game;
-import game.main.item.equipment.armor.Armor;
-import game.main.item.equipment.hand.right.RightHand;
-import game.main.item.equipment.hand.left.LeftHand;
+import game.main.object.item.equipment.armor.Armor;
+import game.main.object.item.equipment.hand.right.RightHand;
+import game.main.object.item.equipment.hand.left.LeftHand;
 import game.main.state.play.map.Map;
 import game.main.state.play.map.dungeon.lock.Lock;
-import game.main.state.play.map.entity.*;
-import game.main.state.play.map.tile.Tile;
+import game.main.object.entity.*;
+import game.main.object.tile.Tile;
 
 public class Dungeon extends Map {
     public static class Room {
@@ -629,7 +629,7 @@ public class Dungeon extends Map {
 
                                     Tile t = tiles.at(xxx, yyy, 0);
 
-                                    if (t != null && t.name.equals(outerWall)) {
+                                    if (t != null && t.id.equals(outerWall)) {
                                         tiles.set(Game.TILES.load(ground), xxx, yyy, 0);
                                     }
                                 }
@@ -646,7 +646,7 @@ public class Dungeon extends Map {
 
                                     Tile t = tiles.at(xxx, yyy, 0);
 
-                                    if (t != null && t.name.equals(outerWall)) {
+                                    if (t != null && t.id.equals(outerWall)) {
                                         tiles.set(Game.TILES.load(ground), xxx, yyy, 0);
                                     }
                                 }
@@ -667,7 +667,7 @@ public class Dungeon extends Map {
 
                                     Tile t = tiles.at(xxx, yyy, 0);
 
-                                    if (t != null && t.name.equals(outerWall)) {
+                                    if (t != null && t.id.equals(outerWall)) {
                                         tiles.set(Game.TILES.load(ground), xxx, yyy, 0);
                                     }
                                 }
@@ -684,7 +684,7 @@ public class Dungeon extends Map {
 
                                     Tile t = tiles.at(xxx, yyy, 0);
 
-                                    if (t != null && t.name.equals(outerWall)) {
+                                    if (t != null && t.id.equals(outerWall)) {
                                         tiles.set(Game.TILES.load(ground), xxx, yyy, 0);
                                     }
                                 }
@@ -734,7 +734,7 @@ public class Dungeon extends Map {
                         do {
                             x = r.getTileX() + 1 + Game.RANDOM.nextInt(r.getTileWidth() - 2);
                             y = r.getTileY() + 1 + Game.RANDOM.nextInt(r.getTileHeight() - 2);
-                        } while (tiles.at(x, y, 0) != null && !tiles.at(x, y, 0).name.equals(ground));
+                        } while (tiles.at(x, y, 0) != null && !tiles.at(x, y, 0).id.equals(ground));
 
                         monster.x = x * 8;
                         monster.y = y * 8;

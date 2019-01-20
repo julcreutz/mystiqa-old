@@ -3,14 +3,11 @@ package game.main.state.play;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.math.MathUtils;
 import game.main.Game;
 import game.main.state.GameState;
 import game.main.state.play.map.Map;
-import game.main.state.play.map.entity.Entity;
 
 public class Play extends GameState {
     public Map map;

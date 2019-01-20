@@ -2,11 +2,11 @@ package game.main.state.play.map.dungeon.lock;
 
 import com.badlogic.gdx.utils.Array;
 import game.main.Game;
-import game.main.item.Item;
-import game.main.state.play.map.entity.Entity;
-import game.main.state.play.map.entity.ItemDrop;
-import game.main.state.play.map.entity.event.CollisionEvent;
-import game.main.state.play.map.entity.event.EntityEvent;
+import game.main.object.item.Item;
+import game.main.object.entity.Entity;
+import game.main.object.entity.ItemDrop;
+import game.main.object.entity.event.CollisionEvent;
+import game.main.object.entity.event.EntityEvent;
 
 public class KeyLock extends Lock {
     public Item key;
@@ -53,7 +53,7 @@ public class KeyLock extends Lock {
                     for (int i = 0; i < dungeon.player.inventory.size; i++) {
                         Item item = dungeon.player.inventory.get(i);
 
-                        if (item.name.equals(dungeon.key)) {
+                        if (item.id.equals(dungeon.key)) {
                             locked = false;
                             door.spriteSheet = dungeon.doorNoKey;
                             e.e.inventory.removeIndex(i);

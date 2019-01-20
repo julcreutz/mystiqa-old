@@ -1,7 +1,6 @@
 {
   "Human": {
     "Humanoid": {
-      "name": "Human",
       "stats": [
         {
           "type": "HEALTH",
@@ -19,7 +18,6 @@
   },
   "Orc": {
     "Humanoid": {
-      "name": "Orc",
       "stats": [
         {
           "type": "HEALTH",
@@ -39,7 +37,6 @@
   },
   "GreenSlime": {
     "Slime": {
-      "name": "GreenSlime",
       "stats": [
         {
           "type": "HEALTH",
@@ -70,7 +67,6 @@
   },
   "GreenSlimeSmall": {
     "Slime": {
-      "name": "GreenSlimeSmall",
       "stats": [
         {
           "type": "HEALTH",
@@ -95,7 +91,6 @@
   },
   "Dragon": {
     "Dragon": {
-      "name": "Dragon",
       "stats": [
         {
           "type": "HEALTH",

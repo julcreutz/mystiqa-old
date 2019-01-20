@@ -1,7 +1,6 @@
 {
   "BattleAxe": {
     "MeleeWeapon": {
-      "name": "BattleAxe",
       "icon": "BattleAxeIcon",
       "stats": [
         {
@@ -20,7 +19,6 @@
   },
   "Sword": {
     "MeleeWeapon": {
-      "name": "Sword",
       "stats": [
         {
           "type": "MIN_PHYSICAL_DAMAGE",
@@ -38,7 +36,6 @@
   },
   "Spear": {
     "MeleeWeapon": {
-      "name": "Spear",
       "stats": [
         {
           "type": "MIN_PHYSICAL_DAMAGE",
@@ -56,7 +53,6 @@
   },
   "Halberd": {
     "MeleeWeapon": {
-      "name": "Halberd",
       "stats": [
         {
           "type": "MIN_PHYSICAL_DAMAGE",
@@ -75,7 +71,6 @@
   },
   "Club": {
     "MeleeWeapon": {
-      "name": "Club",
       "spriteSheet": "Club",
       "angle": 135,
       "speed": 0.75
@@ -83,20 +78,17 @@
   },
   "Shield": {
     "Shield": {
-      "name": "Shield",
       "spriteSheet": "Shield"
     }
   },
   "Armor": {
     "Armor": {
-      "name": "Armor",
       "feet": "FeetArmor",
       "body": "BodyArmor"
     }
   },
   "DungeonKey": {
     "Collectable": {
-      "name": "DungeonKey",
       "icon": "DungeonKey"
     }
   }

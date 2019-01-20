@@ -7,13 +7,11 @@ import com.badlogic.gdx.utils.Array;
 import game.loader.Serializable;
 import game.main.Game;
 import game.main.state.play.Play;
-import game.main.state.play.map.entity.Entity;
-import game.main.state.play.map.entity.EntityManager;
-import game.main.state.play.map.entity.Humanoid;
-import game.main.state.play.map.entity.event.EntityEvent;
-import game.main.state.play.map.entity.event.EntityListener;
-import game.main.state.play.map.tile.Tile;
-import game.main.state.play.map.tile.TileManager;
+import game.main.object.entity.Entity;
+import game.main.object.entity.EntityManager;
+import game.main.object.entity.Humanoid;
+import game.main.object.tile.Tile;
+import game.main.object.tile.TileManager;
 
 public abstract class Map implements Serializable {
     public static final float CAM_SPEED = 1.5f;
