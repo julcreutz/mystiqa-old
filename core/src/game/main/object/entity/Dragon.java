@@ -87,6 +87,11 @@ public class Dragon extends Entity {
         }
     }
 
+    public enum State {
+        IDLE,
+        SPEW
+    }
+
     public SpriteSheet body;
     public SpriteSheet neck;
     public SpriteSheet head;
@@ -98,10 +103,18 @@ public class Dragon extends Entity {
 
     public Array<Head> heads;
 
+    public State state;
+
+    public float idleTime;
+
+    public Head spewing;
     public float spewTime;
+    public float spewSpawnTime;
 
     public Dragon() {
         heads = new Array<Head>();
+
+        state = State.IDLE;
     }
 
     @Override
@@ -112,30 +125,36 @@ public class Dragon extends Entity {
             health = 0;
         }
 
-        spewTime -= Game.getDelta();
-        if (spewTime < 0) {
-            float hp = 0;
+        switch (state) {
+            case IDLE:
+                state = State.SPEW;
+                break;
+            case SPEW:
+                if (spewTime == 0) {
+                    spewing = heads.random();
+                    spewTime = MathUtils.random(.75f, 1f);
 
-            for (Head h : heads) {
-                hp += h.getHealthPercentage();
-            }
+                    Projectile p = (Projectile) Game.ENTITIES.load(spew);
 
-            hp /= heads.size;
+                    p.x = spewing.x;
+                    p.y = spewing.y;
 
-            spewTime = MathUtils.random(.5f, 1.5f) * (1 - (1 - hp) * .5f);
+                    p.isMonster = isMonster;
 
-            Projectile p = (Projectile) Game.ENTITIES.load(spew);
+                    p.dir = new Vector2(map.player.x, map.player.y).sub(spewing.x, spewing.y).angle();
 
-            Head h = heads.random();
+                    map.entities.addEntity(p);
+                }
 
-            p.x = h.x;
-            p.y = h.y;
+                spewTime -= Game.getDelta();
 
-            p.isMonster = isMonster;
+                if (spewTime < 0) {
+                    spewTime = 0;
+                    state = State.IDLE;
+                    break;
+                }
 
-            p.dir = new Vector2(map.player.x, map.player.y).sub(h.x, h.y).angle();
-
-            map.entities.addEntity(p);
+                break;
         }
     }
 

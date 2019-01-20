@@ -1,7 +1,7 @@
 package game.loader.object;
 
 import game.main.object.entity.*;
-import game.main.object.entity.Particle;
+import game.main.object.entity.particle.Particle;
 
 public class EntityLoader extends ObjectLoader<Entity> {
     @Override

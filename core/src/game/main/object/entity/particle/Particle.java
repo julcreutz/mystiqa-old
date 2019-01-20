@@ -1,4 +1,4 @@
-package game.main.object.entity;
+package game.main.object.entity.particle;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.JsonValue;
 import game.loader.Serializable;
 import game.main.Game;
+import game.main.object.entity.Entity;
 
 public class Particle extends Entity {
     public static class Attribute implements Serializable {

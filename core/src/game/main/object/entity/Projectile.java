@@ -4,13 +4,17 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.JsonValue;
+import game.loader.resource.sprite_sheet.SpriteSheet;
 import game.main.Game;
+import game.main.object.entity.particle.ParticleEmitter;
 
 public class Projectile extends Entity {
-    public TextureRegion image;
+    public SpriteSheet image;
 
     public float speed;
     public float dir;
+
+    public ParticleEmitter particles;
 
     public Projectile() {
         hitbox.set(8, 8, 0, 0);
@@ -22,15 +26,27 @@ public class Projectile extends Entity {
 
         velX += MathUtils.cosDeg(dir) * speed;
         velY += MathUtils.sinDeg(dir) * speed;
+
+        if (particles != null) {
+            particles.x = x;
+            particles.y = y;
+
+            particles.map = map;
+
+            particles.update();
+        }
     }
 
     @Override
     public void render(SpriteBatch batch) {
         super.render(batch);
 
-        batch.draw(image, x, y,
-                image.getRegionWidth() * .5f, image.getRegionHeight() * .5f, image.getRegionWidth(), image.getRegionHeight(),
-                1, 1, dir);
+        if (image != null) {
+            TextureRegion image = this.image.sheet[MathUtils.floor(Game.time * 20f) % this.image.sheet.length][0];
+
+            batch.draw(image, x, y, image.getRegionWidth() * .5f, image.getRegionHeight() * .5f,
+                    image.getRegionWidth(), image.getRegionHeight(), 1, 1, dir);
+        }
     }
 
     @Override
@@ -88,12 +104,17 @@ public class Projectile extends Entity {
 
         JsonValue image = json.get("image");
         if (image != null) {
-            this.image = Game.SPRITE_SHEETS.load(image.asString()).sheet[0][0];
+            this.image = Game.SPRITE_SHEETS.load(image.asString());
         }
 
         JsonValue speed = json.get("speed");
         if (speed != null) {
             this.speed = speed.asFloat();
+        }
+
+        JsonValue particles = json.get("particles");
+        if (particles != null) {
+            this.particles = new ParticleEmitter(particles);
         }
     }
 }

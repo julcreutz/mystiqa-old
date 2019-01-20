@@ -243,5 +243,10 @@
     "path": "graphics/chest.png",
     "splitW": 8,
     "splitH": 8
+  },
+  "Flame": {
+    "path": "graphics/flame.png",
+    "splitW": 8,
+    "splitH": 8
   }
 }

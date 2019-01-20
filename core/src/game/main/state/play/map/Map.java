@@ -2,6 +2,7 @@ package game.main.state.play.map;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import game.loader.Serializable;
@@ -14,6 +15,50 @@ import game.main.object.tile.Tile;
 import game.main.object.tile.TileManager;
 
 public abstract class Map implements Serializable {
+    public static class Teleport {
+        public Rectangle rect;
+
+        public Map destination;
+
+        public float destinationX;
+        public float destinationY;
+
+        public Teleport(Map destination, float destinationX, float destinationY, float x, float y, float width, float height) {
+            this.destination = destination;
+
+            this.destinationX = destinationX;
+            this.destinationY = destinationY;
+
+            rect = new Rectangle(x, y, width, height);
+        }
+    }
+
+    public static class Node {
+        public int x;
+        public int y;
+
+        public Node parent;
+
+        public float f;
+        public float g;
+        public float h;
+
+        public Node(int x, int y, Node parent) {
+            this.x = x;
+            this.y = y;
+
+            this.parent = parent;
+        }
+
+        public Node(int x, int y) {
+            this(x, y, null);
+        }
+
+        public Node() {
+            this(0, 0, null);
+        }
+    }
+
     public static final float CAM_SPEED = 1.5f;
 
     public static final int X_VIEW = 6;
