@@ -45,6 +45,10 @@ public abstract class Lock implements EntityListener {
     public void onLock() {
     }
 
+    public boolean isValid(Dungeon.Template t) {
+        return true;
+    }
+
     public abstract boolean isLocked();
 
     @Override

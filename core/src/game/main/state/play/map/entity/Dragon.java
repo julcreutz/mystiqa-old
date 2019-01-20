@@ -94,7 +94,11 @@ public class Dragon extends Entity {
     public int minHeads;
     public int maxHeads;
 
+    public String spew;
+
     public Array<Head> heads;
+
+    public float spewTime;
 
     public Dragon() {
         heads = new Array<Head>();
@@ -106,6 +110,32 @@ public class Dragon extends Entity {
 
         if (heads.size == 0) {
             health = 0;
+        }
+
+        spewTime -= Game.getDelta();
+        if (spewTime < 0) {
+            float hp = 0;
+
+            for (Head h : heads) {
+                hp += h.getHealthPercentage();
+            }
+
+            hp /= heads.size;
+
+            spewTime = MathUtils.random(.5f, 1.5f) * (1 - (1 - hp) * .5f);
+
+            Projectile p = (Projectile) Game.ENTITIES.load(spew);
+
+            Head h = heads.random();
+
+            p.x = h.x;
+            p.y = h.y;
+
+            p.isMonster = isMonster;
+
+            p.dir = new Vector2(map.player.x, map.player.y).sub(h.x, h.y).angle();
+
+            map.entities.addEntity(p);
         }
     }
 
@@ -180,6 +210,11 @@ public class Dragon extends Entity {
         JsonValue maxHeads = json.get("maxHeads");
         if (maxHeads != null) {
             this.maxHeads = maxHeads.asInt();
+        }
+
+        JsonValue spew = json.get("spew");
+        if (spew != null) {
+            this.spew = spew.asString();
         }
     }
 }

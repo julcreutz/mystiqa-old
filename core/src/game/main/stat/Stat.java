@@ -37,14 +37,14 @@ public class Stat implements Serializable {
             this.type = Stat.Type.valueOf(type.asString());
         }
 
-        JsonValue absolute = json.get("value");
-        if (absolute != null) {
-            this.value = absolute.asFloat();
+        JsonValue value = json.get("value");
+        if (value != null) {
+            this.value = value.asFloat();
         }
 
-        JsonValue relative = json.get("multiplier");
-        if (relative != null) {
-            this.multiplier = relative.asFloat();
+        JsonValue multiplier = json.get("multiplier");
+        if (multiplier != null) {
+            this.multiplier = multiplier.asFloat();
         }
     }
 }

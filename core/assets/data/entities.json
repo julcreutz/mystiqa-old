@@ -96,7 +96,8 @@
   "DungeonDoor": {
     "Door": {
       "name": "DungeonDoor",
-      "spriteSheet": "DungeonDoor",
+      "noKey": "DungeonDoor",
+      "key": "DungeonDoorKey",
       "wall": "DungeonWall"
     }
   },
@@ -119,8 +120,9 @@
       "body": "DragonBody",
       "neck": "DragonNeck",
       "head": "DragonHead",
-      "minHeads": 1,
-      "maxHeads": 1
+      "minHeads": 3,
+      "maxHeads": 3,
+      "spew": "Fireball"
     }
   },
   "Smoke": {
@@ -157,6 +159,22 @@
         "min": 0,
         "max": 360
       }
+    }
+  },
+  "Fireball": {
+    "Projectile": {
+      "stats": [
+        {
+          "type": "MIN_PHYSICAL_DAMAGE",
+          "value": 1
+        },
+        {
+          "type": "MIN_PHYSICAL_DAMAGE",
+          "value": 3
+        }
+      ],
+      "image": "Fireball",
+      "speed": 32
     }
   }
 }

@@ -18,6 +18,8 @@ public class EntityLoader extends InstanceLoader<Entity> {
             return new Dragon();
         } else if (name.equals("Particle")) {
             return new Particle();
+        }  else if (name.equals("Projectile")) {
+            return new Projectile();
         }
 
         return null;

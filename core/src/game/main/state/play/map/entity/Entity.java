@@ -238,6 +238,7 @@ public abstract class Entity implements StatCounter, Serializable {
                                     hit.add(e);
 
                                     e.onBlock(this);
+                                    onIsBlocked(e);
                                 }
                             } else {
                                 if (attackHitbox.overlaps(e)) {
@@ -255,6 +256,7 @@ public abstract class Entity implements StatCounter, Serializable {
                                         hit.add(e);
 
                                         e.onHit(this);
+                                        onHasHit(e);
                                     }
                                 } else {
                                     if (contains) {
@@ -510,8 +512,16 @@ public abstract class Entity implements StatCounter, Serializable {
         map.entities.addEntity(p);
     }
 
+    public void onHasHit(Entity hit) {
+
+    }
+
     public void onBlock(Entity blocked) {
         sendEvent(new BlockEvent(this, blocked));
+    }
+
+    public void onIsBlocked(Entity blocker) {
+
     }
 
     public void onDeath() {

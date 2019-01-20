@@ -1,54 +1,41 @@
 {
   "Dungeon": {
     "Dungeon": {
-      "minRooms": 7,
-      "maxRooms": 11,
+      "minRooms": 9,
+      "maxRooms": 13,
       "ground": "DungeonGround",
       "outerWall": "DungeonWall",
       "innerWall": "DungeonBlock",
       "door": "DungeonDoor",
+      "pushableBlock": "DungeonBlock",
+      "treasureRoomChance": 0.75,
       "minMonsters": 0,
       "maxMonsters": 7,
       "monsters": [
         {
-          "difficulty": 0,
-          "chance": 1,
+          "maxDifficulty": 0.25,
           "monster": "GreenSlimeSmall"
         },
         {
-          "difficulty": 0.5,
-          "chance": 0.75,
+          "minDifficulty": 0.25,
           "monster": "GreenSlime"
         },
         {
-          "difficulty": 0.9,
-          "chance": 0.5,
+          "minDifficulty": 0.75,
+          "chance": 0.25,
           "monster": "Orc"
         }
       ],
       "boss": "Dragon",
       "key": "DungeonKey",
       "locks": [
-        {
-          "type": "KILL_MONSTER",
-          "chance": 0.75
-        },
-        {
-          "type": "KEY",
-          "chance": 0.5
-        },
-        {
-          "type": "PUSH_BLOCK",
-          "chance": 1
-        },
-        {
-          "type": "INVISIBLE_DOOR",
-          "chance": 0.25
-        }
+        {"KILL_MONSTER": 0.75},
+        {"KEY": 0.5},
+        {"PUSH_BLOCK": 0.5},
+        {"INVISIBLE_DOOR": 0.25}
       ],
       "templates": [
         {
-          "locks": ["KEY", "KILL_MONSTER", "INVISIBLE_DOOR"],
           "template": [
             ["#", "#", "#", "#", "#", "#", "#", "#", "#", "#"],
             ["#", " ", " ", " ", " ", " ", " ", " ", " ", "#"],
@@ -61,7 +48,6 @@
           ]
         },
         {
-          "locks": ["KEY", "PUSH_BLOCK", "KILL_MONSTER", "INVISIBLE_DOOR"],
           "template": [
             ["#", "#", "#", "#", "#", "#", "#", "#", "#", "#"],
             ["#", " ", " ", " ", " ", " ", " ", " ", " ", "#"],
@@ -74,7 +60,18 @@
           ]
         },
         {
-          "locks": ["KEY", "KILL_MONSTER", "INVISIBLE_DOOR"],
+          "template": [
+            ["#", "#", "#", "#", "#", "#", "#", "#", "#", "#"],
+            ["#", " ", " ", " ", " ", " ", " ", " ", " ", "#"],
+            ["#", " ", "p", " ", " ", " ", " ", "+", " ", "#"],
+            ["#", " ", " ", " ", " ", " ", " ", " ", " ", "#"],
+            ["#", " ", " ", " ", " ", " ", " ", " ", " ", "#"],
+            ["#", " ", "+", " ", " ", " ", " ", "+", " ", "#"],
+            ["#", " ", " ", " ", " ", " ", " ", " ", " ", "#"],
+            ["#", "#", "#", "#", "#", "#", "#", "#", "#", "#"]
+          ]
+        },
+        {
           "template": [
             ["#", "#", "#", "#", "#", "#", "#", "#", "#", "#"],
             ["#", " ", " ", " ", " ", " ", " ", " ", " ", "#"],
@@ -87,7 +84,6 @@
           ]
         },
         {
-          "locks": ["KEY", "KILL_MONSTER", "INVISIBLE_DOOR"],
           "template": [
             ["#", "#", "#", "#", "#", "#", "#", "#", "#", "#"],
             ["#", " ", " ", " ", " ", " ", " ", " ", " ", "#"],
@@ -100,7 +96,6 @@
           ]
         },
         {
-          "locks": ["KEY", "KILL_MONSTER", "INVISIBLE_DOOR"],
           "template": [
             ["#", "#", "#", "#", "#", "#", "#", "#", "#", "#"],
             ["#", " ", " ", " ", " ", " ", " ", " ", " ", "#"],
@@ -113,8 +108,7 @@
           ]
         },
         {
-          "locks": ["KEY", "KILL_MONSTER", "INVISIBLE_DOOR"],
-          "flip": "HORIZONTAL",
+          "horizontallyFlippable": true,
           "template": [
             ["#", "#", "#", "#", "#", "#", "#", "#", "#", "#"],
             ["#", " ", " ", " ", " ", " ", " ", " ", " ", "#"],
@@ -127,8 +121,6 @@
           ]
         },
         {
-          "locks": ["KEY", "KILL_MONSTER", "INVISIBLE_DOOR"],
-          "flip": "HORIZONTAL",
           "template": [
             ["#", "#", "#", "#", "#", "#", "#", "#", "#", "#"],
             ["#", " ", " ", " ", " ", " ", " ", " ", " ", "#"],
@@ -149,6 +141,19 @@
             ["#", " ", " ", " ", " ", " ", " ", " ", " ", "#"],
             ["#", " ", " ", " ", " ", " ", " ", " ", " ", "#"],
             ["#", " ", "+", " ", " ", " ", " ", "+", " ", "#"],
+            ["#", " ", " ", " ", " ", " ", " ", " ", " ", "#"],
+            ["#", "#", "#", "#", "#", "#", "#", "#", "#", "#"]
+          ]
+        },
+        {
+          "isTreasureRoom": true,
+          "template": [
+            ["#", "#", "#", "#", "#", "#", "#", "#", "#", "#"],
+            ["#", " ", " ", " ", " ", " ", " ", " ", " ", "#"],
+            ["#", " ", "+", "+", "+", "+", "+", "+", " ", "#"],
+            ["#", " ", "+", " ", "t", " ", " ", "+", " ", "#"],
+            ["#", " ", "+", " ", " ", " ", " ", "+", " ", "#"],
+            ["#", " ", "+", "+", " ", " ", "+", "+", " ", "#"],
             ["#", " ", " ", " ", " ", " ", " ", " ", " ", "#"],
             ["#", "#", "#", "#", "#", "#", "#", "#", "#", "#"]
           ]

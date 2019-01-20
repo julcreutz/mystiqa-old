@@ -228,5 +228,15 @@
     "path": "graphics/particle_line.png",
     "splitW": 8,
     "splitH": 8
+  },
+  "Fireball": {
+    "path": "graphics/fireball.png",
+    "splitW": 8,
+    "splitH": 8
+  },
+  "DungeonDoorKey": {
+    "path": "graphics/dungeon_door_key.png",
+    "splitW": 8,
+    "splitH": 8
   }
 }

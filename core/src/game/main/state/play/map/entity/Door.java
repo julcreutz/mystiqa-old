@@ -6,12 +6,14 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.JsonValue;
 import game.loader.resource.sprite_sheet.SpriteSheet;
 import game.main.Game;
+import game.main.state.play.map.dungeon.lock.KeyLock;
 import game.main.state.play.map.dungeon.lock.Lock;
 
 public class Door extends Entity {
     public static float OPEN_SPEED = 2.5f;
 
-    public SpriteSheet spriteSheet;
+    public SpriteSheet noKey;
+    public SpriteSheet key;
 
     public boolean horizontal;
     public boolean visible;
@@ -59,7 +61,8 @@ public class Door extends Entity {
         super.render(batch);
 
         if (!invisible) {
-            TextureRegion image = spriteSheet.sheet[MathUtils.floor(openTime * (spriteSheet.sheet.length - 1))][0];
+            TextureRegion image = (lock != null && lock instanceof KeyLock && ((KeyLock) lock).locked ? key : noKey)
+                    .sheet[MathUtils.floor(openTime * (noKey.sheet.length - 1))][0];
 
             if (horizontal) {
                 // Bottom left door
@@ -136,9 +139,14 @@ public class Door extends Entity {
     public void deserialize(JsonValue json) {
         super.deserialize(json);
 
-        JsonValue spriteSheet = json.get("spriteSheet");
-        if (spriteSheet != null) {
-            this.spriteSheet = Game.SPRITE_SHEETS.load(spriteSheet.asString());
+        JsonValue noKey = json.get("noKey");
+        if (noKey != null) {
+            this.noKey = Game.SPRITE_SHEETS.load(noKey.asString());
+        }
+
+        JsonValue key = json.get("key");
+        if (key != null) {
+            this.key = Game.SPRITE_SHEETS.load(key.asString());
         }
 
         JsonValue wall = json.get("wall");

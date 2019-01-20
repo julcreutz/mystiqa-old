@@ -1,8 +1,8 @@
 package game.main.state.play.map.dungeon.lock;
 
-import game.main.Game;
 import game.main.state.play.map.dungeon.Dungeon;
 import game.main.state.play.map.entity.Block;
+import game.main.state.play.map.entity.Entity;
 
 public class PushBlockLock extends Lock {
     public Block block;
@@ -11,21 +11,9 @@ public class PushBlockLock extends Lock {
     public void onLock() {
         super.onLock();
 
-        while (true) {
-            int x = room.getTileX() + Game.RANDOM.nextInt(room.getTileWidth());
-            int y = room.getTileY() + Game.RANDOM.nextInt(room.getTileHeight());
-
-            if (dungeon.tiles.at(x, y, 0).name.equals(dungeon.innerWall)) {
-                dungeon.tiles.set(Game.TILES.load(dungeon.ground), x, y, 0);
-
-                block = (Block) Game.ENTITIES.load("DungeonBlock");
-
-                block.x = x * 8;
-                block.y = y * 8;
-
-                dungeon.entities.addEntity(block);
-
-                return;
+        for (Entity e : room.getContainedEntities()) {
+            if (e.name.equals(dungeon.pushableBlock)) {
+                block = (Block) e;
             }
         }
     }
@@ -33,5 +21,18 @@ public class PushBlockLock extends Lock {
     @Override
     public boolean isLocked() {
         return block != null && block.getStartDistance() < 8;
+    }
+
+    @Override
+    public boolean isValid(Dungeon.Template t) {
+        for (int x = 0; x < t.template.length; x++) {
+            for (int y = 0; y < t.template[0].length; y++) {
+                if (t.template[x][y] == 'p') {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }
