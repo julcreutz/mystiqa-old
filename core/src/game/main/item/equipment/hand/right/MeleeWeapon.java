@@ -70,11 +70,11 @@ public class MeleeWeapon extends RightHand {
 
             if (angle == 0) {
                 a = h.dir * 90;
+                dist = 6 - range * 4f + MathUtils.sin(attackTime * MathUtils.PI) * (range * 4f + 2f);
             } else {
                 a = h.dir * 90 - 135 + (1 - attackTime) * angle;
+                dist = 6 + MathUtils.sin(attackTime * MathUtils.PI) * (2f);
             }
-
-            dist = 6 + MathUtils.sin(attackTime * MathUtils.PI) * (2f);
 
             x = h.x + MathUtils.cosDeg(a) * dist;
             y = h.y + MathUtils.sinDeg(a) * dist + (h.yOffset - h.y);

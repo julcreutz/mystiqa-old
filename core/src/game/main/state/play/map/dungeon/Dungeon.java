@@ -644,7 +644,7 @@ public class Dungeon extends Map {
 
         player.armor = (Armor) Game.ITEMS.load("Armor");
 
-        player.rightHand = (RightHand) Game.ITEMS.load("Sword");
+        player.rightHand = (RightHand) Game.ITEMS.load("Spear");
         player.leftHand = (LeftHand) Game.ITEMS.load("Shield");
 
         player.controlledByPlayer = true;
