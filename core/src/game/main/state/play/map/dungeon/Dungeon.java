@@ -13,14 +13,12 @@ import game.main.item.equipment.hand.left.LeftHand;
 import game.main.state.play.map.Map;
 import game.main.state.play.map.dungeon.lock.Lock;
 import game.main.state.play.map.entity.Door;
-import game.main.state.play.map.entity.Dragon;
 import game.main.state.play.map.entity.Entity;
 import game.main.state.play.map.entity.Humanoid;
-import game.main.state.play.map.entity.event.*;
 import game.main.state.play.map.tile.Tile;
 
 public class Dungeon extends Map {
-    public static class Room implements EntityListener {
+    public static class Room {
         public Dungeon map;
 
         public Rectangle rect;
@@ -30,9 +28,8 @@ public class Dungeon extends Map {
 
         public Door doorToParent;
 
-        public Rectangle bounds;
-        public Rectangle enterBounds;
-        public Array<Entity> monsters;
+        public Rectangle outerBounds;
+        public Rectangle innerBounds;
 
         public boolean containsPlayer;
 
@@ -41,15 +38,16 @@ public class Dungeon extends Map {
         public Room unlocks;
         public Lock.Type lock;
 
+        public boolean isBossRoom;
+
         public Room(Dungeon map, int x, int y, int w, int h) {
             this.map = map;
 
             this.rect = new Rectangle(x, y, w, h);
             children = new Array<Room>();
 
-            bounds = new Rectangle(0, 0, Game.WIDTH - 8, Game.HEIGHT - 8 - 8);
-            enterBounds = new Rectangle(0, 0, Game.WIDTH - 24, Game.HEIGHT - 8 - 24);
-            monsters = new Array<Entity>();
+            outerBounds = new Rectangle(0, 0, Game.WIDTH - 8, Game.HEIGHT - 8 - 8);
+            innerBounds = new Rectangle(0, 0, Game.WIDTH - 24, Game.HEIGHT - 8 - 24);
         }
 
         public Room(Dungeon map) {
@@ -57,11 +55,11 @@ public class Dungeon extends Map {
         }
 
         public void update() {
-            if (!containsPlayer && containsPlayer()) {
+            if (!containsPlayer && map.player.getHitbox().overlaps(getInnerBounds())) {
                 containsPlayer = true;
             }
 
-            // Close door behind player
+            // Close all doors in room the player currently is in
             Array<Room> close = new Array<Room>();
 
             close.add(this);
@@ -69,9 +67,9 @@ public class Dungeon extends Map {
 
             for (Room r : close) {
                 if (r.doorToParent != null) {
-                    if (containsPlayer && monsters.size > 0 && !r.doorToParent.visible) {
+                    if (containsPlayer && getMonsterCount() > 0 && !r.doorToParent.visible) {
                         r.doorToParent.visible = true;
-                    } else if (containsPlayer && monsters.size == 0 && r.doorToParent.visible
+                    } else if (containsPlayer && getMonsterCount() == 0 && r.doorToParent.visible
                             && (r.doorToParent.lock == null || !r.doorToParent.lock.isLocked())) {
                         r.doorToParent.visible = false;
                     }
@@ -119,29 +117,36 @@ public class Dungeon extends Map {
             return getTileY() + getTileHeight();
         }
 
-        public Rectangle getBounds() {
-            return bounds.setPosition(x0() * 8 + 4, y0() * 8 + 4);
+        public Rectangle getOuterBounds() {
+            return outerBounds.setPosition(x0() * 8 + 4, y0() * 8 + 4);
         }
 
-        public Rectangle getEnterBounds() {
-            return enterBounds.setPosition(x0() * 8 + 12, y0() * 8 + 12);
+        public Rectangle getInnerBounds() {
+            return innerBounds.setPosition(x0() * 8 + 12, y0() * 8 + 12);
         }
 
-        public boolean containsPlayer() {
-            return map.player.hitbox.overlaps(getEnterBounds());
-        }
+        public Array<Entity> getMonsters() {
+            Array<Entity> monsters = new Array<Entity>();
 
-        @Override
-        public void eventReceived(EntityEvent e) {
-            if (e instanceof DeathEvent || e instanceof DisabledEvent) {
-                if (monsters.contains(e.e, true)) {
-                    monsters.removeValue(e.e, true);
-                }
-            } else if (e instanceof AddedEvent) {
-                if (e.e.getHitbox().overlaps(getBounds()) && e.e.isMonster) {
-                    monsters.add(e.e);
+            for (Entity e : map.entities.entities) {
+                if (e.isMonster && e.getHitbox().overlaps(getOuterBounds())) {
+                    monsters.add(e);
                 }
             }
+
+            return monsters;
+        }
+
+        public int getMonsterCount() {
+            int n = 0;
+
+            for (Entity e : map.entities.entities) {
+                if (e.isMonster && e.getHitbox().overlaps(getOuterBounds())) {
+                    n++;
+                }
+            }
+
+            return n;
         }
     }
 
@@ -151,6 +156,7 @@ public class Dungeon extends Map {
         }
 
         public Array<Lock.Type> locks;
+        public boolean isBossRoom;
 
         public Flip flip;
         public char[][] template;
@@ -232,6 +238,11 @@ public class Dungeon extends Map {
                 }
             }
 
+            JsonValue isBossRoom = json.get("isBossRoom");
+            if (isBossRoom != null) {
+                this.isBossRoom = isBossRoom.asBoolean();
+            }
+
             JsonValue flip = json.get("flip");
             if (flip != null) {
                 this.flip = Flip.valueOf(flip.asString());
@@ -303,6 +314,8 @@ public class Dungeon extends Map {
     public int maxMonsters;
 
     public Monster[] monsters;
+
+    public String boss;
 
     public String key;
 
@@ -394,7 +407,6 @@ public class Dungeon extends Map {
                         r.children.add(room);
 
                         room.difficulty = r.difficulty + Game.RANDOM.nextFloat();
-                        entities.addListener(room);
 
                         rooms.add(room);
                     }
@@ -424,6 +436,19 @@ public class Dungeon extends Map {
 
         for (Room r : rooms) {
             r.difficulty /= maxDifficulty;
+        }
+
+        // Pick boss room
+        Room bossRoom = null;
+
+        for (Room r : rooms) {
+            if (r.children.size == 0 && (bossRoom == null || r.difficulty > bossRoom.difficulty)) {
+                bossRoom = r;
+            }
+        }
+
+        if (bossRoom != null) {
+            bossRoom.isBossRoom = true;
         }
 
         tiles.initSize(WIDTH * 16, HEIGHT * 8, 8);
@@ -479,7 +504,7 @@ public class Dungeon extends Map {
 
                     // Get valid rooms and make sure room has only one room it unlocks
                     for (Room room : getRoomsUntil(child)) {
-                        if (room.unlocks == null) {
+                        if (room != rooms.first() && !room.isBossRoom && room.unlocks == null) {
                             valid.add(room);
                         }
                     }
@@ -515,7 +540,8 @@ public class Dungeon extends Map {
 
             do {
                 t = templates[Game.RANDOM.nextInt(templates.length)];
-            } while (r.lock != null && !t.locks.contains(r.lock, true));
+            } while ((r.lock != null && (t.locks == null || !t.locks.contains(r.lock, true)))
+                    || r.isBossRoom != t.isBossRoom);
 
             char[][] template = t.getTemplate();
 
@@ -533,6 +559,17 @@ public class Dungeon extends Map {
                             break;
                         case ' ':
                             tiles.set(Game.TILES.load(ground), xx, yy, 0);
+                            break;
+                        case 'b':
+                            tiles.set(Game.TILES.load(ground), xx, yy, 0);
+
+                            Entity boss = Game.ENTITIES.load(this.boss);
+
+                            boss.x = xx * 8;
+                            boss.y = yy * 8;
+
+                            entities.addEntity(boss);
+
                             break;
                     }
                 }
@@ -641,43 +678,34 @@ public class Dungeon extends Map {
         this.player = player;
         entities.addEntity(player);
 
-        /*
-        Dragon dragon = (Dragon) Game.ENTITIES.load("Dragon");
-
-        dragon.x = first.getCenterX() * 8 - 8;
-        dragon.y = first.getCenterY() * 8 - 4 + 16;
-
-        entities.addEntity(dragon);
-        */
-
         // Place monsters randomly
         for (Room r : rooms) {
-            for (int i = 0; i < MathUtils.lerp(minMonsters, maxMonsters, r.difficulty); i++) {
-                Entity monster = null;
+            if (!r.isBossRoom) {
+                for (int i = 0; i < MathUtils.lerp(minMonsters, maxMonsters, r.difficulty); i++) {
+                    Entity monster = null;
 
-                do {
-                    for (Monster m : monsters) {
-                        if (Game.RANDOM.nextFloat() < MathUtils.clamp(1 - Math.abs(r.difficulty - m.difficulty), 0, 1)
-                                && Game.RANDOM.nextFloat() < m.chance) {
-                            monster = Game.ENTITIES.load(m.monster);
+                    do {
+                        for (Monster m : monsters) {
+                            if (Game.RANDOM.nextFloat() < MathUtils.clamp(1 - Math.abs(r.difficulty - m.difficulty), 0, 1)
+                                    && Game.RANDOM.nextFloat() < m.chance) {
+                                monster = Game.ENTITIES.load(m.monster);
+                            }
                         }
-                    }
-                } while (monster == null);
+                    } while (monster == null);
 
-                int x;
-                int y;
+                    int x;
+                    int y;
 
-                do {
-                    x = r.getTileX() + 1 + Game.RANDOM.nextInt(r.getTileWidth() - 2);
-                    y = r.getTileY() + 1 + Game.RANDOM.nextInt(r.getTileHeight() - 2);
-                } while (tiles.at(x, y, 0) != null && !tiles.at(x, y, 0).name.equals(ground));
+                    do {
+                        x = r.getTileX() + 1 + Game.RANDOM.nextInt(r.getTileWidth() - 2);
+                        y = r.getTileY() + 1 + Game.RANDOM.nextInt(r.getTileHeight() - 2);
+                    } while (tiles.at(x, y, 0) != null && !tiles.at(x, y, 0).name.equals(ground));
 
-                monster.x = x * 8;
-                monster.y = y * 8;
+                    monster.x = x * 8;
+                    monster.y = y * 8;
 
-                entities.addEntity(monster);
-
-                r.monsters.add(monster);
+                    entities.addEntity(monster);
+                }
             }
         }
 
@@ -693,7 +721,7 @@ public class Dungeon extends Map {
 
     public Room getCurrentRoom() {
         for (Room r : rooms) {
-            if (player.hitbox.overlaps(r.getBounds())) {
+            if (player.hitbox.overlaps(r.getOuterBounds())) {
                 return r;
             }
         }
@@ -770,6 +798,11 @@ public class Dungeon extends Map {
             for (int i = 0; i < monsters.size; i++) {
                 this.monsters[i] = new Monster(monsters.get(i));
             }
+        }
+
+        JsonValue boss = json.get("boss");
+        if (boss != null) {
+            this.boss = boss.asString();
         }
 
         JsonValue key = json.get("key");

@@ -99,31 +99,31 @@ public class TileManager {
     }
 
     /**
-     * Checks whether given coordinates are within tile bounds.
+     * Checks whether given coordinates are within tile outerBounds.
      *
      * @param x x coordinate
      * @param y y coordinate
      * @param z z coordinate
-     * @return whether coordinates are in bounds
+     * @return whether coordinates are in outerBounds
      */
     public boolean inBounds(int x, int y, int z) {
         return x >= 0 && x < getWidth() && y >= 0 && y < getHeight() && z >= 0 && z < getDepth();
     }
 
     /**
-     * Convenience method not regarding z to check whether given coordinates are within tiles bounds. Uses
+     * Convenience method not regarding z to check whether given coordinates are within tiles outerBounds. Uses
      * {@link #inBounds(int, int, int)} for validation and uses zero as z coordinate.
      *
      * @param x x coordinate
      * @param y y coordinate
-     * @return whether coordinates are in bounds
+     * @return whether coordinates are in outerBounds
      */
     public boolean inBounds(int x, int y) {
         return inBounds(x, y, 0);
     }
 
     /**
-     * Returns tile at given coordinates as long as they are within bounds. If not, null is returned.
+     * Returns tile at given coordinates as long as they are within outerBounds. If not, null is returned.
      *
      * @param x x coordinate
      * @param y y coordinate
@@ -135,7 +135,7 @@ public class TileManager {
     }
 
     /**
-     * Places given tile at given coordinates as long as they are in bounds. Replaces the tile, if not null.
+     * Places given tile at given coordinates as long as they are in outerBounds. Replaces the tile, if not null.
      *
      * @param tile tile to be placed
      * @param x x coordinate
@@ -152,7 +152,7 @@ public class TileManager {
     }
 
     /**
-     * Nullifies all tiles in given area as long as coordinates are in bounds.
+     * Nullifies all tiles in given area as long as coordinates are in outerBounds.
      *
      * @param x0 lower x bound, inclusive
      * @param x1 upper x bound, exclusive
