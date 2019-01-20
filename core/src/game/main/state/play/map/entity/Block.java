@@ -42,14 +42,4 @@ public class Block extends Entity {
 
         return (float) Math.sqrt(diffX * diffX + diffY * diffY);
     }
-
-    @Override
-    public void deserialize(JsonValue json) {
-        super.deserialize(json);
-
-        JsonValue spriteSheet = json.get("spriteSheet");
-        if (spriteSheet != null) {
-            this.spriteSheet = Game.SPRITE_SHEETS.load(spriteSheet.asString());
-        }
-    }
 }

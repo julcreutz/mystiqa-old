@@ -12,8 +12,8 @@ import game.main.state.play.map.dungeon.lock.Lock;
 public class Door extends Entity {
     public static float OPEN_SPEED = 2.5f;
 
-    public SpriteSheet noKey;
-    public SpriteSheet key;
+    public SpriteSheet spriteSheet;
+    public SpriteSheet wall;
 
     public boolean horizontal;
     public boolean visible;
@@ -22,7 +22,6 @@ public class Door extends Entity {
     public Lock lock;
 
     public boolean invisible;
-    public SpriteSheet wall;
 
     public Door() {
         hitbox.set(16, 16, 0, 0);
@@ -61,8 +60,7 @@ public class Door extends Entity {
         super.render(batch);
 
         if (!invisible) {
-            TextureRegion image = (lock != null && lock instanceof KeyLock && ((KeyLock) lock).locked ? key : noKey)
-                    .sheet[MathUtils.floor(openTime * (noKey.sheet.length - 1))][0];
+            TextureRegion image = spriteSheet.sheet[MathUtils.floor(openTime * (spriteSheet.sheet.length - 1))][0];
 
             if (horizontal) {
                 // Bottom left door
@@ -133,25 +131,5 @@ public class Door extends Entity {
     @Override
     public float getSortLevel() {
         return Float.MAX_VALUE;
-    }
-
-    @Override
-    public void deserialize(JsonValue json) {
-        super.deserialize(json);
-
-        JsonValue noKey = json.get("noKey");
-        if (noKey != null) {
-            this.noKey = Game.SPRITE_SHEETS.load(noKey.asString());
-        }
-
-        JsonValue key = json.get("key");
-        if (key != null) {
-            this.key = Game.SPRITE_SHEETS.load(key.asString());
-        }
-
-        JsonValue wall = json.get("wall");
-        if (wall != null) {
-            this.wall = Game.SPRITE_SHEETS.load(wall.asString());
-        }
     }
 }

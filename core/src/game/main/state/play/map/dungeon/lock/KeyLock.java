@@ -20,6 +20,8 @@ public class KeyLock extends Lock {
     public void onLock() {
         super.onLock();
 
+        door.spriteSheet = dungeon.doorKey;
+
         key = Game.ITEMS.load(dungeon.key);
 
         Array<Entity> monsters = room.getMonsters();
@@ -48,6 +50,7 @@ public class KeyLock extends Lock {
         if (e instanceof CollisionEvent) {
             if (e.e == dungeon.player && ((CollisionEvent) e).other == door && e.e.inventory.contains(key, true)) {
                 locked = false;
+                door.spriteSheet = dungeon.doorNoKey;
                 e.e.inventory.removeValue(key, true);
             }
         }

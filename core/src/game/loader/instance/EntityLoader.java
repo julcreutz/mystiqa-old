@@ -10,15 +10,11 @@ public class EntityLoader extends InstanceLoader<Entity> {
             return new Humanoid();
         } else if (name.equals("Slime")) {
             return new Slime();
-        } else if (name.equals("Door")) {
-            return new Door();
-        } else if (name.equals("Block")) {
-            return new Block();
         } else if (name.equals("Dragon")) {
             return new Dragon();
         } else if (name.equals("Particle")) {
             return new Particle();
-        }  else if (name.equals("Projectile")) {
+        } else if (name.equals("Projectile")) {
             return new Projectile();
         }
 

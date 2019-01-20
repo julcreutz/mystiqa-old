@@ -6,16 +6,14 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.ObjectFloatMap;
 import game.loader.Serializable;
+import game.loader.resource.sprite_sheet.SpriteSheet;
 import game.main.Game;
 import game.main.item.equipment.armor.Armor;
 import game.main.item.equipment.hand.right.RightHand;
 import game.main.item.equipment.hand.left.LeftHand;
 import game.main.state.play.map.Map;
 import game.main.state.play.map.dungeon.lock.Lock;
-import game.main.state.play.map.entity.Door;
-import game.main.state.play.map.entity.Entity;
-import game.main.state.play.map.entity.Humanoid;
-import game.main.state.play.map.entity.ItemDrop;
+import game.main.state.play.map.entity.*;
 import game.main.state.play.map.tile.Tile;
 
 public class Dungeon extends Map {
@@ -324,8 +322,11 @@ public class Dungeon extends Map {
     public String outerWall;
     public String innerWall;
 
-    public String door;
-    public String pushableBlock;
+    public SpriteSheet doorNoKey;
+    public SpriteSheet doorKey;
+    public SpriteSheet doorWall;
+
+    public SpriteSheet block;
 
     public float treasureRoomChance;
 
@@ -476,7 +477,10 @@ public class Dungeon extends Map {
 
         for (Room r : rooms) {
             for (Room child : r.children) {
-                Door d = (Door) Game.ENTITIES.load(door);
+                Door d = new Door();
+
+                d.spriteSheet = doorNoKey;
+                d.wall = doorWall;
 
                 if (child.x0() != r.x0()) {
                     d.y = r.getCenterY() * 8 - 8;
@@ -580,12 +584,14 @@ public class Dungeon extends Map {
                         case 'p':
                             tiles.set(Game.TILES.load(ground), xx, yy, 0);
 
-                            Entity block = Game.ENTITIES.load(pushableBlock);
+                            Block b = new Block();
 
-                            block.x = xx * 8;
-                            block.y = yy * 8;
+                            b.spriteSheet = block;
 
-                            entities.addEntity(block);
+                            b.x = xx * 8;
+                            b.y = yy * 8;
+
+                            entities.addEntity(b);
 
                             break;
                         case 't':
@@ -842,15 +848,25 @@ public class Dungeon extends Map {
         if (innerWall != null) {
             this.innerWall = innerWall.asString();
         }
-
-        JsonValue door = json.get("door");
-        if (door != null) {
-            this.door = door.asString();
+        
+        JsonValue doorNoKey = json.get("doorNoKey");
+        if (doorNoKey != null) {
+            this.doorNoKey = Game.SPRITE_SHEETS.load(doorNoKey.asString());
         }
 
-        JsonValue pushableBlock = json.get("pushableBlock");
-        if (pushableBlock != null) {
-            this.pushableBlock = pushableBlock.asString();
+        JsonValue doorKey = json.get("doorKey");
+        if (doorKey != null) {
+            this.doorKey = Game.SPRITE_SHEETS.load(doorKey.asString());
+        }
+
+        JsonValue doorWall = json.get("doorWall");
+        if (doorWall != null) {
+            this.doorWall = Game.SPRITE_SHEETS.load(doorWall.asString());
+        }
+
+        JsonValue block = json.get("block");
+        if (block != null) {
+            this.block = Game.SPRITE_SHEETS.load(block.asString());
         }
 
         JsonValue treasureRoomChance = json.get("treasureRoomChance");

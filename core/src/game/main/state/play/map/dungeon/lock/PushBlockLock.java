@@ -12,8 +12,9 @@ public class PushBlockLock extends Lock {
         super.onLock();
 
         for (Entity e : room.getContainedEntities()) {
-            if (e.name.equals(dungeon.pushableBlock)) {
+            if (e instanceof Block) {
                 block = (Block) e;
+                break;
             }
         }
     }

@@ -93,20 +93,6 @@
       "spriteSheet": "GreenSlimeSmall"
     }
   },
-  "DungeonDoor": {
-    "Door": {
-      "name": "DungeonDoor",
-      "noKey": "DungeonDoor",
-      "key": "DungeonDoorKey",
-      "wall": "DungeonWall"
-    }
-  },
-  "DungeonBlock": {
-    "Block": {
-      "name": "DungeonBlock",
-      "spriteSheet": "DungeonBlock"
-    }
-  },
   "Dragon": {
     "Dragon": {
       "name": "Dragon",
