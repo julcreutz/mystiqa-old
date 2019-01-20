@@ -80,6 +80,11 @@ public class Dragon extends Entity {
         public boolean collidesWithSolidTiles() {
             return false;
         }
+
+        @Override
+        public boolean collidesWithSolidEntities() {
+            return false;
+        }
     }
 
     public SpriteSheet body;

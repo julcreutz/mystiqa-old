@@ -78,7 +78,7 @@ public class Dungeon extends Map {
         }
 
         public int getTileX() {
-            return (int) (rect.x * 16);
+            return (int) (rect.x * 10);
         }
 
         public int getTileY() {
@@ -86,7 +86,7 @@ public class Dungeon extends Map {
         }
 
         public int getTileWidth() {
-            return (int) (rect.width * 16);
+            return (int) (rect.width * 10);
         }
 
         public int getTileHeight() {
@@ -250,7 +250,7 @@ public class Dungeon extends Map {
 
             JsonValue template = json.get("template");
             if (template != null) {
-                this.template = new char[16][8];
+                this.template = new char[10][8];
 
                 int y = 0;
 
@@ -324,6 +324,8 @@ public class Dungeon extends Map {
     public Template[] templates;
 
     public Array<Room> rooms;
+
+    public Array<Lock> allLocks;
 
     @Override
     public void update() {
@@ -447,15 +449,11 @@ public class Dungeon extends Map {
             }
         }
 
-        if (bossRoom != null) {
-            bossRoom.isBossRoom = true;
-        }
-
         tiles.initSize(WIDTH * 16, HEIGHT * 8, 8);
         entities.clear();
 
         // Add doors and lock them
-        Array<Lock> allLocks = new Array<Lock>();
+        allLocks = new Array<Lock>();
 
         for (Room r : rooms) {
             for (Room child : r.children) {
@@ -485,7 +483,16 @@ public class Dungeon extends Map {
                 child.doorToParent = d;
 
                 entities.addEntity(d);
+            }
+        }
 
+        if (bossRoom != null) {
+            bossRoom.isBossRoom = true;
+            lock(bossRoom, bossRoom, bossRoom.doorToParent, Lock.Type.KEY);
+        }
+
+        for (Room r : rooms) {
+            for (Room child : r.children) {
                 String lock = null;
 
                 // Pick random lock; if null, don't lock door
@@ -496,40 +503,7 @@ public class Dungeon extends Map {
                 }
 
                 if (lock != null) {
-                    Lock l = Lock.Type.valueOf(lock).newInstance();
-
-                    l.dungeon = this;
-
-                    Array<Room> valid = new Array<Room>();
-
-                    // Get valid rooms and make sure room has only one room it unlocks
-                    for (Room room : getRoomsUntil(child)) {
-                        if (room != rooms.first() && !room.isBossRoom && room.unlocks == null) {
-                            valid.add(room);
-                        }
-                    }
-
-                    if (valid.size > 0) {
-                        // Pick room with highest difficulty
-                        l.room = valid.first();
-
-                        for (Room room : valid) {
-                            if (room.difficulty > l.room.difficulty) {
-                                l.room = room;
-                            }
-                        }
-
-                        l.room.unlocks = r;
-
-                        l.room.lock = Lock.Type.valueOf(lock);
-
-                        l.door = d;
-                        d.lock = l;
-
-                        entities.addListener(l);
-
-                        allLocks.add(l);
-                    }
+                    lock(r, child, child.doorToParent, Lock.Type.valueOf(lock));
                 }
             }
         }
@@ -746,6 +720,43 @@ public class Dungeon extends Map {
                 rooms.add(child);
                 getRoomsUntil(child, stop, rooms);
             }
+        }
+    }
+
+    public void lock(Room r, Room child, Door d, Lock.Type lock) {
+        Lock l = lock.newInstance();
+
+        l.dungeon = this;
+
+        Array<Room> valid = new Array<Room>();
+
+        // Get valid rooms and make sure room has only one room it unlocks
+        for (Room room : getRoomsUntil(child)) {
+            if (room != rooms.first() && !room.isBossRoom && room.unlocks == null) {
+                valid.add(room);
+            }
+        }
+
+        if (valid.size > 0) {
+            // Pick room with highest difficulty
+            l.room = valid.first();
+
+            for (Room room : valid) {
+                if (room.difficulty > l.room.difficulty) {
+                    l.room = room;
+                }
+            }
+
+            l.room.unlocks = r;
+
+            l.room.lock = lock;
+
+            l.door = d;
+            d.lock = l;
+
+            entities.addListener(l);
+
+            allLocks.add(l);
         }
     }
 

@@ -23,6 +23,9 @@ public class Play extends GameState {
     public void create() {
         super.create();
 
+        game = createFrameBuffer();
+        lighting = createFrameBuffer();
+
         nextMap = Game.MAPS.load("Dungeon");
         nextMap.generate();
         nextMap.placePlayer();
@@ -117,14 +120,6 @@ public class Play extends GameState {
         batch.end();
 
         lighting.end();
-    }
-
-    @Override
-    public void resize(int w, int h) {
-        super.resize(w, h);
-
-        game = createFrameBuffer();
-        lighting = createFrameBuffer();
     }
 
     @Override

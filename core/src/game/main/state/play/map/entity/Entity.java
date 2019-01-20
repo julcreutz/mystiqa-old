@@ -334,15 +334,17 @@ public abstract class Entity implements StatCounter, Serializable {
             }
         }
 
-        for (Entity e : map.entities.entities) {
-            if (e != this && e.isSolid() && e.hitbox.overlaps(this)) {
-                if (velX > 0) {
-                    this.x = e.hitbox.getX() - hitbox.getWidth() - hitbox.offsetX;
-                } else if (velX < 0) {
-                    this.x = e.hitbox.getX() + e.hitbox.getWidth() - hitbox.offsetX;
-                }
+        if (collidesWithSolidEntities()) {
+            for (Entity e : map.entities.entities) {
+                if (e != this && e.isSolid() && e.hitbox.overlaps(this)) {
+                    if (velX > 0) {
+                        this.x = e.hitbox.getX() - hitbox.getWidth() - hitbox.offsetX;
+                    } else if (velX < 0) {
+                        this.x = e.hitbox.getX() + e.hitbox.getWidth() - hitbox.offsetX;
+                    }
 
-                velX = 0;
+                    velX = 0;
+                }
             }
         }
 
@@ -370,15 +372,17 @@ public abstract class Entity implements StatCounter, Serializable {
             }
         }
 
-        for (Entity e : map.entities.entities) {
-            if (e != this && e.isSolid() && e.hitbox.overlaps(this)) {
-                if (velY > 0) {
-                    this.y = e.hitbox.getY() - hitbox.getHeight() - hitbox.offsetY;
-                } else if (velY < 0) {
-                    this.y = e.hitbox.getY() + e.hitbox.getHeight() - hitbox.offsetY;
-                }
+        if (collidesWithSolidEntities()) {
+            for (Entity e : map.entities.entities) {
+                if (e != this && e.isSolid() && e.hitbox.overlaps(this)) {
+                    if (velY > 0) {
+                        this.y = e.hitbox.getY() - hitbox.getHeight() - hitbox.offsetY;
+                    } else if (velY < 0) {
+                        this.y = e.hitbox.getY() + e.hitbox.getHeight() - hitbox.offsetY;
+                    }
 
-                velY = 0;
+                    velY = 0;
+                }
             }
         }
 
@@ -540,6 +544,10 @@ public abstract class Entity implements StatCounter, Serializable {
 
     /** @return whether entity collides with solid tiles */
     public boolean collidesWithSolidTiles() {
+        return true;
+    }
+
+    public boolean collidesWithSolidEntities() {
         return true;
     }
 

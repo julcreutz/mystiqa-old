@@ -24,6 +24,8 @@ public abstract class GameState {
         cam.setToOrtho(false, Game.WIDTH, Game.HEIGHT);
         viewport = new FitViewport(Game.WIDTH, Game.HEIGHT, cam);
         viewport.apply();
+
+        buffer = createFrameBuffer();
     }
 
     public void update(Game g) {
@@ -46,8 +48,10 @@ public abstract class GameState {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         Gdx.gl.glClearColor(0, 0, 0, 1);
 
-        batch.setProjectionMatrix(cam.combined);
+        // Makes the viewport work
+        buffer.end(viewport.getScreenX(), viewport.getScreenY(), viewport.getScreenWidth(), viewport.getScreenHeight());
 
+        batch.setProjectionMatrix(cam.combined);
         batch.begin();
         renderBuffer(buffer);
         batch.end();
@@ -58,8 +62,6 @@ public abstract class GameState {
 
     public void resize(int w, int h) {
         viewport.update(w, h);
-
-        buffer = createFrameBuffer();
     }
 
     public void dispose() {
