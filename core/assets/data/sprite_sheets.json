@@ -238,5 +238,10 @@
     "path": "graphics/dungeon_door_key.png",
     "splitW": 8,
     "splitH": 8
+  },
+  "Chest": {
+    "path": "graphics/chest.png",
+    "splitW": 8,
+    "splitH": 8
   }
 }

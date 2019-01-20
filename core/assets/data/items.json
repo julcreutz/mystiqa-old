@@ -96,7 +96,7 @@
   },
   "DungeonKey": {
     "Collectable": {
-      "name": "Key",
+      "name": "DungeonKey",
       "icon": "DungeonKey"
     }
   }

@@ -19,7 +19,7 @@ public abstract class Map implements Serializable {
     public static final float CAM_SPEED = 1.5f;
 
     public static final int X_VIEW = 6;
-    public static final int Y_VIEW = 5;
+    public static final int Y_VIEW = 6;
 
     public Play play;
 

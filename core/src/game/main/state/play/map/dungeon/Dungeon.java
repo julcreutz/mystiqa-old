@@ -597,12 +597,12 @@ public class Dungeon extends Map {
                         case 't':
                             tiles.set(Game.TILES.load(ground), xx, yy, 0);
 
-                            ItemDrop i = new ItemDrop(Game.ITEMS.load("DungeonKey"));
+                            Chest c = new Chest();
 
-                            i.x = xx * 8;
-                            i.y = yy * 8;
+                            c.x = xx * 8 + 4;
+                            c.y = yy * 8 + 4;
 
-                            entities.addEntity(i);
+                            entities.addEntity(c);
 
                             break;
                     }

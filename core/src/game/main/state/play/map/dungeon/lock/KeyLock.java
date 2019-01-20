@@ -47,11 +47,21 @@ public class KeyLock extends Lock {
     public void eventReceived(EntityEvent e) {
         super.eventReceived(e);
 
-        if (e instanceof CollisionEvent) {
-            if (e.e == dungeon.player && ((CollisionEvent) e).other == door && e.e.inventory.contains(key, true)) {
-                locked = false;
-                door.spriteSheet = dungeon.doorNoKey;
-                e.e.inventory.removeValue(key, true);
+        if (locked) {
+            if (e instanceof CollisionEvent) {
+                if (e.e == dungeon.player && ((CollisionEvent) e).other == door) {
+                    for (int i = 0; i < dungeon.player.inventory.size; i++) {
+                        Item item = dungeon.player.inventory.get(i);
+
+                        if (item.name.equals(dungeon.key)) {
+                            locked = false;
+                            door.spriteSheet = dungeon.doorNoKey;
+                            e.e.inventory.removeIndex(i);
+
+                            break;
+                        }
+                    }
+                }
             }
         }
     }
