@@ -105,11 +105,8 @@ public class Dragon extends Entity {
 
     public State state;
 
-    public float idleTime;
-
     public Head spewing;
     public float spewTime;
-    public float spewSpawnTime;
 
     public Dragon() {
         heads = new Array<Head>();

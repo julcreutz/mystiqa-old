@@ -6,5 +6,9 @@
   "Lighting": {
     "vertexPath": "shaders/lighting/lighting.vert",
     "fragmentPath": "shaders/lighting/lighting.frag"
+  },
+  "Burning": {
+    "vertexPath": "shaders/burning/burning.vert",
+    "fragmentPath": "shaders/burning/burning.frag"
   }
 }

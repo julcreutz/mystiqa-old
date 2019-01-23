@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import game.main.Game;
 import game.main.object.GameObject;
 import game.main.object.entity.particle.Particle;
+import game.main.object.entity.particle.ParticleEmitter;
 import game.main.object.item.Item;
 import game.main.stat.Stat;
 import game.main.stat.StatCounter;
@@ -184,6 +185,10 @@ public abstract class Entity extends GameObject implements StatCounter {
 
     public Entity attachTo;
 
+    public float onFireTime;
+    public float onFireHitTime;
+    public float onFireParticleTime;
+
     public Entity() {
         hitbox = new Hitbox(this);
         stats = new StatManager();
@@ -241,8 +246,13 @@ public abstract class Entity extends GameObject implements StatCounter {
                             } else {
                                 if (attackHitbox.overlaps(e)) {
                                     if (!contains) {
-                                        e.health -= MathUtils.round(MathUtils.lerp(count(Stat.Type.MIN_PHYSICAL_DAMAGE),
-                                                count(Stat.Type.MAX_PHYSICAL_DAMAGE), Game.RANDOM.nextFloat()));
+                                        e.health -= count(Stat.Type.PHYSICAL_DAMAGE)
+                                                - count(Stat.Type.PHYSICAL_DEFENSE) / 2;
+
+                                        if (!e.isOnFire()) {
+                                            e.onFireTime += (count(Stat.Type.FIRE_DAMAGE)
+                                                    - count(Stat.Type.FIRE_DEFENSE) / 2) * .5f;
+                                        }
 
                                         e.hitTime = .1f;
 
@@ -394,9 +404,40 @@ public abstract class Entity extends GameObject implements StatCounter {
 
         velX = 0;
         velY = 0;
+
+        if (isOnFire()) {
+            onFireTime -= Game.getDelta();
+
+            onFireHitTime -= Game.getDelta();
+
+            if (onFireHitTime < 0) {
+                onFireHitTime = .25f;
+                health -= 1;
+            }
+
+            onFireParticleTime -= Game.getDelta();
+
+            if (onFireParticleTime < 0) {
+                onFireParticleTime = .05f;
+
+                Particle p = (Particle) Game.ENTITIES.load("Flame");
+                p.x = x + MathUtils.random(-2, 2);
+                p.y = y + MathUtils.random(-2, 2);
+
+                map.entities.addEntity(p);
+
+                p.dir.value = 90;
+                p.speed.value = 24;
+                p.rot.value = -90;
+            }
+        }
     }
 
     public void preRender(SpriteBatch batch) {
+        if (isOnFire()) {
+            batch.setShader(Game.SHADERS.load("Burning").shader);
+        }
+
         if (isHit()) {
             batch.setShader(Game.SHADERS.load("HitFlash").shader);
         }
@@ -441,6 +482,11 @@ public abstract class Entity extends GameObject implements StatCounter {
     /** @return whether entity is standing on ground */
     public boolean isOnGround() {
         return true;
+    }
+
+    /** @return whether on fire, meaning burning */
+    public boolean isOnFire() {
+        return onFireTime > 0;
     }
 
     /** @return correctly positioned hitbox */

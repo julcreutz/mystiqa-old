@@ -13,7 +13,16 @@
       ],
       "feet": "HumanFeet",
       "body": "HumanBody",
-      "head": "HumanHead"
+      "head": "HumanHead",
+      "particles": {
+        "particle": "Flame",
+        "minDir": 0,
+        "maxDir": 360,
+        "minOffset": 0,
+        "maxOffset": 4,
+        "minTime": 0.1,
+        "maxTime": 0.25
+      }
     }
   },
   "Orc": {
@@ -43,11 +52,7 @@
           "value": 11
         },
         {
-          "type": "MIN_PHYSICAL_DAMAGE",
-          "value": 1
-        },
-        {
-          "type": "MAX_PHYSICAL_DAMAGE",
+          "type": "PHYSICAL_DAMAGE",
           "value": 2
         },
         {
@@ -73,11 +78,7 @@
           "value": 2
         },
         {
-          "type": "MIN_PHYSICAL_DAMAGE",
-          "value": 1
-        },
-        {
-          "type": "MAX_PHYSICAL_DAMAGE",
+          "type": "PHYSICAL_DAMAGE",
           "value": 1
         },
         {
@@ -164,7 +165,7 @@
           "value": 1
         },
         {
-          "type": "MIN_PHYSICAL_DAMAGE",
+          "type": "MAX_PHYSICAL_DAMAGE",
           "value": 3
         }
       ],

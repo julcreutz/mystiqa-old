@@ -7,8 +7,10 @@ public class Stat implements Serializable {
     public enum Type {
         HEALTH,
         SPEED,
-        MIN_PHYSICAL_DAMAGE,
-        MAX_PHYSICAL_DAMAGE
+        PHYSICAL_DAMAGE,
+        PHYSICAL_DEFENSE,
+        FIRE_DAMAGE,
+        FIRE_DEFENSE
     }
 
     public Type type;

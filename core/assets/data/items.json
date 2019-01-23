@@ -4,12 +4,12 @@
       "icon": "BattleAxeIcon",
       "stats": [
         {
-          "type": "MIN_PHYSICAL_DAMAGE",
-          "value": 5
+          "type": "PHYSICAL_DAMAGE",
+          "value": 7
         },
         {
-          "type": "MAX_PHYSICAL_DAMAGE",
-          "value": 7
+          "type": "FIRE_DAMAGE",
+          "value": 2
         }
       ],
       "spriteSheet": "BattleAxe",
@@ -21,12 +21,8 @@
     "MeleeWeapon": {
       "stats": [
         {
-          "type": "MIN_PHYSICAL_DAMAGE",
-          "value": 3
-        },
-        {
-          "type": "MAX_PHYSICAL_DAMAGE",
-          "value": 5
+          "type": "PHYSICAL_DAMAGE",
+          "value": 4
         }
       ],
       "spriteSheet": "Sword",
@@ -38,12 +34,8 @@
     "MeleeWeapon": {
       "stats": [
         {
-          "type": "MIN_PHYSICAL_DAMAGE",
-          "value": 2
-        },
-        {
-          "type": "MIN_PHYSICAL_DAMAGE",
-          "value": 4
+          "type": "PHYSICAL_DAMAGE",
+          "value": 3
         }
       ],
       "spriteSheet": "Spear",
@@ -55,11 +47,7 @@
     "MeleeWeapon": {
       "stats": [
         {
-          "type": "MIN_PHYSICAL_DAMAGE",
-          "value": 3
-        },
-        {
-          "type": "MIN_PHYSICAL_DAMAGE",
+          "type": "PHYSICAL_DAMAGE",
           "value": 5
         }
       ],
