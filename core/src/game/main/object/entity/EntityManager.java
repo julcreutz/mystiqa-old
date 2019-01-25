@@ -87,6 +87,12 @@ public class EntityManager {
         e.onAdded();
     }
 
+    public void removeEntity(Entity e) {
+        if (!entities.removeValue(e, true)) {
+            invisibleEntities.removeValue(e, true);
+        }
+    }
+
     public void clear() {
         entities.clear();
         invisibleEntities.clear();

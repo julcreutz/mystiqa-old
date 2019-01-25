@@ -1,9 +1,12 @@
 package game.main.object.item.equipment.hand.right;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import game.loader.resource.sprite_sheet.SpriteSheet;
 import game.main.Game;
@@ -144,14 +147,11 @@ public class MeleeWeapon extends RightHand {
                 fireParticleTime = MathUtils.random(.05f, .1f);
 
                 Particle p = (Particle) Game.ENTITIES.load("Flame");
-                p.x = x + MathUtils.random(-2, 2);
-                p.y = y + MathUtils.random(-2, 2);
+
+                p.x = x + MathUtils.cosDeg(rot) * range * 8f + MathUtils.random(-2, 2);
+                p.y = y + MathUtils.sinDeg(rot) * range * 8f + MathUtils.random(-2, 2);
 
                 h.map.entities.addEntity(p);
-
-                p.dir.value = 90;
-                p.speed.value = 12;
-                p.rot.value = -90;
             }
         }
     }

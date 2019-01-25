@@ -411,7 +411,7 @@ public abstract class Entity extends GameObject implements StatCounter {
             onFireHitTime -= Game.getDelta();
 
             if (onFireHitTime < 0) {
-                onFireHitTime = .25f;
+                onFireHitTime = .5f;
                 health -= 1;
             }
 
@@ -421,14 +421,11 @@ public abstract class Entity extends GameObject implements StatCounter {
                 onFireParticleTime = MathUtils.random(.05f, .1f);
 
                 Particle p = (Particle) Game.ENTITIES.load("Flame");
+
                 p.x = x + MathUtils.random(-2, 2);
                 p.y = y + MathUtils.random(-2, 2);
 
                 map.entities.addEntity(p);
-
-                p.dir.value = 90;
-                p.speed.value = 12;
-                p.rot.value = -90;
             }
         }
     }
@@ -526,6 +523,10 @@ public abstract class Entity extends GameObject implements StatCounter {
 
     public void onDisabled() {
         sendEvent(new DisabledEvent(this));
+
+        if (removeOnDisabled()) {
+            map.entities.removeEntity(this);
+        }
     }
 
     public void onEnabled() {
@@ -645,6 +646,10 @@ public abstract class Entity extends GameObject implements StatCounter {
 
     public void sendEvent(EntityEvent e) {
         entities.sendEvent(e);
+    }
+
+    public boolean removeOnDisabled() {
+        return false;
     }
 
     @Override

@@ -99,6 +99,11 @@ public class Projectile extends Entity {
     }
 
     @Override
+    public boolean removeOnDisabled() {
+        return true;
+    }
+
+    @Override
     public void deserialize(JsonValue json) {
         super.deserialize(json);
 

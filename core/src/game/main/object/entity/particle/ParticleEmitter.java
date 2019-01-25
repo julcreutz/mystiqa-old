@@ -4,7 +4,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.JsonValue;
 import game.loader.Serializable;
 import game.main.Game;
-import game.main.object.entity.Entity;
 import game.main.state.play.map.Map;
 
 public class ParticleEmitter implements Serializable {

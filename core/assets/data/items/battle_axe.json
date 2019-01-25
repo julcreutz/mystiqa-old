@@ -1,0 +1,10 @@
+{
+  "class": "game.object.item.MeleeWeapon",
+  "name": "Battle Axe",
+  "description": "A heavy double-bladed axe typically used in battle.",
+  "graphics": {
+    "path": "graphics/items/battle_axe.png",
+    "columns": 1,
+    "rows": 2
+  }
+}

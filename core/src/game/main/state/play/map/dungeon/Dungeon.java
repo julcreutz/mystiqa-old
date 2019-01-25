@@ -1,5 +1,6 @@
 package game.main.state.play.map.dungeon;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
@@ -9,6 +10,7 @@ import game.loader.Serializable;
 import game.loader.resource.sprite_sheet.SpriteSheet;
 import game.main.Game;
 import game.main.object.item.equipment.armor.Armor;
+import game.main.object.item.equipment.hand.right.MeleeWeapon;
 import game.main.object.item.equipment.hand.right.RightHand;
 import game.main.object.item.equipment.hand.left.LeftHand;
 import game.main.state.play.map.Map;
@@ -704,7 +706,7 @@ public class Dungeon extends Map {
 
         player.armor = (Armor) Game.ITEMS.load("PlateArmor");
 
-        player.rightHand = (RightHand) Game.ITEMS.load("Sword");
+        player.rightHand = (RightHand) Game.ITEMS.load("Halberd");
         player.leftHand = (LeftHand) Game.ITEMS.load("Shield");
 
         player.controlledByPlayer = true;

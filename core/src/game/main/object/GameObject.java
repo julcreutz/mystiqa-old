@@ -8,6 +8,8 @@ public class GameObject implements Serializable {
 
     @Override
     public void deserialize(JsonValue json) {
-        id = json.parent.name;
+        if (json.parent != null) {
+            id = json.parent.name;
+        }
     }
 }

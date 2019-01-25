@@ -35,9 +35,7 @@ public class Game extends ApplicationAdapter {
 	public static final EntityLoader ENTITIES = new EntityLoader();
 	public static final MapLoader MAPS = new MapLoader();
 
-	public static final Loader[] LOADERS = new Loader[] {
-			SPRITE_SHEETS, TILES, ITEMS, ENTITIES, MAPS
-	};
+	public static final Loader[] LOADERS = new Loader[] {SPRITE_SHEETS, TILES, ITEMS, ENTITIES, MAPS};
 
     public final Play PLAY = new Play();
 

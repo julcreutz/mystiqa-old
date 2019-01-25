@@ -32,10 +32,6 @@
         {
           "type": "PHYSICAL_DAMAGE",
           "value": 7
-        },
-        {
-          "type": "FIRE_DAMAGE",
-          "value": 3
         }
       ],
       "spriteSheet": "Sword",
@@ -62,6 +58,10 @@
         {
           "type": "PHYSICAL_DAMAGE",
           "value": 6
+        },
+        {
+          "type": "FIRE_DAMAGE",
+          "value": 3
         }
       ],
       "spriteSheet": "Halberd",
