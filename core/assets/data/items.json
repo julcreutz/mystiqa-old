@@ -1,7 +1,6 @@
 {
   "BattleAxe": {
     "MeleeWeapon": {
-      "icon": "BattleAxeIcon",
       "stats": [
         {
           "type": "PHYSICAL_DAMAGE",

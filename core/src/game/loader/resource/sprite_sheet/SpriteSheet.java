@@ -13,10 +13,13 @@ public class SpriteSheet implements Serializable {
     @Override
     public void deserialize(JsonValue json) {
         texture = new Texture(Gdx.files.internal(json.getString("path")));
-        sheet = split(texture, json.getInt("splitW"), json.getInt("splitH"));
+        sheet = split(texture, json.getInt("columns", 1), json.getInt("rows", 1));
     }
 
-    private TextureRegion[][] split(Texture image, int splitW, int splitH) {
+    private TextureRegion[][] split(Texture image, int columns, int rows) {
+        int splitW = image.getWidth() / columns;
+        int splitH = image.getHeight() / rows;
+
         TextureRegion[][] sheet = new TextureRegion[image.getWidth() / splitW][image.getHeight() / splitH];
 
         for (int x = 0; x < sheet.length; x++) {

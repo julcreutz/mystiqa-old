@@ -1,177 +1,133 @@
 {
   "HumanFeet": {
     "path": "graphics/human_feet.png",
-    "splitW": 8,
-    "splitH": 8
+    "columns": 3,
+    "rows": 4
   },
   "HumanBody": {
     "path": "graphics/human_body.png",
-    "splitW": 8,
-    "splitH": 8
+    "columns": 5,
+    "rows": 4
   },
   "HumanHead": {
     "path": "graphics/human_head.png",
-    "splitW": 8,
-    "splitH": 8
+    "rows": 4
   },
   "Font": {
     "path": "graphics/font.png",
-    "splitW": 4,
-    "splitH": 4
+    "columns": 10,
+    "rows": 10
   },
   "Sword": {
-    "path": "graphics/sword.png",
-    "splitW": 8,
-    "splitH": 8
+    "path": "graphics/sword.png"
   },
   "Shield": {
     "path": "graphics/shield.png",
-    "splitW": 8,
-    "splitH": 8
+    "rows": 4
   },
   "PlateArmorBody": {
     "path": "graphics/plate_armor_body.png",
-    "splitW": 8,
-    "splitH": 8
+    "columns": 5,
+    "rows": 4
   },
   "PlateArmorFeet": {
     "path": "graphics/plate_armor_feet.png",
-    "splitW": 8,
-    "splitH": 8
+    "columns": 3,
+    "rows": 4
   },
   "BattleAxe": {
-    "path": "graphics/battle_axe.png",
-    "splitW": 8,
-    "splitH": 8
-  },
-  "BattleAxeIcon": {
-    "path": "graphics/battle_axe_icon.png",
-    "splitW": 8,
-    "splitH": 8
+    "path": "graphics/battle_axe.png"
   },
   "GuiLayer": {
-    "path": "graphics/gui_layer.png",
-    "splitW": 8,
-    "splitH": 8
+    "path": "graphics/gui_layer.png"
   },
   "GreenSlime": {
     "path": "graphics/green_slime.png",
-    "splitW": 8,
-    "splitH": 8
+    "columns": 2,
+    "rows": 2
   },
   "GreenSlimeSmall": {
     "path": "graphics/green_slime_small.png",
-    "splitW": 8,
-    "splitH": 8
+    "columns": 2,
+    "rows": 2
   },
   "Club": {
-    "path": "graphics/club.png",
-    "splitW": 8,
-    "splitH": 8
+    "path": "graphics/club.png"
   },
   "DungeonWall": {
     "path": "graphics/dungeon_wall.png",
-    "splitW": 8,
-    "splitH": 8
+    "columns": 5,
+    "rows": 4
   },
   "DungeonGround": {
-    "path": "graphics/dungeon_ground.png",
-    "splitW": 8,
-    "splitH": 8
+    "path": "graphics/dungeon_ground.png"
   },
   "DungeonDoor": {
     "path": "graphics/dungeon_door.png",
-    "splitW": 8,
-    "splitH": 8
+    "columns": 3
   },
   "DungeonBlock": {
     "path": "graphics/dungeon_block.png",
-    "splitW": 8,
-    "splitH": 8
+    "columns": 5,
+    "rows": 4
   },
   "DungeonKey": {
-    "path": "graphics/key.png",
-    "splitW": 8,
-    "splitH": 8
+    "path": "graphics/key.png"
   },
   "DragonBody": {
-    "path": "graphics/dragon_body.png",
-    "splitW": 16,
-    "splitH": 16
+    "path": "graphics/dragon_body.png"
   },
   "DragonNeck": {
-    "path": "graphics/dragon_neck.png",
-    "splitW": 8,
-    "splitH": 8
+    "path": "graphics/dragon_neck.png"
   },
   "DragonHead": {
-    "path": "graphics/dragon_head.png",
-    "splitW": 8,
-    "splitH": 8
+    "path": "graphics/dragon_head.png"
   },
   "Spear": {
-    "path": "graphics/spear.png",
-    "splitW": 16,
-    "splitH": 8
+    "path": "graphics/spear.png"
   },
   "LightCircle": {
-    "path": "graphics/light_circle.png",
-    "splitW": 256,
-    "splitH": 256
+    "path": "graphics/light_circle.png"
   },
   "Halberd": {
-    "path": "graphics/halberd.png",
-    "splitW": 16,
-    "splitH": 8
+    "path": "graphics/halberd.png"
   },
   "OrcFeet": {
     "path": "graphics/orc_feet.png",
-    "splitW": 8,
-    "splitH": 8
+    "columns": 3,
+    "rows": 4
   },
   "OrcBody": {
     "path": "graphics/orc_body.png",
-    "splitW": 8,
-    "splitH": 8
+    "columns": 5,
+    "rows": 4
   },
   "OrcHead": {
     "path": "graphics/orc_head.png",
-    "splitW": 8,
-    "splitH": 8
+    "rows": 4
   },
   "ParticleCircle": {
-    "path": "graphics/particle_circle.png",
-    "splitW": 8,
-    "splitH": 8
+    "path": "graphics/particle_circle.png"
   },
   "ParticleLine": {
-    "path": "graphics/particle_line.png",
-    "splitW": 8,
-    "splitH": 8
+    "path": "graphics/particle_line.png"
   },
   "Fireball": {
     "path": "graphics/fireball.png",
-    "splitW": 8,
-    "splitH": 8
+    "columns": 2
   },
   "DungeonDoorKey": {
     "path": "graphics/dungeon_door_key.png",
-    "splitW": 8,
-    "splitH": 8
+    "columns": 3
   },
   "Chest": {
     "path": "graphics/chest.png",
-    "splitW": 8,
-    "splitH": 8
+    "columns": 2
   },
   "Flame": {
-    "path": "graphics/flame.png",
-    "splitW": 8,
-    "splitH": 8
+    "path": "graphics/flame.png"
   },
   "HandAxe": {
-    "path": "graphics/hand_axe.png",
-    "splitW": 8,
-    "splitH": 8
+    "path": "graphics/hand_axe.png"
   }
 }
