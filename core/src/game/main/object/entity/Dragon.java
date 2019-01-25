@@ -43,7 +43,7 @@ public class Dragon extends Entity {
         public void render(SpriteBatch batch) {
             super.render(batch);
 
-            batch.draw(spriteSheet.sheet[0][0], x, y);
+            batch.draw(spriteSheet.grab(0, 0), x, y);
         }
 
         @Override
@@ -159,13 +159,13 @@ public class Dragon extends Entity {
     public void render(SpriteBatch batch) {
         super.render(batch);
 
-        batch.draw(body.sheet[0][0], x, y);
+        batch.draw(body.grab(0, 0), x, y);
 
         for (Head h : heads) {
             for (int i = 0; i < 5; i++) {
                 float p = (float) i / 5f;
 
-                batch.draw(neck.sheet[0][0], MathUtils.lerp(x + 4, h.x, p), MathUtils.lerp(y + 2, h.y, p),
+                batch.draw(neck.grab(0, 0), MathUtils.lerp(x + 4, h.x, p), MathUtils.lerp(y + 2, h.y, p),
                         4, 4, 8, 8, 1, 1, new Vector2(h.x, h.y).sub(x + 4, y + 2).angle() + 90);
             }
         }

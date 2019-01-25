@@ -12,7 +12,7 @@ public class SpriteSheetLoader extends ResourceLoader<SpriteSheet> implements Di
     @Override
     public void dispose() {
         for (SpriteSheet spriteSheet : loadAll()) {
-            spriteSheet.texture.dispose();
+            spriteSheet.getSource().dispose();
         }
     }
 }

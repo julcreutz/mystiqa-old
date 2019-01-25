@@ -184,5 +184,18 @@
         "maxTime": 0.1
       }
     }
+  },
+  "DungeonDoor": {
+    "Door": {
+      "noKey": "DungeonDoor",
+      "key": "DungeonDoorKey",
+      "bossKey": "DungeonDoorBossKey",
+      "wall": "DungeonWall"
+    }
+  },
+  "DungeonBlock": {
+    "Block": {
+      "spriteSheet": "DungeonBlock"
+    }
   }
 }

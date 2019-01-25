@@ -4,10 +4,12 @@ import game.main.state.play.map.dungeon.Dungeon;
 import game.main.object.entity.Door;
 import game.main.object.entity.event.EntityEvent;
 import game.main.object.entity.event.EntityListener;
+import game.main.state.play.map.dungeon.lock.key.BossKeyLock;
+import game.main.state.play.map.dungeon.lock.key.KeyLock;
 
 public abstract class Lock implements EntityListener {
     public enum Type {
-        KILL_MONSTER, KEY, PUSH_BLOCK, INVISIBLE_DOOR;
+        KILL_MONSTER, KEY, BOSS_KEY, PUSH_BLOCK, INVISIBLE_DOOR;
 
         public Lock newInstance() {
             switch (this) {
@@ -15,6 +17,8 @@ public abstract class Lock implements EntityListener {
                     return new KillMonsterLock();
                 case KEY:
                     return new KeyLock();
+                case BOSS_KEY:
+                    return new BossKeyLock();
                 case PUSH_BLOCK:
                     return new PushBlockLock();
                 case INVISIBLE_DOOR:

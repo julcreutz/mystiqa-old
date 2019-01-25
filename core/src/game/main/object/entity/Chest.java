@@ -14,6 +14,6 @@ public class Chest extends Entity {
     public void render(SpriteBatch batch) {
         super.render(batch);
 
-        batch.draw(Game.SPRITE_SHEETS.load("Chest").sheet[0][0], x, y);
+        batch.draw(Game.SPRITE_SHEETS.load("Chest").grab(0, 0), x, y);
     }
 }

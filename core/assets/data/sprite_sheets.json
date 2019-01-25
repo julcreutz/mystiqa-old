@@ -1,7 +1,7 @@
 {
   "HumanFeet": {
     "path": "graphics/human_feet.png",
-    "columns": 3,
+    "columns": 4,
     "rows": 4
   },
   "HumanBody": {
@@ -32,7 +32,7 @@
   },
   "PlateArmorFeet": {
     "path": "graphics/plate_armor_feet.png",
-    "columns": 3,
+    "columns": 4,
     "rows": 4
   },
   "BattleAxe": {
@@ -66,6 +66,14 @@
     "path": "graphics/dungeon_door.png",
     "columns": 3
   },
+  "DungeonDoorKey": {
+    "path": "graphics/dungeon_door_key.png",
+    "columns": 3
+  },
+  "DungeonDoorBossKey": {
+    "path": "graphics/dungeon_door_boss_key.png",
+    "columns": 3
+  },
   "DungeonBlock": {
     "path": "graphics/dungeon_block.png",
     "columns": 5,
@@ -73,6 +81,9 @@
   },
   "DungeonKey": {
     "path": "graphics/key.png"
+  },
+  "DungeonBossKey": {
+    "path": "graphics/boss_key.png"
   },
   "DragonBody": {
     "path": "graphics/dragon_body.png"
@@ -94,7 +105,7 @@
   },
   "OrcFeet": {
     "path": "graphics/orc_feet.png",
-    "columns": 3,
+    "columns": 4,
     "rows": 4
   },
   "OrcBody": {
@@ -115,10 +126,6 @@
   "Fireball": {
     "path": "graphics/fireball.png",
     "columns": 2
-  },
-  "DungeonDoorKey": {
-    "path": "graphics/dungeon_door_key.png",
-    "columns": 3
   },
   "Chest": {
     "path": "graphics/chest.png",

@@ -8,9 +8,6 @@
       "innerWall": "DungeonBlock",
       "door": "DungeonDoor",
       "pushableBlock": "DungeonBlock",
-      "doorNoKey": "DungeonDoor",
-      "doorKey": "DungeonDoorKey",
-      "doorWall": "DungeonWall",
       "block": "DungeonBlock",
       "treasureRoomChance": 0.75,
       "minMonsters": 0,
@@ -32,6 +29,7 @@
       ],
       "boss": "Dragon",
       "key": "DungeonKey",
+      "bossKey": "DungeonBossKey",
       "locks": [
         {"KILL_MONSTER": 0.75},
         {"KEY": 0.5},

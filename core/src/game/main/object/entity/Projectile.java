@@ -42,7 +42,7 @@ public class Projectile extends Entity {
         super.render(batch);
 
         if (image != null) {
-            TextureRegion image = this.image.sheet[MathUtils.floor(Game.time * 20f) % this.image.sheet.length][0];
+            TextureRegion image = this.image.grab(MathUtils.floor(Game.time * 20f) % this.image.getColumns(), 0);
 
             batch.draw(image, x, y, image.getRegionWidth() * .5f, image.getRegionHeight() * .5f,
                     image.getRegionWidth(), image.getRegionHeight(), 1, 1, dir);

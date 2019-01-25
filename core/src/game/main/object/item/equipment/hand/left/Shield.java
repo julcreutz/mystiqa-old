@@ -97,7 +97,7 @@ public class Shield extends LeftHand {
             blocking = false;
         }
 
-        image = spriteSheet.sheet[0][dir];
+        image = spriteSheet.grab(0, dir);
 
         if (h.step % 2 != 0) {
             y--;
@@ -135,8 +135,9 @@ public class Shield extends LeftHand {
     public void deserialize(JsonValue json) {
         super.deserialize(json);
 
-        if (json.has("spriteSheet")) {
-            spriteSheet = Game.SPRITE_SHEETS.load(json.getString("spriteSheet"));
+        JsonValue spriteSheet = json.get("spriteSheet");
+        if (spriteSheet != null) {
+            this.spriteSheet = Game.SPRITE_SHEETS.load(spriteSheet.asString());
         }
     }
 }

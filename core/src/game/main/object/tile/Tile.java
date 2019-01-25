@@ -44,7 +44,7 @@ public abstract class Tile extends GameObject {
         public void deserialize(JsonValue json) {
             JsonValue image = json.get("image");
             if (image != null) {
-                this.image = Game.SPRITE_SHEETS.load(image.asString()).sheet[0][0];
+                this.image = Game.SPRITE_SHEETS.load(image.asString()).grab(0, 0);
             }
         }
     }

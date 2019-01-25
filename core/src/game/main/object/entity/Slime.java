@@ -115,7 +115,7 @@ public class Slime extends Entity {
         super.render(batch);
 
         if (z > 0) {
-            batch.draw(spriteSheet.sheet[1][1], x, y);
+            batch.draw(spriteSheet.grab(1, 1), x, y);
         }
 
         TextureRegion image = null;
@@ -123,14 +123,14 @@ public class Slime extends Entity {
         switch (state) {
             case RANDOM_MOVEMENT:
             case FOLLOW_PLAYER:
-                image = spriteSheet.sheet[0][0];
+                image = spriteSheet.grab(0, 0);
                 break;
             case JUMP:
-                image = spriteSheet.sheet[0][1];
+                image = spriteSheet.grab(0, 1);
                 break;
             case JUMP_BEGIN:
             case JUMP_END:
-                image = spriteSheet.sheet[1][0];
+                image = spriteSheet.grab(1, 0);
                 break;
         }
 
@@ -192,8 +192,9 @@ public class Slime extends Entity {
     public void deserialize(JsonValue json) {
         super.deserialize(json);
 
-        if (json.has("spriteSheet")) {
-            spriteSheet = Game.SPRITE_SHEETS.load(json.getString("spriteSheet"));
+        JsonValue spriteSheet = json.get("spriteSheet");
+        if (spriteSheet != null) {
+            this.spriteSheet = Game.SPRITE_SHEETS.load(spriteSheet.asString());
         }
 
         JsonValue splitInto = json.get("splitInto");

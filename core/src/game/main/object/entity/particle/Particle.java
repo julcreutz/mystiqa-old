@@ -124,7 +124,7 @@ public class Particle extends Entity {
 
         JsonValue image = json.get("image");
         if (image != null) {
-            this.image = Game.SPRITE_SHEETS.load(image.asString()).sheet[0][0];
+            this.image = Game.SPRITE_SHEETS.load(image.asString()).grab(0, 0);
         }
 
         JsonValue dir = json.get("dir");

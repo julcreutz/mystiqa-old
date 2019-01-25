@@ -3,6 +3,7 @@ package game.main.object.entity;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.utils.JsonValue;
 import game.loader.resource.sprite_sheet.SpriteSheet;
 import game.main.Game;
 import game.main.state.play.map.dungeon.lock.Lock;
@@ -10,8 +11,12 @@ import game.main.state.play.map.dungeon.lock.Lock;
 public class Door extends Entity {
     public static float OPEN_SPEED = 2.5f;
 
-    public SpriteSheet spriteSheet;
+    public SpriteSheet noKey;
+    public SpriteSheet key;
+    public SpriteSheet bossKey;
     public SpriteSheet wall;
+
+    public SpriteSheet spriteSheet;
 
     public boolean horizontal;
     public boolean visible;
@@ -29,6 +34,10 @@ public class Door extends Entity {
     @Override
     public void update() {
         super.update();
+
+        if (spriteSheet == null) {
+            spriteSheet = noKey;
+        }
 
         if (visible) {
             if (openTime < 1) {
@@ -58,7 +67,7 @@ public class Door extends Entity {
         super.render(batch);
 
         if (!invisible) {
-            TextureRegion image = spriteSheet.sheet[MathUtils.floor(openTime * (spriteSheet.sheet.length - 1))][0];
+            TextureRegion image = spriteSheet.grab(MathUtils.floor(openTime * (spriteSheet.getColumns() - 1)), 0);
 
             if (horizontal) {
                 // Bottom left door
@@ -82,26 +91,26 @@ public class Door extends Entity {
         } else {
             if (horizontal) {
                 // Left walls
-                batch.draw(wall.sheet[0][1], x, y + 16);
-                batch.draw(wall.sheet[0][1], x, y + 8);
-                batch.draw(wall.sheet[0][1], x, y);
-                batch.draw(wall.sheet[0][1], x, y - 8);
+                batch.draw(wall.grab(0, 1), x, y + 16);
+                batch.draw(wall.grab(0, 1), x, y + 8);
+                batch.draw(wall.grab(0, 1), x, y);
+                batch.draw(wall.grab(0, 1), x, y - 8);
                 // Right walls
-                batch.draw(wall.sheet[2][1], x + 8, y + 16);
-                batch.draw(wall.sheet[2][1], x + 8, y + 8);
-                batch.draw(wall.sheet[2][1], x + 8, y);
-                batch.draw(wall.sheet[2][1], x + 8, y - 8);
+                batch.draw(wall.grab(2, 1), x + 8, y + 16);
+                batch.draw(wall.grab(2, 1), x + 8, y + 8);
+                batch.draw(wall.grab(2, 1), x + 8, y);
+                batch.draw(wall.grab(2, 1), x + 8, y - 8);
             } else {
                 // Bottom walls
-                batch.draw(wall.sheet[1][2], x - 8, y);
-                batch.draw(wall.sheet[1][2], x, y);
-                batch.draw(wall.sheet[1][2], x + 8, y);
-                batch.draw(wall.sheet[1][2], x + 16, y);
+                batch.draw(wall.grab(1, 2), x - 8, y);
+                batch.draw(wall.grab(1, 2), x, y);
+                batch.draw(wall.grab(1, 2), x + 8, y);
+                batch.draw(wall.grab(1, 2), x + 16, y);
                 // Top walls
-                batch.draw(wall.sheet[1][0], x - 8, y + 8);
-                batch.draw(wall.sheet[1][0], x, y + 8);
-                batch.draw(wall.sheet[1][0], x + 8, y + 8);
-                batch.draw(wall.sheet[1][0], x + 16, y + 8);
+                batch.draw(wall.grab(1, 0), x - 8, y + 8);
+                batch.draw(wall.grab(1, 0), x, y + 8);
+                batch.draw(wall.grab(1, 0), x + 8, y + 8);
+                batch.draw(wall.grab(1, 0), x + 16, y + 8);
             }
         }
     }
@@ -129,5 +138,30 @@ public class Door extends Entity {
     @Override
     public float getSortLevel() {
         return Float.MAX_VALUE;
+    }
+
+    @Override
+    public void deserialize(JsonValue json) {
+        super.deserialize(json);
+
+        JsonValue noKey = json.get("noKey");
+        if (noKey != null) {
+            this.noKey = Game.SPRITE_SHEETS.load(noKey.asString());
+        }
+        
+        JsonValue key = json.get("key");
+        if (key != null) {
+            this.key = Game.SPRITE_SHEETS.load(key.asString());
+        }
+
+        JsonValue bossKey = json.get("bossKey");
+        if (bossKey != null) {
+            this.bossKey = Game.SPRITE_SHEETS.load(bossKey.asString());
+        }
+
+        JsonValue wall = json.get("wall");
+        if (wall != null) {
+            this.wall = Game.SPRITE_SHEETS.load(wall.asString());
+        }
     }
 }

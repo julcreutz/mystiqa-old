@@ -25,7 +25,7 @@ public class ItemDrop extends Entity {
     public void render(SpriteBatch batch) {
         super.render(batch);
 
-        batch.draw(i.icon.sheet[0][0], x, y + yOffset);
+        batch.draw(i.icon.grab(0, 0), x, y + yOffset);
     }
 
     @Override

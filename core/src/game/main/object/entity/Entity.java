@@ -9,7 +9,6 @@ import com.badlogic.gdx.utils.JsonValue;
 import game.main.Game;
 import game.main.object.GameObject;
 import game.main.object.entity.particle.Particle;
-import game.main.object.entity.particle.ParticleEmitter;
 import game.main.object.item.Item;
 import game.main.stat.Stat;
 import game.main.stat.StatCounter;
@@ -140,7 +139,7 @@ public abstract class Entity extends GameObject implements StatCounter {
         }
 
         public void render(SpriteBatch batch) {
-            batch.draw(Game.SPRITE_SHEETS.load("GuiLayer").sheet[0][0], getX(), getY(), getWidth(), getHeight());
+            batch.draw(Game.SPRITE_SHEETS.load("GuiLayer").grab(0, 0), getX(), getY(), getWidth(), getHeight());
         }
     }
 

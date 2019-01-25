@@ -97,5 +97,10 @@
     "Collectable": {
       "icon": "DungeonKey"
     }
+  },
+  "DungeonBossKey": {
+    "Collectable": {
+      "icon": "DungeonBossKey"
+    }
   }
 }

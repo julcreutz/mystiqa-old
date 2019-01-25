@@ -1,6 +1,5 @@
 package game.main.state.play.map.dungeon;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
@@ -10,7 +9,6 @@ import game.loader.Serializable;
 import game.loader.resource.sprite_sheet.SpriteSheet;
 import game.main.Game;
 import game.main.object.item.equipment.armor.Armor;
-import game.main.object.item.equipment.hand.right.MeleeWeapon;
 import game.main.object.item.equipment.hand.right.RightHand;
 import game.main.object.item.equipment.hand.left.LeftHand;
 import game.main.state.play.map.Map;
@@ -324,11 +322,8 @@ public class Dungeon extends Map {
     public String outerWall;
     public String innerWall;
 
-    public SpriteSheet doorNoKey;
-    public SpriteSheet doorKey;
-    public SpriteSheet doorWall;
-
-    public SpriteSheet block;
+    public String door;
+    public String block;
 
     public float treasureRoomChance;
 
@@ -340,6 +335,7 @@ public class Dungeon extends Map {
     public String boss;
 
     public String key;
+    public String bossKey;
 
     public ObjectFloatMap<String> locks;
 
@@ -479,10 +475,7 @@ public class Dungeon extends Map {
 
         for (Room r : rooms) {
             for (Room child : r.children) {
-                Door d = new Door();
-
-                d.spriteSheet = doorNoKey;
-                d.wall = doorWall;
+                Door d = (Door) Game.ENTITIES.load(door);
 
                 if (child.x0() != r.x0()) {
                     d.y = r.getCenterY() * 8 - 8;
@@ -511,25 +504,30 @@ public class Dungeon extends Map {
             }
         }
 
+        // Init and lock boss room
         if (bossRoom != null) {
             bossRoom.isBossRoom = true;
             bossRoom.spawnMonsters = false;
-            lock(bossRoom, bossRoom, bossRoom.doorToParent, Lock.Type.KEY);
+            lock(bossRoom, bossRoom, bossRoom.doorToParent, Lock.Type.BOSS_KEY);
         }
 
+        // Lock random rooms
         for (Room r : rooms) {
             for (Room child : r.children) {
-                String lock = null;
+                // Only lock if not already locked
+                if (child.doorToParent.lock == null) {
+                    String lock = null;
 
-                // Pick random lock; if null, don't lock door
-                for (String type : locks.keys()) {
-                    if (Game.RANDOM.nextFloat() < locks.get(type, 0)) {
-                        lock = type;
+                    // Pick random lock; if null, don't lock door
+                    for (String type : locks.keys()) {
+                        if (Game.RANDOM.nextFloat() < locks.get(type, 0)) {
+                            lock = type;
+                        }
                     }
-                }
 
-                if (lock != null) {
-                    lock(r, child, child.doorToParent, Lock.Type.valueOf(lock));
+                    if (lock != null) {
+                        lock(r, child, child.doorToParent, Lock.Type.valueOf(lock));
+                    }
                 }
             }
         }
@@ -586,9 +584,7 @@ public class Dungeon extends Map {
                         case 'p':
                             tiles.set(Game.TILES.load(ground), xx, yy, 0);
 
-                            Block b = new Block();
-
-                            b.spriteSheet = block;
+                            Block b = (Block) Game.ENTITIES.load(block);
 
                             b.x = xx * 8;
                             b.y = yy * 8;
@@ -851,24 +847,14 @@ public class Dungeon extends Map {
             this.innerWall = innerWall.asString();
         }
         
-        JsonValue doorNoKey = json.get("doorNoKey");
-        if (doorNoKey != null) {
-            this.doorNoKey = Game.SPRITE_SHEETS.load(doorNoKey.asString());
-        }
-
-        JsonValue doorKey = json.get("doorKey");
-        if (doorKey != null) {
-            this.doorKey = Game.SPRITE_SHEETS.load(doorKey.asString());
-        }
-
-        JsonValue doorWall = json.get("doorWall");
-        if (doorWall != null) {
-            this.doorWall = Game.SPRITE_SHEETS.load(doorWall.asString());
+        JsonValue door = json.get("door");
+        if (door != null) {
+            this.door = door.asString();
         }
 
         JsonValue block = json.get("block");
         if (block != null) {
-            this.block = Game.SPRITE_SHEETS.load(block.asString());
+            this.block = block.asString();
         }
 
         JsonValue treasureRoomChance = json.get("treasureRoomChance");
@@ -903,6 +889,11 @@ public class Dungeon extends Map {
         JsonValue key = json.get("key");
         if (key != null) {
             this.key = key.asString();
+        }
+
+        JsonValue bossKey = json.get("bossKey");
+        if (bossKey != null) {
+            this.bossKey = bossKey.asString();
         }
 
         JsonValue locks = json.get("locks");

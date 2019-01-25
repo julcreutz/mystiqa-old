@@ -3,11 +3,12 @@ package game.main.object.tile;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.JsonValue;
+import game.loader.resource.sprite_sheet.SpriteSheet;
 import game.main.Game;
 import game.main.state.play.map.Map;
 
 public class ConnectedTile extends Tile {
-    public TextureRegion[][] spriteSheet;
+    public SpriteSheet spriteSheet;
     public String[] connectWith;
 
     public TextureRegion corner;
@@ -15,6 +16,9 @@ public class ConnectedTile extends Tile {
     @Override
     public void update(Map map) {
         super.update(map);
+
+        int column = 0;
+        int row = 0;
 
         int n = 0;
 
@@ -44,54 +48,72 @@ public class ConnectedTile extends Tile {
 
         switch (n) {
             case 0:
-                image = spriteSheet[3][3];
+                column = 3;
+                row = 3;
                 break;
             case 1:
-                image = spriteSheet[0][3];
+                column = 0;
+                row = 3;
                 break;
             case 2:
-                image = spriteSheet[3][2];
+                column = 3;
+                row = 2;
                 break;
             case 3:
-                image = spriteSheet[0][2];
+                column = 0;
+                row = 2;
                 break;
             case 4:
-                image = spriteSheet[2][3];
+                column = 2;
+                row = 3;
                 break;
             case 5:
-                image = spriteSheet[1][3];
+                column = 1;
+                row = 3;
                 break;
             case 6:
-                image = spriteSheet[2][2];
+                column = 2;
+                row = 2;
                 break;
             case 7:
-                image = spriteSheet[1][2];
+                column = 1;
+                row = 2;
                 break;
             case 8:
-                image = spriteSheet[3][0];
+                column = 3;
+                row = 0;
                 break;
             case 9:
-                image = spriteSheet[0][0];
+                column = 0;
+                row = 0;
                 break;
             case 10:
-                image = spriteSheet[3][1];
+                column = 3;
+                row = 1;
                 break;
             case 11:
-                image = spriteSheet[0][1];
+                column = 0;
+                row = 1;
                 break;
             case 12:
-                image = spriteSheet[2][0];
+                column = 2;
+                row = 0;
                 break;
             case 13:
-                image = spriteSheet[1][0];
+                column = 1;
+                row = 0;
                 break;
             case 14:
-                image = spriteSheet[2][1];
+                column = 2;
+                row = 1;
                 break;
             case 15:
-                image = spriteSheet[1][1];
+                column = 1;
+                row = 1;
                 break;
         }
+
+        image = spriteSheet.grab(column, row);
 
         // Corner cases
         corner = null;
@@ -102,19 +124,19 @@ public class ConnectedTile extends Tile {
         boolean lu = connectsWith(map, x - 1, y + 1, 0);
 
         if (r && d && !rd) {
-            corner = spriteSheet[4][0];
+            corner = spriteSheet.grab(4, 0);
         }
 
         if (l && d && !ld) {
-            corner = spriteSheet[4][1];
+            corner = spriteSheet.grab(4, 1);
         }
 
         if (r && u && !ru) {
-            corner = spriteSheet[4][2];
+            corner = spriteSheet.grab(4, 2);
         }
 
         if (l && u && !lu) {
-            corner = spriteSheet[4][3];
+            corner = spriteSheet.grab(4, 3);
         }
     }
 
@@ -153,7 +175,7 @@ public class ConnectedTile extends Tile {
 
         JsonValue spriteSheet = json.get("spriteSheet");
         if (spriteSheet != null) {
-            this.spriteSheet = Game.SPRITE_SHEETS.load(spriteSheet.asString()).sheet;
+            this.spriteSheet = Game.SPRITE_SHEETS.load(spriteSheet.asString());
         }
 
         JsonValue connect = json.get("connectWith");

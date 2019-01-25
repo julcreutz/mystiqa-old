@@ -109,7 +109,7 @@ public class Play extends GameState {
         batch.begin();
 
         batch.setColor(1, 1, 1, 1);
-        batch.draw(Game.SPRITE_SHEETS.load("LightCircle").sheet[0][0],
+        batch.draw(Game.SPRITE_SHEETS.load("LightCircle").grab(0, 0),
                 MathUtils.round(map.player.x + 4 - 128), MathUtils.round(map.player.y + 4 - 128),
                 128, 128, 256, 256, 0.125f * .5f, 0.125f * .5f, 0);
         batch.setColor(1, 1, 1, 1);

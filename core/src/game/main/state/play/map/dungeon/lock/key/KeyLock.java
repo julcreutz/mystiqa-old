@@ -1,4 +1,4 @@
-package game.main.state.play.map.dungeon.lock;
+package game.main.state.play.map.dungeon.lock.key;
 
 import com.badlogic.gdx.utils.Array;
 import game.main.Game;
@@ -7,6 +7,7 @@ import game.main.object.entity.Entity;
 import game.main.object.entity.ItemDrop;
 import game.main.object.entity.event.CollisionEvent;
 import game.main.object.entity.event.EntityEvent;
+import game.main.state.play.map.dungeon.lock.Lock;
 
 public class KeyLock extends Lock {
     public Item key;
@@ -16,13 +17,17 @@ public class KeyLock extends Lock {
         locked = true;
     }
 
+    public String getKey() {
+        return dungeon.key;
+    }
+
     @Override
     public void onLock() {
         super.onLock();
 
-        door.spriteSheet = dungeon.doorKey;
+        door.spriteSheet = door.key;
 
-        key = Game.ITEMS.load(dungeon.key);
+        key = Game.ITEMS.load(getKey());
 
         Array<Entity> monsters = room.getMonsters();
 
@@ -53,9 +58,9 @@ public class KeyLock extends Lock {
                     for (int i = 0; i < dungeon.player.inventory.size; i++) {
                         Item item = dungeon.player.inventory.get(i);
 
-                        if (item.id.equals(dungeon.key)) {
+                        if (item.id.equals(key.id)) {
                             locked = false;
-                            door.spriteSheet = dungeon.doorNoKey;
+                            door.spriteSheet = door.noKey;
                             e.e.inventory.removeIndex(i);
 
                             break;

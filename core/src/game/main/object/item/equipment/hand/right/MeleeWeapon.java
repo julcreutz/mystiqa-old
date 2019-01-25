@@ -1,12 +1,9 @@
 package game.main.object.item.equipment.hand.right;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import game.loader.resource.sprite_sheet.SpriteSheet;
 import game.main.Game;
@@ -138,7 +135,7 @@ public class MeleeWeapon extends RightHand {
             h.attackHitbox.set(0, 0, 0, 0);
         }
 
-        image = spriteSheet.sheet[0][0];
+        image = spriteSheet.grab(0, 0);
 
         if (count(Stat.Type.FIRE_DAMAGE) > 0) {
             fireParticleTime -= Game.getDelta();

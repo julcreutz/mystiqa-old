@@ -185,11 +185,11 @@ public abstract class Map implements Serializable {
         tiles.render(batch, x0, x1, y0, y1, 1, tiles.getDepth());
 
         // GUI
-        batch.draw(Game.SPRITE_SHEETS.load("GuiLayer").sheet[0][0],
+        batch.draw(Game.SPRITE_SHEETS.load("GuiLayer").grab(0, 0),
                  play.cam.position.x - Game.WIDTH * .5f, play.cam.position.y + Game.HEIGHT * .5f - 8, Game.WIDTH, 8);
 
         /*
-        batch.draw(player.rightHand.icon.sheet[0][0],
+        batch.draw(player.rightHand.icon.split[0][0],
                 play.cam.position.x - Game.WIDTH * .5f + 8, play.cam.position.y + Game.HEIGHT * .5f - 8);
         */
     }

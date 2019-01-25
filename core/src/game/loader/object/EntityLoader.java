@@ -16,6 +16,10 @@ public class EntityLoader extends ObjectLoader<Entity> {
             return new Particle();
         } else if (name.equals("Projectile")) {
             return new Projectile();
+        } else if (name.equals("Door")) {
+            return new Door();
+        } else if (name.equals("Block")) {
+            return new Block();
         }
 
         return null;
