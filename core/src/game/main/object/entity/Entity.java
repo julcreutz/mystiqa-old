@@ -247,11 +247,11 @@ public abstract class Entity extends GameObject implements StatCounter {
                                 if (attackHitbox.overlaps(e)) {
                                     if (!contains) {
                                         e.health -= count(Stat.Type.PHYSICAL_DAMAGE)
-                                                - count(Stat.Type.PHYSICAL_DEFENSE) / 2;
+                                                - e.count(Stat.Type.PHYSICAL_DEFENSE);
 
                                         if (!e.isOnFire()) {
                                             e.onFireTime += (count(Stat.Type.FIRE_DAMAGE)
-                                                    - count(Stat.Type.FIRE_DEFENSE) / 2) * .5f;
+                                                    - e.count(Stat.Type.FIRE_DEFENSE)) * .5f;
                                         }
 
                                         e.hitTime = .1f;
@@ -418,7 +418,7 @@ public abstract class Entity extends GameObject implements StatCounter {
             onFireParticleTime -= Game.getDelta();
 
             if (onFireParticleTime < 0) {
-                onFireParticleTime = .05f;
+                onFireParticleTime = MathUtils.random(.05f, .1f);
 
                 Particle p = (Particle) Game.ENTITIES.load("Flame");
                 p.x = x + MathUtils.random(-2, 2);
@@ -427,7 +427,7 @@ public abstract class Entity extends GameObject implements StatCounter {
                 map.entities.addEntity(p);
 
                 p.dir.value = 90;
-                p.speed.value = 24;
+                p.speed.value = 12;
                 p.rot.value = -90;
             }
         }

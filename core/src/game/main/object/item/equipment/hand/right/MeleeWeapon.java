@@ -2,11 +2,13 @@ package game.main.object.item.equipment.hand.right;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.JsonValue;
 import game.loader.resource.sprite_sheet.SpriteSheet;
 import game.main.Game;
 import game.main.object.entity.Humanoid;
+import game.main.object.entity.particle.Particle;
 import game.main.stat.Stat;
 
 public class MeleeWeapon extends RightHand {
@@ -52,6 +54,8 @@ public class MeleeWeapon extends RightHand {
 
     public int armIndex;
     public boolean renderBehind;
+
+    public float fireParticleTime;
 
     public MeleeWeapon() {
         slowdown = new Stat(Stat.Type.SPEED);
@@ -132,6 +136,24 @@ public class MeleeWeapon extends RightHand {
         }
 
         image = spriteSheet.sheet[0][0];
+
+        if (count(Stat.Type.FIRE_DAMAGE) > 0) {
+            fireParticleTime -= Game.getDelta();
+
+            if (fireParticleTime < 0) {
+                fireParticleTime = MathUtils.random(.05f, .1f);
+
+                Particle p = (Particle) Game.ENTITIES.load("Flame");
+                p.x = x + MathUtils.random(-2, 2);
+                p.y = y + MathUtils.random(-2, 2);
+
+                h.map.entities.addEntity(p);
+
+                p.dir.value = 90;
+                p.speed.value = 12;
+                p.rot.value = -90;
+            }
+        }
     }
 
     @Override
@@ -162,8 +184,15 @@ public class MeleeWeapon extends RightHand {
     public void render(SpriteBatch batch, Humanoid h) {
         super.render(batch, h);
 
-        batch.draw(image, x, y,
-                4, 4, image.getRegionWidth(), 8, 1, 1, rot);
+        ShaderProgram old = batch.getShader();
+
+        if (count(Stat.Type.FIRE_DAMAGE) > 0) {
+            batch.setShader(Game.SHADERS.load("Burning").shader);
+        }
+
+        batch.draw(image, x, y, 4, 4, image.getRegionWidth(), 8, 1, 1, rot);
+
+        batch.setShader(old);
     }
 
     public boolean isAttacking() {

@@ -702,9 +702,9 @@ public class Dungeon extends Map {
         player.x = first.getCenterX() * 8 - 4;
         player.y = first.getCenterY() * 8 - 4;
 
-        player.armor = (Armor) Game.ITEMS.load("Armor");
+        player.armor = (Armor) Game.ITEMS.load("PlateArmor");
 
-        player.rightHand = (RightHand) Game.ITEMS.load("BattleAxe");
+        player.rightHand = (RightHand) Game.ITEMS.load("Sword");
         player.leftHand = (LeftHand) Game.ITEMS.load("Shield");
 
         player.controlledByPlayer = true;

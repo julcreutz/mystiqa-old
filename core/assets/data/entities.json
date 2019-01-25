@@ -4,7 +4,7 @@
       "stats": [
         {
           "type": "HEALTH",
-          "value": 10
+          "value": 15
         },
         {
           "type": "SPEED",
@@ -13,16 +13,7 @@
       ],
       "feet": "HumanFeet",
       "body": "HumanBody",
-      "head": "HumanHead",
-      "particles": {
-        "particle": "Flame",
-        "minDir": 0,
-        "maxDir": 360,
-        "minOffset": 0,
-        "maxOffset": 4,
-        "minTime": 0.1,
-        "maxTime": 0.25
-      }
+      "head": "HumanHead"
     }
   },
   "Orc": {
@@ -49,11 +40,15 @@
       "stats": [
         {
           "type": "HEALTH",
-          "value": 11
+          "value": 9
         },
         {
           "type": "PHYSICAL_DAMAGE",
-          "value": 2
+          "value": 4
+        },
+        {
+          "type": "PHYSICAL_DEFENSE",
+          "value": 1
         },
         {
           "type": "SPEED",
@@ -75,7 +70,7 @@
       "stats": [
         {
           "type": "HEALTH",
-          "value": 2
+          "value": 5
         },
         {
           "type": "PHYSICAL_DAMAGE",
@@ -151,9 +146,17 @@
         "max": 1,
         "gain": -2
       },
+      "dir": {
+        "min": 90,
+        "max": 90
+      },
+      "speed": {
+        "min": 12,
+        "max": 12
+      },
       "rot": {
-        "min": 0,
-        "max": 360
+        "min": 270,
+        "max": 270
       }
     }
   },
@@ -161,12 +164,12 @@
     "Projectile": {
       "stats": [
         {
-          "type": "MIN_PHYSICAL_DAMAGE",
-          "value": 1
+          "type": "PHYSICAL_DAMAGE",
+          "value": 2
         },
         {
-          "type": "MAX_PHYSICAL_DAMAGE",
-          "value": 3
+          "type": "FIRE_DAMAGE",
+          "value": 2
         }
       ],
       "image": "Fireball",
@@ -176,9 +179,9 @@
         "minDir": 0,
         "maxDir": 360,
         "minOffset": 0,
-        "maxOffset": 4,
-        "minTime": 0.1,
-        "maxTime": 0.25
+        "maxOffset": 2,
+        "minTime": 0.05,
+        "maxTime": 0.1
       }
     }
   }

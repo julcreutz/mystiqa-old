@@ -11,26 +11,9 @@ import game.main.object.item.equipment.hand.right.MeleeWeapon;
 
 /** Superclass every type of item, e.g. weapons or consumables, must extend. Only consists of name and icon. */
 public abstract class Item extends GameObject {
-    public enum Type {
-        MELEE_WEAPON, SHIELD, ARMOR;
-
-        public Item newInstance() {
-            switch (this) {
-                case MELEE_WEAPON:
-                    return new MeleeWeapon();
-                case SHIELD:
-                    return new Shield();
-                case ARMOR:
-                    return new Armor();
-            }
-
-            return null;
-        }
-    }
-
     /** Name of item. */
     public String name;
-    /** Item icon. */
+    /** Item icon displayed in GUI elements. */
     public SpriteSheet icon;
 
     @Override

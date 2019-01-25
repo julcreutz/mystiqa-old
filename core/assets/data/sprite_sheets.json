@@ -1,14 +1,4 @@
 {
-  "Grass": {
-    "path": "graphics/grass.png",
-    "splitW": 8,
-    "splitH": 8
-  },
-  "Water": {
-    "path": "graphics/water.png",
-    "splitW": 8,
-    "splitH": 8
-  },
   "HumanFeet": {
     "path": "graphics/human_feet.png",
     "splitW": 8,
@@ -29,26 +19,6 @@
     "splitW": 4,
     "splitH": 4
   },
-  "Waterfall": {
-    "path": "graphics/waterfall.png",
-    "splitW": 8,
-    "splitH": 8
-  },
-  "TreeBottom": {
-    "path": "graphics/tree_bottom.png",
-    "splitW": 8,
-    "splitH": 8
-  },
-  "TreeMiddle": {
-    "path": "graphics/tree_middle.png",
-    "splitW": 8,
-    "splitH": 8
-  },
-  "TreeTop": {
-    "path": "graphics/tree_top.png",
-    "splitW": 8,
-    "splitH": 8
-  },
   "Sword": {
     "path": "graphics/sword.png",
     "splitW": 8,
@@ -59,63 +29,13 @@
     "splitW": 8,
     "splitH": 8
   },
-  "Stone": {
-    "path": "graphics/stone.png",
+  "PlateArmorBody": {
+    "path": "graphics/plate_armor_body.png",
     "splitW": 8,
     "splitH": 8
   },
-  "Tendril": {
-    "path": "graphics/tendril.png",
-    "splitW": 8,
-    "splitH": 8
-  },
-  "Bridge": {
-    "path": "graphics/bridge.png",
-    "splitW": 8,
-    "splitH": 8
-  },
-  "HouseWall": {
-    "path": "graphics/house_wall.png",
-    "splitW": 8,
-    "splitH": 8
-  },
-  "HouseRoof": {
-    "path": "graphics/house_roof.png",
-    "splitW": 8,
-    "splitH": 8
-  },
-  "HouseEntrance": {
-    "path": "graphics/house_entrance.png",
-    "splitW": 8,
-    "splitH": 8
-  },
-  "Rock": {
-    "path": "graphics/rock.png",
-    "splitW": 8,
-    "splitH": 8
-  },
-  "Rock2": {
-    "path": "graphics/rock_2.png",
-    "splitW": 8,
-    "splitH": 8
-  },
-  "TallGrass": {
-    "path": "graphics/tall_grass.png",
-    "splitW": 8,
-    "splitH": 8
-  },
-  "TallGrassOverlay": {
-    "path": "graphics/tall_grass_overlay.png",
-    "splitW": 8,
-    "splitH": 8
-  },
-  "BodyArmor": {
-    "path": "graphics/body_armor.png",
-    "splitW": 8,
-    "splitH": 8
-  },
-  "FeetArmor": {
-    "path": "graphics/feet_armor.png",
+  "PlateArmorFeet": {
+    "path": "graphics/plate_armor_feet.png",
     "splitW": 8,
     "splitH": 8
   },
@@ -246,6 +166,11 @@
   },
   "Flame": {
     "path": "graphics/flame.png",
+    "splitW": 8,
+    "splitH": 8
+  },
+  "HandAxe": {
+    "path": "graphics/hand_axe.png",
     "splitW": 8,
     "splitH": 8
   }

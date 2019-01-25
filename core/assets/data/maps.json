@@ -1,8 +1,8 @@
 {
   "Dungeon": {
     "Dungeon": {
-      "minRooms": 9,
-      "maxRooms": 13,
+      "minRooms": 3,
+      "maxRooms": 3,
       "ground": "DungeonGround",
       "outerWall": "DungeonWall",
       "innerWall": "DungeonBlock",
