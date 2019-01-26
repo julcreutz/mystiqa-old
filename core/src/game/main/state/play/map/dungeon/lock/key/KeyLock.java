@@ -2,9 +2,8 @@ package game.main.state.play.map.dungeon.lock.key;
 
 import com.badlogic.gdx.utils.Array;
 import game.main.Game;
-import game.main.object.item.Item;
 import game.main.object.entity.Entity;
-import game.main.object.entity.ItemDrop;
+import game.main.object.item.Item;
 import game.main.object.entity.event.CollisionEvent;
 import game.main.object.entity.event.EntityEvent;
 import game.main.state.play.map.dungeon.lock.Lock;
@@ -25,21 +24,13 @@ public class KeyLock extends Lock {
     public void onLock() {
         super.onLock();
 
-        door.spriteSheet = door.key;
-
         key = Game.ITEMS.load(getKey());
+        door.spriteSheet = door.key;
 
         Array<Entity> monsters = room.getMonsters();
 
         if (room.getMonsters().size > 0) {
             monsters.get(Game.RANDOM.nextInt(monsters.size)).inventory.add(key);
-        } else {
-            ItemDrop drop = new ItemDrop(key);
-
-            drop.x = room.getCenterX() * 8;
-            drop.y = room.getCenterY() * 8;
-
-            dungeon.entities.addEntity(drop);
         }
     }
 

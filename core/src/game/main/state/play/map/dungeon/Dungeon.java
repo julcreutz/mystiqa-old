@@ -4,12 +4,9 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
-import com.badlogic.gdx.utils.ObjectFloatMap;
 import game.loader.Serializable;
 import game.main.Game;
-import game.main.object.item.equipment.armor.Armor;
-import game.main.object.item.equipment.hand.right.RightHand;
-import game.main.object.item.equipment.hand.left.LeftHand;
+import game.main.object.entity.Humanoid;
 import game.main.state.play.map.Map;
 import game.main.state.play.map.dungeon.lock.Lock;
 import game.main.object.entity.*;
@@ -17,6 +14,10 @@ import game.main.object.tile.Tile;
 
 public class Dungeon extends Map {
     public static class Room {
+        public enum Direction {
+            RIGHT, UP, LEFT, DOWN
+        }
+
         public Dungeon map;
 
         public Rectangle rect;
@@ -155,54 +156,52 @@ public class Dungeon extends Map {
         public int getMonsterCount() {
             return getMonsters().size;
         }
+
+        public Array<Direction> getDirections() {
+            Array<Direction> directions = new Array<Direction>();
+
+            for (Room child : children) {
+                if (child.getTileX() > getTileX() && !directions.contains(Direction.RIGHT, true)) {
+                    directions.add(Direction.RIGHT);
+                }
+
+                if (child.getTileY() > getTileY() && !directions.contains(Direction.UP, true)) {
+                    directions.add(Direction.UP);
+                }
+
+                if (child.getTileX() < getTileX() && !directions.contains(Direction.LEFT, true)) {
+                    directions.add(Direction.LEFT);
+                }
+
+                if (child.getTileY() < getTileY() && !directions.contains(Direction.DOWN, true)) {
+                    directions.add(Direction.DOWN);
+                }
+            }
+
+            return directions;
+        }
     }
 
     public static class Template implements Serializable {
         public float minChance;
         public float maxChance;
 
-        public boolean horizontallyFlippable;
-        public boolean verticallyFlippable;
+        public float chance;
 
         public boolean isBossRoom;
         public boolean isTreasureRoom;
 
+        public Array<Room.Direction> directions;
+
         public char[][] template;
 
         public Template(JsonValue json) {
+            minChance = 1;
+            maxChance = 1;
+
+            chance = 1;
+
             deserialize(json);
-        }
-
-        public char[][] getTemplate() {
-            char[][] template = new char[this.template.length][this.template[0].length];
-
-            // Copy the template
-            for (int x = 0; x < template.length; x++) {
-                System.arraycopy(this.template[x], 0, template[x], 0, template[0].length);
-            }
-
-            // Flip it
-            if (horizontallyFlippable && Game.RANDOM.nextFloat() < .5f) {
-                for (int x = 0; x < template.length / 2; x++) {
-                    char[] temp = template[x];
-
-                    template[x] = template[template.length - 1 - x];
-                    template[template.length - 1 - x] = temp;
-                }
-            }
-
-            if (verticallyFlippable && Game.RANDOM.nextFloat() < .5f) {
-                for (int x = 0; x < template.length; x++) {
-                    for (int y = 0; y < template[0].length / 2; y++) {
-                        char temp = template[x][y];
-
-                        template[x][y] = template[x][template[0].length - 1 - y];
-                        template[x][template[0].length - 1 - y] = temp;
-                    }
-                }
-            }
-
-            return template;
         }
 
         @Override
@@ -217,14 +216,9 @@ public class Dungeon extends Map {
                 this.maxChance = maxChance.asFloat();
             }
 
-            JsonValue horizontallyFlippable = json.get("horizontallyFlippable");
-            if (horizontallyFlippable != null) {
-                this.horizontallyFlippable = horizontallyFlippable.asBoolean();
-            }
-            
-            JsonValue verticallyFlippable = json.get("verticallyFlippable");
-            if (verticallyFlippable != null) {
-                this.verticallyFlippable = verticallyFlippable.asBoolean();
+            JsonValue chance = json.get("chance");
+            if (chance != null) {
+                this.chance = chance.asFloat();
             }
 
             JsonValue isBossRoom = json.get("isBossRoom");
@@ -235,6 +229,15 @@ public class Dungeon extends Map {
             JsonValue isTreasureRoom = json.get("isTreasureRoom");
             if (isTreasureRoom != null) {
                 this.isTreasureRoom = isTreasureRoom.asBoolean();
+            }
+
+            JsonValue directions = json.get("directions");
+            if (directions != null) {
+                this.directions = new Array<Room.Direction>();
+
+                for (JsonValue direction : directions) {
+                    this.directions.add(Room.Direction.valueOf(direction.asString()));
+                }
             }
 
             JsonValue template = json.get("template");
@@ -325,10 +328,12 @@ public class Dungeon extends Map {
     public String ground;
     public String outerWall;
     public String innerWall;
+    public String hole;
 
     public String door;
     public String block;
     public String spikes;
+    public String chest;
 
     public int minTreasureRooms;
     public int maxTreasureRooms;
@@ -514,6 +519,7 @@ public class Dungeon extends Map {
         if (bossRoom != null) {
             bossRoom.isBossRoom = true;
             bossRoom.spawnMonsters = false;
+
             lock(bossRoom, bossRoom, bossRoom.doorToParent, Lock.Type.BOSS_KEY);
         }
 
@@ -533,6 +539,8 @@ public class Dungeon extends Map {
             if (treasureRoom != null) {
                 treasureRoom.isTreasureRoom = true;
                 treasureRoom.spawnMonsters = false;
+
+                lock(treasureRoom, treasureRoom, treasureRoom.doorToParent, getRandomLock(treasureRoom));
             }
         }
 
@@ -541,19 +549,8 @@ public class Dungeon extends Map {
             for (Room child : r.children) {
                 // Only lock if not already locked
                 if (child.doorToParent.lock == null) {
-                    Array<Lock.Type> locks = new Array<Lock.Type>();
-
-                    // Pick random lock; if null, don't lock door
-                    for (LockChoice lockChoice : this.locks) {
-                        float chance = MathUtils.lerp(lockChoice.minChance, lockChoice.maxChance, child.difficulty);
-
-                        if (Game.RANDOM.nextFloat() < chance) {
-                            locks.add(lockChoice.lock);
-                        }
-                    }
-
                     if (locks.size > 0) {
-                        lock(r, child, child.doorToParent, locks.get(Game.RANDOM.nextInt(locks.size)));
+                        lock(r, child, child.doorToParent, getRandomLock(child));
                     }
                 }
             }
@@ -564,14 +561,38 @@ public class Dungeon extends Map {
             Array<Template> templates = new Array<Template>();
 
             for (Template t : this.templates) {
+                boolean sameDirections;
+
+                if (t.directions == null) {
+                    sameDirections = true;
+                } else {
+                    sameDirections = true;
+
+                    Array<Room.Direction> directions = r.getDirections();
+
+                    for (Room.Direction direction : t.directions) {
+                        if (!directions.contains(direction, true)) {
+                            sameDirections = false;
+                            break;
+                        }
+                    }
+
+                    for (Room.Direction direction : directions) {
+                        if (t.directions.contains(direction, true)) {
+                            sameDirections = false;
+                            break;
+                        }
+                    }
+                }
+
                 if (Game.RANDOM.nextFloat() < MathUtils.lerp(t.minChance, t.maxChance, r.difficulty)
-                        && (r.lock == null || r.lock.isValid(t)) && r.isBossRoom == t.isBossRoom
-                        && r.isTreasureRoom == t.isTreasureRoom) {
+                        && Game.RANDOM.nextFloat() < t.chance && (r.lock == null || r.lock.isValid(t))
+                        && r.isBossRoom == t.isBossRoom && r.isTreasureRoom == t.isTreasureRoom && sameDirections) {
                     templates.add(t);
                 }
             }
 
-            char[][] template = templates.get(Game.RANDOM.nextInt(templates.size)).getTemplate();
+            char[][] template = templates.get(Game.RANDOM.nextInt(templates.size)).template;
 
             for (int x = 0; x < template.length; x++) {
                 for (int y = 0; y < template[0].length; y++) {
@@ -587,6 +608,9 @@ public class Dungeon extends Map {
                             break;
                         case ' ':
                             tiles.set(Game.TILES.load(ground), xx, yy, 0);
+                            break;
+                        case '.':
+                            tiles.set(Game.TILES.load(hole), xx, yy, 0);
                             break;
                         case 'b':
                             tiles.set(Game.TILES.load(ground), xx, yy, 0);
@@ -614,10 +638,10 @@ public class Dungeon extends Map {
                             }
 
                             break;
-                        case 't':
+                        case 'c':
                             tiles.set(Game.TILES.load(ground), xx, yy, 0);
 
-                            Chest c = new Chest();
+                            Chest c = (Chest) Game.ENTITIES.load(chest);
 
                             c.x = xx * 8 + 4;
                             c.y = yy * 8 + 4;
@@ -625,13 +649,24 @@ public class Dungeon extends Map {
                             entities.addEntity(c);
 
                             break;
-                        case '^':
+                        case '0':
+                        case '1':
+                        case '2':
+                        case '3':
+                        case '4':
+                        case '5':
+                        case '6':
+                        case '7':
+                        case '8':
+                        case '9':
                             tiles.set(Game.TILES.load(ground), xx, yy, 0);
 
                             Spikes s = (Spikes) Game.ENTITIES.load(spikes);
 
                             s.x = xx * 8;
                             s.y = yy * 8;
+
+                            s.offset = Integer.parseInt("" + template[x][y]) * .1f;
 
                             entities.addEntity(s);
 
@@ -731,14 +766,9 @@ public class Dungeon extends Map {
 
         Room first = rooms.first();
 
-        Humanoid player = (Humanoid) Game.ENTITIES.load("Human");
+        Humanoid player = (Humanoid) Game.ENTITIES.load("Player");
         player.x = first.getCenterX() * 8 - 4;
         player.y = first.getCenterY() * 8 - 4;
-
-        player.armor = (Armor) Game.ITEMS.load("PlateArmor");
-
-        player.rightHand = (RightHand) Game.ITEMS.load("Halberd");
-        player.leftHand = (LeftHand) Game.ITEMS.load("Shield");
 
         player.controlledByPlayer = true;
 
@@ -820,16 +850,15 @@ public class Dungeon extends Map {
         }
     }
 
-    public void lock(Room r, Room child, Door d, Lock.Type lock) {
-        Lock l = lock.newInstance();
-
+    public void lock(Room r, Room child, Door d, Lock l) {
         l.dungeon = this;
 
         Array<Room> valid = new Array<Room>();
 
         // Get valid rooms and make sure room has only one room it unlocks
         for (Room room : getRoomsUntil(child)) {
-            if (room != rooms.first() && !room.isBossRoom && !room.isTreasureRoom && room.unlocks == null) {
+            if (room != rooms.first() && !room.isBossRoom && !room.isTreasureRoom && room.unlocks == null
+                    && room.spawnMonsters) {
                 valid.add(room);
             }
         }
@@ -857,6 +886,10 @@ public class Dungeon extends Map {
         }
     }
 
+    public void lock(Room r, Room child, Door d, Lock.Type lock) {
+        lock(r, child, d, lock.newInstance());
+    }
+
     public Array<Room> getTreasureRooms() {
         Array<Room> rooms = new Array<Room>();
 
@@ -871,6 +904,23 @@ public class Dungeon extends Map {
 
     public int getTreasureRoomCount() {
         return getTreasureRooms().size;
+    }
+
+    public Lock.Type getRandomLock(Room r) {
+        Array<Lock.Type> locks = new Array<Lock.Type>();
+
+        // Pick random lock; if null, don't lock door
+        while (locks.size == 0) {
+            for (LockChoice lockChoice : this.locks) {
+                float chance = MathUtils.lerp(lockChoice.minChance, lockChoice.maxChance, r.difficulty);
+
+                if (Game.RANDOM.nextFloat() < chance) {
+                    locks.add(lockChoice.lock);
+                }
+            }
+        }
+
+        return locks.get(Game.RANDOM.nextInt(locks.size));
     }
 
     @Override
@@ -899,6 +949,11 @@ public class Dungeon extends Map {
         if (innerWall != null) {
             this.innerWall = innerWall.asString();
         }
+
+        JsonValue hole = json.get("hole");
+        if (hole != null) {
+            this.hole = hole.asString();
+        }
         
         JsonValue door = json.get("door");
         if (door != null) {
@@ -913,6 +968,11 @@ public class Dungeon extends Map {
         JsonValue spikes = json.get("spikes");
         if (spikes != null) {
             this.spikes = spikes.asString();
+        }
+
+        JsonValue chest = json.get("chest");
+        if (chest != null) {
+            this.chest = chest.asString();
         }
 
         JsonValue minTreasureRooms = json.get("minTreasureRooms");

@@ -62,6 +62,9 @@
   "DungeonGround": {
     "path": "graphics/dungeon_ground.png"
   },
+  "Hole": {
+    "path": "graphics/hole.png"
+  },
   "DungeonDoor": {
     "path": "graphics/dungeon_door.png",
     "columns": 3
@@ -131,7 +134,7 @@
     "path": "graphics/fireball.png",
     "columns": 2
   },
-  "Chest": {
+  "DungeonChest": {
     "path": "graphics/chest.png",
     "columns": 2
   },

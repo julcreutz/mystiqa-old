@@ -12,6 +12,7 @@ public class Spikes extends Entity {
     public TextureRegion image;
 
     public int state;
+    public float offset;
 
     public Spikes() {
         hitbox.set(8, 8, 0, 0);
@@ -21,7 +22,7 @@ public class Spikes extends Entity {
     public void update() {
         super.update();
 
-        state = MathUtils.round(Game.time * (spriteSheet.getColumns() - 1)) % (spriteSheet.getColumns() * 2);
+        state = MathUtils.round((Game.time + offset) * (spriteSheet.getColumns() - 1)) % (spriteSheet.getColumns() * 2);
 
         if (state < spriteSheet.getColumns()) {
             image = spriteSheet.grab(state, 0);

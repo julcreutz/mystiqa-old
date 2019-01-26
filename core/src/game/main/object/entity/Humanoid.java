@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonValue;
 import game.loader.reference.sprite_sheet.SpriteSheet;
 import game.main.Game;
+import game.main.object.entity.Entity;
 import game.main.object.item.equipment.armor.Armor;
 import game.main.object.item.equipment.hand.right.RightHand;
 import game.main.object.item.equipment.hand.left.LeftHand;
@@ -596,19 +597,19 @@ public class Humanoid extends Entity {
             this.head = Game.SPRITE_SHEETS.load(head.asString());
         }
 
+        JsonValue rightHand = json.get("rightHand");
+        if (rightHand != null) {
+            this.rightHand = (RightHand) Game.ITEMS.load(rightHand.asString());
+        }
+
+        JsonValue leftHand = json.get("leftHand");
+        if (leftHand != null) {
+            this.leftHand = (LeftHand) Game.ITEMS.load(leftHand.asString());
+        }
+
         JsonValue armor = json.get("armor");
-        if (this.armor != null && this.armor.feet != null) {
+        if (armor != null) {
             this.armor = (Armor) Game.ITEMS.load(armor.asString());
-        }
-
-        JsonValue mainHand = json.get("rightHand");
-        if (mainHand != null) {
-            this.rightHand = (RightHand) Game.ITEMS.load(mainHand.asString());
-        }
-
-        JsonValue offHand = json.get("leftHand");
-        if (offHand != null) {
-            this.leftHand = (LeftHand) Game.ITEMS.load(offHand.asString());
         }
     }
 }

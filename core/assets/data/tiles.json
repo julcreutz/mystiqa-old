@@ -15,5 +15,11 @@
       "solid": true,
       "spriteSheet": "DungeonBlock"
     }
+  },
+  "Hole": {
+    "UnconnectedTile": {
+      "solid": true,
+      "spriteSheet": "Hole"
+    }
   }
 }

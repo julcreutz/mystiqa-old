@@ -1,6 +1,7 @@
 package game.loader.instance;
 
 import game.main.object.entity.*;
+import game.main.object.entity.Humanoid;
 import game.main.object.entity.particle.Particle;
 
 public class EntityLoader extends InstanceLoader<Entity> {
@@ -22,6 +23,8 @@ public class EntityLoader extends InstanceLoader<Entity> {
             return new Block();
         } else if (name.equals("Spikes")) {
             return new Spikes();
+        } else if (name.equals("Chest")) {
+            return new Chest();
         }
 
         return null;

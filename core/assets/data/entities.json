@@ -1,5 +1,5 @@
 {
-  "Human": {
+  "Player": {
     "Humanoid": {
       "stats": [
         {
@@ -13,7 +13,10 @@
       ],
       "feet": "HumanFeet",
       "body": "HumanBody",
-      "head": "HumanHead"
+      "head": "HumanHead",
+      "rightHand": "BattleAxe",
+      "leftHand": "Shield",
+      "armor": "PlateArmor"
     }
   },
   "Orc": {
@@ -208,6 +211,11 @@
       ],
       "isMonster": true,
       "spriteSheet": "DungeonSpikes"
+    }
+  },
+  "DungeonChest": {
+    "Chest": {
+      "spriteSheet": "DungeonChest"
     }
   }
 }
