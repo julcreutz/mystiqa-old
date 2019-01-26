@@ -3,17 +3,18 @@ package game.loader.reference;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.ObjectMap;
 import game.loader.Loader;
 import game.loader.Serializable;
 
 import java.util.HashMap;
 
 public abstract class ReferenceLoader<T extends Serializable> implements Loader<T> {
-    public HashMap<String, T> map;
+    public ObjectMap<String, T> map;
 
     @Override
     public void load(FileHandle file) {
-        map = new HashMap<String, T>();
+        map = new ObjectMap<String, T>();
 
         for (JsonValue json : Loader.READER.parse(file)) {
             T t = newInstance();

@@ -11,29 +11,23 @@ public class Spikes extends Entity {
     public SpriteSheet spriteSheet;
     public TextureRegion image;
 
-    public float time;
-    public float timeScale;
+    public int state;
 
     public Spikes() {
         hitbox.set(8, 8, 0, 0);
-        timeScale = 1;
     }
 
     @Override
     public void update() {
         super.update();
 
-        time += Game.getDelta() * timeScale;
+        state = MathUtils.round(Game.time * (spriteSheet.getColumns() - 1)) % (spriteSheet.getColumns() * 2);
 
-        if (time > 1) {
-            time = 1;
-            timeScale = -1;
-        } else if (time < 0) {
-            time = 0;
-            timeScale = 1;
+        if (state < spriteSheet.getColumns()) {
+            image = spriteSheet.grab(state, 0);
+        } else {
+            image = spriteSheet.grab(spriteSheet.getColumns() - 1 - (state - spriteSheet.getColumns()), 0);
         }
-
-        image = spriteSheet.grab(MathUtils.round(time * (spriteSheet.getColumns() - 1)), 0);
     }
 
     @Override
@@ -65,7 +59,7 @@ public class Spikes extends Entity {
 
     @Override
     public boolean isAttacking() {
-        return time > .67f;
+        return state == 2 || state == 3;
     }
 
     @Override
