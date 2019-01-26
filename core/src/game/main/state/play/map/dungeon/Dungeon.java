@@ -217,6 +217,10 @@ public class Dungeon extends Map {
         }
 
         public boolean isForbidden(Room r) {
+            if (forbiddenDirections == null) {
+                return false;
+            }
+
             Array<Room.Direction> directions = r.getDirections();
 
             for (Room.Direction direction : directions) {
@@ -365,6 +369,8 @@ public class Dungeon extends Map {
     public int minMonsters;
     public int maxMonsters;
 
+    public Template entranceRoom;
+    public Template treasureRoom;
     public Template bossRoom;
 
     public Monster[] monsters;
@@ -496,13 +502,66 @@ public class Dungeon extends Map {
         }
 
         // Pick the boss room
+        Room entranceRoom = null;
+
+        if (this.entranceRoom != null) {
+            Array<Room> possible = new Array<Room>();
+
+            for (Room r : rooms) {
+                if (!this.entranceRoom.isForbidden(r)) {
+                    possible.add(r);
+                }
+            }
+
+            if (possible.size > 0) {
+                entranceRoom = possible.first();
+
+                for (Room r : possible) {
+                    if (r.difficulty < entranceRoom.difficulty) {
+                        entranceRoom = r;
+                    }
+                }
+
+                entranceRoom.template = this.entranceRoom;
+                entranceRoom.spawnMonsters = false;
+            }
+        }
+
+        // Pick treasure room
+        Room treasureRoom = null;
+
+        if (this.treasureRoom != null) {
+            Array<Room> possible = new Array<Room>();
+
+            for (Room r : rooms) {
+                if (!this.treasureRoom.isForbidden(r) && r != entranceRoom) {
+                    possible.add(r);
+                }
+            }
+
+            if (possible.size > 0) {
+                treasureRoom = possible.first();
+
+                for (Room r : possible) {
+                    if (r.difficulty > treasureRoom.difficulty) {
+                        treasureRoom = r;
+                    }
+                }
+
+                treasureRoom.template = this.treasureRoom;
+
+                System.out.println(treasureRoom);
+            }
+        }
+
+        // Pick the boss room
         Room bossRoom = null;
 
         if (this.bossRoom != null) {
             Array<Room> possible = new Array<Room>();
 
             for (Room r : rooms) {
-                if (!this.bossRoom.isForbidden(r)) {
+                if (!this.bossRoom.isForbidden(r) && r != entranceRoom && r != treasureRoom) {
                     possible.add(r);
                 }
             }
@@ -563,6 +622,7 @@ public class Dungeon extends Map {
             lock(bossRoom, bossRoom, bossRoom.doorToParent, Lock.Type.BOSS_KEY);
         }
 
+        /*
         // Place treasure rooms in most difficult rooms
         int treasureRoomCount = minTreasureRooms + Game.RANDOM.nextInt(maxTreasureRooms - minTreasureRooms + 1);
 
@@ -583,6 +643,7 @@ public class Dungeon extends Map {
                 lock(treasureRoom, treasureRoom, treasureRoom.doorToParent, getRandomLock(treasureRoom));
             }
         }
+        */
 
         // Lock random rooms
         for (Room r : rooms) {
@@ -808,13 +869,9 @@ public class Dungeon extends Map {
         }
 
         // Place player
-        rooms.first().spawnMonsters = false;
-
-        Room first = rooms.first();
-
         Humanoid player = (Humanoid) Game.ENTITIES.load("Player");
-        player.x = first.getCenterX() * 8 - 4;
-        player.y = first.getCenterY() * 8 - 4;
+        player.x = entranceRoom.getCenterX() * 8 - 4;
+        player.y = entranceRoom.getCenterY() * 8 - 4;
 
         player.controlledByPlayer = true;
 
@@ -1039,6 +1096,16 @@ public class Dungeon extends Map {
         JsonValue maxMonsters = json.get("maxMonsters");
         if (maxMonsters != null) {
             this.maxMonsters = maxMonsters.asInt();
+        }
+
+        JsonValue entranceRoom = json.get("entranceRoom");
+        if (entranceRoom != null) {
+            this.entranceRoom = new Template(entranceRoom);
+        }
+
+        JsonValue treasureRoom = json.get("treasureRoom");
+        if (treasureRoom != null) {
+            this.treasureRoom = new Template(treasureRoom);
         }
 
         JsonValue bossRoom = json.get("bossRoom");

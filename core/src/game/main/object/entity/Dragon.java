@@ -118,10 +118,6 @@ public class Dragon extends Entity {
     public void update() {
         super.update();
 
-        if (heads.size == 0) {
-            health = 0;
-        }
-
         switch (state) {
             case IDLE:
                 state = State.SPEW;
@@ -152,6 +148,10 @@ public class Dragon extends Entity {
                 }
 
                 break;
+        }
+
+        if (heads.size == 0) {
+            health = 0;
         }
     }
 

@@ -215,6 +215,7 @@ public abstract class Entity extends GameObject implements StatCounter {
         for (Entity e : map.entities.entities) {
             if (hitbox.overlaps(e)) {
                 onCollision(e);
+                e.onCollision(this);
             }
         }
 

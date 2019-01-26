@@ -21,7 +21,7 @@ public class PushBlockLock extends Lock {
 
     @Override
     public boolean isLocked() {
-        return block != null && block.getStartDistance() < 8;
+        return block != null && block.getStartDistance() == 0;
     }
 
     @Override
