@@ -45,10 +45,14 @@ public class Block extends Entity {
             if (pushTime == .5f) {
                 if (MathUtils.round(x) != pushX) {
                     velX = pushX > x ? 24 : -24;
+                } else {
+                    x = pushX;
                 }
 
                 if (MathUtils.round(y) != pushY) {
                     velY = pushY > y ? 24 : -24;
+                } else {
+                    y = pushY;
                 }
             }
         }

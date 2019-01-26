@@ -37,9 +37,6 @@ public class Dungeon extends Map {
         public Room unlocks;
         public Lock lock;
 
-        public boolean isBossRoom;
-        public boolean isTreasureRoom;
-
         public boolean spawnMonsters;
 
         public Template template;
@@ -192,6 +189,10 @@ public class Dungeon extends Map {
 
             return directions;
         }
+
+        public boolean isBossRoom() {
+            return template == map.bossTemplate;
+        }
     }
 
     public static class Template implements Serializable {
@@ -199,9 +200,6 @@ public class Dungeon extends Map {
         public float maxChance;
 
         public float chance;
-
-        public boolean isBossRoom;
-        public boolean isTreasureRoom;
 
         public Array<Room.Direction> forbiddenDirections;
 
@@ -247,16 +245,6 @@ public class Dungeon extends Map {
             JsonValue chance = json.get("chance");
             if (chance != null) {
                 this.chance = chance.asFloat();
-            }
-
-            JsonValue isBossRoom = json.get("isBossRoom");
-            if (isBossRoom != null) {
-                this.isBossRoom = isBossRoom.asBoolean();
-            }
-
-            JsonValue isTreasureRoom = json.get("isTreasureRoom");
-            if (isTreasureRoom != null) {
-                this.isTreasureRoom = isTreasureRoom.asBoolean();
             }
 
             JsonValue forbiddenDirections = json.get("forbiddenDirections");
@@ -369,10 +357,6 @@ public class Dungeon extends Map {
     public int minMonsters;
     public int maxMonsters;
 
-    public Template entranceRoom;
-    public Template treasureRoom;
-    public Template bossRoom;
-
     public Monster[] monsters;
 
     public String boss;
@@ -382,6 +366,7 @@ public class Dungeon extends Map {
 
     public Array<LockChoice> locks;
 
+    public Template bossTemplate;
     public Template[] templates;
 
     public Array<Room> rooms;
@@ -502,66 +487,13 @@ public class Dungeon extends Map {
         }
 
         // Pick the boss room
-        Room entranceRoom = null;
-
-        if (this.entranceRoom != null) {
-            Array<Room> possible = new Array<Room>();
-
-            for (Room r : rooms) {
-                if (!this.entranceRoom.isForbidden(r)) {
-                    possible.add(r);
-                }
-            }
-
-            if (possible.size > 0) {
-                entranceRoom = possible.first();
-
-                for (Room r : possible) {
-                    if (r.difficulty < entranceRoom.difficulty) {
-                        entranceRoom = r;
-                    }
-                }
-
-                entranceRoom.template = this.entranceRoom;
-                entranceRoom.spawnMonsters = false;
-            }
-        }
-
-        // Pick treasure room
-        Room treasureRoom = null;
-
-        if (this.treasureRoom != null) {
-            Array<Room> possible = new Array<Room>();
-
-            for (Room r : rooms) {
-                if (!this.treasureRoom.isForbidden(r) && r != entranceRoom) {
-                    possible.add(r);
-                }
-            }
-
-            if (possible.size > 0) {
-                treasureRoom = possible.first();
-
-                for (Room r : possible) {
-                    if (r.difficulty > treasureRoom.difficulty) {
-                        treasureRoom = r;
-                    }
-                }
-
-                treasureRoom.template = this.treasureRoom;
-
-                System.out.println(treasureRoom);
-            }
-        }
-
-        // Pick the boss room
         Room bossRoom = null;
 
-        if (this.bossRoom != null) {
+        if (this.bossTemplate != null) {
             Array<Room> possible = new Array<Room>();
 
             for (Room r : rooms) {
-                if (!this.bossRoom.isForbidden(r) && r != entranceRoom && r != treasureRoom) {
+                if (!this.bossTemplate.isForbidden(r)) {
                     possible.add(r);
                 }
             }
@@ -575,7 +507,7 @@ public class Dungeon extends Map {
                     }
                 }
 
-                bossRoom.template = this.bossRoom;
+                bossRoom.template = this.bossTemplate;
                 bossRoom.spawnMonsters = false;
             }
         }
@@ -622,29 +554,6 @@ public class Dungeon extends Map {
             lock(bossRoom, bossRoom, bossRoom.doorToParent, Lock.Type.BOSS_KEY);
         }
 
-        /*
-        // Place treasure rooms in most difficult rooms
-        int treasureRoomCount = minTreasureRooms + Game.RANDOM.nextInt(maxTreasureRooms - minTreasureRooms + 1);
-
-        while (getTreasureRoomCount() < treasureRoomCount) {
-            Room treasureRoom = null;
-
-            for (Room r : this.rooms) {
-                if (r.children.size == 0 && r.unlocks == null && !r.isBossRoom && !r.isTreasureRoom
-                        && (treasureRoom == null || r.difficulty > treasureRoom.difficulty)) {
-                    treasureRoom = r;
-                }
-            }
-
-            if (treasureRoom != null) {
-                treasureRoom.isTreasureRoom = true;
-                treasureRoom.spawnMonsters = false;
-
-                lock(treasureRoom, treasureRoom, treasureRoom.doorToParent, getRandomLock(treasureRoom));
-            }
-        }
-        */
-
         // Lock random rooms
         for (Room r : rooms) {
             for (Room child : r.children) {
@@ -662,33 +571,9 @@ public class Dungeon extends Map {
             Array<Template> templates = new Array<Template>();
 
             for (Template t : this.templates) {
-                boolean sameDirections;
-
-                if (t.forbiddenDirections == null) {
-                    sameDirections = true;
-                } else {
-                    sameDirections = true;
-
-                    Array<Room.Direction> directions = r.getDirections();
-
-                    for (Room.Direction direction : t.forbiddenDirections) {
-                        if (!directions.contains(direction, true)) {
-                            sameDirections = false;
-                            break;
-                        }
-                    }
-
-                    for (Room.Direction direction : directions) {
-                        if (t.forbiddenDirections.contains(direction, true)) {
-                            sameDirections = false;
-                            break;
-                        }
-                    }
-                }
-
                 if (Game.RANDOM.nextFloat() < MathUtils.lerp(t.minChance, t.maxChance, r.difficulty)
                         && Game.RANDOM.nextFloat() < t.chance && (r.lock == null || r.lock.isValid(t))
-                        && r.isBossRoom == t.isBossRoom && r.isTreasureRoom == t.isTreasureRoom && sameDirections) {
+                        && !t.isForbidden(r)) {
                     templates.add(t);
                 }
             }
@@ -869,9 +754,11 @@ public class Dungeon extends Map {
         }
 
         // Place player
+        rooms.first().spawnMonsters = false;
+
         Humanoid player = (Humanoid) Game.ENTITIES.load("Player");
-        player.x = entranceRoom.getCenterX() * 8 - 4;
-        player.y = entranceRoom.getCenterY() * 8 - 4;
+        player.x = rooms.first().getCenterX() * 8 - 4;
+        player.y = rooms.first().getCenterY() * 8 - 4;
 
         player.controlledByPlayer = true;
 
@@ -960,7 +847,7 @@ public class Dungeon extends Map {
 
         // Get valid rooms and make sure room has only one room it unlocks
         for (Room room : getRoomsUntil(child)) {
-            if (room != rooms.first() && !room.isBossRoom && !room.isTreasureRoom && room.unlocks == null
+            if (room != rooms.first() && !room.isBossRoom() && room.unlocks == null
                     && room.spawnMonsters) {
                 valid.add(room);
             }
@@ -991,22 +878,6 @@ public class Dungeon extends Map {
 
     public void lock(Room r, Room child, Door d, Lock.Type lock) {
         lock(r, child, d, lock.newInstance());
-    }
-
-    public Array<Room> getTreasureRooms() {
-        Array<Room> rooms = new Array<Room>();
-
-        for (Room r : this.rooms) {
-            if (r.isTreasureRoom) {
-                rooms.add(r);
-            }
-        }
-
-        return rooms;
-    }
-
-    public int getTreasureRoomCount() {
-        return getTreasureRooms().size;
     }
 
     public Lock.Type getRandomLock(Room r) {
@@ -1098,21 +969,6 @@ public class Dungeon extends Map {
             this.maxMonsters = maxMonsters.asInt();
         }
 
-        JsonValue entranceRoom = json.get("entranceRoom");
-        if (entranceRoom != null) {
-            this.entranceRoom = new Template(entranceRoom);
-        }
-
-        JsonValue treasureRoom = json.get("treasureRoom");
-        if (treasureRoom != null) {
-            this.treasureRoom = new Template(treasureRoom);
-        }
-
-        JsonValue bossRoom = json.get("bossRoom");
-        if (bossRoom != null) {
-            this.bossRoom = new Template(bossRoom);
-        }
-
         JsonValue monsters = json.get("monsters");
         if (monsters != null) {
             this.monsters = new Monster[monsters.size];
@@ -1144,6 +1000,11 @@ public class Dungeon extends Map {
             for (JsonValue lock : locks) {
                 this.locks.add(new LockChoice(lock));
             }
+        }
+
+        JsonValue bossTemplate = json.get("bossTemplate");
+        if (bossTemplate != null) {
+            this.bossTemplate = new Template(bossTemplate);
         }
 
         JsonValue templates = json.get("templates");
