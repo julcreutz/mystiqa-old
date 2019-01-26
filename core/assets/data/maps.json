@@ -1,8 +1,8 @@
 {
   "Dungeon": {
     "Dungeon": {
-      "minRooms": 13,
-      "maxRooms": 18,
+      "minRooms": 3,
+      "maxRooms": 3,
       "ground": "DungeonGround",
       "outerWall": "DungeonWall",
       "innerWall": "DungeonBlock",
@@ -12,10 +12,23 @@
       "block": "DungeonBlock",
       "spikes": "DungeonSpikes",
       "chest": "DungeonChest",
-      "minTreasureRooms": 1,
-      "maxTreasureRooms": 2,
+      "minTreasureRooms": 0,
+      "maxTreasureRooms": 0,
       "minMonsters": 2,
       "maxMonsters": 7,
+      "bossRoom": {
+        "forbiddenDirections": ["UP"],
+        "template": [
+          ["#", "#", "#", "#", "#", "#", "#", "#", "#", "#"],
+          ["#", "+", "+", "+", " ", " ", "+", "+", "+", "#"],
+          ["#", "+", "+", " ", "b", " ", " ", "+", "+", "#"],
+          ["#", " ", " ", " ", " ", " ", " ", " ", " ", "#"],
+          ["#", " ", " ", " ", " ", " ", " ", " ", " ", "#"],
+          ["#", " ", "+", " ", " ", " ", " ", "+", " ", "#"],
+          ["#", " ", " ", " ", " ", " ", " ", " ", " ", "#"],
+          ["#", "#", "#", "#", "#", "#", "#", "#", "#", "#"]
+        ]
+      },
       "monsters": [
         {
           "monster": "GreenSlimeSmall",

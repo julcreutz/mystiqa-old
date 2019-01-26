@@ -42,6 +42,8 @@ public class Dungeon extends Map {
 
         public boolean spawnMonsters;
 
+        public Template template;
+
         public Room(Dungeon map, int x, int y, int w, int h) {
             this.map = map;
 
@@ -160,20 +162,30 @@ public class Dungeon extends Map {
         public Array<Direction> getDirections() {
             Array<Direction> directions = new Array<Direction>();
 
-            for (Room child : children) {
-                if (child.getTileX() > getTileX() && !directions.contains(Direction.RIGHT, true)) {
+            Array<Room> check = new Array<Room>();
+
+            if (parent != null) {
+                check.add(parent);
+            }
+
+            if (children.size > 0) {
+                check.addAll(children);
+            }
+
+            for (Room r : check) {
+                if (r.getTileX() > getTileX() && !directions.contains(Direction.RIGHT, true)) {
                     directions.add(Direction.RIGHT);
                 }
 
-                if (child.getTileY() > getTileY() && !directions.contains(Direction.UP, true)) {
+                if (r.getTileY() > getTileY() && !directions.contains(Direction.UP, true)) {
                     directions.add(Direction.UP);
                 }
 
-                if (child.getTileX() < getTileX() && !directions.contains(Direction.LEFT, true)) {
+                if (r.getTileX() < getTileX() && !directions.contains(Direction.LEFT, true)) {
                     directions.add(Direction.LEFT);
                 }
 
-                if (child.getTileY() < getTileY() && !directions.contains(Direction.DOWN, true)) {
+                if (r.getTileY() < getTileY() && !directions.contains(Direction.DOWN, true)) {
                     directions.add(Direction.DOWN);
                 }
             }
@@ -191,7 +203,7 @@ public class Dungeon extends Map {
         public boolean isBossRoom;
         public boolean isTreasureRoom;
 
-        public Array<Room.Direction> directions;
+        public Array<Room.Direction> forbiddenDirections;
 
         public char[][] template;
 
@@ -202,6 +214,18 @@ public class Dungeon extends Map {
             chance = 1;
 
             deserialize(json);
+        }
+
+        public boolean isForbidden(Room r) {
+            Array<Room.Direction> directions = r.getDirections();
+
+            for (Room.Direction direction : directions) {
+                if (forbiddenDirections.contains(direction, true)) {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         @Override
@@ -231,12 +255,12 @@ public class Dungeon extends Map {
                 this.isTreasureRoom = isTreasureRoom.asBoolean();
             }
 
-            JsonValue directions = json.get("directions");
-            if (directions != null) {
-                this.directions = new Array<Room.Direction>();
+            JsonValue forbiddenDirections = json.get("forbiddenDirections");
+            if (forbiddenDirections != null) {
+                this.forbiddenDirections = new Array<Room.Direction>();
 
-                for (JsonValue direction : directions) {
-                    this.directions.add(Room.Direction.valueOf(direction.asString()));
+                for (JsonValue direction : forbiddenDirections) {
+                    this.forbiddenDirections.add(Room.Direction.valueOf(direction.asString()));
                 }
             }
 
@@ -340,6 +364,8 @@ public class Dungeon extends Map {
 
     public int minMonsters;
     public int maxMonsters;
+
+    public Template bossRoom;
 
     public Monster[] monsters;
 
@@ -469,12 +495,29 @@ public class Dungeon extends Map {
             r.difficulty /= maxDifficulty;
         }
 
-        // Pick boss room
+        // Pick the boss room
         Room bossRoom = null;
 
-        for (Room r : rooms) {
-            if (r.children.size == 0 && (bossRoom == null || r.difficulty > bossRoom.difficulty)) {
-                bossRoom = r;
+        if (this.bossRoom != null) {
+            Array<Room> possible = new Array<Room>();
+
+            for (Room r : rooms) {
+                if (!this.bossRoom.isForbidden(r)) {
+                    possible.add(r);
+                }
+            }
+
+            if (possible.size > 0) {
+                bossRoom = possible.first();
+
+                for (Room r : possible) {
+                    if (r.difficulty > bossRoom.difficulty) {
+                        bossRoom = r;
+                    }
+                }
+
+                bossRoom.template = this.bossRoom;
+                bossRoom.spawnMonsters = false;
             }
         }
 
@@ -517,9 +560,6 @@ public class Dungeon extends Map {
 
         // Init and lock boss room
         if (bossRoom != null) {
-            bossRoom.isBossRoom = true;
-            bossRoom.spawnMonsters = false;
-
             lock(bossRoom, bossRoom, bossRoom.doorToParent, Lock.Type.BOSS_KEY);
         }
 
@@ -563,14 +603,14 @@ public class Dungeon extends Map {
             for (Template t : this.templates) {
                 boolean sameDirections;
 
-                if (t.directions == null) {
+                if (t.forbiddenDirections == null) {
                     sameDirections = true;
                 } else {
                     sameDirections = true;
 
                     Array<Room.Direction> directions = r.getDirections();
 
-                    for (Room.Direction direction : t.directions) {
+                    for (Room.Direction direction : t.forbiddenDirections) {
                         if (!directions.contains(direction, true)) {
                             sameDirections = false;
                             break;
@@ -578,7 +618,7 @@ public class Dungeon extends Map {
                     }
 
                     for (Room.Direction direction : directions) {
-                        if (t.directions.contains(direction, true)) {
+                        if (t.forbiddenDirections.contains(direction, true)) {
                             sameDirections = false;
                             break;
                         }
@@ -592,7 +632,13 @@ public class Dungeon extends Map {
                 }
             }
 
-            char[][] template = templates.get(Game.RANDOM.nextInt(templates.size)).template;
+            char[][] template;
+
+            if (r.template != null) {
+                template = r.template.template;
+            } else {
+                template = templates.get(Game.RANDOM.nextInt(templates.size)).template;
+            }
 
             for (int x = 0; x < template.length; x++) {
                 for (int y = 0; y < template[0].length; y++) {
@@ -993,6 +1039,11 @@ public class Dungeon extends Map {
         JsonValue maxMonsters = json.get("maxMonsters");
         if (maxMonsters != null) {
             this.maxMonsters = maxMonsters.asInt();
+        }
+
+        JsonValue bossRoom = json.get("bossRoom");
+        if (bossRoom != null) {
+            this.bossRoom = new Template(bossRoom);
         }
 
         JsonValue monsters = json.get("monsters");
