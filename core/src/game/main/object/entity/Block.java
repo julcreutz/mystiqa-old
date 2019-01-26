@@ -2,7 +2,7 @@ package game.main.object.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.JsonValue;
-import game.loader.resource.sprite_sheet.SpriteSheet;
+import game.loader.reference.sprite_sheet.SpriteSheet;
 import game.main.Game;
 
 public class Block extends Entity {

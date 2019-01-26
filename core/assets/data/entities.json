@@ -197,5 +197,17 @@
     "Block": {
       "spriteSheet": "DungeonBlock"
     }
+  },
+  "DungeonSpikes": {
+    "Spikes": {
+      "stats": [
+        {
+          "type": "PHYSICAL_DAMAGE",
+          "value": 1
+        }
+      ],
+      "isMonster": true,
+      "spriteSheet": "DungeonSpikes"
+    }
   }
 }

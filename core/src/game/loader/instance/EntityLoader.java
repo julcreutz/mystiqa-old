@@ -1,9 +1,9 @@
-package game.loader.object;
+package game.loader.instance;
 
 import game.main.object.entity.*;
 import game.main.object.entity.particle.Particle;
 
-public class EntityLoader extends ObjectLoader<Entity> {
+public class EntityLoader extends InstanceLoader<Entity> {
     @Override
     public Entity newInstance(String name) {
         if (name.equals("Humanoid")) {
@@ -20,6 +20,8 @@ public class EntityLoader extends ObjectLoader<Entity> {
             return new Door();
         } else if (name.equals("Block")) {
             return new Block();
+        } else if (name.equals("Spikes")) {
+            return new Spikes();
         }
 
         return null;

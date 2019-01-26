@@ -1,4 +1,4 @@
-package game.loader.resource;
+package game.loader.reference;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
@@ -8,7 +8,7 @@ import game.loader.Serializable;
 
 import java.util.HashMap;
 
-public abstract class ResourceLoader<T extends Serializable> implements Loader<T> {
+public abstract class ReferenceLoader<T extends Serializable> implements Loader<T> {
     public HashMap<String, T> map;
 
     @Override

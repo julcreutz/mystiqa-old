@@ -7,12 +7,12 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Disposable;
 import game.loader.*;
-import game.loader.object.EntityLoader;
-import game.loader.object.ItemLoader;
-import game.loader.object.MapLoader;
-import game.loader.resource.shader.ShaderLoader;
-import game.loader.resource.sprite_sheet.SpriteSheetLoader;
-import game.loader.object.TileLoader;
+import game.loader.instance.EntityLoader;
+import game.loader.instance.ItemLoader;
+import game.loader.instance.MapLoader;
+import game.loader.reference.shader.ShaderLoader;
+import game.loader.reference.sprite_sheet.SpriteSheetLoader;
+import game.loader.instance.TileLoader;
 import game.main.state.play.Play;
 import game.main.state.GameState;
 

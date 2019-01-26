@@ -3,7 +3,7 @@ package game.main.object.tile;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.JsonValue;
-import game.loader.resource.sprite_sheet.SpriteSheet;
+import game.loader.reference.sprite_sheet.SpriteSheet;
 import game.main.Game;
 import game.main.state.play.map.Map;
 

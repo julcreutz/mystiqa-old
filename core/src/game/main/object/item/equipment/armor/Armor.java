@@ -1,7 +1,7 @@
 package game.main.object.item.equipment.armor;
 
 import com.badlogic.gdx.utils.JsonValue;
-import game.loader.resource.sprite_sheet.SpriteSheet;
+import game.loader.reference.sprite_sheet.SpriteSheet;
 import game.main.Game;
 import game.main.object.item.equipment.Equipment;
 

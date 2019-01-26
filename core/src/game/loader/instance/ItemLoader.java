@@ -1,4 +1,4 @@
-package game.loader.object;
+package game.loader.instance;
 
 import game.main.object.item.Item;
 import game.main.object.item.collectable.Collectable;
@@ -6,7 +6,7 @@ import game.main.object.item.equipment.armor.Armor;
 import game.main.object.item.equipment.hand.right.MeleeWeapon;
 import game.main.object.item.equipment.hand.left.Shield;
 
-public class ItemLoader extends ObjectLoader<Item> {
+public class ItemLoader extends InstanceLoader<Item> {
     @Override
     public Item newInstance(String name) {
         if (name.equals("MeleeWeapon")) {

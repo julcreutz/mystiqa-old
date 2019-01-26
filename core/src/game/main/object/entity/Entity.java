@@ -185,7 +185,6 @@ public abstract class Entity extends GameObject implements StatCounter {
     public Entity attachTo;
 
     public float onFireTime;
-    public float onFireHitTime;
     public float onFireParticleTime;
 
     public Entity() {
@@ -233,7 +232,7 @@ public abstract class Entity extends GameObject implements StatCounter {
                         if (!e.isHit() && e.isOnGround() && isHostile(e) && e.isVulnerable()) {
                             boolean contains = hit.contains(e, true);
 
-                            if (e.isBlocking() && attackHitbox.overlaps(e.getBlockHitbox())) {
+                            if (isBlockable() && e.isBlocking() && attackHitbox.overlaps(e.getBlockHitbox())) {
                                 if (!contains) {
                                     map.screenShake += .5f;
 
@@ -245,12 +244,12 @@ public abstract class Entity extends GameObject implements StatCounter {
                             } else {
                                 if (attackHitbox.overlaps(e)) {
                                     if (!contains) {
-                                        e.health -= count(Stat.Type.PHYSICAL_DAMAGE)
-                                                - e.count(Stat.Type.PHYSICAL_DEFENSE);
+                                        e.health -= MathUtils.clamp(count(Stat.Type.PHYSICAL_DAMAGE)
+                                                - e.count(Stat.Type.PHYSICAL_DEFENSE), 1, Float.MAX_VALUE);
 
                                         if (!e.isOnFire()) {
-                                            e.onFireTime += (count(Stat.Type.FIRE_DAMAGE)
-                                                    - e.count(Stat.Type.FIRE_DEFENSE)) * .5f;
+                                            e.onFireTime += MathUtils.clamp((count(Stat.Type.FIRE_DAMAGE)
+                                                    - e.count(Stat.Type.FIRE_DEFENSE)), 0, Float.MAX_VALUE);
                                         }
 
                                         e.hitTime = .1f;
@@ -407,12 +406,7 @@ public abstract class Entity extends GameObject implements StatCounter {
         if (isOnFire()) {
             onFireTime -= Game.getDelta();
 
-            onFireHitTime -= Game.getDelta();
-
-            if (onFireHitTime < 0) {
-                onFireHitTime = .5f;
-                health -= 1;
-            }
+            health -= 1 * Game.getDelta();
 
             onFireParticleTime -= Game.getDelta();
 
@@ -627,6 +621,11 @@ public abstract class Entity extends GameObject implements StatCounter {
 
     /** @return whether entity is able to be attacked by other entities */
     public boolean isVulnerable() {
+        return true;
+    }
+
+    /** @return whether attack is able to be blocked by other entities */
+    public boolean isBlockable() {
         return true;
     }
 

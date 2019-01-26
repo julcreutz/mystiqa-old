@@ -85,6 +85,10 @@
   "DungeonBossKey": {
     "path": "graphics/boss_key.png"
   },
+  "DungeonSpikes": {
+    "path": "graphics/spikes.png",
+    "columns": 3
+  },
   "DragonBody": {
     "path": "graphics/dragon_body.png"
   },

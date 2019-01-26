@@ -1,9 +1,9 @@
-package game.loader.resource.sprite_sheet;
+package game.loader.reference.sprite_sheet;
 
 import com.badlogic.gdx.utils.Disposable;
-import game.loader.resource.ResourceLoader;
+import game.loader.reference.ReferenceLoader;
 
-public class SpriteSheetLoader extends ResourceLoader<SpriteSheet> implements Disposable {
+public class SpriteSheetLoader extends ReferenceLoader<SpriteSheet> implements Disposable {
     @Override
     public SpriteSheet newInstance() {
         return new SpriteSheet();

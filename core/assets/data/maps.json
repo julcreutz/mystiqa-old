@@ -1,43 +1,65 @@
 {
   "Dungeon": {
     "Dungeon": {
-      "minRooms": 9,
-      "maxRooms": 13,
+      "minRooms": 13,
+      "maxRooms": 18,
       "ground": "DungeonGround",
       "outerWall": "DungeonWall",
       "innerWall": "DungeonBlock",
       "door": "DungeonDoor",
       "pushableBlock": "DungeonBlock",
       "block": "DungeonBlock",
-      "treasureRoomChance": 0.75,
-      "minMonsters": 0,
+      "spikes": "DungeonSpikes",
+      "minTreasureRooms": 1,
+      "maxTreasureRooms": 2,
+      "minMonsters": 2,
       "maxMonsters": 7,
       "monsters": [
         {
-          "maxDifficulty": 0.25,
-          "monster": "GreenSlimeSmall"
+          "monster": "GreenSlimeSmall",
+          "minChance": 1,
+          "maxChance": 0
         },
         {
-          "minDifficulty": 0.25,
-          "monster": "GreenSlime"
+          "monster": "GreenSlime",
+          "minChance": 0.25,
+          "maxChance": 0.75
         },
         {
-          "minDifficulty": 0.75,
-          "chance": 0.25,
-          "monster": "Orc"
+          "monster": "Orc",
+          "minChance": 0,
+          "maxChance": 1
         }
       ],
       "boss": "Dragon",
       "key": "DungeonKey",
       "bossKey": "DungeonBossKey",
       "locks": [
-        {"KILL_MONSTER": 0.75},
-        {"KEY": 0.5},
-        {"PUSH_BLOCK": 0.5},
-        {"INVISIBLE_DOOR": 0.25}
+        {
+          "lock": "KILL_MONSTER",
+          "minChance": 0.75,
+          "maxChance": 0.25
+        },
+        {
+          "lock": "KEY",
+          "minChance": 0.5,
+          "maxChance": 0.75
+        },
+        {
+          "lock": "PUSH_BLOCK",
+          "minChance": 0.5,
+          "maxChance": 0.5
+        },
+        {
+          "lock": "INVISIBLE_DOOR",
+          "minChance": 0,
+          "maxChance": 0.75
+        }
       ],
       "templates": [
         {
+          "minChance": 1,
+          "maxChance": 0.5,
           "template": [
             ["#", "#", "#", "#", "#", "#", "#", "#", "#", "#"],
             ["#", " ", " ", " ", " ", " ", " ", " ", " ", "#"],
@@ -50,18 +72,22 @@
           ]
         },
         {
+          "minChance": 0,
+          "maxChance": 1,
           "template": [
             ["#", "#", "#", "#", "#", "#", "#", "#", "#", "#"],
             ["#", " ", " ", " ", " ", " ", " ", " ", " ", "#"],
-            ["#", " ", "+", " ", " ", " ", " ", "+", " ", "#"],
-            ["#", " ", " ", " ", " ", " ", " ", " ", " ", "#"],
-            ["#", " ", " ", " ", " ", " ", " ", " ", " ", "#"],
-            ["#", " ", "+", " ", " ", " ", " ", "+", " ", "#"],
+            ["#", " ", "^", "^", "^", "^", "^", "^", " ", "#"],
+            ["#", " ", "^", " ", " ", " ", " ", "^", " ", "#"],
+            ["#", " ", "^", " ", " ", " ", " ", "^", " ", "#"],
+            ["#", " ", "^", "^", "^", "^", "^", "^", " ", "#"],
             ["#", " ", " ", " ", " ", " ", " ", " ", " ", "#"],
             ["#", "#", "#", "#", "#", "#", "#", "#", "#", "#"]
           ]
         },
         {
+          "minChance": 1,
+          "maxChance": 1,
           "template": [
             ["#", "#", "#", "#", "#", "#", "#", "#", "#", "#"],
             ["#", " ", " ", " ", " ", " ", " ", " ", " ", "#"],
@@ -74,18 +100,22 @@
           ]
         },
         {
+          "minChance": 1,
+          "maxChance": 1,
           "template": [
             ["#", "#", "#", "#", "#", "#", "#", "#", "#", "#"],
             ["#", " ", " ", " ", " ", " ", " ", " ", " ", "#"],
             ["#", " ", " ", " ", " ", " ", " ", " ", " ", "#"],
-            ["#", " ", "+", "+", " ", " ", "+", "+", " ", "#"],
-            ["#", " ", "+", "+", " ", " ", "+", "+", " ", "#"],
+            ["#", " ", "+", "+", "^", "^", "+", "+", " ", "#"],
+            ["#", " ", "+", "+", "^", "^", "+", "+", " ", "#"],
             ["#", " ", " ", " ", " ", " ", " ", " ", " ", "#"],
             ["#", " ", " ", " ", " ", " ", " ", " ", " ", "#"],
             ["#", "#", "#", "#", "#", "#", "#", "#", "#", "#"]
           ]
         },
         {
+          "minChance": 1,
+          "maxChance": 1,
           "template": [
             ["#", "#", "#", "#", "#", "#", "#", "#", "#", "#"],
             ["#", " ", " ", " ", " ", " ", " ", " ", " ", "#"],
@@ -98,6 +128,8 @@
           ]
         },
         {
+          "minChance": 1,
+          "maxChance": 1,
           "template": [
             ["#", "#", "#", "#", "#", "#", "#", "#", "#", "#"],
             ["#", " ", " ", " ", " ", " ", " ", " ", " ", "#"],
@@ -110,6 +142,8 @@
           ]
         },
         {
+          "minChance": 1,
+          "maxChance": 1,
           "horizontallyFlippable": true,
           "template": [
             ["#", "#", "#", "#", "#", "#", "#", "#", "#", "#"],
@@ -123,6 +157,8 @@
           ]
         },
         {
+          "minChance": 1,
+          "maxChance": 1,
           "template": [
             ["#", "#", "#", "#", "#", "#", "#", "#", "#", "#"],
             ["#", " ", " ", " ", " ", " ", " ", " ", " ", "#"],
@@ -135,6 +171,8 @@
           ]
         },
         {
+          "minChance": 1,
+          "maxChance": 1,
           "isBossRoom": true,
           "template": [
             ["#", "#", "#", "#", "#", "#", "#", "#", "#", "#"],
@@ -148,6 +186,8 @@
           ]
         },
         {
+          "minChance": 1,
+          "maxChance": 1,
           "isTreasureRoom": true,
           "template": [
             ["#", "#", "#", "#", "#", "#", "#", "#", "#", "#"],

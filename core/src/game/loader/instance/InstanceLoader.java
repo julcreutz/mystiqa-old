@@ -1,4 +1,4 @@
-package game.loader.object;
+package game.loader.instance;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.JsonValue;
@@ -6,7 +6,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 import game.loader.Loader;
 import game.loader.Serializable;
 
-public abstract class ObjectLoader<T extends Serializable> implements Loader<T> {
+public abstract class InstanceLoader<T extends Serializable> implements Loader<T> {
     public ObjectMap<String, JsonValue> map;
 
     @Override

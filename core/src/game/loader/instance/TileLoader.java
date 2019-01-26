@@ -1,10 +1,10 @@
-package game.loader.object;
+package game.loader.instance;
 
 import game.main.object.tile.ConnectedTile;
 import game.main.object.tile.Tile;
 import game.main.object.tile.UnconnectedTile;
 
-public class TileLoader extends ObjectLoader<Tile> {
+public class TileLoader extends InstanceLoader<Tile> {
     @Override
     public Tile newInstance(String name) {
         if (name.equals("ConnectedTile")) {

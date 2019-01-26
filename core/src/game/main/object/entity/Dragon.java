@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
-import game.loader.resource.sprite_sheet.SpriteSheet;
+import game.loader.reference.sprite_sheet.SpriteSheet;
 import game.main.Game;
 
 public class Dragon extends Entity {
