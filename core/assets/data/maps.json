@@ -245,44 +245,17 @@
       "spikes": "DungeonSpikes",
       "chest": "DungeonChest",
       "minMonsters": 2,
-      "maxMonsters": 7,
+      "maxMonsters": 5,
       "monsters": [
         {
-          "monster": "GreenSlimeSmall",
+          "monster": "Bat",
           "minChance": 1,
-          "maxChance": 0
-        },
-        {
-          "monster": "GreenSlime",
-          "minChance": 0.25,
-          "maxChance": 0.75
-        },
-        {
-          "monster": "Orc",
-          "minChance": 0,
           "maxChance": 1
         }
       ],
       "boss": "Dragon",
       "key": "DungeonKey",
       "bossKey": "DungeonBossKey",
-      "locks": [
-        {
-          "lock": "KILL_MONSTER",
-          "minChance": 0.75,
-          "maxChance": 0.25
-        },
-        {
-          "lock": "KEY",
-          "minChance": 0.5,
-          "maxChance": 0.75
-        },
-        {
-          "lock": "INVISIBLE_DOOR",
-          "minChance": 0,
-          "maxChance": 0.75
-        }
-      ],
       "bossTemplate": {
         "template": [
           ["#", "#", "#", "#", "#", "#", "#", "#", "#", "#"],
@@ -340,7 +313,7 @@
             ["#", "#", "#", "+", "+", "+", "+", "+", "#", "#"],
             [" ", " ", " ", " ", "+", "+", "+", "+", " ", "#"],
             ["#", " ", " ", " ", " ", " ", " ", " ", " ", " "],
-            ["#", "c", "#", "#", " ", " ", " ", " ", " ", "#"],
+            ["#", " ", "#", "#", " ", " ", " ", " ", " ", "#"],
             ["#", "#", "#", "#", " ", " ", " ", " ", "#", "#"],
             ["#", "#", "#", "#", " ", " ", "#", "#", "#", "#"]
           ]

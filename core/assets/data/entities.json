@@ -217,5 +217,17 @@
     "Chest": {
       "spriteSheet": "DungeonChest"
     }
+  },
+  "Bat": {
+    "Bat": {
+      "stats": [
+        {
+          "type": "HEALTH",
+          "value": 7
+        }
+      ],
+      "isMonster": true,
+      "spriteSheet": "Bat"
+    }
   }
 }

@@ -25,6 +25,8 @@ public class EntityLoader extends InstanceLoader<Entity> {
             return new Spikes();
         } else if (name.equals("Chest")) {
             return new Chest();
+        } else if (name.equals("Bat")) {
+            return new Bat();
         }
 
         return null;

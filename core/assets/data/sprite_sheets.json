@@ -161,5 +161,9 @@
     "path": "graphics/cave_bridge.png",
     "columns": 5,
     "rows": 4
+  },
+  "Bat": {
+    "path": "graphics/bat.png",
+    "columns": 2
   }
 }

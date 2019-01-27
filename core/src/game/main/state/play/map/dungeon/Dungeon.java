@@ -78,6 +78,11 @@ public class Dungeon extends Map {
                     }
                 }
             }
+
+            for (Entity e : getMonsters()) {
+                e.x = MathUtils.clamp(e.x, x0() * 8, (x1() - 1) * 8);
+                e.y = MathUtils.clamp(e.y, y0() * 8, (y1() - 1) * 8);
+            }
         }
 
         public int getTileX() {
