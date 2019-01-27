@@ -518,49 +518,51 @@ public class Dungeon extends Map {
         // Add doors
         allLocks = new Array<Lock>();
 
-        for (Room r : rooms) {
-            for (Room child : r.children) {
-                Door d = (Door) Game.ENTITIES.load(door);
+        if (door != null) {
+            for (Room r : rooms) {
+                for (Room child : r.children) {
+                    Door d = (Door) Game.ENTITIES.load(door);
 
-                if (child.x0() != r.x0()) {
-                    d.y = r.getCenterY() * 8 - 8;
-                    d.horizontal = true;
+                    if (child.x0() != r.x0()) {
+                        d.y = r.getCenterY() * 8 - 8;
+                        d.horizontal = true;
 
-                    if (child.x0() > r.x0()) {
-                        d.x = r.x1() * 8 - 8;
-                    } else {
-                        d.x = r.x0() * 8 - 8;
+                        if (child.x0() > r.x0()) {
+                            d.x = r.x1() * 8 - 8;
+                        } else {
+                            d.x = r.x0() * 8 - 8;
+                        }
                     }
-                }
 
-                if (child.y0() != r.y0()) {
-                    d.x = r.getCenterX() * 8 - 8;
+                    if (child.y0() != r.y0()) {
+                        d.x = r.getCenterX() * 8 - 8;
 
-                    if (child.y0() > r.y0()) {
-                        d.y = r.y1() * 8 - 8;
-                    } else {
-                        d.y = r.y0() * 8 - 8;
+                        if (child.y0() > r.y0()) {
+                            d.y = r.y1() * 8 - 8;
+                        } else {
+                            d.y = r.y0() * 8 - 8;
+                        }
                     }
+
+                    child.doorToParent = d;
+
+                    entities.addEntity(d);
                 }
-
-                child.doorToParent = d;
-
-                entities.addEntity(d);
             }
-        }
 
-        // Init and lock boss room
-        if (bossRoom != null) {
-            lock(bossRoom, bossRoom, bossRoom.doorToParent, Lock.Type.BOSS_KEY);
-        }
+            // Init and lock boss room
+            if (bossRoom != null) {
+                lock(bossRoom, bossRoom, bossRoom.doorToParent, Lock.Type.BOSS_KEY);
+            }
 
-        // Lock random rooms
-        for (Room r : rooms) {
-            for (Room child : r.children) {
-                // Only lock if not already locked
-                if (child.doorToParent.lock == null) {
-                    if (locks.size > 0) {
-                        lock(r, child, child.doorToParent, getRandomLock(child));
+            // Lock random rooms
+            for (Room r : rooms) {
+                for (Room child : r.children) {
+                    // Only lock if not already locked
+                    if (child.doorToParent.lock == null) {
+                        if (locks.size > 0) {
+                            lock(r, child, child.doorToParent, getRandomLock(child));
+                        }
                     }
                 }
             }
@@ -570,11 +572,13 @@ public class Dungeon extends Map {
         for (Room r : rooms) {
             Array<Template> templates = new Array<Template>();
 
-            for (Template t : this.templates) {
-                if (Game.RANDOM.nextFloat() < MathUtils.lerp(t.minChance, t.maxChance, r.difficulty)
-                        && Game.RANDOM.nextFloat() < t.chance && (r.lock == null || r.lock.isValid(t))
-                        && !t.isForbidden(r)) {
-                    templates.add(t);
+            while (templates.size == 0) {
+                for (Template t : this.templates) {
+                    if (Game.RANDOM.nextFloat() < MathUtils.lerp(t.minChance, t.maxChance, r.difficulty)
+                            && Game.RANDOM.nextFloat() < t.chance && (r.lock == null || r.lock.isValid(t))
+                            && !t.isForbidden(r)) {
+                        templates.add(t);
+                    }
                 }
             }
 
@@ -633,12 +637,14 @@ public class Dungeon extends Map {
                         case 'c':
                             tiles.set(Game.TILES.load(ground), xx, yy, 0);
 
-                            Chest c = (Chest) Game.ENTITIES.load(chest);
+                            if (Game.RANDOM.nextFloat() < r.difficulty) {
+                                Chest c = (Chest) Game.ENTITIES.load(chest);
 
-                            c.x = xx * 8 + 4;
-                            c.y = yy * 8 + 4;
+                                c.x = xx * 8;
+                                c.y = yy * 8;
 
-                            entities.addEntity(c);
+                                entities.addEntity(c);
+                            }
 
                             break;
                         case '0':
@@ -668,6 +674,81 @@ public class Dungeon extends Map {
             }
         }
 
+        // Close off rooms if not connected to respective direction
+        for (Room r : rooms) {
+            Array<Room.Direction> directions = r.getDirections();
+
+            if (!directions.contains(Room.Direction.RIGHT, true)) {
+                for (int y = r.y0(); y < r.y1(); y++) {
+                    tiles.set(Game.TILES.load(outerWall), r.x1() - 1, y, 0);
+                }
+            }
+
+            if (!directions.contains(Room.Direction.LEFT, true)) {
+                for (int y = r.y0(); y < r.y1(); y++) {
+                    tiles.set(Game.TILES.load(outerWall), r.x0(), y, 0);
+                }
+            }
+
+            if (!directions.contains(Room.Direction.UP, true)) {
+                for (int x = r.x0(); x < r.x1(); x++) {
+                    tiles.set(Game.TILES.load(outerWall), x, r.y1() - 1, 0);
+                }
+            }
+
+            if (!directions.contains(Room.Direction.DOWN, true)) {
+                for (int x = r.x0(); x < r.x1(); x++) {
+                    tiles.set(Game.TILES.load(outerWall), x, r.y0(), 0);
+                }
+            }
+        }
+
+        // Extend room connections to make sure they are traversable
+        for (Room r : rooms) {
+            Array<Room.Direction> directions = r.getDirections();
+
+            if (directions.contains(Room.Direction.RIGHT, true)) {
+                int x = r.x1() - 1;
+
+                for (int y = r.y0(); y < r.y1(); y++) {
+                    if (tiles.at(x, y, 0).id.equals(ground)) {
+                        tiles.set(Game.TILES.load(ground), x + 1, y, 0);
+                    }
+                }
+            }
+
+            if (directions.contains(Room.Direction.LEFT, true)) {
+                int x = r.x0();
+
+                for (int y = r.y0(); y < r.y1(); y++) {
+                    if (tiles.at(x, y, 0).id.equals(ground)) {
+                        tiles.set(Game.TILES.load(ground), x - 1, y, 0);
+                    }
+                }
+            }
+
+            if (directions.contains(Room.Direction.UP, true)) {
+                int y = r.y1() - 1;
+
+                for (int x = r.x0(); x < r.x1(); x++) {
+                    if (tiles.at(x, y, 0).id.equals(ground)) {
+                        tiles.set(Game.TILES.load(ground), x, y + 1, 0);
+                    }
+                }
+            }
+
+            if (directions.contains(Room.Direction.DOWN, true)) {
+                int y = r.y0();
+
+                for (int x = r.x0(); x < r.x1(); x++) {
+                    if (tiles.at(x, y, 0).id.equals(ground)) {
+                        tiles.set(Game.TILES.load(ground), x, y - 1, 0);
+                    }
+                }
+            }
+        }
+
+        /*
         // Connect parent rooms with its children
         for (int i = 0; i < rooms.size; i++) {
             Room r0 = rooms.get(i);
@@ -752,6 +833,7 @@ public class Dungeon extends Map {
                 }
             }
         }
+        */
 
         // Place player
         rooms.first().spawnMonsters = false;

@@ -143,5 +143,23 @@
   },
   "HandAxe": {
     "path": "graphics/hand_axe.png"
+  },
+  "CaveWall": {
+    "path": "graphics/cave_wall.png",
+    "columns": 5,
+    "rows": 4
+  },
+  "CaveGround": {
+    "path": "graphics/cave_ground.png"
+  },
+  "CaveWater": {
+    "path": "graphics/cave_water.png",
+    "columns": 5,
+    "rows": 4
+  },
+  "CaveBridge": {
+    "path": "graphics/cave_bridge.png",
+    "columns": 5,
+    "rows": 4
   }
 }

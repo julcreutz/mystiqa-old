@@ -21,5 +21,29 @@
       "solid": true,
       "spriteSheet": "Hole"
     }
+  },
+  "CaveWall": {
+    "ConnectedTile": {
+      "solid": true,
+      "spriteSheet": "CaveWall"
+    }
+  },
+  "CaveGround": {
+    "UnconnectedTile": {
+      "spriteSheet": "CaveGround"
+    }
+  },
+  "CaveWater": {
+    "ConnectedTile": {
+      "solid": true,
+      "connectWith": ["CaveWall", "CaveBridge"],
+      "spriteSheet": "CaveWater"
+    }
+  },
+  "CaveBridge": {
+    "ConnectedTile": {
+      "connectWith": ["CaveGround"],
+      "spriteSheet": "CaveBridge"
+    }
   }
 }

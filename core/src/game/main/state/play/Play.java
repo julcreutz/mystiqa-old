@@ -23,7 +23,7 @@ public class Play extends GameState {
         game = createFrameBuffer();
         lighting = createFrameBuffer();
 
-        nextMap = Game.MAPS.load("Dungeon");
+        nextMap = Game.MAPS.load("Cave");
         nextMap.generate();
         nextMap.placePlayer();
     }
@@ -33,7 +33,7 @@ public class Play extends GameState {
         super.update(g);
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
-            nextMap = Game.MAPS.load("Dungeon");
+            nextMap = Game.MAPS.load("Cave");
             nextMap.generate();
             nextMap.placePlayer();
         }
@@ -111,7 +111,7 @@ public class Play extends GameState {
         batch.setColor(1, 1, 1, 1);
         batch.draw(Game.SPRITE_SHEETS.load("LightCircle").grab(0, 0),
                 MathUtils.round(map.player.x + 4 - 128), MathUtils.round(map.player.y + 4 - 128),
-                128, 128, 256, 256, 0.125f * .5f, 0.125f * .5f, 0);
+                128, 128, 256, 256, 0.125f, 0.125f, 0);
         batch.setColor(1, 1, 1, 1);
 
         batch.end();

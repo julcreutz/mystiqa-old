@@ -2,6 +2,7 @@ package game.main.object.tile;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import game.loader.reference.sprite_sheet.SpriteSheet;
 import game.main.Game;
@@ -11,7 +12,11 @@ public class ConnectedTile extends Tile {
     public SpriteSheet spriteSheet;
     public String[] connectWith;
 
-    public TextureRegion corner;
+    public Array<TextureRegion> corners;
+
+    public ConnectedTile() {
+        corners = new Array<TextureRegion>();
+    }
 
     @Override
     public void update(Map map) {
@@ -116,7 +121,7 @@ public class ConnectedTile extends Tile {
         image = spriteSheet.grab(column, row);
 
         // Corner cases
-        corner = null;
+        corners.clear();
 
         boolean rd = connectsWith(map, x + 1, y - 1, 0);
         boolean ld = connectsWith(map, x - 1, y - 1, 0);
@@ -124,19 +129,19 @@ public class ConnectedTile extends Tile {
         boolean lu = connectsWith(map, x - 1, y + 1, 0);
 
         if (r && d && !rd) {
-            corner = spriteSheet.grab(4, 0);
+            corners.add(spriteSheet.grab(4, 0));
         }
 
         if (l && d && !ld) {
-            corner = spriteSheet.grab(4, 1);
+            corners.add(spriteSheet.grab(4, 1));
         }
 
         if (r && u && !ru) {
-            corner = spriteSheet.grab(4, 2);
+            corners.add(spriteSheet.grab(4, 2));
         }
 
         if (l && u && !lu) {
-            corner = spriteSheet.grab(4, 3);
+            corners.add(spriteSheet.grab(4, 3));
         }
     }
 
@@ -144,8 +149,10 @@ public class ConnectedTile extends Tile {
     public void render(SpriteBatch batch) {
         super.render(batch);
 
-        if (corner != null) {
-            batch.draw(corner, x * 8, y * 8 + z * 8);
+        if (corners.size > 0) {
+            for (TextureRegion corner : corners) {
+                batch.draw(corner, x * 8, y * 8 + z * 8);
+            }
         }
     }
 
@@ -178,9 +185,9 @@ public class ConnectedTile extends Tile {
             this.spriteSheet = Game.SPRITE_SHEETS.load(spriteSheet.asString());
         }
 
-        JsonValue connect = json.get("connectWith");
-        if (connect != null) {
-            this.connectWith = connect.asStringArray();
+        JsonValue connectWith = json.get("connectWith");
+        if (connectWith != null) {
+            this.connectWith = connectWith.asStringArray();
         }
     }
 }
