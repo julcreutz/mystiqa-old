@@ -1206,20 +1206,18 @@ public abstract class Map {
             if (r.spawnMonsters) {
                 int monsterCount = (int) MathUtils.lerp(minMonsters, maxMonsters, r.difficulty);
 
-                //while (r.getMonsterCount() < monsterCount) {
-                    /*
-                    Array<String> monsters = new Array<String>();
+                while (r.getMonsterCount() < monsterCount) {
+                    /*Array<String> monsters = new Array<String>();
 
                     for (Monster m : this.monsters) {
                         if (Game.RANDOM.nextFloat() < MathUtils.lerp(m.minChance, m.maxChance, r.difficulty)) {
                             monsters.add(m.monster);
                         }
-                    }
-                    */
+                    }*/
 
                     //if (monsters.size > 0) {
                         //Entity monster = Game.ENTITIES.load(monsters.get(Game.RANDOM.nextInt(monsters.size)));
-                        Entity monster = new Slime();
+                        Entity monster = new Bat();
 
                         int x;
                         int y;
@@ -1234,7 +1232,7 @@ public abstract class Map {
 
                         entities.addEntity(monster);
                     //}
-                //}
+                }
             }
         }
 

@@ -335,6 +335,8 @@ public abstract class Entity implements StatCounter {
                             }
 
                             velX = 0;
+
+                            onSolidTileCollision(map.tiles.at(x, y, 0));
                         }
                     }
                 }
@@ -373,6 +375,8 @@ public abstract class Entity implements StatCounter {
                             }
 
                             velY = 0;
+
+                            onSolidTileCollision(map.tiles.at(x, y, 0));
                         }
                     }
                 }
@@ -587,6 +591,10 @@ public abstract class Entity implements StatCounter {
 
     public void onMove() {
         sendEvent(new MoveEvent(this));
+    }
+
+    public void onSolidTileCollision(Tile t) {
+
     }
 
     /** @return whether entity collides with solid tiles */

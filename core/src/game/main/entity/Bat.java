@@ -7,10 +7,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonValue;
 import game.SpriteSheet;
 import game.main.Game;
+import game.main.stat.Stat;
+import game.main.tile.Tile;
 
 public class Bat extends Entity {
     public enum State {
-        IDLE
+        IDLE, FOCUS_PLAYER, ATTACK_PLAYER
     }
 
     public State state;
@@ -19,14 +21,23 @@ public class Bat extends Entity {
     public float moveSpeed;
     public float moveTime;
 
+    public float focusTime;
+    public float focusSpeed;
+
+    public float attackAngle;
+    public float attackTime;
+
     public SpriteSheet spriteSheet;
     public float animTime;
     public float scaleX;
 
     public Bat() {
         hitbox.set(4, 2, 3, 2);
+        stats.stats.addAll(new Stat(Stat.Type.HEALTH, 7), new Stat(Stat.Type.PHYSICAL_DEFENSE, 1),
+                new Stat(Stat.Type.PHYSICAL_DAMAGE, 3));
+        isMonster = true;
         state = State.IDLE;
-        spriteSheet = new SpriteSheet("bat.png", 2, 1);
+        spriteSheet = new SpriteSheet("bat", 2, 1);
         scaleX = 1;
     }
 
@@ -34,13 +45,16 @@ public class Bat extends Entity {
     public void update() {
         super.update();
 
+        float angleToPlayer = new Vector2(map.player.x, map.player.y).sub(x, y).angle();
+        float distToPlayer = new Vector2(map.player.x, map.player.y).sub(x, y).len();
+
         switch (state) {
             case IDLE:
                 moveTime -= Game.getDelta();
 
                 if (moveTime < 0) {
                     moveDir = MathUtils.random(360f);
-                    moveSpeed = MathUtils.random(12f, 24f);
+                    moveSpeed = MathUtils.random(8f, 16f);
 
                     moveTime = MathUtils.random(.5f, 2f);
                 }
@@ -48,21 +62,92 @@ public class Bat extends Entity {
                 velX += MathUtils.cosDeg(moveDir) * moveSpeed;
                 velY += MathUtils.sinDeg(moveDir) * moveSpeed;
 
+                if (distToPlayer < 32) {
+                    state = State.FOCUS_PLAYER;
+                }
+
+                break;
+            case FOCUS_PLAYER:
+                if (distToPlayer > 24) {
+                    velX += MathUtils.cosDeg(angleToPlayer) * (distToPlayer - 24) * 4f;
+                    velY += MathUtils.sinDeg(angleToPlayer) * (distToPlayer - 24) * 4f;
+                } else if (distToPlayer < 16) {
+                    velX -= MathUtils.cosDeg(angleToPlayer) * (1 - distToPlayer / 16f) * 32f;
+                    velY -= MathUtils.sinDeg(angleToPlayer) * (1 - distToPlayer / 16f) * 32f;
+                }
+
+                velX += MathUtils.cosDeg(angleToPlayer + 90f) * focusSpeed;
+                velY += MathUtils.sinDeg(angleToPlayer + 90f) * focusSpeed;
+
+                if (focusTime == 0) {
+                    focusTime = MathUtils.random(1f, 2f);
+                    focusSpeed = (MathUtils.randomBoolean(.5f) ? 1 : -1) * MathUtils.random(8f, 24f);
+                }
+
+                focusTime -= Game.getDelta();
+
+                if (focusTime < 0) {
+                    focusTime = 0;
+                    attackAngle = angleToPlayer;
+                    state = State.ATTACK_PLAYER;
+                }
+
+                break;
+            case ATTACK_PLAYER:
+                velX += MathUtils.cosDeg(attackAngle) * 56f;
+                velY += MathUtils.sinDeg(attackAngle) * 56f;
+
+                if (attackTime == 0) {
+                    attackTime = .5f;
+                }
+
+                attackTime -= Game.getDelta();
+
+                if (attackTime < 0) {
+                    attackTime = 0;
+                    state = State.FOCUS_PLAYER;
+                }
+
                 break;
         }
+
+        animTime += Game.getDelta() * MathUtils.clamp((new Vector2(velX, velY).len() / 16f), .5f, Float.MAX_VALUE);
     }
 
     @Override
     public void onMove() {
         super.onMove();
 
-        animTime += Game.getDelta() * (new Vector2(velX, velY).len() / 16f);
-
         if (velX > 0) {
             scaleX = 1;
         } else {
             scaleX = -1;
         }
+    }
+
+    @Override
+    public boolean collidesWithSolidTiles() {
+        return false;
+    }
+
+    @Override
+    public Hitbox getAttackHitbox() {
+        return getHitbox();
+    }
+
+    @Override
+    public boolean isAttacking() {
+        return state == State.ATTACK_PLAYER;
+    }
+
+    @Override
+    public boolean isPushing() {
+        return false;
+    }
+
+    @Override
+    public boolean isPushable() {
+        return false;
     }
 
     @Override

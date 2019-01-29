@@ -8,9 +8,13 @@ import com.badlogic.gdx.math.Vector2;
 import game.SpriteSheet;
 import game.main.Game;
 import game.main.item.equipment.armor.Armor;
+import game.main.item.equipment.hand.left.Shield;
 import game.main.item.equipment.hand.right.RightHand;
 import game.main.item.equipment.hand.left.LeftHand;
 import game.main.item.equipment.hand.right.melee_weapon.BattleAxe;
+import game.main.item.equipment.hand.right.melee_weapon.Longsword;
+import game.main.item.equipment.hand.right.melee_weapon.Shortsword;
+import game.main.item.equipment.hand.right.melee_weapon.Spear;
 import game.main.stat.Stat;
 import game.main.stat.StatCounter;
 import game.main.tile.Tile;
@@ -71,6 +75,7 @@ public class Humanoid extends Entity {
         head = new SpriteSheet("human_head", 1, 4);
 
         rightHand = new BattleAxe();
+        leftHand = new Shield();
 
         state = State.RANDOM_MOVEMENT;
     }

@@ -22,7 +22,7 @@ public class MeleeWeapon extends RightHand {
     public static final float[][] Y = new float[][] {
             {-1, 1, -1, -3},
             {3, 2, 3, 1},
-            {-2, -1, -2, -4},
+            {-1, 1, -1, -3},
             {-6, -6, -6, -5}
     };
 

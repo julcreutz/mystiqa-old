@@ -3,7 +3,6 @@ package game.main.item.equipment.hand.left;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.utils.JsonValue;
 import game.SpriteSheet;
 import game.main.Game;
 import game.main.stat.Stat;
@@ -24,6 +23,7 @@ public class Shield extends LeftHand {
     public Stat slowdown;
 
     public Shield() {
+        spriteSheet = new SpriteSheet("shield", 1, 4);
         slowdown = new Stat(Stat.Type.SPEED, 0, -.5f);
     }
 
