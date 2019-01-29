@@ -1,4 +1,4 @@
-package game.main.state.play.map.dungeon;
+package game.main.state.play.map;
 
 import game.main.state.play.map.Map;
 

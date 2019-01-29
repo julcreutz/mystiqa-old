@@ -36,6 +36,9 @@ public class Slime extends Entity {
 
     public Slime() {
         hitbox.set(6, 4, 1, 1);
+        stats.stats.addAll(new Stat(Stat.Type.HEALTH, 9), new Stat(Stat.Type.PHYSICAL_DAMAGE, 4),
+                new Stat(Stat.Type.PHYSICAL_DEFENSE, 1), new Stat(Stat.Type.SPEED, 1));
+        isMonster = true;
         spriteSheet = new SpriteSheet("slime", 2, 2);
         state = State.RANDOM_MOVEMENT;
     }

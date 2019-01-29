@@ -1,12 +1,12 @@
-package game.main.state.play.map.dungeon.lock;
+package game.main.state.play.map.lock;
 
 import game.main.state.play.map.Map;
-import game.main.state.play.map.dungeon.Dungeon;
+import game.main.state.play.map.Dungeon;
 import game.main.entity.Door;
 import game.main.entity.event.EntityEvent;
 import game.main.entity.event.EntityListener;
-import game.main.state.play.map.dungeon.lock.key.BossKeyLock;
-import game.main.state.play.map.dungeon.lock.key.KeyLock;
+import game.main.state.play.map.lock.key.BossKeyLock;
+import game.main.state.play.map.lock.key.KeyLock;
 
 public abstract class Lock implements EntityListener {
     public enum Type {

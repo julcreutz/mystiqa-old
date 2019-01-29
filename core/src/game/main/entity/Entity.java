@@ -539,7 +539,7 @@ public abstract class Entity implements StatCounter {
     public void onHit(Entity by) {
         sendEvent(new HitEvent(this, by));
 
-        Cut c = new Cut();
+        Cut c = new Cut(new Vector2(x, y).sub(by.x, by.y).angle() + 90);
 
         c.x = x;
         c.y = y;

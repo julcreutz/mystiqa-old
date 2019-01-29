@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import game.SpriteSheet;
 import game.main.Game;
-import game.main.state.play.map.dungeon.lock.Lock;
+import game.main.state.play.map.lock.Lock;
 
 public class Door extends Entity {
     public static float OPEN_SPEED = 2.5f;

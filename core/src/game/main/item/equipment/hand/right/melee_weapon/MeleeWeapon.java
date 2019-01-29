@@ -1,29 +1,28 @@
-package game.main.item.equipment.hand.right;
+package game.main.item.equipment.hand.right.melee_weapon;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.utils.JsonValue;
 import game.SpriteSheet;
 import game.main.Game;
 import game.main.entity.Humanoid;
 import game.main.entity.particle.Flame;
-import game.main.entity.particle.Particle;
+import game.main.item.equipment.hand.right.RightHand;
 import game.main.stat.Stat;
 
 public class MeleeWeapon extends RightHand {
     public static final float[][] X = new float[][] {
             {5, 6, 5, 3},
             {3, 0, 3, 4},
-            {-5, -5, -5, -3},
+            {-5, -6, -5, -3},
             {-3, 0, -3, -5}
     };
 
     public static final float[][] Y = new float[][] {
             {-1, 1, -1, -3},
             {3, 2, 3, 1},
-            {0, 1, 0, -2},
+            {-2, -1, -2, -4},
             {-6, -6, -6, -5}
     };
 
@@ -38,7 +37,6 @@ public class MeleeWeapon extends RightHand {
     public TextureRegion image;
 
     public float angle;
-    public float speed;
     public float range;
 
     public Stat slowdown;
@@ -68,7 +66,7 @@ public class MeleeWeapon extends RightHand {
 
         if (isAttacking()) {
             if (attacking) {
-                attackTime -= Game.getDelta() * 4f * speed;
+                attackTime -= Game.getDelta() * 4f * count(Stat.Type.SPEED);
             }
 
             float a;

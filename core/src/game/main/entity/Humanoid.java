@@ -5,12 +5,12 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.JsonValue;
 import game.SpriteSheet;
 import game.main.Game;
 import game.main.item.equipment.armor.Armor;
 import game.main.item.equipment.hand.right.RightHand;
 import game.main.item.equipment.hand.left.LeftHand;
+import game.main.item.equipment.hand.right.melee_weapon.BattleAxe;
 import game.main.stat.Stat;
 import game.main.stat.StatCounter;
 import game.main.tile.Tile;
@@ -69,6 +69,8 @@ public class Humanoid extends Entity {
         feet = new SpriteSheet("human_feet", 4, 4);
         body = new SpriteSheet("human_body", 5, 4);
         head = new SpriteSheet("human_head", 1, 4);
+
+        rightHand = new BattleAxe();
 
         state = State.RANDOM_MOVEMENT;
     }

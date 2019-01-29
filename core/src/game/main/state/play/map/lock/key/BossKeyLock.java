@@ -1,4 +1,4 @@
-package game.main.state.play.map.dungeon.lock.key;
+package game.main.state.play.map.lock.key;
 
 public class BossKeyLock extends KeyLock {
     @Override

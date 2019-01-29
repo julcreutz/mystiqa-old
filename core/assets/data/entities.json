@@ -19,25 +19,6 @@
       "armor": "PlateArmor"
     }
   },
-  "Orc": {
-    "Humanoid": {
-      "stats": [
-        {
-          "type": "HEALTH",
-          "value": 10
-        },
-        {
-          "type": "SPEED",
-          "value": 20
-        }
-      ],
-      "isMonster": true,
-      "feet": "OrcFeet",
-      "body": "OrcBody",
-      "head": "OrcHead",
-      "rightHand": "Club"
-    }
-  },
   "GreenSlime": {
     "Slime": {
       "stats": [

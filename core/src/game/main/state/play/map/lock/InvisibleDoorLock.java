@@ -1,4 +1,4 @@
-package game.main.state.play.map.dungeon.lock;
+package game.main.state.play.map.lock;
 
 public class InvisibleDoorLock extends Lock {
     @Override

@@ -1,4 +1,4 @@
-package game.main.state.play.map.dungeon.lock.key;
+package game.main.state.play.map.lock.key;
 
 import com.badlogic.gdx.utils.Array;
 import game.main.Game;
@@ -7,7 +7,7 @@ import game.main.item.Item;
 import game.main.entity.event.CollisionEvent;
 import game.main.entity.event.EntityEvent;
 import game.main.item.collectable.Key;
-import game.main.state.play.map.dungeon.lock.Lock;
+import game.main.state.play.map.lock.Lock;
 
 public class KeyLock extends Lock {
     public Item key;

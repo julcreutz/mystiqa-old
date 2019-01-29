@@ -1,6 +1,6 @@
-package game.main.state.play.map.dungeon.lock;
+package game.main.state.play.map.lock;
 
-import game.main.state.play.map.dungeon.Dungeon;
+import game.main.state.play.map.Dungeon;
 import game.main.entity.Block;
 import game.main.entity.Entity;
 

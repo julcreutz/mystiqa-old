@@ -5,13 +5,11 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.JsonValue;
 import game.SpriteSheet;
 import game.main.Game;
 import game.main.entity.*;
 import game.main.state.play.Play;
-import game.main.state.play.map.dungeon.Dungeon;
-import game.main.state.play.map.dungeon.lock.Lock;
+import game.main.state.play.map.lock.Lock;
 import game.main.tile.Tile;
 import game.main.tile.TileManager;
 
