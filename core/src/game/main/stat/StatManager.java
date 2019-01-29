@@ -2,9 +2,8 @@ package game.main.stat;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
-import game.loader.Serializable;
 
-public class StatManager implements StatCounter, Serializable {
+public class StatManager implements StatCounter {
     public Array<Stat> stats;
 
     public StatManager() {
@@ -29,14 +28,5 @@ public class StatManager implements StatCounter, Serializable {
     @Override
     public StatManager getStats() {
         return this;
-    }
-
-    @Override
-    public void deserialize(JsonValue json) {
-        for (JsonValue stat : json) {
-            Stat s = new Stat();
-            s.deserialize(stat);
-            stats.add(s);
-        }
     }
 }

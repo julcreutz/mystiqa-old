@@ -1,9 +1,6 @@
 package game.main.stat;
 
-import com.badlogic.gdx.utils.JsonValue;
-import game.loader.Serializable;
-
-public class Stat implements Serializable {
+public class Stat {
     public enum Type {
         HEALTH,
         SPEED,
@@ -24,29 +21,11 @@ public class Stat implements Serializable {
         this.multiplier = multiplier;
     }
 
+    public Stat(Type type, float value) {
+        this(type, value, 0);
+    }
+
     public Stat(Type type) {
         this(type, 0, 0);
-    }
-
-    public Stat() {
-        this(null, 0, 0);
-    }
-
-    @Override
-    public void deserialize(JsonValue json) {
-        JsonValue type = json.get("type");
-        if (type != null) {
-            this.type = Stat.Type.valueOf(type.asString());
-        }
-
-        JsonValue value = json.get("value");
-        if (value != null) {
-            this.value = value.asFloat();
-        }
-
-        JsonValue multiplier = json.get("multiplier");
-        if (multiplier != null) {
-            this.multiplier = multiplier.asFloat();
-        }
     }
 }

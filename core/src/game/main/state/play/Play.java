@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.MathUtils;
 import game.main.Game;
 import game.main.state.GameState;
 import game.main.state.play.map.Map;
+import game.main.state.play.map.dungeon.Cave;
 
 public class Play extends GameState {
     public Map map;
@@ -23,9 +24,8 @@ public class Play extends GameState {
         game = createFrameBuffer();
         lighting = createFrameBuffer();
 
-        nextMap = Game.MAPS.load("Cave");
+        nextMap = new Cave();
         nextMap.generate();
-        nextMap.placePlayer();
     }
 
     @Override
@@ -33,9 +33,8 @@ public class Play extends GameState {
         super.update(g);
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
-            nextMap = Game.MAPS.load("Cave");
+            nextMap = new Cave();
             nextMap.generate();
-            nextMap.placePlayer();
         }
 
         if (nextMap != null) {
@@ -80,7 +79,7 @@ public class Play extends GameState {
 
         renderBuffer(game);
 
-        batch.setShader(Game.SHADERS.load("Lighting").shader);
+        batch.setShader(Game.SHADERS.load("lighting"));
         renderBuffer(lighting);
         batch.setShader(null);
     }
@@ -109,9 +108,6 @@ public class Play extends GameState {
         batch.begin();
 
         batch.setColor(1, 1, 1, 1);
-        batch.draw(Game.SPRITE_SHEETS.load("LightCircle").grab(0, 0),
-                MathUtils.round(map.player.x + 4 - 128), MathUtils.round(map.player.y + 4 - 128),
-                128, 128, 256, 256, 0.125f, 0.125f, 0);
         batch.setColor(1, 1, 1, 1);
 
         batch.end();

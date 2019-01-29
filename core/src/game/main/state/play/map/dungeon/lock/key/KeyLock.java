@@ -2,10 +2,11 @@ package game.main.state.play.map.dungeon.lock.key;
 
 import com.badlogic.gdx.utils.Array;
 import game.main.Game;
-import game.main.object.entity.Entity;
-import game.main.object.item.Item;
-import game.main.object.entity.event.CollisionEvent;
-import game.main.object.entity.event.EntityEvent;
+import game.main.entity.Entity;
+import game.main.item.Item;
+import game.main.entity.event.CollisionEvent;
+import game.main.entity.event.EntityEvent;
+import game.main.item.collectable.Key;
 import game.main.state.play.map.dungeon.lock.Lock;
 
 public class KeyLock extends Lock {
@@ -16,21 +17,28 @@ public class KeyLock extends Lock {
         locked = true;
     }
 
-    public String getKey() {
-        return dungeon.key;
+    public Class getKey() {
+        return Key.class;
     }
 
     @Override
     public void onLock() {
         super.onLock();
 
-        key = Game.ITEMS.load(getKey());
-        door.spriteSheet = door.key;
+        try {
+            key = (Item) getKey().newInstance();
 
-        Array<Entity> monsters = room.getMonsters();
+            door.spriteSheet = door.key;
 
-        if (room.getMonsters().size > 0) {
-            monsters.get(Game.RANDOM.nextInt(monsters.size)).inventory.add(key);
+            Array<Entity> monsters = room.getMonsters();
+
+            if (room.getMonsters().size > 0) {
+                monsters.get(Game.RANDOM.nextInt(monsters.size)).inventory.add(key);
+            }
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
         }
     }
 
@@ -49,7 +57,7 @@ public class KeyLock extends Lock {
                     for (int i = 0; i < dungeon.player.inventory.size; i++) {
                         Item item = dungeon.player.inventory.get(i);
 
-                        if (item.id.equals(key.id)) {
+                        if (item.getClass().equals(getKey())) {
                             locked = false;
                             door.spriteSheet = door.noKey;
                             e.e.inventory.removeIndex(i);

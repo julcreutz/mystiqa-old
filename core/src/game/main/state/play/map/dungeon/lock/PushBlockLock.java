@@ -1,8 +1,8 @@
 package game.main.state.play.map.dungeon.lock;
 
 import game.main.state.play.map.dungeon.Dungeon;
-import game.main.object.entity.Block;
-import game.main.object.entity.Entity;
+import game.main.entity.Block;
+import game.main.entity.Entity;
 
 public class PushBlockLock extends Lock {
     public Block block;

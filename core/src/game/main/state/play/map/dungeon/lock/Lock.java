@@ -1,9 +1,10 @@
 package game.main.state.play.map.dungeon.lock;
 
+import game.main.state.play.map.Map;
 import game.main.state.play.map.dungeon.Dungeon;
-import game.main.object.entity.Door;
-import game.main.object.entity.event.EntityEvent;
-import game.main.object.entity.event.EntityListener;
+import game.main.entity.Door;
+import game.main.entity.event.EntityEvent;
+import game.main.entity.event.EntityListener;
 import game.main.state.play.map.dungeon.lock.key.BossKeyLock;
 import game.main.state.play.map.dungeon.lock.key.KeyLock;
 
@@ -29,8 +30,8 @@ public abstract class Lock implements EntityListener {
         }
     }
 
-    /** Holds dungeon reference. */
-    public Dungeon dungeon;
+    /** Holds map reference. */
+    public Map dungeon;
 
     /** The room unlocking this lock. */
     public Dungeon.Room room;
