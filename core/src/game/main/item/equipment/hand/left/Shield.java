@@ -5,9 +5,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import game.SpriteSheet;
 import game.main.Game;
-import game.main.entity.event.BlockEvent;
-import game.main.entity.event.EntityEvent;
-import game.main.entity.Humanoid;
+import game.main.positionable.entity.event.BlockEvent;
+import game.main.positionable.entity.event.EntityEvent;
+import game.main.positionable.entity.Humanoid;
 
 public class Shield extends LeftHand {
     public SpriteSheet spriteSheet;
@@ -39,25 +39,25 @@ public class Shield extends LeftHand {
                     x = h.x + 7;
                     y = h.y + 0;
                     renderBehind = true;
-                    h.blockHitbox.set(1, 8, 7, 0);
+                    h.blockHitbox.set(7, 0, 1, 8);
                     break;
                 case 2:
                     x = h.x - 7;
                     y = h.y + 0;
                     renderBehind = false;
-                    h.blockHitbox.set(1, 8, 0, 0);
+                    h.blockHitbox.set(0, 0, 1, 8);
                     break;
                 case 1:
                     x = h.x - 2;
                     y = h.y + 1;
                     renderBehind = true;
-                    h.blockHitbox.set(8, 4, 0, 4);
+                    h.blockHitbox.set(0, 4, 8, 4);
                     break;
                 case 3:
                     x = h.x + 2;
                     y = h.y - 2;
                     renderBehind = false;
-                    h.blockHitbox.set(8, 1, 0, 0);
+                    h.blockHitbox.set(0, 0, 8, 1);
                     break;
             }
         } else {

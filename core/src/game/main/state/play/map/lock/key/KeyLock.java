@@ -2,10 +2,10 @@ package game.main.state.play.map.lock.key;
 
 import com.badlogic.gdx.utils.Array;
 import game.main.Game;
-import game.main.entity.Entity;
+import game.main.positionable.entity.Entity;
 import game.main.item.Item;
-import game.main.entity.event.CollisionEvent;
-import game.main.entity.event.EntityEvent;
+import game.main.positionable.entity.event.CollisionEvent;
+import game.main.positionable.entity.event.EntityEvent;
 import game.main.item.collectable.Key;
 import game.main.state.play.map.lock.Lock;
 

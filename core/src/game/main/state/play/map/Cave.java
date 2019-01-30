@@ -1,12 +1,12 @@
 package game.main.state.play.map;
 
-import game.main.entity.Chest;
-import game.main.tile.connected.CaveBridge;
-import game.main.tile.connected.CaveHole;
-import game.main.tile.connected.CaveWall;
-import game.main.tile.unconnected.CaveGround;
-import game.main.tile.unconnected.CaveMushroom;
-import game.main.tile.unconnected.CaveRock;
+import game.main.positionable.entity.Chest;
+import game.main.positionable.tile.connected.CaveBridge;
+import game.main.positionable.tile.connected.CaveHole;
+import game.main.positionable.tile.connected.CaveWall;
+import game.main.positionable.tile.unconnected.CaveGround;
+import game.main.positionable.tile.unconnected.CaveMushroom;
+import game.main.positionable.tile.unconnected.CaveRock;
 
 public class Cave extends Map {
     public Cave() {

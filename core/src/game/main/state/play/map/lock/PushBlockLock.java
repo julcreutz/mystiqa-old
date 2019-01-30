@@ -1,7 +1,7 @@
 package game.main.state.play.map.lock;
 
-import game.main.entity.Block;
-import game.main.entity.Entity;
+import game.main.positionable.entity.Block;
+import game.main.positionable.entity.Entity;
 import game.main.state.play.map.Map;
 
 public class PushBlockLock extends Lock {

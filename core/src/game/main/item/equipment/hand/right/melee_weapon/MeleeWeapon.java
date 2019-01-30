@@ -6,8 +6,8 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
 import game.SpriteSheet;
 import game.main.Game;
-import game.main.entity.Humanoid;
-import game.main.entity.particle.Flame;
+import game.main.positionable.entity.Humanoid;
+import game.main.positionable.entity.particle.Flame;
 import game.main.item.equipment.hand.right.RightHand;
 
 public class MeleeWeapon extends RightHand {
@@ -121,8 +121,8 @@ public class MeleeWeapon extends RightHand {
         }
 
         if (attacking) {
-            h.attackHitbox.set(8, 8,
-                    x + MathUtils.cosDeg(rot) * range * 8f - h.x, y + MathUtils.sinDeg(rot) * range * 8f - h.y);
+            h.attackHitbox.set(x + MathUtils.cosDeg(rot) * range * 8f - h.x, y + MathUtils.sinDeg(rot) * range * 8f - h.y, 8, 8
+            );
         } else {
             h.attackHitbox.set(0, 0, 0, 0);
         }

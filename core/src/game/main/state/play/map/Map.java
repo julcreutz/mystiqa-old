@@ -5,14 +5,13 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.ObjectFloatMap;
 import game.SpriteSheet;
 import game.main.Game;
-import game.main.entity.*;
+import game.main.positionable.entity.*;
 import game.main.state.play.Play;
 import game.main.state.play.map.lock.Lock;
-import game.main.tile.Tile;
-import game.main.tile.TileManager;
+import game.main.positionable.tile.Tile;
+import game.main.positionable.tile.TileManager;
 
 public abstract class Map {
     public static class Teleport {
@@ -473,15 +472,13 @@ public abstract class Map {
     public void render(SpriteBatch batch) {
         batch.setShader(null);
 
-        tiles.render(batch, x0, x1, y0, y1, 0, 1);
+        tiles.render(batch, x0, x1, y0, y1);
 
         batch.setShader(null);
 
         entities.render(batch);
 
         batch.setShader(null);
-
-        tiles.render(batch, x0, x1, y0, y1, 1, tiles.getDepth());
 
         // GUI
         batch.draw(guiLayer.grab(0, 0),
@@ -565,9 +562,9 @@ public abstract class Map {
                         int yy = curr.y + y;
 
                         if (tiles.inBounds(xx, yy)) {
-                            Tile t = tiles.at(xx, yy, 0);
+                            Tile t = tiles.at(xx, yy);
 
-                            if (xx >= 0 && xx < tiles.getWidth() && yy >= 0 && yy < tiles.getHeight() && t != null && !t.solid) {
+                            if (xx >= 0 && xx < tiles.getWidth() && yy >= 0 && yy < tiles.getHeight() && t != null && t.hitbox == null) {
                                 Node node = new Node(xx, yy);
 
                                 // Ignore if node is in closed list
@@ -754,7 +751,7 @@ public abstract class Map {
             }
         }
 
-        tiles.initSize(WIDTH * 16, HEIGHT * 8, 8);
+        tiles.initSize(WIDTH * 16, HEIGHT * 8);
         entities.clear();
 
         // Add doors
@@ -841,7 +838,7 @@ public abstract class Map {
                     switch (template[template.length - 1 - y][x]) {
                         case '#':
                             try {
-                                tiles.set((Tile) outerWall.newInstance(), xx, yy, 0);
+                                tiles.set((Tile) outerWall.newInstance(), xx, yy);
                             } catch (InstantiationException e) {
                                 e.printStackTrace();
                             } catch (IllegalAccessException e) {
@@ -850,7 +847,7 @@ public abstract class Map {
                             break;
                         case '+':
                             try {
-                                tiles.set((Tile) innerWall.newInstance(), xx, yy, 0);
+                                tiles.set((Tile) innerWall.newInstance(), xx, yy);
                             } catch (InstantiationException e) {
                                 e.printStackTrace();
                             } catch (IllegalAccessException e) {
@@ -858,11 +855,11 @@ public abstract class Map {
                             }
                             break;
                         case ' ':
-                            tiles.set(getGround(), xx, yy, 0);
+                            tiles.set(getGround(), xx, yy);
                             break;
                         case '.':
                             try {
-                                tiles.set((Tile) hole.newInstance(), xx, yy, 0);
+                                tiles.set((Tile) hole.newInstance(), xx, yy);
                             } catch (InstantiationException e) {
                                 e.printStackTrace();
                             } catch (IllegalAccessException e) {
@@ -870,7 +867,7 @@ public abstract class Map {
                             }
                             break;
                         case 'b':
-                            tiles.set(getGround(), xx, yy, 0);
+                            tiles.set(getGround(), xx, yy);
 
                             try {
                                 Entity boss = (Entity) this.boss.newInstance();
@@ -889,14 +886,14 @@ public abstract class Map {
                         case 'p':
                             if (r.unlocks == null) {
                                 try {
-                                    tiles.set((Tile) block.newInstance(), xx, yy, 0);
+                                    tiles.set((Tile) block.newInstance(), xx, yy);
                                 } catch (InstantiationException e) {
                                     e.printStackTrace();
                                 } catch (IllegalAccessException e) {
                                     e.printStackTrace();
                                 }
                             } else {
-                                tiles.set(getGround(), xx, yy, 0);
+                                tiles.set(getGround(), xx, yy);
 
                                 try {
                                     Block b = (Block) block.newInstance();
@@ -914,7 +911,7 @@ public abstract class Map {
 
                             break;
                         case 'c':
-                            tiles.set(getGround(), xx, yy, 0);
+                            tiles.set(getGround(), xx, yy);
 
                             if (Game.RANDOM.nextFloat() < r.difficulty) {
                                 try {
@@ -943,7 +940,7 @@ public abstract class Map {
                         case '8':
                         case '9':
                             try {
-                                tiles.set((Tile) ground.newInstance(), xx, yy, 0);
+                                tiles.set((Tile) ground.newInstance(), xx, yy);
                             } catch (InstantiationException e) {
                                 e.printStackTrace();
                             } catch (IllegalAccessException e) {
@@ -978,7 +975,7 @@ public abstract class Map {
             if (!directions.contains(Room.Direction.RIGHT, true)) {
                 for (int y = r.y0(); y < r.y1(); y++) {
                     try {
-                        tiles.set((Tile) outerWall.newInstance(), r.x1() - 1, y, 0);
+                        tiles.set((Tile) outerWall.newInstance(), r.x1() - 1, y);
                     } catch (InstantiationException e) {
                         e.printStackTrace();
                     } catch (IllegalAccessException e) {
@@ -990,7 +987,7 @@ public abstract class Map {
             if (!directions.contains(Room.Direction.LEFT, true)) {
                 for (int y = r.y0(); y < r.y1(); y++) {
                     try {
-                        tiles.set((Tile) outerWall.newInstance(), r.x0(), y, 0);
+                        tiles.set((Tile) outerWall.newInstance(), r.x0(), y);
                     } catch (InstantiationException e) {
                         e.printStackTrace();
                     } catch (IllegalAccessException e) {
@@ -1002,7 +999,7 @@ public abstract class Map {
             if (!directions.contains(Room.Direction.UP, true)) {
                 for (int x = r.x0(); x < r.x1(); x++) {
                     try {
-                        tiles.set((Tile) outerWall.newInstance(), x, r.y1() - 1, 0);
+                        tiles.set((Tile) outerWall.newInstance(), x, r.y1() - 1);
                     } catch (InstantiationException e) {
                         e.printStackTrace();
                     } catch (IllegalAccessException e) {
@@ -1014,7 +1011,7 @@ public abstract class Map {
             if (!directions.contains(Room.Direction.DOWN, true)) {
                 for (int x = r.x0(); x < r.x1(); x++) {
                     try {
-                        tiles.set((Tile) outerWall.newInstance(), x, r.y0(), 0);
+                        tiles.set((Tile) outerWall.newInstance(), x, r.y0());
                     } catch (InstantiationException e) {
                         e.printStackTrace();
                     } catch (IllegalAccessException e) {
@@ -1032,8 +1029,8 @@ public abstract class Map {
                 int x = r.x1() - 1;
 
                 for (int y = r.y0(); y < r.y1(); y++) {
-                    if (tiles.at(x, y, 0) != null && isGround(tiles.at(x, y, 0))) {
-                        tiles.set(getGround(), x + 1, y, 0);
+                    if (tiles.at(x, y) != null && isGround(tiles.at(x, y))) {
+                        tiles.set(getGround(), x + 1, y);
                     }
                 }
             }
@@ -1042,8 +1039,8 @@ public abstract class Map {
                 int x = r.x0();
 
                 for (int y = r.y0(); y < r.y1(); y++) {
-                    if (tiles.at(x, y, 0) != null && isGround(tiles.at(x, y, 0))) {
-                        tiles.set(getGround(), x - 1, y, 0);
+                    if (tiles.at(x, y) != null && isGround(tiles.at(x, y))) {
+                        tiles.set(getGround(), x - 1, y);
                     }
                 }
             }
@@ -1052,8 +1049,8 @@ public abstract class Map {
                 int y = r.y1() - 1;
 
                 for (int x = r.x0(); x < r.x1(); x++) {
-                    if (tiles.at(x, y, 0) != null && isGround(tiles.at(x, y, 0))) {
-                        tiles.set(getGround(), x, y + 1, 0);
+                    if (tiles.at(x, y) != null && isGround(tiles.at(x, y))) {
+                        tiles.set(getGround(), x, y + 1);
                     }
                 }
             }
@@ -1062,8 +1059,8 @@ public abstract class Map {
                 int y = r.y0();
 
                 for (int x = r.x0(); x < r.x1(); x++) {
-                    if (tiles.at(x, y, 0) != null && isGround(tiles.at(x, y, 0))) {
-                        tiles.set(getGround(), x, y - 1, 0);
+                    if (tiles.at(x, y) != null && isGround(tiles.at(x, y))) {
+                        tiles.set(getGround(), x, y - 1);
                     }
                 }
             }
@@ -1192,7 +1189,7 @@ public abstract class Map {
                         do {
                             x = r.getTileX() + 1 + Game.RANDOM.nextInt(r.getTileWidth() - 2);
                             y = r.getTileY() + 1 + Game.RANDOM.nextInt(r.getTileHeight() - 2);
-                        } while (tiles.at(x, y, 0) != null && !isGround(tiles.at(x, y, 0)));
+                        } while (tiles.at(x, y) != null && !isGround(tiles.at(x, y)));
 
                         monster.x = x * 8;
                         monster.y = y * 8;
@@ -1326,5 +1323,11 @@ public abstract class Map {
         }
 
         return false;
+    }
+
+    public void shakeScreen(float screenShake) {
+        if (screenShake > this.screenShake) {
+            this.screenShake = screenShake;
+        }
     }
 }
