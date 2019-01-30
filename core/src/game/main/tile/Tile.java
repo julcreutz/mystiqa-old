@@ -8,8 +8,8 @@ import game.main.entity.Entity;
 
 public abstract class Tile {
     /**
-     * Represents a property of a {@link Tile}. Overlays are rendered when an {@link Entity} walks
-     * over the tile this belongs to.
+     * Represents a property of a {@link Tile}. Overlays are rendered when an {@link Entity} walks over the tile this
+     * belongs to.
      *
      * This can create interesting effects, e.g. tall grass.
      */
@@ -18,8 +18,8 @@ public abstract class Tile {
         public TextureRegion image;
 
         /**
-         * Renders colored overlay image multiplier to specified entity. It's positioned
-         * multiplier to the entity's hitbox center.
+         * Renders colored overlay image multiplier to specified entity. It's positioned multiplier to the entity's
+         * hitbox center.
          *
          * @param batch sprite batch to render to
          * @param e entity to render multiplier to

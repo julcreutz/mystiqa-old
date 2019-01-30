@@ -9,15 +9,18 @@ import game.SpriteSheet;
 import game.main.Game;
 import game.main.item.equipment.armor.Armor;
 import game.main.item.equipment.armor.PlateArmor;
+import game.main.item.equipment.attribute.enchantment.OfFlames;
+import game.main.item.equipment.hand.left.HeaterShield;
 import game.main.item.equipment.hand.left.Shield;
 import game.main.item.equipment.hand.right.RightHand;
 import game.main.item.equipment.hand.left.LeftHand;
 import game.main.item.equipment.hand.right.melee_weapon.BattleAxe;
+import game.main.item.equipment.attribute.material.Iron;
+import game.main.stat.HasStats;
 import game.main.stat.Stat;
-import game.main.stat.StatCounter;
 import game.main.tile.Tile;
 
-public class Humanoid extends Entity {
+public class Humanoid extends Entity implements HasStats {
     public enum State {
         RANDOM_MOVEMENT, FOLLOW_PLAYER, ATTACK_PLAYER
     }
@@ -63,15 +66,16 @@ public class Humanoid extends Entity {
         attackHitbox = new Hitbox(this);
         blockHitbox = new Hitbox(this);
 
-        stats.stats.addAll(new Stat(Stat.Type.HEALTH, 15), new Stat(Stat.Type.SPEED, 24));
+        stats.add(new Stat(Stat.Type.HEALTH, 15));
+        stats.add(new Stat(Stat.Type.SPEED, 24));
 
         feet = new SpriteSheet("human_feet", 4, 4);
         body = new SpriteSheet("human_body", 5, 4);
         head = new SpriteSheet("human_head", 1, 4);
 
-        rightHand = new BattleAxe();
-        leftHand = new Shield();
-        armor = new PlateArmor();
+        setRightHand(new BattleAxe());
+        setLeftHand(new HeaterShield());
+        setArmor(new PlateArmor());
 
         state = State.RANDOM_MOVEMENT;
     }
@@ -210,8 +214,8 @@ public class Humanoid extends Entity {
         }
 
         if (moveSpeed != 0) {
-            velX += MathUtils.round(MathUtils.cosDeg(moveAngle) * moveSpeed * stats.count(Stat.Type.SPEED));
-            velY += MathUtils.round(MathUtils.sinDeg(moveAngle) * moveSpeed * stats.count(Stat.Type.SPEED));
+            velX += MathUtils.round(MathUtils.cosDeg(moveAngle) * moveSpeed * stats.get(Stat.Type.SPEED));
+            velY += MathUtils.round(MathUtils.sinDeg(moveAngle) * moveSpeed * stats.get(Stat.Type.SPEED));
 
             if (changeDirection && lastUsed > .01f) {
                 if (controlledByPlayer) {
@@ -549,24 +553,18 @@ public class Humanoid extends Entity {
         return blockHitbox;
     }
 
-    @Override
-    public float count(Stat.Type type) {
-        float value = 0;
-        float multiplier = 0;
+    public void setRightHand(RightHand rightHand) {
+        this.rightHand = rightHand;
+        stats.attach(rightHand);
+    }
 
-        StatCounter[] counters = new StatCounter[] {this, rightHand, leftHand, armor};
+    public void setLeftHand(LeftHand leftHand) {
+        this.leftHand = leftHand;
+        stats.attach(leftHand);
+    }
 
-        for (StatCounter counter : counters) {
-            if (counter != null) {
-                for (Stat s : counter.getStats().stats) {
-                    if (s.type == type) {
-                        value += s.value;
-                        multiplier += s.multiplier;
-                    }
-                }
-            }
-        }
-
-        return value * (1 + multiplier);
+    public void setArmor(Armor armor) {
+        this.armor = armor;
+        stats.attach(armor);
     }
 }

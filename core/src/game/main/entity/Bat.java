@@ -33,8 +33,9 @@ public class Bat extends Entity {
 
     public Bat() {
         hitbox.set(4, 2, 3, 2);
-        stats.stats.addAll(new Stat(Stat.Type.HEALTH, 7), new Stat(Stat.Type.PHYSICAL_DEFENSE, 1),
-                new Stat(Stat.Type.PHYSICAL_DAMAGE, 3));
+        stats.add(new Stat(Stat.Type.HEALTH, 7));
+        stats.add(new Stat(Stat.Type.PHYSICAL_DEFENSE, 1));
+        stats.add(new Stat(Stat.Type.PHYSICAL_DAMAGE, 3));
         isMonster = true;
         state = State.IDLE;
         spriteSheet = new SpriteSheet("bat", 2, 1);

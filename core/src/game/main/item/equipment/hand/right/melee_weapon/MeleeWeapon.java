@@ -39,8 +39,6 @@ public class MeleeWeapon extends RightHand {
     public float angle;
     public float range;
 
-    public Stat slowdown;
-
     public float attackTime;
 
     public float rot;
@@ -56,17 +54,16 @@ public class MeleeWeapon extends RightHand {
 
     public float fireParticleTime;
 
-    public MeleeWeapon() {
-        slowdown = new Stat(Stat.Type.SPEED);
-    }
-
     @Override
     public void update(Humanoid h) {
         super.update(h);
 
         if (isAttacking()) {
             if (attacking) {
-                attackTime -= Game.getDelta() * 4f * count(Stat.Type.SPEED);
+                h.moveSpeed *= 0;
+                attackTime -= Game.getDelta() * 4f * stats.get(Stat.Type.SPEED);
+            } else {
+                h.moveSpeed *= .5f;
             }
 
             float a;
@@ -97,10 +94,6 @@ public class MeleeWeapon extends RightHand {
 
             if (attackTime < 0) {
                 attackTime = 0;
-
-                if (h.stats.stats.contains(slowdown, true)) {
-                    h.stats.stats.removeValue(slowdown, true);
-                }
 
                 attacking = false;
             }
@@ -136,7 +129,7 @@ public class MeleeWeapon extends RightHand {
 
         image = spriteSheet.grab(0, 0);
 
-        if (count(Stat.Type.FIRE_DAMAGE) > 0) {
+        if (stats.get(Stat.Type.FIRE_DAMAGE) > 0) {
             fireParticleTime -= Game.getDelta();
 
             if (fireParticleTime < 0) {
@@ -159,10 +152,6 @@ public class MeleeWeapon extends RightHand {
         if (!attacking) {
             attackTime = 1;
             attackTime = MathUtils.clamp(attackTime, 0, 1);
-            if (!h.stats.stats.contains(slowdown, true)) {
-                h.stats.stats.add(slowdown);
-            }
-            slowdown.multiplier = -.5f;
         }
     }
 
@@ -172,7 +161,6 @@ public class MeleeWeapon extends RightHand {
 
         if (attackTime > 0) {
             attacking = true;
-            slowdown.multiplier = -1;
         }
     }
 
@@ -182,7 +170,7 @@ public class MeleeWeapon extends RightHand {
 
         ShaderProgram old = batch.getShader();
 
-        if (count(Stat.Type.FIRE_DAMAGE) > 0) {
+        if (stats.get(Stat.Type.FIRE_DAMAGE) > 0) {
             batch.setShader(Game.SHADERS.load("burning"));
         }
 

@@ -6,22 +6,20 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.JsonValue;
 import game.SpriteSheet;
 import game.main.Game;
 import game.main.entity.particle.Cut;
 import game.main.entity.particle.Flame;
-import game.main.entity.particle.Particle;
 import game.main.entity.particle.Smoke;
 import game.main.item.Item;
+import game.main.stat.HasStats;
 import game.main.stat.Stat;
-import game.main.stat.StatCounter;
-import game.main.stat.StatManager;
+import game.main.stat.Stats;
 import game.main.state.play.map.Map;
 import game.main.entity.event.*;
 import game.main.tile.Tile;
 
-public abstract class Entity implements StatCounter {
+public abstract class Entity implements HasStats {
     /**
      * Describes a rectangle offset by specified x and y values multiplier to
      * a given entity. Uses {@link Rectangle} class to represent the rectangle itself.
@@ -164,7 +162,7 @@ public abstract class Entity implements StatCounter {
 
     public boolean updated;
 
-    public StatManager stats;
+    public Stats stats;
 
     public Array<Entity> hit;
 
@@ -195,7 +193,7 @@ public abstract class Entity implements StatCounter {
 
     public Entity() {
         hitbox = new Hitbox(this);
-        stats = new StatManager();
+        stats = new Stats();
         hit = new Array<Entity>();
 
         inventory = new Array<Item>();
@@ -252,12 +250,13 @@ public abstract class Entity implements StatCounter {
                             } else {
                                 if (attackHitbox.overlaps(e)) {
                                     if (!contains) {
-                                        e.health -= MathUtils.clamp(count(Stat.Type.PHYSICAL_DAMAGE)
-                                                - e.count(Stat.Type.PHYSICAL_DEFENSE), 1, Float.MAX_VALUE);
+                                        e.health -= MathUtils.clamp(stats.get(Stat.Type.PHYSICAL_DAMAGE)
+                                                - e.stats.get(Stat.Type.PHYSICAL_DEFENSE), 1, Float.MAX_VALUE);
 
                                         if (!e.isOnFire()) {
-                                            e.onFireTime += MathUtils.clamp((count(Stat.Type.FIRE_DAMAGE)
-                                                    - e.count(Stat.Type.FIRE_DEFENSE)), 0, Float.MAX_VALUE);
+                                            e.onFireTime += stats.get(Stat.Type.PHYSICAL_DAMAGE)
+                                                    * MathUtils.clamp((stats.get(Stat.Type.FIRE_DAMAGE)
+                                                    * (1 - e.stats.get(Stat.Type.FIRE_RESISTANCE))), 0, Float.MAX_VALUE) * .5f;
                                         }
 
                                         e.hitTime = .1f;
@@ -505,7 +504,7 @@ public abstract class Entity implements StatCounter {
      * @return whether entity is dead
      */
     public boolean isDead() {
-        return count(Stat.Type.HEALTH) > 0 && health <= 0;
+        return stats.get(Stat.Type.HEALTH) > 0 && health <= 0;
     }
 
     /** @return whether entity is standing on ground */
@@ -554,7 +553,7 @@ public abstract class Entity implements StatCounter {
     }
 
     public float getHealthPercentage() {
-        return health / count(Stat.Type.HEALTH);
+        return health / stats.get(Stat.Type.HEALTH);
     }
 
     public void onDisabled() {
@@ -573,7 +572,7 @@ public abstract class Entity implements StatCounter {
         sendEvent(new AddedEvent(this));
 
         hitbox.position();
-        health = count(Stat.Type.HEALTH);
+        health = stats.get(Stat.Type.HEALTH);
     }
 
     public void onCollision(Entity e) {
@@ -698,12 +697,7 @@ public abstract class Entity implements StatCounter {
     }
 
     @Override
-    public float count(Stat.Type type) {
-        return stats.count(type);
-    }
-
-    @Override
-    public StatManager getStats() {
+    public Stats getStats() {
         return stats;
     }
 }

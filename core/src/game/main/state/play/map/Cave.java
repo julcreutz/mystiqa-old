@@ -1,10 +1,12 @@
 package game.main.state.play.map;
 
+import game.main.Game;
 import game.main.entity.Chest;
 import game.main.tile.connected.CaveBridge;
 import game.main.tile.connected.CaveHole;
 import game.main.tile.connected.CaveWall;
 import game.main.tile.unconnected.CaveGround;
+import game.main.tile.unconnected.CaveMushroom;
 
 public class Cave extends Dungeon {
     public Cave() {
@@ -139,5 +141,21 @@ public class Cave extends Dungeon {
                         {'#', '#', '#', '#', '#', '#', '#', '#', '#', '#'}
                 }, Room.Direction.UP, Room.Direction.DOWN),
         };
+    }
+
+    @Override
+    public void generate() {
+        super.generate();
+
+        for (Room r : rooms) {
+            for (int x = r.x0(); x < r.x1(); x++) {
+                for (int y = r.y0(); y < r.y1(); y++) {
+                    if (tiles.at(x, y, 0) != null && tiles.at(x, y, 0).getClass().equals(CaveGround.class)
+                            && Game.RANDOM.nextFloat() < .05f) {
+                        tiles.set(new CaveMushroom(), x, y, 0);
+                    }
+                }
+            }
+        }
     }
 }

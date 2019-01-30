@@ -13,6 +13,8 @@ import game.main.state.play.map.lock.Lock;
 import game.main.tile.Tile;
 import game.main.tile.TileManager;
 
+import java.io.Serializable;
+
 public abstract class Map {
     public static class Teleport {
         public Rectangle rect;

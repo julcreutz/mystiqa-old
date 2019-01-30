@@ -20,13 +20,6 @@ public class Shield extends LeftHand {
     public int armIndex;
     public boolean renderBehind;
 
-    public Stat slowdown;
-
-    public Shield() {
-        spriteSheet = new SpriteSheet("shield", 1, 4);
-        slowdown = new Stat(Stat.Type.SPEED, 0, -.5f);
-    }
-
     @Override
     public void update(Humanoid h) {
         super.update(h);
@@ -35,6 +28,8 @@ public class Shield extends LeftHand {
 
         if (isUsing() && !h.isAttacking()) {
             dir = h.dir;
+
+            h.moveSpeed *= .5f;
 
             armIndex = 3;
 
@@ -113,20 +108,6 @@ public class Shield extends LeftHand {
                 ((BlockEvent) e).blocked.stunTime += 2f;
             }
         }
-    }
-
-    @Override
-    public void onStartUse(Humanoid h) {
-        super.onStartUse(h);
-
-        h.stats.stats.add(slowdown);
-    }
-
-    @Override
-    public void onFinishUse(Humanoid h) {
-        super.onFinishUse(h);
-
-        h.stats.stats.removeValue(slowdown, true);
     }
 
     @Override

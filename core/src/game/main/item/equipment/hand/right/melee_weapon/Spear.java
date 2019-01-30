@@ -5,7 +5,8 @@ import game.main.stat.Stat;
 
 public class Spear extends MeleeWeapon {
     public Spear() {
-        stats.stats.addAll(new Stat(Stat.Type.PHYSICAL_DAMAGE, 4), new Stat(Stat.Type.SPEED, 1));
+        stats.stats.add(new Stat(Stat.Type.PHYSICAL_DAMAGE, 4));
+        stats.stats.add(new Stat(Stat.Type.SPEED, 1));
         spriteSheet = new SpriteSheet("spear");
         angle = 0;
         range = 1;

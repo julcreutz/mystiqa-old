@@ -4,10 +4,8 @@ public class Stat {
     public enum Type {
         HEALTH,
         SPEED,
-        PHYSICAL_DAMAGE,
-        PHYSICAL_DEFENSE,
-        FIRE_DAMAGE,
-        FIRE_DEFENSE
+        PHYSICAL_DAMAGE, PHYSICAL_DEFENSE,
+        FIRE_DAMAGE, FIRE_RESISTANCE
     }
 
     public Type type;

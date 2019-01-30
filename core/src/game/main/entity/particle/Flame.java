@@ -8,6 +8,7 @@ public class Flame extends Particle {
     public Flame() {
         image = new SpriteSheet("flame").grab(0, 0);
         scale = 1;
+        rot = -90;
     }
 
     @Override
