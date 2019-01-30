@@ -1,7 +1,6 @@
 package game.main.state.play.map.lock;
 
 import game.main.state.play.map.Map;
-import game.main.state.play.map.Dungeon;
 import game.main.entity.Door;
 import game.main.entity.event.EntityEvent;
 import game.main.entity.event.EntityListener;
@@ -34,7 +33,7 @@ public abstract class Lock implements EntityListener {
     public Map dungeon;
 
     /** The room unlocking this lock. */
-    public Dungeon.Room room;
+    public Map.Room room;
     /** The door unlocked by lock. */
     public Door door;
 
@@ -50,7 +49,7 @@ public abstract class Lock implements EntityListener {
     public void onLock() {
     }
 
-    public boolean isValid(Dungeon.Template t) {
+    public boolean isValid(Map.Template t) {
         return true;
     }
 

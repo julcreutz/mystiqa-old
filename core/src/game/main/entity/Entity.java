@@ -12,14 +12,11 @@ import game.main.entity.particle.Cut;
 import game.main.entity.particle.Flame;
 import game.main.entity.particle.Smoke;
 import game.main.item.Item;
-import game.main.stat.HasStats;
-import game.main.stat.Stat;
-import game.main.stat.Stats;
 import game.main.state.play.map.Map;
 import game.main.entity.event.*;
 import game.main.tile.Tile;
 
-public abstract class Entity implements HasStats {
+public abstract class Entity {
     /**
      * Describes a rectangle offset by specified x and y values multiplier to
      * a given entity. Uses {@link Rectangle} class to represent the rectangle itself.
@@ -160,17 +157,24 @@ public abstract class Entity implements HasStats {
     /** Represents entity physical dimensions mainly used for collision detection. */
     public Hitbox hitbox;
 
-    public boolean updated;
+    public float health;
+    public float maxHealth;
 
-    public Stats stats;
+    public float speed;
+
+    public float damage;
+    public float defense;
+
+    public float fire;
+    public float fireResistance;
+
+    public boolean updated;
 
     public Array<Entity> hit;
 
     public float hitTime;
     public float hitSpeed;
     public float hitAngle;
-
-    public float health;
 
     public boolean isMonster;
 
@@ -193,10 +197,9 @@ public abstract class Entity implements HasStats {
 
     public Entity() {
         hitbox = new Hitbox(this);
-        stats = new Stats();
+
         hit = new Array<Entity>();
 
-        inventory = new Array<Item>();
         inventory = new Array<Item>();
 
         star = new SpriteSheet("star");
@@ -250,13 +253,12 @@ public abstract class Entity implements HasStats {
                             } else {
                                 if (attackHitbox.overlaps(e)) {
                                     if (!contains) {
-                                        e.health -= MathUtils.clamp(stats.get(Stat.Type.PHYSICAL_DAMAGE)
-                                                - e.stats.get(Stat.Type.PHYSICAL_DEFENSE), 1, Float.MAX_VALUE);
+                                        e.health -= MathUtils.clamp(getDamage() - e.getDefense(),
+                                                1, Float.MAX_VALUE);
 
                                         if (!e.isOnFire()) {
-                                            e.onFireTime += stats.get(Stat.Type.PHYSICAL_DAMAGE)
-                                                    * MathUtils.clamp((stats.get(Stat.Type.FIRE_DAMAGE)
-                                                    * (1 - e.stats.get(Stat.Type.FIRE_RESISTANCE))), 0, Float.MAX_VALUE) * .5f;
+                                            e.onFireTime += MathUtils.clamp(getDamage() * getFire()
+                                                    * (1 - e.getFireResistance()), 0, Float.MAX_VALUE) * .5f;
                                         }
 
                                         e.hitTime = .1f;
@@ -483,6 +485,30 @@ public abstract class Entity implements HasStats {
         }
     }
 
+    public float getMaxHealth() {
+        return maxHealth;
+    }
+
+    public float getSpeed() {
+        return speed;
+    }
+
+    public float getDamage() {
+        return damage;
+    }
+
+    public float getDefense() {
+        return defense;
+    }
+
+    public float getFire() {
+        return fire;
+    }
+
+    public float getFireResistance() {
+        return fireResistance;
+    }
+
     /** @return whether entity is attacking */
     public boolean isAttacking() {
         return !isStunned();
@@ -504,7 +530,7 @@ public abstract class Entity implements HasStats {
      * @return whether entity is dead
      */
     public boolean isDead() {
-        return stats.get(Stat.Type.HEALTH) > 0 && health <= 0;
+        return maxHealth > 0 && health <= 0;
     }
 
     /** @return whether entity is standing on ground */
@@ -529,12 +555,12 @@ public abstract class Entity implements HasStats {
 
     /** @return correctly positioned attack hitbox */
     public Hitbox getAttackHitbox() {
-        return null;
+        return getHitbox();
     }
 
     /** @return correctly positioned block hitbox */
     public Hitbox getBlockHitbox() {
-        return null;
+        return getHitbox();
     }
 
     public boolean isHostile(Entity e) {
@@ -550,10 +576,6 @@ public abstract class Entity implements HasStats {
         }
 
         return null;
-    }
-
-    public float getHealthPercentage() {
-        return health / stats.get(Stat.Type.HEALTH);
     }
 
     public void onDisabled() {
@@ -572,7 +594,7 @@ public abstract class Entity implements HasStats {
         sendEvent(new AddedEvent(this));
 
         hitbox.position();
-        health = stats.get(Stat.Type.HEALTH);
+        health = getMaxHealth();
     }
 
     public void onCollision(Entity e) {
@@ -694,10 +716,5 @@ public abstract class Entity implements HasStats {
 
     public boolean removeOnDisabled() {
         return false;
-    }
-
-    @Override
-    public Stats getStats() {
-        return stats;
     }
 }

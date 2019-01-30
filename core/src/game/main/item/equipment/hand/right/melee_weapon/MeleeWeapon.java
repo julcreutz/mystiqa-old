@@ -9,7 +9,6 @@ import game.main.Game;
 import game.main.entity.Humanoid;
 import game.main.entity.particle.Flame;
 import game.main.item.equipment.hand.right.RightHand;
-import game.main.stat.Stat;
 
 public class MeleeWeapon extends RightHand {
     public static final float[][] X = new float[][] {
@@ -36,6 +35,7 @@ public class MeleeWeapon extends RightHand {
     public SpriteSheet spriteSheet;
     public TextureRegion image;
 
+    public float speed;
     public float angle;
     public float range;
 
@@ -61,7 +61,7 @@ public class MeleeWeapon extends RightHand {
         if (isAttacking()) {
             if (attacking) {
                 h.moveSpeed *= 0;
-                attackTime -= Game.getDelta() * 4f * stats.get(Stat.Type.SPEED);
+                attackTime -= Game.getDelta() * 4f * speed;
             } else {
                 h.moveSpeed *= .5f;
             }
@@ -129,7 +129,7 @@ public class MeleeWeapon extends RightHand {
 
         image = spriteSheet.grab(0, 0);
 
-        if (stats.get(Stat.Type.FIRE_DAMAGE) > 0) {
+        if (fire > 0) {
             fireParticleTime -= Game.getDelta();
 
             if (fireParticleTime < 0) {
@@ -170,7 +170,7 @@ public class MeleeWeapon extends RightHand {
 
         ShaderProgram old = batch.getShader();
 
-        if (stats.get(Stat.Type.FIRE_DAMAGE) > 0) {
+        if (fire > 0) {
             batch.setShader(Game.SHADERS.load("burning"));
         }
 

@@ -7,7 +7,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import game.SpriteSheet;
 import game.main.Game;
-import game.main.stat.Stat;
 
 public class Slime extends Entity {
     public enum State {
@@ -35,13 +34,14 @@ public class Slime extends Entity {
 
     public Slime() {
         hitbox.set(6, 4, 1, 1);
-        stats.stats.add(new Stat(Stat.Type.HEALTH, 9));
-        stats.stats.add(new Stat(Stat.Type.PHYSICAL_DAMAGE, 4));
-        stats.stats.add(new Stat(Stat.Type.PHYSICAL_DEFENSE, 2));
-        stats.stats.add(new Stat(Stat.Type.SPEED, 1));
         isMonster = true;
         spriteSheet = new SpriteSheet("slime", 2, 2);
         state = State.RANDOM_MOVEMENT;
+
+        health = 9;
+        damage = 4;
+        defense = 2;
+        speed = 1;
     }
 
     @Override
@@ -148,7 +148,7 @@ public class Slime extends Entity {
 
         velZ = 90;
 
-        this.time = time / stats.get(Stat.Type.SPEED);
+        this.time = time / speed;
 
         state = State.JUMP_BEGIN;
     }

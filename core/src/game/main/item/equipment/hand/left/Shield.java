@@ -7,7 +7,6 @@ import game.SpriteSheet;
 import game.main.Game;
 import game.main.entity.event.BlockEvent;
 import game.main.entity.event.EntityEvent;
-import game.main.stat.Stat;
 import game.main.entity.Humanoid;
 
 public class Shield extends LeftHand {

@@ -4,11 +4,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.JsonValue;
 import game.SpriteSheet;
 import game.main.Game;
-import game.main.stat.Stat;
-import game.main.tile.Tile;
 
 public class Bat extends Entity {
     public enum State {
@@ -33,13 +30,15 @@ public class Bat extends Entity {
 
     public Bat() {
         hitbox.set(4, 2, 3, 2);
-        stats.add(new Stat(Stat.Type.HEALTH, 7));
-        stats.add(new Stat(Stat.Type.PHYSICAL_DEFENSE, 1));
-        stats.add(new Stat(Stat.Type.PHYSICAL_DAMAGE, 3));
         isMonster = true;
         state = State.IDLE;
         spriteSheet = new SpriteSheet("bat", 2, 1);
         scaleX = 1;
+
+        maxHealth = 7;
+        damage = 3;
+        defense = 1;
+        speed = 1;
     }
 
     @Override
@@ -59,7 +58,7 @@ public class Bat extends Entity {
 
                 if (moveTime < 0) {
                     moveDir = MathUtils.random(360f);
-                    moveSpeed = MathUtils.random(8f, 16f);
+                    moveSpeed = MathUtils.random(8f, 16f) * getSpeed();
 
                     moveTime = MathUtils.random(.5f, 2f);
                 }
@@ -86,7 +85,7 @@ public class Bat extends Entity {
 
                 if (focusTime == 0) {
                     focusTime = MathUtils.random(1f, 2f);
-                    focusSpeed = (MathUtils.randomBoolean(.5f) ? 1 : -1) * MathUtils.random(8f, 24f);
+                    focusSpeed = (MathUtils.randomBoolean(.5f) ? 1 : -1) * MathUtils.random(8f, 24f) * getSpeed();
                 }
 
                 focusTime -= Game.getDelta();
@@ -99,8 +98,8 @@ public class Bat extends Entity {
 
                 break;
             case ATTACK_PLAYER:
-                velX += MathUtils.cosDeg(attackAngle) * 56f;
-                velY += MathUtils.sinDeg(attackAngle) * 56f;
+                velX += MathUtils.cosDeg(attackAngle) * 56f * getSpeed();
+                velY += MathUtils.sinDeg(attackAngle) * 56f * getSpeed();
 
                 if (attackTime == 0) {
                     attackTime = .5f;

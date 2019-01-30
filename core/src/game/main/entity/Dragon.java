@@ -180,8 +180,6 @@ public class Dragon extends Entity {
         for (int i = 0; i < minHeads + Game.RANDOM.nextInt(maxHeads - minHeads + 1); i++) {
             final Head h = new Head();
 
-            h.stats.stats.addAll(stats.stats);
-
             h.isMonster = isMonster;
 
             h.body = this;

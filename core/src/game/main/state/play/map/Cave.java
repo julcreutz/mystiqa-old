@@ -8,7 +8,7 @@ import game.main.tile.connected.CaveWall;
 import game.main.tile.unconnected.CaveGround;
 import game.main.tile.unconnected.CaveMushroom;
 
-public class Cave extends Dungeon {
+public class Cave extends Map {
     public Cave() {
         minRooms = 13;
         maxRooms = 18;

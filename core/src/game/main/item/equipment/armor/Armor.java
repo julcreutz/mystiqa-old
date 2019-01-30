@@ -7,4 +7,6 @@ public class Armor extends Equipment {
     public SpriteSheet feet;
     public SpriteSheet body;
     public SpriteSheet head;
+
+    public float defense;
 }
