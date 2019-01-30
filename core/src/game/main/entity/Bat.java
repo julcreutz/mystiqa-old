@@ -45,6 +45,10 @@ public class Bat extends Entity {
     public void update() {
         super.update();
 
+        if (isStunned()) {
+            return;
+        }
+
         float angleToPlayer = new Vector2(map.player.x, map.player.y).sub(x, y).angle();
         float distToPlayer = new Vector2(map.player.x, map.player.y).sub(x, y).len();
 
@@ -137,7 +141,7 @@ public class Bat extends Entity {
 
     @Override
     public boolean isAttacking() {
-        return state == State.ATTACK_PLAYER;
+        return super.isAttacking() && state == State.ATTACK_PLAYER;
     }
 
     @Override

@@ -23,6 +23,11 @@ public class Chest extends Entity {
     }
 
     @Override
+    public boolean isVulnerable() {
+        return false;
+    }
+
+    @Override
     public void onCollision(Entity e) {
         super.onCollision(e);
 

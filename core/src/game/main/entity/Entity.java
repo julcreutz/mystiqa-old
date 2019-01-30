@@ -1,11 +1,13 @@
 package game.main.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
+import game.SpriteSheet;
 import game.main.Game;
 import game.main.entity.particle.Cut;
 import game.main.entity.particle.Flame;
@@ -26,7 +28,7 @@ public abstract class Entity implements StatCounter {
      *
      * @see Rectangle
      */
-    public class Hitbox {
+    public static class Hitbox {
         /** Holds reference of entity this applies to. */
         public Entity e;
 
@@ -185,6 +187,12 @@ public abstract class Entity implements StatCounter {
     public float onFireTime;
     public float onFireParticleTime;
 
+    public float stunTime;
+
+    public float hitFlashTime;
+
+    public SpriteSheet star;
+
     public Entity() {
         hitbox = new Hitbox(this);
         stats = new StatManager();
@@ -192,6 +200,8 @@ public abstract class Entity implements StatCounter {
 
         inventory = new Array<Item>();
         inventory = new Array<Item>();
+
+        star = new SpriteSheet("star");
     }
 
     public void preUpdate() {
@@ -199,7 +209,6 @@ public abstract class Entity implements StatCounter {
     }
 
     public void update() {
-
     }
 
     public void postUpdate() {
@@ -424,6 +433,22 @@ public abstract class Entity implements StatCounter {
                 map.entities.addEntity(f);
             }
         }
+
+        if (isStunned()) {
+            stunTime -= Game.getDelta();
+
+            if (stunTime < 0) {
+                stunTime = 0;
+            }
+        }
+
+        if (hitFlashTime > 0) {
+            hitFlashTime -= Game.getDelta();
+
+            if (hitFlashTime < 0) {
+                hitFlashTime = 0;
+            }
+        }
     }
 
     public void preRender(SpriteBatch batch) {
@@ -431,7 +456,7 @@ public abstract class Entity implements StatCounter {
             batch.setShader(Game.SHADERS.load("burning"));
         }
 
-        if (isHit()) {
+        if (isHit() || hitFlashTime > 0) {
             batch.setShader(Game.SHADERS.load("hit_flash"));
         }
     }
@@ -446,11 +471,22 @@ public abstract class Entity implements StatCounter {
         if (overlay != null) {
             overlay.render(batch, this);
         }
+
+        if (isStunned()) {
+            TextureRegion star = this.star.grab(0, 0);
+
+            for (int i = 0; i < 3; i++) {
+                float angle = Game.time * 360f + i * 120f;
+
+                batch.draw(star, hitbox.getCenterX() - star.getRegionWidth() * .5f + MathUtils.cosDeg(angle) * 4f,
+                        hitbox.getY() + hitbox.getHeight() + MathUtils.sinDeg(angle) * 2f);
+            }
+        }
     }
 
     /** @return whether entity is attacking */
     public boolean isAttacking() {
-        return false;
+        return !isStunned();
     }
 
     /** @return whether entity is blocking */
@@ -480,6 +516,10 @@ public abstract class Entity implements StatCounter {
     /** @return whether on fire, meaning burning */
     public boolean isOnFire() {
         return onFireTime > 0;
+    }
+
+    public boolean isStunned() {
+        return stunTime > 0;
     }
 
     /** @return correctly positioned hitbox */

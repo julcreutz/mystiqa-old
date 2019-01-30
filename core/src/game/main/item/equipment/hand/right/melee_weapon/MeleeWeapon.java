@@ -186,7 +186,7 @@ public class MeleeWeapon extends RightHand {
             batch.setShader(Game.SHADERS.load("burning"));
         }
 
-        batch.draw(image, x, y, 4, 4, image.getRegionWidth(), 8, 1, 1, rot);
+        batch.draw(image, x, y, 4, image.getRegionHeight() * .5f, image.getRegionWidth(), image.getRegionHeight(), 1, 1, rot);
 
         batch.setShader(old);
     }

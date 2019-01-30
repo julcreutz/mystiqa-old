@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import game.SpriteSheet;
 import game.main.Game;
+import game.main.entity.event.BlockEvent;
+import game.main.entity.event.EntityEvent;
 import game.main.stat.Stat;
 import game.main.entity.Humanoid;
 
@@ -67,7 +69,7 @@ public class Shield extends LeftHand {
         } else {
             dir = (h.dir + 1) % 4;
 
-            armIndex = 2;
+            armIndex = 0;
 
             switch (dir) {
                 case 0:
@@ -97,6 +99,19 @@ public class Shield extends LeftHand {
 
         if (h.step % 2 != 0) {
             y--;
+        }
+    }
+
+    @Override
+    public void eventReceived(EntityEvent e) {
+        super.eventReceived(e);
+
+        if (e instanceof BlockEvent) {
+            if (useTime < .0125f) {
+                e.e.map.screenShake += 2;
+                ((BlockEvent) e).blocked.hitFlashTime += .1f;
+                ((BlockEvent) e).blocked.stunTime += 2f;
+            }
         }
     }
 

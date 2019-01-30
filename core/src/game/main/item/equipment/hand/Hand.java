@@ -6,9 +6,9 @@ import game.main.item.equipment.Equipment;
 import game.main.entity.Humanoid;
 
 public abstract class Hand extends Equipment {
-    private float useTime;
-    private int useState;
-    private boolean isUsing;
+    public float useTime;
+    public int useState;
+    public boolean isUsing;
 
     public void update(Humanoid h) {
         if (useTime > 0) {

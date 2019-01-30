@@ -59,8 +59,6 @@ public class Humanoid extends Entity {
     public boolean changeDirection;
 
     public Humanoid() {
-        super();
-
         hitbox.set(4, 2, 2, 1);
         attackHitbox = new Hitbox(this);
         blockHitbox = new Hitbox(this);
@@ -73,7 +71,6 @@ public class Humanoid extends Entity {
 
         rightHand = new BattleAxe();
         leftHand = new Shield();
-
         armor = new PlateArmor();
 
         state = State.RANDOM_MOVEMENT;
@@ -504,6 +501,15 @@ public class Humanoid extends Entity {
 
                 break;
         }
+    }
+
+    @Override
+    public void onAdded() {
+        super.onAdded();
+
+        map.entities.addListener(leftHand);
+        map.entities.addListener(rightHand);
+        map.entities.addListener(armor);
     }
 
     @Override
