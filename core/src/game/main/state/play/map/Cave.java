@@ -1,18 +1,17 @@
 package game.main.state.play.map;
 
-import game.main.Game;
 import game.main.entity.Chest;
 import game.main.tile.connected.CaveBridge;
 import game.main.tile.connected.CaveHole;
 import game.main.tile.connected.CaveWall;
 import game.main.tile.unconnected.CaveGround;
 import game.main.tile.unconnected.CaveMushroom;
+import game.main.tile.unconnected.CaveRock;
 
 public class Cave extends Map {
     public Cave() {
         minRooms = 13;
         maxRooms = 18;
-        ground = CaveGround.class;
         outerWall = CaveWall.class;
         innerWall = CaveHole.class;
         hole = CaveBridge.class;
@@ -20,16 +19,6 @@ public class Cave extends Map {
         minMonsters = 2;
         maxMonsters = 5;
         templates = new Template[] {
-                new Template(new char[][] {
-                        {'#', '#', '#', '#', '#', ' ', '#', '#', '#', '#'},
-                        {'#', '#', '#', ' ', ' ', ' ', '#', '#', '#', '#'},
-                        {'#', '#', ' ', ' ', ' ', ' ', ' ', '#', '#', '#'},
-                        {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'},
-                        {'#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-                        {'#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'},
-                        {'#', '#', '#', ' ', ' ', ' ', '#', '#', ' ', '#'},
-                        {'#', '#', '#', '#', ' ', ' ', '#', '#', '#', '#'}
-                }),
                 new Template(new char[][] {
                         {'#', '#', '#', '#', '#', ' ', '#', '#', '#', '#'},
                         {'#', '#', '#', ' ', ' ', ' ', '#', '#', '#', '#'},
@@ -141,21 +130,9 @@ public class Cave extends Map {
                         {'#', '#', '#', '#', '#', '#', '#', '#', '#', '#'}
                 }, Room.Direction.UP, Room.Direction.DOWN),
         };
-    }
 
-    @Override
-    public void generate() {
-        super.generate();
-
-        for (Room r : rooms) {
-            for (int x = r.x0(); x < r.x1(); x++) {
-                for (int y = r.y0(); y < r.y1(); y++) {
-                    if (tiles.at(x, y, 0) != null && tiles.at(x, y, 0).getClass().equals(CaveGround.class)
-                            && Game.RANDOM.nextFloat() < .05f) {
-                        tiles.set(new CaveMushroom(), x, y, 0);
-                    }
-                }
-            }
-        }
+        grounds.add(new Ground(1, CaveGround.class));
+        grounds.add(new Ground(.05f, CaveMushroom.class));
+        grounds.add(new Ground(.025f, CaveRock.class));
     }
 }

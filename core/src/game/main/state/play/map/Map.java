@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectFloatMap;
 import game.SpriteSheet;
 import game.main.Game;
 import game.main.entity.*;
@@ -12,8 +13,6 @@ import game.main.state.play.Play;
 import game.main.state.play.map.lock.Lock;
 import game.main.tile.Tile;
 import game.main.tile.TileManager;
-
-import java.io.Serializable;
 
 public abstract class Map {
     public static class Teleport {
@@ -299,6 +298,16 @@ public abstract class Map {
         public float maxChance;
     }
 
+    public static class Ground {
+        public float chance;
+        public Class tile;
+
+        public Ground(float chance, Class tile) {
+            this.chance = chance;
+            this.tile = tile;
+        }
+    }
+
     public static final float CAM_SPEED = 1.5f;
 
     public static final int X_VIEW = 6;
@@ -373,6 +382,8 @@ public abstract class Map {
 
     public Array<Lock> allLocks;
 
+    public Array<Ground> grounds;
+
     public Map() {
         guiLayer = new SpriteSheet("gui_layer");
 
@@ -380,6 +391,8 @@ public abstract class Map {
         entities = new EntityManager(this);
 
         teleports = new Array<Teleport>();
+
+        grounds = new Array<Ground>();
     }
 
     public void update() {
@@ -845,13 +858,7 @@ public abstract class Map {
                             }
                             break;
                         case ' ':
-                            try {
-                                tiles.set((Tile) ground.newInstance(), xx, yy, 0);
-                            } catch (InstantiationException e) {
-                                e.printStackTrace();
-                            } catch (IllegalAccessException e) {
-                                e.printStackTrace();
-                            }
+                            tiles.set(getGround(), xx, yy, 0);
                             break;
                         case '.':
                             try {
@@ -863,13 +870,7 @@ public abstract class Map {
                             }
                             break;
                         case 'b':
-                            try {
-                                tiles.set((Tile) ground.newInstance(), xx, yy, 0);
-                            } catch (InstantiationException e) {
-                                e.printStackTrace();
-                            } catch (IllegalAccessException e) {
-                                e.printStackTrace();
-                            }
+                            tiles.set(getGround(), xx, yy, 0);
 
                             try {
                                 Entity boss = (Entity) this.boss.newInstance();
@@ -895,13 +896,7 @@ public abstract class Map {
                                     e.printStackTrace();
                                 }
                             } else {
-                                try {
-                                    tiles.set((Tile) ground.newInstance(), xx, yy, 0);
-                                } catch (InstantiationException e) {
-                                    e.printStackTrace();
-                                } catch (IllegalAccessException e) {
-                                    e.printStackTrace();
-                                }
+                                tiles.set(getGround(), xx, yy, 0);
 
                                 try {
                                     Block b = (Block) block.newInstance();
@@ -919,13 +914,7 @@ public abstract class Map {
 
                             break;
                         case 'c':
-                            try {
-                                tiles.set((Tile) ground.newInstance(), xx, yy, 0);
-                            } catch (InstantiationException e) {
-                                e.printStackTrace();
-                            } catch (IllegalAccessException e) {
-                                e.printStackTrace();
-                            }
+                            tiles.set(getGround(), xx, yy, 0);
 
                             if (Game.RANDOM.nextFloat() < r.difficulty) {
                                 try {
@@ -1043,14 +1032,8 @@ public abstract class Map {
                 int x = r.x1() - 1;
 
                 for (int y = r.y0(); y < r.y1(); y++) {
-                    if (tiles.at(x, y, 0) != null && tiles.at(x, y, 0).getClass().equals(ground)) {
-                        try {
-                            tiles.set((Tile) ground.newInstance(), x + 1, y, 0);
-                        } catch (InstantiationException e) {
-                            e.printStackTrace();
-                        } catch (IllegalAccessException e) {
-                            e.printStackTrace();
-                        }
+                    if (tiles.at(x, y, 0) != null && isGround(tiles.at(x, y, 0))) {
+                        tiles.set(getGround(), x + 1, y, 0);
                     }
                 }
             }
@@ -1059,14 +1042,8 @@ public abstract class Map {
                 int x = r.x0();
 
                 for (int y = r.y0(); y < r.y1(); y++) {
-                    if (tiles.at(x, y, 0) != null && tiles.at(x, y, 0).getClass().equals(ground)) {
-                        try {
-                            tiles.set((Tile) ground.newInstance(), x - 1, y, 0);
-                        } catch (InstantiationException e) {
-                            e.printStackTrace();
-                        } catch (IllegalAccessException e) {
-                            e.printStackTrace();
-                        }
+                    if (tiles.at(x, y, 0) != null && isGround(tiles.at(x, y, 0))) {
+                        tiles.set(getGround(), x - 1, y, 0);
                     }
                 }
             }
@@ -1075,14 +1052,8 @@ public abstract class Map {
                 int y = r.y1() - 1;
 
                 for (int x = r.x0(); x < r.x1(); x++) {
-                    if (tiles.at(x, y, 0) != null && tiles.at(x, y, 0).getClass().equals(ground)) {
-                        try {
-                            tiles.set((Tile) ground.newInstance(), x, y + 1, 0);
-                        } catch (InstantiationException e) {
-                            e.printStackTrace();
-                        } catch (IllegalAccessException e) {
-                            e.printStackTrace();
-                        }
+                    if (tiles.at(x, y, 0) != null && isGround(tiles.at(x, y, 0))) {
+                        tiles.set(getGround(), x, y + 1, 0);
                     }
                 }
             }
@@ -1091,14 +1062,8 @@ public abstract class Map {
                 int y = r.y0();
 
                 for (int x = r.x0(); x < r.x1(); x++) {
-                    if (tiles.at(x, y, 0) != null && tiles.at(x, y, 0).getClass().equals(ground)) {
-                        try {
-                            tiles.set((Tile) ground.newInstance(), x, y - 1, 0);
-                        } catch (InstantiationException e) {
-                            e.printStackTrace();
-                        } catch (IllegalAccessException e) {
-                            e.printStackTrace();
-                        }
+                    if (tiles.at(x, y, 0) != null && isGround(tiles.at(x, y, 0))) {
+                        tiles.set(getGround(), x, y - 1, 0);
                     }
                 }
             }
@@ -1227,7 +1192,7 @@ public abstract class Map {
                         do {
                             x = r.getTileX() + 1 + Game.RANDOM.nextInt(r.getTileWidth() - 2);
                             y = r.getTileY() + 1 + Game.RANDOM.nextInt(r.getTileHeight() - 2);
-                        } while (tiles.at(x, y, 0) != null && !tiles.at(x, y, 0).getClass().equals(ground));
+                        } while (tiles.at(x, y, 0) != null && !isGround(tiles.at(x, y, 0)));
 
                         monster.x = x * 8;
                         monster.y = y * 8;
@@ -1329,5 +1294,37 @@ public abstract class Map {
         }
 
         return locks.get(Game.RANDOM.nextInt(locks.size));
+    }
+
+    public Tile getGround() {
+        try {
+            Class tile = null;
+
+            do {
+                for (Ground ground : grounds) {
+                    if (Game.RANDOM.nextFloat() < ground.chance) {
+                        tile = ground.tile;
+                    }
+                }
+            } while (tile == null);
+
+            return (Tile) tile.newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public boolean isGround(Tile t) {
+        for (Ground ground : grounds) {
+            if (ground.tile.isInstance(t)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
