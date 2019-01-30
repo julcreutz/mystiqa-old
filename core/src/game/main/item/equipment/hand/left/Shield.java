@@ -18,8 +18,6 @@ public class Shield extends LeftHand {
     public int armIndex;
     public boolean renderBehind;
 
-    public boolean blocking;
-
     public Stat slowdown;
 
     public Shield() {
@@ -33,10 +31,12 @@ public class Shield extends LeftHand {
 
         int dir;
 
-        if (!h.isAttacking()) {
+        if (isUsing() && !h.isAttacking()) {
             dir = h.dir;
 
             armIndex = 3;
+
+            h.changeDirection = false;
 
             switch (dir) {
                 case 0:
@@ -64,12 +64,10 @@ public class Shield extends LeftHand {
                     h.blockHitbox.set(8, 1, 0, 0);
                     break;
             }
-
-            blocking = true;
         } else {
             dir = (h.dir + 1) % 4;
 
-            armIndex = 1;
+            armIndex = 2;
 
             switch (dir) {
                 case 0:
@@ -93,8 +91,6 @@ public class Shield extends LeftHand {
                     renderBehind = false;
                     break;
             }
-
-            blocking = false;
         }
 
         image = spriteSheet.grab(0, dir);
@@ -102,6 +98,20 @@ public class Shield extends LeftHand {
         if (h.step % 2 != 0) {
             y--;
         }
+    }
+
+    @Override
+    public void onStartUse(Humanoid h) {
+        super.onStartUse(h);
+
+        h.stats.stats.add(slowdown);
+    }
+
+    @Override
+    public void onFinishUse(Humanoid h) {
+        super.onFinishUse(h);
+
+        h.stats.stats.removeValue(slowdown, true);
     }
 
     @Override
@@ -128,6 +138,6 @@ public class Shield extends LeftHand {
 
     @Override
     public boolean isBlocking() {
-        return blocking;
+        return isUsing();
     }
 }

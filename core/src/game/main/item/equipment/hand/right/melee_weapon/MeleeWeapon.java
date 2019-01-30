@@ -153,8 +153,8 @@ public class MeleeWeapon extends RightHand {
     }
 
     @Override
-    public void onAttack(Humanoid h) {
-        super.onAttack(h);
+    public void onUse(Humanoid h) {
+        super.onUse(h);
 
         if (!attacking) {
             attackTime = 1;
@@ -167,8 +167,8 @@ public class MeleeWeapon extends RightHand {
     }
 
     @Override
-    public void onFinishAttack(Humanoid h) {
-        super.onFinishAttack(h);
+    public void onFinishUse(Humanoid h) {
+        super.onFinishUse(h);
 
         if (attackTime > 0) {
             attacking = true;

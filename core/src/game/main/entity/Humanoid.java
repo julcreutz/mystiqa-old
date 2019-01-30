@@ -8,13 +8,11 @@ import com.badlogic.gdx.math.Vector2;
 import game.SpriteSheet;
 import game.main.Game;
 import game.main.item.equipment.armor.Armor;
+import game.main.item.equipment.armor.PlateArmor;
 import game.main.item.equipment.hand.left.Shield;
 import game.main.item.equipment.hand.right.RightHand;
 import game.main.item.equipment.hand.left.LeftHand;
 import game.main.item.equipment.hand.right.melee_weapon.BattleAxe;
-import game.main.item.equipment.hand.right.melee_weapon.Longsword;
-import game.main.item.equipment.hand.right.melee_weapon.Shortsword;
-import game.main.item.equipment.hand.right.melee_weapon.Spear;
 import game.main.stat.Stat;
 import game.main.stat.StatCounter;
 import game.main.tile.Tile;
@@ -54,12 +52,11 @@ public class Humanoid extends Entity {
 
     public float attackTime;
 
-    public boolean attackStarted;
-    public int attackState;
-
     public float yOffset;
 
     public float blockTime;
+
+    public boolean changeDirection;
 
     public Humanoid() {
         super();
@@ -77,6 +74,8 @@ public class Humanoid extends Entity {
         rightHand = new BattleAxe();
         leftHand = new Shield();
 
+        armor = new PlateArmor();
+
         state = State.RANDOM_MOVEMENT;
     }
 
@@ -93,6 +92,7 @@ public class Humanoid extends Entity {
         Vector2 dir = new Vector2();
 
         boolean useRightHand = false;
+        boolean useLeftHand = false;
 
         if (controlledByPlayer) {
             if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
@@ -113,6 +113,10 @@ public class Humanoid extends Entity {
 
             if (Gdx.input.isKeyPressed(Input.Keys.F)) {
                 useRightHand = true;
+            }
+
+            if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+                useLeftHand = true;
             }
 
             if (dir.x != 0 || dir.y != 0) {
@@ -186,11 +190,33 @@ public class Humanoid extends Entity {
             }
         }
 
-        if (moveSpeed != 0) {
-            velX = MathUtils.round(MathUtils.cosDeg(moveAngle) * moveSpeed * stats.count(Stat.Type.SPEED));
-            velY = MathUtils.round(MathUtils.sinDeg(moveAngle) * moveSpeed * stats.count(Stat.Type.SPEED));
+        changeDirection = true;
 
-            if (lastUsed > .01f) {
+        if (rightHand != null) {
+            if (useRightHand) {
+                rightHand.use(this);
+            }
+
+            rightHand.update(this);
+        }
+
+        if (leftHand != null) {
+            if (useLeftHand) {
+                leftHand.use(this);
+            }
+
+            leftHand.update(this);
+        }
+
+        if ((leftHand != null && leftHand.isUsing()) || (rightHand != null && rightHand.isUsing())) {
+            lastUsed = 0;
+        }
+
+        if (moveSpeed != 0) {
+            velX += MathUtils.round(MathUtils.cosDeg(moveAngle) * moveSpeed * stats.count(Stat.Type.SPEED));
+            velY += MathUtils.round(MathUtils.sinDeg(moveAngle) * moveSpeed * stats.count(Stat.Type.SPEED));
+
+            if (changeDirection && lastUsed > .01f) {
                 if (controlledByPlayer) {
                     switch (MathUtils.round((moveAngle + 360f) / 45f) % 8) {
                         case 0:
@@ -215,36 +241,6 @@ public class Humanoid extends Entity {
 
             if (t != null && t.forcedDirection != -1) {
                 this.dir = t.forcedDirection;
-            }
-        }
-
-        if (rightHand != null) {
-            if (useRightHand) {
-                attack();
-            }
-
-            rightHand.update(this);
-        }
-
-        if (leftHand != null) {
-            leftHand.update(this);
-        }
-
-        if (attackTime > 0) {
-            if (!attackStarted) {
-                onStartAttack();
-                attackStarted = true;
-            }
-
-            onAttack();
-
-            attackState--;
-
-            if (attackState < 0) {
-                attackStarted = false;
-                onFinishAttack();
-                attackState = 0;
-                attackTime = 0;
             }
         }
 
@@ -510,29 +506,6 @@ public class Humanoid extends Entity {
         }
     }
 
-    public void attack() {
-        attackTime += Game.getDelta();
-        attackState++;
-    }
-
-    public void onStartAttack() {
-        if (rightHand != null) {
-            rightHand.onStartAttack(this);
-        }
-    }
-
-    public void onAttack() {
-        if (rightHand != null) {
-            rightHand.onAttack(this);
-        }
-    }
-
-    public void onFinishAttack() {
-        if (rightHand != null) {
-            rightHand.onFinishAttack(this);
-        }
-    }
-
     @Override
     public void onMove() {
         super.onMove();
@@ -549,7 +522,8 @@ public class Humanoid extends Entity {
 
     @Override
     public boolean isAttacking() {
-        return attackTime > 0 || (rightHand != null && rightHand.isAttacking());
+        return attackTime > 0 || (rightHand != null && rightHand.isAttacking())
+                || (leftHand != null && leftHand.isAttacking());
     }
 
     @Override

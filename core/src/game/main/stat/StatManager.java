@@ -1,5 +1,6 @@
 package game.main.stat;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 
@@ -22,7 +23,7 @@ public class StatManager implements StatCounter {
             }
         }
 
-        return value * (1 + multiplier);
+        return value * (MathUtils.clamp(1 + multiplier, 0, Float.MAX_VALUE));
     }
 
     @Override
