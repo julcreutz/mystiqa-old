@@ -68,7 +68,7 @@ public class Player extends Entity {
         body = new SpriteSheet("human_body", 5, 4);
         head = new SpriteSheet("human_head", 1, 4);
 
-        rightHand = new BattleAxe();
+        rightHand = new HandAxe();
         leftHand = new HeaterShield();
         armor = new PlateArmor();
     }

@@ -142,7 +142,7 @@ public abstract class Entity implements Positionable {
                                         }
 
                                         if (!e.isOnFire()) {
-                                            e.onFireTime += MathUtils.clamp(getDamage() * getFire()
+                                            e.onFireTime += MathUtils.clamp(getDamage() * MathUtils.clamp(getFire(), 0, 1)
                                                     * (1 - e.getFireResistance()), 0, Float.MAX_VALUE) * .5f;
                                         }
 
@@ -394,7 +394,7 @@ public abstract class Entity implements Positionable {
     }
 
     public float getFire() {
-        return fire;
+        return fire + (isOnFire() ? 1 : 0);
     }
 
     public float getFireResistance() {
