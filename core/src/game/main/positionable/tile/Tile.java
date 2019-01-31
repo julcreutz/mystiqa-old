@@ -33,6 +33,7 @@ public abstract class Tile implements Positionable {
     }
 
     public Hitbox hitbox;
+    public boolean isOverfliable;
 
     public float moveSpeed;
 

@@ -52,6 +52,11 @@ public abstract class Entity implements Positionable {
     public float fire;
     public float fireResistance;
 
+    public boolean blocking;
+
+    public float block;
+    public float maxBlock;
+
     public int level;
 
     public boolean updated;
@@ -78,6 +83,8 @@ public abstract class Entity implements Positionable {
     public float hitFlashTime;
 
     public SpriteSheet star;
+
+    public boolean isFlying;
 
     public Entity() {
         hitbox = new Hitbox(this);
@@ -125,7 +132,7 @@ public abstract class Entity implements Positionable {
                         if (!e.isHit() && e.isOnGround() && isHostile(e) && e.isVulnerable()) {
                             boolean contains = hit.contains(e, true);
 
-                            if (isBlockable() && e.isBlocking() && attackHitbox.overlaps(e.getBlockHitbox())) {
+                            if (isBlockable() && e.blocking && attackHitbox.overlaps(e.getBlockHitbox())) {
                                 if (!contains) {
                                     map.shakeScreen(.5f);
 
@@ -224,7 +231,7 @@ public abstract class Entity implements Positionable {
                 for (int y = map.y0; y < map.y1; y++) {
                     Tile t = map.tiles.at(x, y);
 
-                    if (t != null && t.hitbox != null && hitbox.overlaps(t.hitbox)) {
+                    if (t != null && t.hitbox != null && (!isFlying || !t.isOverfliable) && hitbox.overlaps(t.hitbox)) {
                         if (velX > 0) {
                             this.x = t.hitbox.getX() - hitbox.getWidth() - hitbox.offsetX;
                         } else if (velX < 0) {
@@ -262,7 +269,7 @@ public abstract class Entity implements Positionable {
                 for (int y = map.y0; y < map.y1; y++) {
                     Tile t = map.tiles.at(x, y);
 
-                    if (t != null && t.hitbox != null && hitbox.overlaps(t.hitbox)) {
+                    if (t != null && t.hitbox != null && (!isFlying || !t.isOverfliable) && hitbox.overlaps(t.hitbox)) {
                         if (velY > 0) {
                             this.y = t.hitbox.getY() - hitbox.getHeight() - hitbox.offsetY;
                         } else if (velY < 0) {
@@ -409,11 +416,6 @@ public abstract class Entity implements Positionable {
         return !isStunned();
     }
 
-    /** @return whether entity is blocking */
-    public boolean isBlocking() {
-        return false;
-    }
-
     /** @return whether entity is currently hit */
     public boolean isHit() {
         return hitTime > 0;
@@ -515,6 +517,12 @@ public abstract class Entity implements Positionable {
 
     public void onBlock(Entity blocked) {
         sendEvent(new BlockEvent(this, blocked));
+
+        block -= blocked.getDamage();
+        if (block < 0) {
+            stunTime = 3f;
+            setBlocking(false);
+        }
     }
 
     public void onIsBlocked(Entity blocker) {
@@ -611,6 +619,18 @@ public abstract class Entity implements Positionable {
 
     public boolean removeOnDisabled() {
         return false;
+    }
+
+    public void setBlocking(boolean blocking) {
+        this.blocking = blocking;
+
+        if (blocking) {
+            block = getMaxBlock();
+        }
+    }
+
+    public float getMaxBlock() {
+        return maxBlock;
     }
 
     @Override

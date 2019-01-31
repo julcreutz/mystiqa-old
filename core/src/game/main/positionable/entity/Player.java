@@ -8,13 +8,16 @@ import com.badlogic.gdx.math.Vector2;
 import game.SpriteSheet;
 import game.main.Game;
 import game.main.item.equipment.armor.Armor;
+import game.main.item.equipment.armor.ChainMail;
 import game.main.item.equipment.armor.PlateArmor;
 import game.main.item.equipment.hand.left.HeaterShield;
 import game.main.item.equipment.hand.left.RoundShield;
+import game.main.item.equipment.hand.left.Shield;
 import game.main.item.equipment.hand.right.RightHand;
 import game.main.item.equipment.hand.left.LeftHand;
 import game.main.item.equipment.hand.right.melee_weapon.BattleAxe;
 import game.main.item.equipment.hand.right.melee_weapon.HandAxe;
+import game.main.item.equipment.hand.right.melee_weapon.Spear;
 import game.main.positionable.Hitbox;
 import game.main.positionable.tile.Tile;
 
@@ -40,12 +43,8 @@ public class Player extends Entity {
 
     public float lastUsed;
 
-    public float stateTime;
-
     public float moveAngle;
     public float moveSpeed;
-
-    public float actionTime;
 
     public float attackTime;
 
@@ -62,6 +61,10 @@ public class Player extends Entity {
 
         maxHealth = 15;
         speed = 1;
+        damage = 1;
+        damagePerLevel = .5f;
+        defense = 1;
+        defensePerLevel = .5f;
 
         maxExperience = 20;
 
@@ -71,7 +74,7 @@ public class Player extends Entity {
 
         rightHand = new HandAxe();
         leftHand = new RoundShield();
-        armor = new PlateArmor();
+        armor = new ChainMail();
     }
 
     @Override
@@ -89,35 +92,37 @@ public class Player extends Entity {
         boolean useRightHand = false;
         boolean useLeftHand = false;
 
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            dir.x -= 1;
-        }
+        moveSpeed = 0;
 
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            dir.x += 1;
-        }
+        if (!isStunned()) {
+            if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+                dir.x -= 1;
+            }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            dir.y -= 1;
-        }
+            if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+                dir.x += 1;
+            }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            dir.y += 1;
-        }
+            if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+                dir.y -= 1;
+            }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.F)) {
-            useRightHand = true;
-        }
+            if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+                dir.y += 1;
+            }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            useLeftHand = true;
-        }
+            if (Gdx.input.isKeyPressed(Input.Keys.F)) {
+                useRightHand = true;
+            }
 
-        if (dir.x != 0 || dir.y != 0) {
-            moveAngle = dir.angle();
-            moveSpeed = 1;
-        } else {
-            moveSpeed = 0;
+            if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+                useLeftHand = true;
+            }
+
+            if (dir.x != 0 || dir.y != 0) {
+                moveAngle = dir.angle();
+                moveSpeed = 1;
+            }
         }
 
         changeDirection = true;
@@ -462,11 +467,6 @@ public class Player extends Entity {
     }
 
     @Override
-    public boolean isBlocking() {
-        return (rightHand != null && rightHand.isBlocking()) || (leftHand != null && leftHand.isBlocking());
-    }
-
-    @Override
     public Hitbox getAttackHitbox() {
         attackHitbox.position();
         return attackHitbox;
@@ -481,6 +481,11 @@ public class Player extends Entity {
     @Override
     public float getMaxHealth() {
         return super.getMaxHealth() + level * 2;
+    }
+
+    @Override
+    public float getSpeed() {
+        return super.getSpeed() + (armor != null ? armor.speed : 0);
     }
 
     @Override
@@ -517,5 +522,10 @@ public class Player extends Entity {
 
     public float getExperiencePercentage() {
         return experience / getMaxExperience();
+    }
+
+    @Override
+    public float getMaxBlock() {
+        return super.getMaxBlock() + (leftHand instanceof Shield ? ((Shield) leftHand).block : 0);
     }
 }

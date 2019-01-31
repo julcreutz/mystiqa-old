@@ -35,6 +35,8 @@ public class Bat extends Monster {
         spriteSheet = new SpriteSheet("bat", 2, 1);
         scaleX = 1;
 
+        isFlying = true;
+
         maxHealth = 7;
         maxHealthPerLevel = 1;
         damage = 3;
@@ -74,21 +76,30 @@ public class Bat extends Monster {
                     state = State.FOCUS_PLAYER;
                 }
 
-                break;
-            case FOCUS_PLAYER:
-                if (distToPlayer > 24) {
-                    velX += MathUtils.cosDeg(angleToPlayer) * (distToPlayer - 24) * 4f;
-                    velY += MathUtils.sinDeg(angleToPlayer) * (distToPlayer - 24) * 4f;
-                } else if (distToPlayer < 16) {
-                    velX -= MathUtils.cosDeg(angleToPlayer) * (1 - distToPlayer / 16f) * 32f;
-                    velY -= MathUtils.sinDeg(angleToPlayer) * (1 - distToPlayer / 16f) * 32f;
+                animTime += Game.getDelta() * MathUtils.clamp((new Vector2(velX, velY).len() / 16f), .5f, Float.MAX_VALUE);
+
+                if (velX > 0) {
+                    scaleX = 1;
+                } else if (velX < 0) {
+                    scaleX = -1;
                 }
 
-                velX += MathUtils.cosDeg(angleToPlayer + 90f) * focusSpeed;
-                velY += MathUtils.sinDeg(angleToPlayer + 90f) * focusSpeed;
+                break;
+            case FOCUS_PLAYER:
+                if (distToPlayer < 16f) {
+                    float speed = 48f * getSpeed();
+
+                    velX += MathUtils.cosDeg(angleToPlayer + 180) * speed;
+                    velY += MathUtils.sinDeg(angleToPlayer + 180) * speed;
+                } else if (distToPlayer > 24f) {
+                    float speed = 24f * getSpeed();
+
+                    velX += MathUtils.cosDeg(angleToPlayer) * speed;
+                    velY += MathUtils.sinDeg(angleToPlayer) * speed;
+                }
 
                 if (focusTime == 0) {
-                    focusTime = MathUtils.random(1f, 2f);
+                    focusTime = MathUtils.random(1f, 3f);
                     focusSpeed = (MathUtils.randomBoolean(.5f) ? 1 : -1) * MathUtils.random(8f, 24f) * getSpeed();
                 }
 
@@ -100,13 +111,21 @@ public class Bat extends Monster {
                     state = State.ATTACK_PLAYER;
                 }
 
+                animTime += Game.getDelta() * (focusTime > .5f ? 1 : 2);
+
+                if (map.player.x > x) {
+                    scaleX = 1;
+                } else if (map.player.x < x) {
+                    scaleX = -1;
+                }
+
                 break;
             case ATTACK_PLAYER:
                 velX += MathUtils.cosDeg(attackAngle) * 56f * getSpeed();
                 velY += MathUtils.sinDeg(attackAngle) * 56f * getSpeed();
 
                 if (attackTime == 0) {
-                    attackTime = .5f;
+                    attackTime = distToPlayer * .025f;
                 }
 
                 attackTime -= Game.getDelta();
@@ -116,26 +135,10 @@ public class Bat extends Monster {
                     state = State.FOCUS_PLAYER;
                 }
 
+                animTime = 0;
+
                 break;
         }
-
-        animTime += Game.getDelta() * MathUtils.clamp((new Vector2(velX, velY).len() / 16f), .5f, Float.MAX_VALUE);
-    }
-
-    @Override
-    public void onMove() {
-        super.onMove();
-
-        if (velX > 0) {
-            scaleX = 1;
-        } else {
-            scaleX = -1;
-        }
-    }
-
-    @Override
-    public boolean collidesWithSolidTiles() {
-        return false;
     }
 
     @Override
@@ -146,16 +149,6 @@ public class Bat extends Monster {
     @Override
     public boolean isAttacking() {
         return super.isAttacking() && state == State.ATTACK_PLAYER;
-    }
-
-    @Override
-    public boolean isPushing() {
-        return false;
-    }
-
-    @Override
-    public boolean isPushable() {
-        return false;
     }
 
     @Override

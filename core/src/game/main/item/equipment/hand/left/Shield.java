@@ -19,6 +19,10 @@ public class Shield extends LeftHand {
     public int armIndex;
     public boolean renderBehind;
 
+    public float parryTime;
+
+    public float block;
+
     @Override
     public void update(Player h) {
         super.update(h);
@@ -97,11 +101,25 @@ public class Shield extends LeftHand {
     }
 
     @Override
+    public void onStartUse(Player h) {
+        super.onStartUse(h);
+
+        h.setBlocking(true);
+    }
+
+    @Override
+    public void onFinishUse(Player h) {
+        super.onFinishUse(h);
+
+        h.setBlocking(false);
+    }
+
+    @Override
     public void eventReceived(EntityEvent e) {
         super.eventReceived(e);
 
         if (e instanceof BlockEvent) {
-            if (useTime < .0125f) {
+            if (useTime < parryTime) {
                 e.e.map.screenShake += 2;
                 ((BlockEvent) e).blocked.hitFlashTime += .1f;
                 ((BlockEvent) e).blocked.stunTime += 2f;

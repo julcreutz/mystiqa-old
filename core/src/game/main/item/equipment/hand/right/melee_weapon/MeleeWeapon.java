@@ -54,6 +54,8 @@ public class MeleeWeapon extends RightHand {
 
     public float fireParticleTime;
 
+    public boolean wasBlocking;
+
     @Override
     public void update(Player h) {
         super.update(h);
@@ -94,8 +96,9 @@ public class MeleeWeapon extends RightHand {
 
             if (attackTime < 0) {
                 attackTime = 0;
-
                 attacking = false;
+
+                h.blocking = wasBlocking;
             }
 
             float relativeAngle = a - h.dir * 90f;
@@ -143,6 +146,14 @@ public class MeleeWeapon extends RightHand {
                 h.map.entities.addEntity(p);
             }
         }
+    }
+
+    @Override
+    public void onStartUse(Player h) {
+        super.onStartUse(h);
+
+        wasBlocking = h.blocking;
+        h.setBlocking(false);
     }
 
     @Override

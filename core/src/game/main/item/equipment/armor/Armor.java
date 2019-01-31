@@ -9,4 +9,5 @@ public class Armor extends Equipment {
     public SpriteSheet head;
 
     public float defense;
+    public float speed;
 }
