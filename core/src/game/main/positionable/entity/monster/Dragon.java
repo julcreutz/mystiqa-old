@@ -1,4 +1,4 @@
-package game.main.positionable.entity;
+package game.main.positionable.entity.monster;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
@@ -8,8 +8,8 @@ import game.SpriteSheet;
 import game.main.Game;
 import game.main.positionable.entity.projectile.Fireball;
 
-public class Dragon extends Entity {
-    public static class Head extends Entity {
+public class Dragon extends Monster {
+    public static class Head extends Monster {
         public Dragon body;
         public SpriteSheet spriteSheet;
 
@@ -132,8 +132,6 @@ public class Dragon extends Entity {
                     p.x = spewing.x;
                     p.y = spewing.y;
 
-                    p.isMonster = isMonster;
-
                     p.dir = new Vector2(map.player.x, map.player.y).sub(spewing.x, spewing.y).angle();
 
                     map.entities.addEntity(p);
@@ -177,8 +175,6 @@ public class Dragon extends Entity {
 
         for (int i = 0; i < minHeads + Game.RANDOM.nextInt(maxHeads - minHeads + 1); i++) {
             final Head h = new Head();
-
-            h.isMonster = isMonster;
 
             h.body = this;
 

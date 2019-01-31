@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
 import game.SpriteSheet;
 import game.main.Game;
-import game.main.positionable.entity.Humanoid;
+import game.main.positionable.entity.Player;
 import game.main.positionable.entity.particle.Flame;
 import game.main.item.equipment.hand.right.RightHand;
 
@@ -55,7 +55,7 @@ public class MeleeWeapon extends RightHand {
     public float fireParticleTime;
 
     @Override
-    public void update(Humanoid h) {
+    public void update(Player h) {
         super.update(h);
 
         if (isAttacking()) {
@@ -146,7 +146,7 @@ public class MeleeWeapon extends RightHand {
     }
 
     @Override
-    public void onUse(Humanoid h) {
+    public void onUse(Player h) {
         super.onUse(h);
 
         if (!attacking) {
@@ -156,7 +156,7 @@ public class MeleeWeapon extends RightHand {
     }
 
     @Override
-    public void onFinishUse(Humanoid h) {
+    public void onFinishUse(Player h) {
         super.onFinishUse(h);
 
         if (attackTime > 0) {
@@ -165,7 +165,7 @@ public class MeleeWeapon extends RightHand {
     }
 
     @Override
-    public void render(SpriteBatch batch, Humanoid h) {
+    public void render(SpriteBatch batch, Player h) {
         super.render(batch, h);
 
         ShaderProgram old = batch.getShader();

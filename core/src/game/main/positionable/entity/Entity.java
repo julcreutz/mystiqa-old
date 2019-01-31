@@ -3,13 +3,13 @@ package game.main.positionable.entity;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import game.SpriteSheet;
 import game.main.Game;
 import game.main.positionable.Hitbox;
 import game.main.positionable.Positionable;
+import game.main.positionable.entity.monster.Monster;
 import game.main.positionable.entity.particle.Cut;
 import game.main.positionable.entity.particle.Flame;
 import game.main.positionable.entity.particle.Smoke;
@@ -49,6 +49,8 @@ public abstract class Entity implements Positionable {
     public float fire;
     public float fireResistance;
 
+    public int level;
+
     public boolean updated;
 
     public Array<Entity> hit;
@@ -56,8 +58,6 @@ public abstract class Entity implements Positionable {
     public float hitTime;
     public float hitSpeed;
     public float hitAngle;
-
-    public boolean isMonster;
 
     public boolean onTeleport;
 
@@ -135,8 +135,10 @@ public abstract class Entity implements Positionable {
                                 if (attackHitbox.overlaps(e)) {
                                     if (!contains) {
                                         if (e.health > 0) {
-                                            e.health -= MathUtils.clamp(getDamage() - e.getDefense(),
+                                            float dmg = MathUtils.clamp(getDamage() - e.getDefense(),
                                                     1, Float.MAX_VALUE);
+
+                                            e.health -= dmg;
                                         }
 
                                         if (!e.isOnFire()) {
@@ -375,6 +377,10 @@ public abstract class Entity implements Positionable {
         return maxHealth;
     }
 
+    public float getHealthPercentage() {
+        return health / getMaxHealth();
+    }
+
     public float getSpeed() {
         return speed;
     }
@@ -450,7 +456,7 @@ public abstract class Entity implements Positionable {
     }
 
     public boolean isHostile(Entity e) {
-        return isMonster != e.isMonster;
+        return e instanceof Monster;
     }
 
     public Tile tileAt() {

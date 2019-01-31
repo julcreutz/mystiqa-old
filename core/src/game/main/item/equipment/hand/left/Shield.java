@@ -7,7 +7,7 @@ import game.SpriteSheet;
 import game.main.Game;
 import game.main.positionable.entity.event.BlockEvent;
 import game.main.positionable.entity.event.EntityEvent;
-import game.main.positionable.entity.Humanoid;
+import game.main.positionable.entity.Player;
 
 public class Shield extends LeftHand {
     public SpriteSheet spriteSheet;
@@ -20,7 +20,7 @@ public class Shield extends LeftHand {
     public boolean renderBehind;
 
     @Override
-    public void update(Humanoid h) {
+    public void update(Player h) {
         super.update(h);
 
         int dir;
@@ -110,7 +110,7 @@ public class Shield extends LeftHand {
     }
 
     @Override
-    public void render(SpriteBatch batch, Humanoid h) {
+    public void render(SpriteBatch batch, Player h) {
         super.render(batch, h);
 
         ShaderProgram lastShader = batch.getShader();

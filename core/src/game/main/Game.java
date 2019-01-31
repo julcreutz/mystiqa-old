@@ -2,7 +2,9 @@ package game.main;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.MathUtils;
 import game.main.item.equipment.hand.right.melee_weapon.BattleAxe;
 import game.main.state.play.map.Cave;
 import game.resource.Shaders;
@@ -80,15 +82,4 @@ public class Game extends ApplicationAdapter {
 	public static float getDelta() {
 		return Gdx.graphics.getDeltaTime();
 	}
-
-	/*
-	public static void write(SpriteBatch batch, String text, float x, float y, boolean centered) {
-		for (int i = 0; i < text.length(); i++) {
-			char c = text.charAt(i);
-			int val = (int) c - 32;
-			batch.draw(.grab(val % 10, MathUtils.floor(val / 10f)),
-					x + i * 4 - (centered ? text.length() * 2 : 0), y);
-		}
-	}
-	*/
 }

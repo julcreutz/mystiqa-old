@@ -1,4 +1,4 @@
-package game.main.positionable.entity;
+package game.main.positionable.entity.monster;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -8,7 +8,7 @@ import game.SpriteSheet;
 import game.main.Game;
 import game.main.positionable.Hitbox;
 
-public class Bat extends Entity {
+public class Bat extends Monster {
     public enum State {
         IDLE, FOCUS_PLAYER, ATTACK_PLAYER
     }
@@ -31,7 +31,6 @@ public class Bat extends Entity {
 
     public Bat() {
         hitbox.set(3, 2, 4, 2);
-        isMonster = true;
         state = State.IDLE;
         spriteSheet = new SpriteSheet("bat", 2, 1);
         scaleX = 1;
@@ -40,6 +39,7 @@ public class Bat extends Entity {
         damage = 3;
         defense = 1;
         speed = 1;
+        experience = 3;
     }
 
     @Override

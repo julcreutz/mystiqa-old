@@ -17,11 +17,7 @@ import game.main.item.equipment.hand.right.melee_weapon.HandAxe;
 import game.main.positionable.Hitbox;
 import game.main.positionable.tile.Tile;
 
-public class Humanoid extends Entity {
-    public enum State {
-        RANDOM_MOVEMENT, FOLLOW_PLAYER, ATTACK_PLAYER
-    }
-
+public class Player extends Entity {
     public SpriteSheet feet;
     public SpriteSheet body;
     public SpriteSheet head;
@@ -34,15 +30,15 @@ public class Humanoid extends Entity {
 
     public Armor armor;
 
+    public int experience;
+    public int maxExperience;
+
     public int step;
     public int dir;
     public float time;
 
     public float lastUsed;
 
-    public boolean controlledByPlayer;
-
-    public State state;
     public float stateTime;
 
     public float moveAngle;
@@ -58,13 +54,15 @@ public class Humanoid extends Entity {
 
     public boolean changeDirection;
 
-    public Humanoid() {
+    public Player() {
         hitbox.set(2, 1, 4, 2);
         attackHitbox = new Hitbox(this);
         blockHitbox = new Hitbox(this);
 
         maxHealth = 15;
         speed = 1;
+
+        maxExperience = 20;
 
         feet = new SpriteSheet("human_feet", 4, 4);
         body = new SpriteSheet("human_body", 5, 4);
@@ -73,8 +71,6 @@ public class Humanoid extends Entity {
         rightHand = new BattleAxe();
         leftHand = new HeaterShield();
         armor = new PlateArmor();
-
-        state = State.RANDOM_MOVEMENT;
     }
 
     @Override
@@ -92,100 +88,35 @@ public class Humanoid extends Entity {
         boolean useRightHand = false;
         boolean useLeftHand = false;
 
-        if (controlledByPlayer) {
-            if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-                dir.x -= 1;
-            }
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            dir.x -= 1;
+        }
 
-            if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-                dir.x += 1;
-            }
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            dir.x += 1;
+        }
 
-            if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-                dir.y -= 1;
-            }
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            dir.y -= 1;
+        }
 
-            if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-                dir.y += 1;
-            }
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            dir.y += 1;
+        }
 
-            if (Gdx.input.isKeyPressed(Input.Keys.F)) {
-                useRightHand = true;
-            }
+        if (Gdx.input.isKeyPressed(Input.Keys.F)) {
+            useRightHand = true;
+        }
 
-            if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-                useLeftHand = true;
-            }
+        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+            useLeftHand = true;
+        }
 
-            if (dir.x != 0 || dir.y != 0) {
-                moveAngle = dir.angle();
-                moveSpeed = 1;
-            } else {
-                moveSpeed = 0;
-            }
+        if (dir.x != 0 || dir.y != 0) {
+            moveAngle = dir.angle();
+            moveSpeed = 1;
         } else {
-            Vector2 toPlayer = new Vector2(map.player.x, map.player.y).sub(x, y);
-
-            switch (state) {
-                case RANDOM_MOVEMENT:
-                    if (toPlayer.len() < 32) {
-                        state = State.FOLLOW_PLAYER;
-                        break;
-                    }
-
-                    stateTime -= Game.getDelta();
-
-                    if (stateTime < 0) {
-                        stateTime = MathUtils.random(1f, 3f);
-
-                        if (MathUtils.randomBoolean(.5f)) {
-                            moveAngle = MathUtils.random(360f);
-                            moveSpeed = 1;
-                        } else {
-                            moveSpeed = 0;
-                        }
-                    }
-
-                    break;
-                case FOLLOW_PLAYER:
-                    if (toPlayer.len() > 64) {
-                        state = State.RANDOM_MOVEMENT;
-                        break;
-                    }
-
-                    actionTime -= Game.getDelta();
-
-                    if (actionTime <= 0) {
-                        if (toPlayer.len() < 16) {
-                            state = State.ATTACK_PLAYER;
-
-                            break;
-                        }
-
-                        moveAngle = toPlayer.angle();
-                        moveSpeed = 1;
-                    } else {
-                        moveSpeed = 0;
-                    }
-
-                    break;
-                case ATTACK_PLAYER:
-                    if (toPlayer.len() < 24) {
-                        useRightHand = true;
-                    }
-
-                    if (toPlayer.len() < 12) {
-                        state = State.FOLLOW_PLAYER;
-                        actionTime = MathUtils.random(.5f, 1f);
-
-                        break;
-                    }
-
-                    moveAngle = toPlayer.angle();
-                    moveSpeed = 1;
-
-                    break;
-            }
+            moveSpeed = 0;
         }
 
         changeDirection = true;
@@ -215,23 +146,19 @@ public class Humanoid extends Entity {
             velY += MathUtils.round(MathUtils.sinDeg(moveAngle) * moveSpeed * 24f * getSpeed());
 
             if (changeDirection && lastUsed > .01f) {
-                if (controlledByPlayer) {
-                    switch (MathUtils.round((moveAngle + 360f) / 45f) % 8) {
-                        case 0:
-                            this.dir = 0;
-                            break;
-                        case 2:
-                            this.dir = 1;
-                            break;
-                        case 4:
-                            this.dir = 2;
-                            break;
-                        case 6:
-                            this.dir = 3;
-                            break;
-                    }
-                } else {
-                    this.dir = MathUtils.round((moveAngle + 360f) / 90f) % 4;
+                switch (MathUtils.round((moveAngle + 360f) / 45f) % 8) {
+                    case 0:
+                        this.dir = 0;
+                        break;
+                    case 2:
+                        this.dir = 1;
+                        break;
+                    case 4:
+                        this.dir = 2;
+                        break;
+                    case 6:
+                        this.dir = 3;
+                        break;
                 }
             }
 
@@ -551,6 +478,11 @@ public class Humanoid extends Entity {
     }
 
     @Override
+    public float getMaxHealth() {
+        return super.getMaxHealth() + level * 2;
+    }
+
+    @Override
     public float getDamage() {
         return super.getDamage() + (rightHand != null ? rightHand.damage : 0);
     }
@@ -563,5 +495,26 @@ public class Humanoid extends Entity {
     @Override
     public float getFire() {
         return super.getFire() + (rightHand != null ? rightHand.fire : 0);
+    }
+
+    public void addExperience(int experience) {
+        this.experience += experience;
+
+        if (this.experience >= getMaxExperience()) {
+            this.experience -= getMaxExperience();
+            level++;
+
+            health = getMaxHealth();
+
+            map.play.setMessage("You reach level " + (level + 1) + "!");
+        }
+    }
+
+    public int getMaxExperience() {
+        return maxExperience + level * level * 5;
+    }
+
+    public float getExperiencePercentage() {
+        return (float) experience / (float) getMaxExperience();
     }
 }

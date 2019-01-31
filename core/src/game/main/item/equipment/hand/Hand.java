@@ -3,14 +3,14 @@ package game.main.item.equipment.hand;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import game.main.Game;
 import game.main.item.equipment.Equipment;
-import game.main.positionable.entity.Humanoid;
+import game.main.positionable.entity.Player;
 
 public abstract class Hand extends Equipment {
     public float useTime;
     public int useState;
     public boolean isUsing;
 
-    public void update(Humanoid h) {
+    public void update(Player h) {
         if (useTime > 0) {
             if (!isUsing) {
                 onStartUse(h);
@@ -30,23 +30,23 @@ public abstract class Hand extends Equipment {
         }
     }
 
-    public void render(SpriteBatch batch, Humanoid h) {
+    public void render(SpriteBatch batch, Player h) {
     }
 
-    public void use(Humanoid h) {
+    public void use(Player h) {
         useTime += Game.getDelta();
         useState++;
     }
 
-    public void onStartUse(Humanoid h) {
+    public void onStartUse(Player h) {
 
     }
 
-    public void onUse(Humanoid h) {
+    public void onUse(Player h) {
 
     }
 
-    public void onFinishUse(Humanoid h) {
+    public void onFinishUse(Player h) {
 
     }
 

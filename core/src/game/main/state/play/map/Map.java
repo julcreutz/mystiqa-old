@@ -8,6 +8,8 @@ import com.badlogic.gdx.utils.Array;
 import game.SpriteSheet;
 import game.main.Game;
 import game.main.positionable.entity.*;
+import game.main.positionable.entity.monster.Bat;
+import game.main.positionable.entity.monster.Monster;
 import game.main.state.play.Play;
 import game.main.state.play.map.lock.Lock;
 import game.main.positionable.tile.Tile;
@@ -195,7 +197,7 @@ public abstract class Map {
             Array<Entity> monsters = new Array<Entity>();
 
             for (Entity e : getContainedEntities()) {
-                if (e.isMonster && e.isVulnerable()) {
+                if (e instanceof Monster) {
                     monsters.add(e);
                 }
             }
@@ -283,13 +285,6 @@ public abstract class Map {
         }
     }
 
-    public static class Monster {
-        public String monster;
-
-        public float minChance;
-        public float maxChance;
-    }
-
     public static class LockChoice {
         public Lock.Type lock;
 
@@ -324,7 +319,7 @@ public abstract class Map {
     public TileManager tiles;
 
     public EntityManager entities;
-    public Humanoid player;
+    public Player player;
 
     public int x0;
     public int x1;
@@ -479,15 +474,6 @@ public abstract class Map {
         entities.render(batch);
 
         batch.setShader(null);
-
-        // GUI
-        batch.draw(guiLayer.grab(0, 0),
-                 play.cam.position.x - Game.WIDTH * .5f, play.cam.position.y + Game.HEIGHT * .5f - 8, Game.WIDTH, 8);
-
-        /*
-        batch.draw(player.rightHand.icon.split[0][0],
-                play.cam.position.x - Game.WIDTH * .5f + 8, play.cam.position.y + Game.HEIGHT * .5f - 8);
-        */
     }
 
     public void positionCamera() {
@@ -1156,11 +1142,9 @@ public abstract class Map {
         // Place player
         rooms.first().spawnMonsters = false;
 
-        Humanoid player = new Humanoid();
+        Player player = new Player();
         player.x = rooms.first().getCenterX() * 8 - 4;
         player.y = rooms.first().getCenterY() * 8 - 4;
-
-        player.controlledByPlayer = true;
 
         this.player = player;
         entities.addEntity(player);
@@ -1330,4 +1314,6 @@ public abstract class Map {
             this.screenShake = screenShake;
         }
     }
+
+
 }

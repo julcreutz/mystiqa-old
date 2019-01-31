@@ -1,4 +1,4 @@
-package game.main.positionable.entity;
+package game.main.positionable.entity.monster;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -9,7 +9,7 @@ import game.SpriteSheet;
 import game.main.Game;
 import game.main.positionable.Hitbox;
 
-public class Slime extends Entity {
+public class Slime extends Monster {
     public enum State {
         RANDOM_MOVEMENT,
         FOLLOW_PLAYER,
@@ -35,7 +35,6 @@ public class Slime extends Entity {
 
     public Slime() {
         hitbox.set(1, 1, 6, 4);
-        isMonster = true;
         spriteSheet = new SpriteSheet("slime", 2, 2);
         state = State.RANDOM_MOVEMENT;
 
