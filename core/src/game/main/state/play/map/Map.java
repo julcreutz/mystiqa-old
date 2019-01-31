@@ -1167,6 +1167,8 @@ public abstract class Map {
                         //Entity monster = Game.ENTITIES.load(monsters.get(Game.RANDOM.nextInt(monsters.size)));
                         Entity monster = new Bat();
 
+                        monster.level = Game.RANDOM.nextInt(4);
+
                         int x;
                         int y;
 
@@ -1314,6 +1316,4 @@ public abstract class Map {
             this.screenShake = screenShake;
         }
     }
-
-
 }

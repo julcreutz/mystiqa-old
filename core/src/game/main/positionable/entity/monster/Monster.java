@@ -1,9 +1,15 @@
 package game.main.positionable.entity.monster;
 
+import com.badlogic.gdx.math.MathUtils;
 import game.main.positionable.entity.Entity;
 
 public class Monster extends Entity {
-    public int experience;
+    public float experience;
+    public float experiencePerLevel;
+
+    public float getExperience() {
+        return experience + MathUtils.floor(level * experiencePerLevel);
+    }
 
     @Override
     public boolean isHostile(Entity e) {
@@ -14,6 +20,6 @@ public class Monster extends Entity {
     public void onDeath() {
         super.onDeath();
 
-        map.player.addExperience(experience);
+        map.player.addExperience(getExperience());
     }
 }

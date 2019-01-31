@@ -8,7 +8,6 @@ public class HandAxe extends MeleeWeapon {
         spriteSheet = new SpriteSheet("hand_axe");
 
         damage = 4;
-        fire = 1;
         speed = 0.67f;
         angle = 180;
     }

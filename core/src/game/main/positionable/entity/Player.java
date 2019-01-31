@@ -10,6 +10,7 @@ import game.main.Game;
 import game.main.item.equipment.armor.Armor;
 import game.main.item.equipment.armor.PlateArmor;
 import game.main.item.equipment.hand.left.HeaterShield;
+import game.main.item.equipment.hand.left.RoundShield;
 import game.main.item.equipment.hand.right.RightHand;
 import game.main.item.equipment.hand.left.LeftHand;
 import game.main.item.equipment.hand.right.melee_weapon.BattleAxe;
@@ -30,8 +31,8 @@ public class Player extends Entity {
 
     public Armor armor;
 
-    public int experience;
-    public int maxExperience;
+    public float experience;
+    public float maxExperience;
 
     public int step;
     public int dir;
@@ -69,7 +70,7 @@ public class Player extends Entity {
         head = new SpriteSheet("human_head", 1, 4);
 
         rightHand = new HandAxe();
-        leftHand = new HeaterShield();
+        leftHand = new RoundShield();
         armor = new PlateArmor();
     }
 
@@ -497,7 +498,7 @@ public class Player extends Entity {
         return super.getFire() + (rightHand != null ? rightHand.fire : 0);
     }
 
-    public void addExperience(int experience) {
+    public void addExperience(float experience) {
         this.experience += experience;
 
         if (this.experience >= getMaxExperience()) {
@@ -510,11 +511,11 @@ public class Player extends Entity {
         }
     }
 
-    public int getMaxExperience() {
+    public float getMaxExperience() {
         return maxExperience + level * level * 5;
     }
 
     public float getExperiencePercentage() {
-        return (float) experience / (float) getMaxExperience();
+        return experience / getMaxExperience();
     }
 }

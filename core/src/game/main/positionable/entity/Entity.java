@@ -40,11 +40,14 @@ public abstract class Entity implements Positionable {
 
     public float health;
     public float maxHealth;
+    public float maxHealthPerLevel;
 
     public float speed;
 
     public float damage;
+    public float damagePerLevel;
     public float defense;
+    public float defensePerLevel;
 
     public float fire;
     public float fireResistance;
@@ -374,7 +377,7 @@ public abstract class Entity implements Positionable {
     }
 
     public float getMaxHealth() {
-        return maxHealth;
+        return maxHealth + MathUtils.floor(level * maxHealthPerLevel);
     }
 
     public float getHealthPercentage() {
@@ -386,11 +389,11 @@ public abstract class Entity implements Positionable {
     }
 
     public float getDamage() {
-        return damage;
+        return damage + MathUtils.floor(level * damagePerLevel);
     }
 
     public float getDefense() {
-        return defense;
+        return defense + MathUtils.floor(level * defensePerLevel);
     }
 
     public float getFire() {
