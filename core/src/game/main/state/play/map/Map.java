@@ -10,6 +10,8 @@ import game.main.Game;
 import game.main.positionable.entity.*;
 import game.main.positionable.entity.monster.Bat;
 import game.main.positionable.entity.monster.Monster;
+import game.main.positionable.entity.monster.Spider;
+import game.main.positionable.entity.monster.SpiderNest;
 import game.main.state.play.Play;
 import game.main.state.play.map.lock.Lock;
 import game.main.positionable.tile.Tile;
@@ -129,7 +131,7 @@ public abstract class Map {
             // Keep monsters in room
             for (Entity e : getMonsters()) {
                 e.x = MathUtils.clamp(e.x, x0() * 8, (x1() - 1) * 8);
-                e.y = MathUtils.clamp(e.y, y0() * 8, (y1() - 1) * 8);
+                e.y = MathUtils.clamp(e.y, y0() * 8 + 8, (y1() - 1) * 8);
             }
         }
 
@@ -1165,7 +1167,7 @@ public abstract class Map {
 
                     //if (monsters.size > 0) {
                         //Entity monster = Game.ENTITIES.load(monsters.get(Game.RANDOM.nextInt(monsters.size)));
-                        Entity monster = new Bat();
+                        Entity monster = MathUtils.randomBoolean(.25f) ? new SpiderNest() : new Bat();
 
                         monster.level = Game.RANDOM.nextInt(4);
 

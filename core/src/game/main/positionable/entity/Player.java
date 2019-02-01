@@ -17,6 +17,7 @@ import game.main.item.equipment.hand.right.RightHand;
 import game.main.item.equipment.hand.left.LeftHand;
 import game.main.item.equipment.hand.right.melee_weapon.BattleAxe;
 import game.main.item.equipment.hand.right.melee_weapon.HandAxe;
+import game.main.item.equipment.hand.right.melee_weapon.Longsword;
 import game.main.item.equipment.hand.right.melee_weapon.Spear;
 import game.main.positionable.Hitbox;
 import game.main.positionable.tile.Tile;
@@ -54,6 +55,8 @@ public class Player extends Entity {
 
     public boolean changeDirection;
 
+    public float invincibleTime;
+
     public Player() {
         hitbox.set(2, 1, 4, 2);
         attackHitbox = new Hitbox(this);
@@ -72,7 +75,7 @@ public class Player extends Entity {
         body = new SpriteSheet("human_body", 5, 4);
         head = new SpriteSheet("human_head", 1, 4);
 
-        rightHand = new HandAxe();
+        rightHand = new Longsword();
         leftHand = new RoundShield();
         armor = new ChainMail();
     }
@@ -162,8 +165,8 @@ public class Player extends Entity {
         }
 
         if (moveSpeed != 0) {
-            velX += MathUtils.round(MathUtils.cosDeg(moveAngle) * moveSpeed * 24f * getSpeed());
-            velY += MathUtils.round(MathUtils.sinDeg(moveAngle) * moveSpeed * 24f * getSpeed());
+            velX += MathUtils.round(MathUtils.cosDeg(moveAngle) * moveSpeed * 24f);
+            velY += MathUtils.round(MathUtils.sinDeg(moveAngle) * moveSpeed * 24f);
 
             if (changeDirection && lastUsed > .01f) {
                 switch (MathUtils.round((moveAngle + 360f) / 45f) % 8) {
@@ -196,11 +199,23 @@ public class Player extends Entity {
         if (isAttacking()) {
             lastUsed = 0;
         }
+
+        if (invincibleTime > 0) {
+            invincibleTime -= Game.getDelta();
+
+            if (invincibleTime < 0) {
+                invincibleTime = 0;
+            }
+        }
     }
 
     @Override
     public void render(SpriteBatch batch) {
         super.render(batch);
+
+        if (invincibleTime > 0 && MathUtils.floor(invincibleTime * 30f) % 2 == 0) {
+            return;
+        }
 
         yOffset = this.y + (step % 2 != 0 ? -1 : 0);
 
@@ -541,5 +556,27 @@ public class Player extends Entity {
     @Override
     public float getMaxBlock() {
         return super.getMaxBlock() + (leftHand instanceof Shield ? ((Shield) leftHand).block : 0);
+    }
+
+    @Override
+    public void onHit(Entity by) {
+        super.onHit(by);
+
+        invincibleTime += 1f;
+    }
+
+    @Override
+    public boolean isVulnerable() {
+        return super.isVulnerable() && invincibleTime == 0;
+    }
+
+    @Override
+    public boolean isPushing() {
+        return super.isPushing() && invincibleTime == 0;
+    }
+
+    @Override
+    public boolean isPushable() {
+        return super.isPushable() && invincibleTime == 0;
     }
 }

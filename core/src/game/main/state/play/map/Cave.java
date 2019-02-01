@@ -7,6 +7,7 @@ import game.main.positionable.tile.connected.CaveWall;
 import game.main.positionable.tile.unconnected.CaveGround;
 import game.main.positionable.tile.unconnected.CaveMushroom;
 import game.main.positionable.tile.unconnected.CaveRock;
+import game.main.positionable.tile.connected.SpiderWeb;
 
 public class Cave extends Map {
     public Cave() {
@@ -132,6 +133,7 @@ public class Cave extends Map {
         };
 
         grounds.add(new Ground(1, CaveGround.class));
+        grounds.add(new Ground(.25f, SpiderWeb.class));
         grounds.add(new Ground(.05f, CaveMushroom.class));
         grounds.add(new Ground(.025f, CaveRock.class));
     }

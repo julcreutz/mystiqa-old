@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import game.SpriteSheet;
 import game.main.Game;
 import game.main.positionable.Hitbox;
+import game.main.positionable.entity.Entity;
 
 public class Bat extends Monster {
     public enum State {
@@ -64,7 +65,7 @@ public class Bat extends Monster {
 
                 if (moveTime < 0) {
                     moveDir = MathUtils.random(360f);
-                    moveSpeed = MathUtils.random(8f, 16f) * getSpeed();
+                    moveSpeed = MathUtils.random(8f, 16f);
 
                     moveTime = MathUtils.random(.5f, 2f);
                 }
@@ -87,7 +88,7 @@ public class Bat extends Monster {
                 break;
             case FOCUS_PLAYER:
                 if (distToPlayer < 16f) {
-                    float speed = 48f * getSpeed();
+                    float speed = 12f * getSpeed();
 
                     velX += MathUtils.cosDeg(angleToPlayer + 180) * speed;
                     velY += MathUtils.sinDeg(angleToPlayer + 180) * speed;
@@ -100,7 +101,7 @@ public class Bat extends Monster {
 
                 if (focusTime == 0) {
                     focusTime = MathUtils.random(1f, 3f);
-                    focusSpeed = (MathUtils.randomBoolean(.5f) ? 1 : -1) * MathUtils.random(8f, 24f) * getSpeed();
+                    focusSpeed = (MathUtils.randomBoolean(.5f) ? 1 : -1) * MathUtils.random(8f, 24f);
                 }
 
                 focusTime -= Game.getDelta();
@@ -121,8 +122,8 @@ public class Bat extends Monster {
 
                 break;
             case ATTACK_PLAYER:
-                velX += MathUtils.cosDeg(attackAngle) * 56f * getSpeed();
-                velY += MathUtils.sinDeg(attackAngle) * 56f * getSpeed();
+                velX += MathUtils.cosDeg(attackAngle) * 56f;
+                velY += MathUtils.sinDeg(attackAngle) * 56f;
 
                 if (attackTime == 0) {
                     attackTime = distToPlayer * .025f;
@@ -158,5 +159,15 @@ public class Bat extends Monster {
         TextureRegion img = spriteSheet.grab(MathUtils.floor(animTime * 7.5f) % spriteSheet.getColumns(), 0);
         batch.draw(img, x, y, img.getRegionWidth() * .5f, img.getRegionHeight() * .5f,
                 img.getRegionWidth(), img.getRegionHeight(), scaleX, 1, 0);
+    }
+
+    @Override
+    public void onIsBlocked(Entity blocker) {
+        super.onIsBlocked(blocker);
+
+        if (state == State.ATTACK_PLAYER) {
+            state = State.FOCUS_PLAYER;
+            attackTime = 0;
+        }
     }
 }

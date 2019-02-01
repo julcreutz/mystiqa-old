@@ -86,6 +86,10 @@ public abstract class Entity implements Positionable {
 
     public boolean isFlying;
 
+    public boolean receiveKnockback;
+
+    public float hitShakeMultiplier;
+
     public Entity() {
         hitbox = new Hitbox(this);
 
@@ -94,6 +98,10 @@ public abstract class Entity implements Positionable {
         inventory = new Array<Item>();
 
         star = new SpriteSheet("star");
+
+        receiveKnockback = true;
+
+        hitShakeMultiplier = 1;
     }
 
     public void preUpdate() {
@@ -158,10 +166,12 @@ public abstract class Entity implements Positionable {
 
                                         e.hitTime = .1f;
 
-                                        e.hitAngle = new Vector2(e.x, e.y).sub(x, y).angle();
-                                        e.hitSpeed = e.isDead() ? 96f : 48f;
+                                        if (e.receiveKnockback) {
+                                            e.hitAngle = new Vector2(e.x, e.y).sub(x, y).angle();
+                                            e.hitSpeed = e.isDead() ? 96f : 48f;
+                                        }
 
-                                        map.shakeScreen(e.isDead() ? 2f : 1f);
+                                        map.shakeScreen((e.isDead() ? 2f : 1f) * e.hitShakeMultiplier);
 
                                         hit.add(e);
 
@@ -214,7 +224,7 @@ public abstract class Entity implements Positionable {
         }
 
         Tile tileAt = tileAt();
-        float moveSpeed = 1;
+        float moveSpeed = getSpeed();
 
         if (tileAt != null) {
             moveSpeed = tileAt.moveSpeed;
@@ -520,7 +530,7 @@ public abstract class Entity implements Positionable {
 
         block -= blocked.getDamage();
         if (block < 0) {
-            stunTime = 3f;
+            stunTime = Math.abs(block);
             setBlocking(false);
         }
     }
@@ -626,6 +636,8 @@ public abstract class Entity implements Positionable {
 
         if (blocking) {
             block = getMaxBlock();
+        } else {
+            block = 0;
         }
     }
 
