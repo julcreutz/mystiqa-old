@@ -19,6 +19,13 @@ public class Projectile extends Entity {
 
     public Projectile() {
         hitbox.set(0, 0, 8, 8);
+
+        isVulnerable = false;
+
+        isPushable = false;
+
+        collidesWithEntities = false;
+        collidesWithTiles = false;
     }
 
     @Override
@@ -65,21 +72,6 @@ public class Projectile extends Entity {
     }
 
     @Override
-    public boolean isVulnerable() {
-        return false;
-    }
-
-    @Override
-    public boolean collidesWithSolidTiles() {
-        return false;
-    }
-
-    @Override
-    public boolean collidesWithSolidEntities() {
-        return false;
-    }
-
-    @Override
     public Hitbox getAttackHitbox() {
         return getHitbox();
     }
@@ -87,16 +79,6 @@ public class Projectile extends Entity {
     @Override
     public boolean isAttacking() {
         return true;
-    }
-
-    @Override
-    public boolean isPushing() {
-        return false;
-    }
-
-    @Override
-    public boolean isPushable() {
-        return false;
     }
 
     @Override

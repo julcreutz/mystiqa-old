@@ -11,6 +11,8 @@ public class Chest extends Entity implements Interactable {
     public Chest() {
         hitbox.set(0, 0, 8, 4);
         spriteSheet = new SpriteSheet("chest", 2, 1);
+
+        isVulnerable = false;
     }
 
     @Override
@@ -18,11 +20,6 @@ public class Chest extends Entity implements Interactable {
         super.render(batch);
 
         batch.draw(spriteSheet.grab(opened ? 1 : 0, 0), x, y);
-    }
-
-    @Override
-    public boolean isVulnerable() {
-        return false;
     }
 
     @Override

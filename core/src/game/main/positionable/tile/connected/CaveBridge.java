@@ -7,7 +7,7 @@ import game.main.positionable.tile.unconnected.CaveRock;
 
 public class CaveBridge extends ConnectedTile {
     public CaveBridge() {
-        connectWith = new Class[] {CaveGround.class, CaveMushroom.class, CaveRock.class};
+        connectWith = new Class[] {CaveGround.class, CaveMushroom.class, CaveRock.class, CaveSpiderWeb.class};
         spriteSheet = new SpriteSheet("cave_bridge", 5, 4);
     }
 }

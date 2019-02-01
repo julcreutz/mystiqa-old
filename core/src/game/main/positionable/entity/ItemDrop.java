@@ -12,6 +12,11 @@ public class ItemDrop extends Entity {
     public ItemDrop(Item i) {
         this.i = i;
         hitbox.set(0, 0, 8, 8);
+
+        isVulnerable = false;
+
+        isPushable = false;
+        isPushing = false;
     }
 
     @Override
@@ -26,21 +31,6 @@ public class ItemDrop extends Entity {
         super.render(batch);
 
         batch.draw(i.icon.grab(0, 0), x, y + yOffset);
-    }
-
-    @Override
-    public boolean isVulnerable() {
-        return false;
-    }
-
-    @Override
-    public boolean isPushing() {
-        return false;
-    }
-
-    @Override
-    public boolean isPushable() {
-        return false;
     }
 
     @Override

@@ -18,6 +18,12 @@ public class Dragon extends Monster {
 
         public Head() {
             hitbox.set(0, 0, 8, 8);
+
+            isPushable = false;
+            isPushing = false;
+
+            collidesWithEntities = false;
+            collidesWithTiles = false;
         }
 
         @Override
@@ -64,26 +70,6 @@ public class Dragon extends Monster {
         @Override
         public float getSortLevel() {
             return Float.MIN_VALUE;
-        }
-
-        @Override
-        public boolean isPushing() {
-            return false;
-        }
-
-        @Override
-        public boolean isPushable() {
-            return false;
-        }
-
-        @Override
-        public boolean collidesWithSolidTiles() {
-            return false;
-        }
-
-        @Override
-        public boolean collidesWithSolidEntities() {
-            return false;
         }
     }
 

@@ -17,6 +17,8 @@ public class SpiderNest extends Monster {
     public SpiderNest() {
         hitbox.set(0, 0, 8, 4);
 
+        isPushable = false;
+
         maxHealth = 11;
         maxHealthPerLevel = 3;
         defense = 2;
@@ -69,11 +71,6 @@ public class SpiderNest extends Monster {
 
     @Override
     public boolean isAttacking() {
-        return false;
-    }
-
-    @Override
-    public boolean isPushable() {
         return false;
     }
 }

@@ -32,6 +32,11 @@ public class Door extends Entity {
         bossKey = new SpriteSheet("dungeon_door_boss_key", 3, 1);
         wall = new SpriteSheet("dungeon_wall", 5, 4);
         visible = false;
+
+        isPushable = false;
+        isPushing = false;
+
+        isVulnerable = false;
     }
 
     @Override
@@ -43,6 +48,8 @@ public class Door extends Entity {
         }
 
         if (visible) {
+            isSolid = true;
+
             if (openTime < 1) {
                 openTime += Game.getDelta() * OPEN_SPEED;
 
@@ -51,6 +58,8 @@ public class Door extends Entity {
                 }
             }
         } else {
+            isSolid = false;
+
             if (openTime > 0) {
                 openTime -= Game.getDelta() * OPEN_SPEED;
 
@@ -116,26 +125,6 @@ public class Door extends Entity {
                 batch.draw(wall.grab(1, 0), x + 16, y + 8);
             }
         }
-    }
-
-    @Override
-    public boolean isPushable() {
-        return false;
-    }
-
-    @Override
-    public boolean isPushing() {
-        return false;
-    }
-
-    @Override
-    public boolean isSolid() {
-        return visible;
-    }
-
-    @Override
-    public boolean isVulnerable() {
-        return false;
     }
 
     @Override

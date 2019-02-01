@@ -17,6 +17,13 @@ public class Spikes extends Entity {
     public Spikes() {
         hitbox.set(0, 0, 8, 8);
         spriteSheet = new SpriteSheet("spikes", 3, 1);
+
+        isPushable = false;
+        isPushing = false;
+
+        isVulnerable = false;
+
+        isBlockable = false;
     }
 
     @Override
@@ -40,16 +47,6 @@ public class Spikes extends Entity {
     }
 
     @Override
-    public boolean isPushing() {
-        return false;
-    }
-
-    @Override
-    public boolean isPushable() {
-        return false;
-    }
-
-    @Override
     public float getSortLevel() {
         return Float.MAX_VALUE;
     }
@@ -62,15 +59,5 @@ public class Spikes extends Entity {
     @Override
     public boolean isAttacking() {
         return state == 2 || state == 3;
-    }
-
-    @Override
-    public boolean isVulnerable() {
-        return false;
-    }
-
-    @Override
-    public boolean isBlockable() {
-        return false;
     }
 }

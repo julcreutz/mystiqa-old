@@ -21,6 +21,13 @@ public class Block extends Entity {
     public Block() {
         hitbox.set(0, 0, 8, 8);
         spriteSheet = new SpriteSheet("dungeon_block");
+
+        isPushable = false;
+        isPushing = false;
+
+        isVulnerable = false;
+
+        isSolid = true;
     }
 
     @Override
@@ -71,26 +78,6 @@ public class Block extends Entity {
 
         startX = x;
         startY = y;
-    }
-
-    @Override
-    public boolean isVulnerable() {
-        return false;
-    }
-
-    @Override
-    public boolean isPushing() {
-        return false;
-    }
-
-    @Override
-    public boolean isPushable() {
-        return false;
-    }
-
-    @Override
-    public boolean isSolid() {
-        return true;
     }
 
     public float getStartDistance() {

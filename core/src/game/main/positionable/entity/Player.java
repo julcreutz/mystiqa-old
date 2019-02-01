@@ -9,6 +9,7 @@ import game.SpriteSheet;
 import game.main.Game;
 import game.main.item.equipment.armor.Armor;
 import game.main.item.equipment.armor.ChainMail;
+import game.main.item.equipment.armor.LeatherArmor;
 import game.main.item.equipment.armor.PlateArmor;
 import game.main.item.equipment.hand.left.HeaterShield;
 import game.main.item.equipment.hand.left.RoundShield;
@@ -74,14 +75,12 @@ public class Player extends Entity {
         feet = new SpriteSheet("human_feet", 4, 4);
         body = new SpriteSheet("human_body", 5, 4);
         head = new SpriteSheet("human_head", 1, 4);
-
-        rightHand = new Longsword();
-        leftHand = new RoundShield();
-        armor = new ChainMail();
     }
 
     @Override
     public void update() {
+        super.update();
+
         if (blockTime > 0) {
             blockTime -= Game.getDelta();
         } else {
@@ -130,25 +129,25 @@ public class Player extends Entity {
 
         changeDirection = true;
 
-        if (rightHand != null) {
-            if (useRightHand) {
-                Interactable interactable = null;
+        if (useRightHand) {
+            Interactable interactable = null;
 
-                hitbox.position(MathUtils.cosDeg(this.dir * 90), MathUtils.sinDeg(this.dir * 90));
+            hitbox.position(MathUtils.cosDeg(this.dir * 90), MathUtils.sinDeg(this.dir * 90));
 
-                for (Entity e : map.entities.entities) {
-                    if (e instanceof Interactable && hitbox.overlaps(e.getHitbox())) {
-                        interactable = (Interactable) e;
-                    }
-                }
-
-                if (interactable != null) {
-                    interactable.interact(this);
-                } else {
-                    rightHand.use(this);
+            for (Entity e : map.entities.entities) {
+                if (e instanceof Interactable && hitbox.overlaps(e.getHitbox())) {
+                    interactable = (Interactable) e;
                 }
             }
 
+            if (interactable != null) {
+                interactable.interact(this);
+            } else if (rightHand != null) {
+                rightHand.use(this);
+            }
+        }
+
+        if (rightHand != null) {
             rightHand.update(this);
         }
 
@@ -201,10 +200,20 @@ public class Player extends Entity {
         }
 
         if (invincibleTime > 0) {
+            isVulnerable = false;
+
+            isPushable = false;
+            isPushing = false;
+
             invincibleTime -= Game.getDelta();
 
             if (invincibleTime < 0) {
                 invincibleTime = 0;
+
+                isVulnerable = true;
+
+                isPushable = true;
+                isPushing = true;
             }
         }
     }
@@ -470,9 +479,9 @@ public class Player extends Entity {
     public void onAdded() {
         super.onAdded();
 
-        map.entities.addListener(leftHand);
-        map.entities.addListener(rightHand);
-        map.entities.addListener(armor);
+        setRightHand(new HandAxe());
+        setLeftHand(new RoundShield());
+        setArmor(new ChainMail());
     }
 
     @Override
@@ -565,18 +574,18 @@ public class Player extends Entity {
         invincibleTime += 1f;
     }
 
-    @Override
-    public boolean isVulnerable() {
-        return super.isVulnerable() && invincibleTime == 0;
+    public void setRightHand(RightHand rightHand) {
+        this.rightHand = rightHand;
+        map.entities.addListener(rightHand);
     }
 
-    @Override
-    public boolean isPushing() {
-        return super.isPushing() && invincibleTime == 0;
+    public void setLeftHand(LeftHand leftHand) {
+        this.leftHand = leftHand;
+        map.entities.addListener(leftHand);
     }
 
-    @Override
-    public boolean isPushable() {
-        return super.isPushable() && invincibleTime == 0;
+    public void setArmor(Armor armor) {
+        this.armor = armor;
+        map.entities.addListener(armor);
     }
 }

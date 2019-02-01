@@ -10,6 +10,13 @@ public class Particle extends Entity {
     public float scale;
     public float rot;
 
+    public Particle() {
+        isPushable = false;
+        isPushing = false;
+
+        isVulnerable = false;
+    }
+
     @Override
     public void update() {
         super.update();
@@ -27,21 +34,6 @@ public class Particle extends Entity {
                 image.getRegionWidth() * .5f, image.getRegionHeight() * .5f,
                 image.getRegionWidth(), image.getRegionHeight(),
                 scale, scale, rot);
-    }
-
-    @Override
-    public boolean isPushing() {
-        return false;
-    }
-
-    @Override
-    public boolean isPushable() {
-        return false;
-    }
-
-    @Override
-    public boolean isVulnerable() {
-        return false;
     }
 
     @Override

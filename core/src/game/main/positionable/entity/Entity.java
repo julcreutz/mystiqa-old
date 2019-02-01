@@ -90,6 +90,18 @@ public abstract class Entity implements Positionable {
 
     public float hitShakeMultiplier;
 
+    public boolean collidesWithTiles;
+    public boolean collidesWithEntities;
+
+    public boolean isPushing;
+    public boolean isPushable;
+
+    public boolean isSolid;
+
+    public boolean isVulnerable;
+
+    public boolean isBlockable;
+
     public Entity() {
         hitbox = new Hitbox(this);
 
@@ -102,6 +114,16 @@ public abstract class Entity implements Positionable {
         receiveKnockback = true;
 
         hitShakeMultiplier = 1;
+
+        collidesWithTiles = true;
+        collidesWithEntities = true;
+
+        isPushing = true;
+        isPushable = true;
+
+        isVulnerable = true;
+
+        isBlockable = true;
     }
 
     public void preUpdate() {
@@ -137,10 +159,10 @@ public abstract class Entity implements Positionable {
             if (isAttacking() && isOnGround()) {
                 for (Entity e : map.entities.entities) {
                     if (e != this) {
-                        if (!e.isHit() && e.isOnGround() && isHostile(e) && e.isVulnerable()) {
+                        if (!e.isHit() && e.isOnGround() && isHostile(e) && e.isVulnerable) {
                             boolean contains = hit.contains(e, true);
 
-                            if (isBlockable() && e.blocking && attackHitbox.overlaps(e.getBlockHitbox())) {
+                            if (isBlockable && e.blocking && attackHitbox.overlaps(e.getBlockHitbox())) {
                                 if (!contains) {
                                     map.shakeScreen(.5f);
 
@@ -212,9 +234,9 @@ public abstract class Entity implements Positionable {
             }
         }
 
-        if (isPushing() && isOnGround()) {
+        if (isPushing && isOnGround()) {
             for (Entity e : map.entities.entities) {
-                if (e != this && e.isPushable() && hitbox.overlaps(e) && e.isOnGround()) {
+                if (e != this && e.isPushable && hitbox.overlaps(e) && e.isOnGround()) {
                     float a = new Vector2(e.x, e.y).sub(x, y).angle();
 
                     e.velX += MathUtils.cosDeg(a) * 16f;
@@ -226,7 +248,7 @@ public abstract class Entity implements Positionable {
         Tile tileAt = tileAt();
         float moveSpeed = getSpeed();
 
-        if (tileAt != null) {
+        if (tileAt != null && !isFlying) {
             moveSpeed = tileAt.moveSpeed;
             overlay = tileAt.overlay;
         }
@@ -236,7 +258,7 @@ public abstract class Entity implements Positionable {
 
         hitbox.position(velX * Game.getDelta(), 0);
 
-        if (collidesWithSolidTiles()) {
+        if (collidesWithTiles) {
             for (int x = map.x0; x < map.x1; x++) {
                 for (int y = map.y0; y < map.y1; y++) {
                     Tile t = map.tiles.at(x, y);
@@ -256,9 +278,9 @@ public abstract class Entity implements Positionable {
             }
         }
 
-        if (collidesWithSolidEntities()) {
+        if (collidesWithEntities) {
             for (Entity e : map.entities.entities) {
-                if (e != this && e.isSolid() && e.hitbox.overlaps(this)) {
+                if (e != this && e.isSolid && e.hitbox.overlaps(this)) {
                     if (velX > 0) {
                         this.x = e.hitbox.getX() - hitbox.getWidth() - hitbox.offsetX;
                     } else if (velX < 0) {
@@ -274,7 +296,7 @@ public abstract class Entity implements Positionable {
 
         hitbox.position(0, velY * Game.getDelta());
 
-        if (collidesWithSolidTiles()) {
+        if (collidesWithTiles) {
             for (int x = map.x0; x < map.x1; x++) {
                 for (int y = map.y0; y < map.y1; y++) {
                     Tile t = map.tiles.at(x, y);
@@ -294,9 +316,9 @@ public abstract class Entity implements Positionable {
             }
         }
 
-        if (collidesWithSolidEntities()) {
+        if (collidesWithEntities) {
             for (Entity e : map.entities.entities) {
-                if (e != this && e.isSolid() && e.hitbox.overlaps(this)) {
+                if (e != this && e.isSolid && e.hitbox.overlaps(this)) {
                     if (velY > 0) {
                         this.y = e.hitbox.getY() - hitbox.getHeight() - hitbox.offsetY;
                     } else if (velY < 0) {
@@ -569,45 +591,6 @@ public abstract class Entity implements Positionable {
 
     public void onSolidTileCollision(Tile t) {
 
-    }
-
-    /** @return whether entity collides with solid tiles */
-    public boolean collidesWithSolidTiles() {
-        return true;
-    }
-
-    public boolean collidesWithSolidEntities() {
-        return true;
-    }
-
-    /** @return whether entity is able to push other entities away */
-    public boolean isPushing() {
-        return true;
-    }
-
-    /** @return whether entity is able to be pushed away by other entities. */
-    public boolean isPushable() {
-        return true;
-    }
-
-    /**
-     * Returns whether entity is solid. Being solid means other entities pushed out similarly to how solid tiles
-     * function.
-     *
-     * @return whether entity is solid
-     */
-    public boolean isSolid() {
-        return false;
-    }
-
-    /** @return whether entity is able to be attacked by other entities */
-    public boolean isVulnerable() {
-        return true;
-    }
-
-    /** @return whether attack is able to be blocked by other entities */
-    public boolean isBlockable() {
-        return true;
     }
 
     /**

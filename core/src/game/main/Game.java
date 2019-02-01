@@ -24,6 +24,7 @@ public class Game extends ApplicationAdapter {
 
 	public static final int WIDTH = 80;
 	public static final int HEIGHT = 72;
+
 	public static final int SCALE = 12;
 
 	public static final Random RANDOM = new Random();

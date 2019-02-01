@@ -90,6 +90,8 @@ public abstract class Map {
 
         public Template template;
 
+        public float treasureChance;
+
         public Room(Map map, int x, int y, int w, int h) {
             this.map = map;
 
@@ -713,6 +715,15 @@ public abstract class Map {
             r.difficulty /= maxDifficulty;
         }
 
+        // Treasure chance
+        for (Room r : rooms) {
+            if (r.children.size == 0) {
+                r.treasureChance = 1;
+            } else {
+                r.treasureChance = r.difficulty;
+            }
+        }
+
         // Pick the boss room
         Room bossRoom = null;
 
@@ -901,7 +912,7 @@ public abstract class Map {
                         case 'c':
                             tiles.set(getGround(), xx, yy);
 
-                            if (Game.RANDOM.nextFloat() < r.difficulty) {
+                            if (Game.RANDOM.nextFloat() < r.treasureChance) {
                                 try {
                                     Chest c = (Chest) chest.newInstance();
 
