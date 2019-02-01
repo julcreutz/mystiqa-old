@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import game.SpriteSheet;
 import game.main.item.Item;
 
-public class Chest extends Entity {
+public class Chest extends Entity implements Interactable {
     public SpriteSheet spriteSheet;
     public boolean opened;
 
@@ -31,10 +31,8 @@ public class Chest extends Entity {
     }
 
     @Override
-    public void onCollision(Entity e) {
-        super.onCollision(e);
-
-        if (e == map.player && !opened) {
+    public void interact(Entity interactor) {
+        if (!opened) {
             opened = true;
 
             for (Item i : inventory) {

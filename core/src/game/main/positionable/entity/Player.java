@@ -129,7 +129,21 @@ public class Player extends Entity {
 
         if (rightHand != null) {
             if (useRightHand) {
-                rightHand.use(this);
+                Interactable interactable = null;
+
+                hitbox.position(MathUtils.cosDeg(this.dir * 90), MathUtils.sinDeg(this.dir * 90));
+
+                for (Entity e : map.entities.entities) {
+                    if (e instanceof Interactable && hitbox.overlaps(e.getHitbox())) {
+                        interactable = (Interactable) e;
+                    }
+                }
+
+                if (interactable != null) {
+                    interactable.interact(this);
+                } else {
+                    rightHand.use(this);
+                }
             }
 
             rightHand.update(this);
