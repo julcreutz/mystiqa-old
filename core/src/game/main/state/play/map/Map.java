@@ -297,11 +297,19 @@ public abstract class Map {
     }
 
     public static class Ground {
+        public float minDifficulty;
+        public float maxDifficulty;
+
         public float chance;
+
         public Class tile;
 
-        public Ground(float chance, Class tile) {
+        public Ground(float minDifficulty, float maxDifficulty, float chance, Class tile) {
+            this.minDifficulty = minDifficulty;
+            this.maxDifficulty = maxDifficulty;
+
             this.chance = chance;
+
             this.tile = tile;
         }
     }
@@ -854,7 +862,7 @@ public abstract class Map {
                             }
                             break;
                         case ' ':
-                            tiles.set(getGround(), xx, yy);
+                            tiles.set(getGround(r), xx, yy);
                             break;
                         case '.':
                             try {
@@ -866,7 +874,7 @@ public abstract class Map {
                             }
                             break;
                         case 'b':
-                            tiles.set(getGround(), xx, yy);
+                            tiles.set(getGround(r), xx, yy);
 
                             try {
                                 Entity boss = (Entity) this.boss.newInstance();
@@ -892,7 +900,7 @@ public abstract class Map {
                                     e.printStackTrace();
                                 }
                             } else {
-                                tiles.set(getGround(), xx, yy);
+                                tiles.set(getGround(r), xx, yy);
 
                                 try {
                                     Block b = (Block) block.newInstance();
@@ -910,7 +918,7 @@ public abstract class Map {
 
                             break;
                         case 'c':
-                            tiles.set(getGround(), xx, yy);
+                            tiles.set(getGround(r), xx, yy);
 
                             if (Game.RANDOM.nextFloat() < r.treasureChance) {
                                 try {
@@ -1029,7 +1037,7 @@ public abstract class Map {
 
                 for (int y = r.y0(); y < r.y1(); y++) {
                     if (tiles.at(x, y) != null && isGround(tiles.at(x, y))) {
-                        tiles.set(getGround(), x + 1, y);
+                        tiles.set(getGround(r), x + 1, y);
                     }
                 }
             }
@@ -1039,7 +1047,7 @@ public abstract class Map {
 
                 for (int y = r.y0(); y < r.y1(); y++) {
                     if (tiles.at(x, y) != null && isGround(tiles.at(x, y))) {
-                        tiles.set(getGround(), x - 1, y);
+                        tiles.set(getGround(r), x - 1, y);
                     }
                 }
             }
@@ -1049,7 +1057,7 @@ public abstract class Map {
 
                 for (int x = r.x0(); x < r.x1(); x++) {
                     if (tiles.at(x, y) != null && isGround(tiles.at(x, y))) {
-                        tiles.set(getGround(), x, y + 1);
+                        tiles.set(getGround(r), x, y + 1);
                     }
                 }
             }
@@ -1059,7 +1067,7 @@ public abstract class Map {
 
                 for (int x = r.x0(); x < r.x1(); x++) {
                     if (tiles.at(x, y) != null && isGround(tiles.at(x, y))) {
-                        tiles.set(getGround(), x, y - 1);
+                        tiles.set(getGround(r), x, y - 1);
                     }
                 }
             }
@@ -1292,14 +1300,15 @@ public abstract class Map {
         return locks.get(Game.RANDOM.nextInt(locks.size));
     }
 
-    public Tile getGround() {
+    public Tile getGround(Room r) {
         try {
             Class tile = null;
 
             do {
-                for (Ground ground : grounds) {
-                    if (Game.RANDOM.nextFloat() < ground.chance) {
-                        tile = ground.tile;
+                for (Ground g : grounds) {
+                    if (Game.RANDOM.nextFloat() < MathUtils.lerp(g.minDifficulty, g.maxDifficulty, r.difficulty)
+                            && Game.RANDOM.nextFloat() < g.chance) {
+                        tile = g.tile;
                     }
                 }
             } while (tile == null);

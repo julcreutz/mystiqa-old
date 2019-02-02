@@ -132,9 +132,9 @@ public class Cave extends Map {
                 }, Room.Direction.UP, Room.Direction.DOWN),
         };
 
-        grounds.add(new Ground(1, CaveGround.class));
-        grounds.add(new Ground(.25f, CaveSpiderWeb.class));
-        grounds.add(new Ground(.05f, CaveMushroom.class));
-        grounds.add(new Ground(.025f, CaveRock.class));
+        grounds.add(new Ground(1, 1, 1, CaveGround.class));
+        grounds.add(new Ground(0, 1, .5f, CaveSpiderWeb.class));
+        grounds.add(new Ground(1, 1, .05f, CaveMushroom.class));
+        grounds.add(new Ground(1, 1, .025f, CaveRock.class));
     }
 }
