@@ -6,10 +6,9 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import game.SpriteSheet;
 import game.main.Game;
-import game.main.positionable.tile.Tile;
 import game.main.positionable.tile.connected.CaveSpiderWeb;
 
-public class SpiderNest extends Monster {
+public class GiantSpiderNest extends Monster {
     public float startSpawnTime;
     public float spawnTime;
     public float spawnSpiderTime;
@@ -19,22 +18,22 @@ public class SpiderNest extends Monster {
     public SpriteSheet spriteSheet;
     public float scaleX;
 
-    public SpiderNest() {
-        hitbox.set(0, 4, 8, 4);
+    public GiantSpiderNest() {
+        hitbox.set(1, 6, 14, 8);
 
         isPushable = false;
 
-        maxHealth = 11;
-        maxHealthPerLevel = 3;
-        defense = 2;
-        defensePerLevel = 1;
-        experience = 5;
-        experiencePerLevel = 2;
+        maxHealth = 45;
+        maxHealthPerLevel = 9;
+        defense = 4;
+        defensePerLevel = 2;
+        experience = 16;
+        experiencePerLevel = 6;
         fireResistance = -.5f;
 
         receiveKnockback = false;
 
-        spriteSheet = new SpriteSheet("spider_nest");
+        spriteSheet = new SpriteSheet("giant_spider_nest");
         scaleX = MathUtils.randomBoolean(.5f) ? 1 : -1;
     }
 
@@ -46,7 +45,7 @@ public class SpiderNest extends Monster {
             startSpawnTime -= Game.getDelta();
 
             if (startSpawnTime < 0) {
-                startSpawnTime = MathUtils.random(3f, 6f);
+                startSpawnTime = MathUtils.random(5f, 8f);
 
                 spawnTime = 1f;
             }
@@ -57,11 +56,11 @@ public class SpiderNest extends Monster {
                 spawnSpiderTime -= Game.getDelta();
 
                 if (spawnSpiderTime < 0) {
-                    spawnSpiderTime = .2f;
+                    spawnSpiderTime = .1f;
 
                     Spider s = new Spider();
-                    s.x = x;
-                    s.y = y;
+                    s.x = x + 4;
+                    s.y = y + 4;
                     map.entities.addEntity(s);
                 }
             }
@@ -72,12 +71,12 @@ public class SpiderNest extends Monster {
 
             if (spawnFireSpiderTime < 0) {
                 Spider s = new Spider();
-                s.x = x;
-                s.y = y;
+                s.x = x + 4;
+                s.y = y + 4;
                 s.onFireTime = onFireTime;
                 map.entities.addEntity(s);
 
-                spawnFireSpiderTime = .5f;
+                spawnFireSpiderTime = .25f;
             }
         }
     }

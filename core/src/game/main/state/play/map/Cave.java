@@ -2,9 +2,7 @@ package game.main.state.play.map;
 
 import game.main.positionable.entity.Chest;
 import game.main.positionable.entity.Entity;
-import game.main.positionable.entity.monster.Bat;
-import game.main.positionable.entity.monster.Spider;
-import game.main.positionable.entity.monster.SpiderNest;
+import game.main.positionable.entity.monster.*;
 import game.main.positionable.tile.Tile;
 import game.main.positionable.tile.connected.CaveBridge;
 import game.main.positionable.tile.connected.CaveHole;
@@ -24,6 +22,17 @@ public class Cave extends Map {
         chest = Chest.class;
         minMonsters = 2;
         maxMonsters = 7;
+        boss = SpiderQueen.class;
+        bossTemplate = new Template(new char[][] {
+                {'#', '#', '#', '#', '#', ' ', '#', '#', '#', '#'},
+                {'#', '#', ' ', ' ', ' ', ' ', ' ', '#', '#', '#'},
+                {'#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#', '#'},
+                {' ', ' ', ' ', ' ', 'b', ' ', ' ', ' ', ' ', '#'},
+                {'#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {'#', '#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'},
+                {'#', '#', ' ', ' ', ' ', ' ', ' ', ' ', '#', '#'},
+                {'#', '#', '#', '#', ' ', ' ', '#', '#', '#', '#'}
+        });
         templates = new Template[] {
                 new Template(new char[][] {
                         {'#', '#', '#', '#', '#', ' ', '#', '#', '#', '#'},

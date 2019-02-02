@@ -103,6 +103,10 @@ public abstract class Entity implements Positionable {
 
     public boolean isBlockable;
 
+    public float criticalChance;
+
+    public boolean applyTileMovementSpeed;
+
     public Entity() {
         hitbox = new Hitbox(this);
 
@@ -113,6 +117,8 @@ public abstract class Entity implements Positionable {
         star = new SpriteSheet("star");
 
         receiveKnockback = true;
+
+        speed = 1;
 
         hitShakeMultiplier = 1;
 
@@ -125,6 +131,8 @@ public abstract class Entity implements Positionable {
         isVulnerable = true;
 
         isBlockable = true;
+
+        applyTileMovementSpeed = true;
     }
 
     public void preUpdate() {
@@ -175,8 +183,14 @@ public abstract class Entity implements Positionable {
                             } else {
                                 if (attackHitbox.overlaps(e)) {
                                     if (!contains) {
+                                        boolean criticalHit = Game.RANDOM.nextFloat() < criticalChance;
+
+                                        if (criticalHit && this instanceof Player) {
+                                            map.play.setMessage("Critical hit!");
+                                        }
+
                                         if (e.health > 0) {
-                                            float damage = getDamage();
+                                            float damage = getDamage() * (criticalHit ? 2 : 1);
 
                                             float dmg = MathUtils.clamp((damage * (1 - getFire())) - e.getDefense(), 1, Float.MAX_VALUE);
                                             e.health -= dmg;
@@ -196,7 +210,7 @@ public abstract class Entity implements Positionable {
                                             e.hitSpeed = e.isDead() ? 96f : 48f;
                                         }
 
-                                        map.shakeScreen((e.isDead() ? 2f : 1f) * e.hitShakeMultiplier);
+                                        map.shakeScreen((e.isDead() ? 2f : 1f) * (criticalHit ? 2 : 1) * e.hitShakeMultiplier);
 
                                         hit.add(e);
 
@@ -251,7 +265,7 @@ public abstract class Entity implements Positionable {
         Tile tileAt = tileAt();
         float moveSpeed = getSpeed();
 
-        if (tileAt != null && !isFlying) {
+        if (tileAt != null && !isFlying && applyTileMovementSpeed) {
             moveSpeed = tileAt.moveSpeed;
             overlay = tileAt.overlay;
         }
@@ -430,7 +444,7 @@ public abstract class Entity implements Positionable {
     }
 
     public float getDamage() {
-        return minDamage + Game.RANDOM.nextInt((int) (maxDamage - minDamage + 1)) + MathUtils.floor(level * damagePerLevel);
+        return (minDamage + Game.RANDOM.nextInt((int) (maxDamage - minDamage + 1)) + MathUtils.floor(level * damagePerLevel));
     }
 
     public float getDefense() {

@@ -1203,8 +1203,8 @@ public abstract class Map {
         rooms.first().spawnMonsters = false;
 
         Player player = new Player();
-        player.x = rooms.first().getCenterX() * 8 - 4;
-        player.y = rooms.first().getCenterY() * 8 - 4;
+        player.x = bossRoom.getCenterX() * 8 - 4;
+        player.y = bossRoom.getCenterY() * 8 - 4;
 
         this.player = player;
         entities.addEntity(player);

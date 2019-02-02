@@ -6,5 +6,7 @@ public abstract class RightHand extends Hand {
     public float minDamage;
     public float maxDamage;
 
+    public float criticalChance;
+
     public float fire;
 }

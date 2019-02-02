@@ -9,6 +9,7 @@ public class HandAxe extends MeleeWeapon {
 
         minDamage = 3;
         maxDamage = 7;
+        criticalChance = .05f;
         speed = 0.67f;
         angle = 180;
     }

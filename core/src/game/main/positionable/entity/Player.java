@@ -477,9 +477,9 @@ public class Player extends Entity {
     public void onAdded() {
         super.onAdded();
 
-        setRightHand(new Longsword());
+        setRightHand(new BattleAxe());
         setLeftHand(new HeaterShield());
-        setArmor(new PlateArmor());
+        setArmor(new ChainMail());
     }
 
     @Override
@@ -494,6 +494,13 @@ public class Player extends Entity {
         super.onBlock(e);
 
         blockTime = .1f;
+    }
+
+    @Override
+    public void onDeath() {
+        super.onDeath();
+
+        map.play.setMessage("You die...");
     }
 
     @Override
@@ -572,6 +579,8 @@ public class Player extends Entity {
 
         minDamage += rightHand.minDamage;
         maxDamage += rightHand.maxDamage;
+
+        criticalChance += rightHand.criticalChance;
 
         map.entities.addListener(rightHand);
     }
