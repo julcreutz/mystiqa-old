@@ -21,7 +21,7 @@ public class Cave extends Map {
         hole = CaveBridge.class;
         chest = Chest.class;
         minMonsters = 2;
-        maxMonsters = 7;
+        maxMonsters = 11;
         boss = SpiderQueen.class;
         bossTemplate = new Template(new char[][] {
                 {'#', '#', '#', '#', '#', ' ', '#', '#', '#', '#'},
@@ -147,12 +147,12 @@ public class Cave extends Map {
         };
 
         grounds.addChoice(new Choice<Tile>(1, 1, 1, CaveGround.class));
-        grounds.addChoice(new Choice<Tile>(0, 1, .5f, CaveSpiderWeb.class));
+        grounds.addChoice(new Choice<Tile>(0, 1, .75f, CaveSpiderWeb.class));
         grounds.addChoice(new Choice<Tile>(1, 1, .05f, CaveMushroom.class));
         grounds.addChoice(new Choice<Tile>(1, 1, .025f, CaveRock.class));
 
-        monsters.addChoice(new Choice<Entity>(1, .25f, 1, Spider.class));
-        monsters.addChoice(new Choice<Entity>(.25f, .75f, .75f, Bat.class));
-        monsters.addChoice(new Choice<Entity>(.5f, 1, .5f, SpiderNest.class));
+        monsters.addChoice(new Choice<Entity>(1f, 1f, 1, Spider.class));
+        monsters.addChoice(new Choice<Entity>(1f, 0f, .5f, Bat.class));
+        monsters.addChoice(new Choice<Entity>(0f, 1f, .33f, SpiderNest.class));
     }
 }

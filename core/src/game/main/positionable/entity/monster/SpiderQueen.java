@@ -143,8 +143,10 @@ public class SpiderQueen extends Monster {
             batch.draw(spriteSheet.grab(4, 0), x, y);
         }
 
-        batch.draw(image, x, y + z, image.getRegionWidth() * .5f, image.getRegionHeight() * .5f,
-                image.getRegionWidth(), image.getRegionHeight(), scaleX, 1, 0);
+        if (image != null) {
+            batch.draw(image, x, y + z, image.getRegionWidth() * .5f, image.getRegionHeight() * .5f,
+                    image.getRegionWidth(), image.getRegionHeight(), scaleX, 1, 0);
+        }
     }
 
     @Override

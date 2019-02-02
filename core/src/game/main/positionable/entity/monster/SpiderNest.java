@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import game.SpriteSheet;
 import game.main.Game;
+import game.main.positionable.entity.Entity;
 import game.main.positionable.tile.Tile;
 import game.main.positionable.tile.connected.CaveSpiderWeb;
 
@@ -42,6 +43,23 @@ public class SpiderNest extends Monster {
     public void update() {
         super.update();
 
+        if (spawnTime > 0) {
+            spawnTime -= Game.getDelta();
+
+            spawnSpiderTime -= Game.getDelta();
+
+            if (spawnSpiderTime < 0) {
+                spawnSpiderTime = .2f;
+
+                Spider s = new Spider();
+                s.x = x;
+                s.y = y;
+                map.player.hit.add(s);
+                map.entities.addEntity(s);
+            }
+        }
+
+        /*
         if (new Vector2(map.player.x, map.player.y).sub(x, y).len() < 24) {
             startSpawnTime -= Game.getDelta();
 
@@ -66,6 +84,7 @@ public class SpiderNest extends Monster {
                 }
             }
         }
+        */
 
         if (isOnFire()) {
             spawnFireSpiderTime -= Game.getDelta();
@@ -95,7 +114,7 @@ public class SpiderNest extends Monster {
     public void onDeath() {
         super.onDeath();
 
-        for (int i = 0; i < MathUtils.random(5, 10); i++) {
+        for (int i = 0; i < 5; i++) {
             Spider s = new Spider();
             s.x = x;
             s.y = y;
@@ -103,6 +122,13 @@ public class SpiderNest extends Monster {
             map.player.hit.add(s);
             map.entities.addEntity(s);
         }
+    }
+
+    @Override
+    public void onHit(Entity by) {
+        super.onHit(by);
+
+        //spawnTime = .2f * 3;
     }
 
     @Override

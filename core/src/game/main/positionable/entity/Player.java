@@ -477,9 +477,9 @@ public class Player extends Entity {
     public void onAdded() {
         super.onAdded();
 
-        setRightHand(new BattleAxe());
+        setRightHand(new Sword());
         setLeftHand(new HeaterShield());
-        setArmor(new ChainMail());
+        setArmor(new PlateArmor());
     }
 
     @Override
