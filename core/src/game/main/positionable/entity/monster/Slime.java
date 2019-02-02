@@ -39,7 +39,8 @@ public class Slime extends Monster {
         state = State.RANDOM_MOVEMENT;
 
         health = 9;
-        damage = 4;
+        minDamage = 2;
+        maxDamage = 4;
         defense = 2;
         speed = 1;
     }

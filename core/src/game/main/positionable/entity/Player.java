@@ -16,10 +16,7 @@ import game.main.item.equipment.hand.left.RoundShield;
 import game.main.item.equipment.hand.left.Shield;
 import game.main.item.equipment.hand.right.RightHand;
 import game.main.item.equipment.hand.left.LeftHand;
-import game.main.item.equipment.hand.right.melee_weapon.BattleAxe;
-import game.main.item.equipment.hand.right.melee_weapon.HandAxe;
-import game.main.item.equipment.hand.right.melee_weapon.Longsword;
-import game.main.item.equipment.hand.right.melee_weapon.Spear;
+import game.main.item.equipment.hand.right.melee_weapon.*;
 import game.main.positionable.Hitbox;
 import game.main.positionable.tile.Tile;
 
@@ -65,7 +62,8 @@ public class Player extends Entity {
 
         maxHealth = 15;
         speed = 1;
-        damage = 1;
+        minDamage = 1;
+        maxDamage = 1;
         damagePerLevel = .5f;
         defense = 1;
         defensePerLevel = .5f;
@@ -479,9 +477,9 @@ public class Player extends Entity {
     public void onAdded() {
         super.onAdded();
 
-        setRightHand(new HandAxe());
-        setLeftHand(new RoundShield());
-        setArmor(new ChainMail());
+        setRightHand(new Longsword());
+        setLeftHand(new HeaterShield());
+        setArmor(new PlateArmor());
     }
 
     @Override
@@ -524,11 +522,6 @@ public class Player extends Entity {
     @Override
     public float getSpeed() {
         return super.getSpeed() + (armor != null ? armor.speed : 0);
-    }
-
-    @Override
-    public float getDamage() {
-        return super.getDamage() + (rightHand != null ? rightHand.damage : 0);
     }
 
     @Override
@@ -576,6 +569,10 @@ public class Player extends Entity {
 
     public void setRightHand(RightHand rightHand) {
         this.rightHand = rightHand;
+
+        minDamage += rightHand.minDamage;
+        maxDamage += rightHand.maxDamage;
+
         map.entities.addListener(rightHand);
     }
 

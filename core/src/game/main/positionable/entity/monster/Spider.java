@@ -20,11 +20,10 @@ public class Spider extends Monster {
     public Spider() {
         hitbox.set(2, 0, 4, 3);
 
-        hitShakeMultiplier = .25f;
-
-        maxHealth = 5;
+        maxHealth = 3;
         maxHealthPerLevel = .5f;
-        damage = 1;
+        minDamage = 1;
+        maxDamage = 1;
         damagePerLevel = .5f;
         defense = 1;
         defensePerLevel = .5f;

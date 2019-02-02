@@ -6,7 +6,8 @@ public class Shortsword extends MeleeWeapon {
     public Shortsword() {
         spriteSheet = new SpriteSheet("sword");
 
-        damage = 5;
+        minDamage = 2;
+        maxDamage = 4;
         speed = 1;
     }
 }

@@ -1,6 +1,11 @@
 package game.main.state.play.map;
 
 import game.main.positionable.entity.Chest;
+import game.main.positionable.entity.Entity;
+import game.main.positionable.entity.monster.Bat;
+import game.main.positionable.entity.monster.Spider;
+import game.main.positionable.entity.monster.SpiderNest;
+import game.main.positionable.tile.Tile;
 import game.main.positionable.tile.connected.CaveBridge;
 import game.main.positionable.tile.connected.CaveHole;
 import game.main.positionable.tile.connected.CaveWall;
@@ -18,7 +23,7 @@ public class Cave extends Map {
         hole = CaveBridge.class;
         chest = Chest.class;
         minMonsters = 2;
-        maxMonsters = 5;
+        maxMonsters = 7;
         templates = new Template[] {
                 new Template(new char[][] {
                         {'#', '#', '#', '#', '#', ' ', '#', '#', '#', '#'},
@@ -132,9 +137,13 @@ public class Cave extends Map {
                 }, Room.Direction.UP, Room.Direction.DOWN),
         };
 
-        grounds.add(new Ground(1, 1, 1, CaveGround.class));
-        grounds.add(new Ground(0, 1, .5f, CaveSpiderWeb.class));
-        grounds.add(new Ground(1, 1, .05f, CaveMushroom.class));
-        grounds.add(new Ground(1, 1, .025f, CaveRock.class));
+        grounds.addChoice(new Choice<Tile>(1, 1, 1, CaveGround.class));
+        grounds.addChoice(new Choice<Tile>(0, 1, .5f, CaveSpiderWeb.class));
+        grounds.addChoice(new Choice<Tile>(1, 1, .05f, CaveMushroom.class));
+        grounds.addChoice(new Choice<Tile>(1, 1, .025f, CaveRock.class));
+
+        monsters.addChoice(new Choice<Entity>(1, .25f, 1, Spider.class));
+        monsters.addChoice(new Choice<Entity>(.25f, .75f, .75f, Bat.class));
+        monsters.addChoice(new Choice<Entity>(.5f, 1, .5f, SpiderNest.class));
     }
 }

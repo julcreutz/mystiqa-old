@@ -44,7 +44,8 @@ public abstract class Entity implements Positionable {
 
     public float speed;
 
-    public float damage;
+    public float minDamage;
+    public float maxDamage;
     public float damagePerLevel;
     public float defense;
     public float defensePerLevel;
@@ -175,15 +176,17 @@ public abstract class Entity implements Positionable {
                                 if (attackHitbox.overlaps(e)) {
                                     if (!contains) {
                                         if (e.health > 0) {
-                                            float dmg = MathUtils.clamp(getDamage() - e.getDefense(),
-                                                    1, Float.MAX_VALUE);
+                                            float damage = getDamage();
 
+                                            float dmg = MathUtils.clamp((damage * (1 - getFire())) - e.getDefense(), 1, Float.MAX_VALUE);
                                             e.health -= dmg;
-                                        }
 
-                                        if (!e.isOnFire()) {
-                                            e.onFireTime += MathUtils.clamp(getDamage() * MathUtils.clamp(getFire(), 0, 1)
-                                                    * (1 - e.getFireResistance()), 0, Float.MAX_VALUE) * .5f;
+                                            float fireDamage = MathUtils.clamp(damage * getFire(), 0, Float.MAX_VALUE) * (1 - e.getFireResistance());
+                                            e.health -= fireDamage;
+
+                                            if (fireDamage > 0 && !e.isOnFire() && Game.RANDOM.nextFloat() < getFire()) {
+                                                e.onFireTime = MathUtils.random(1f, 3f);
+                                            }
                                         }
 
                                         e.hitTime = .1f;
@@ -347,7 +350,6 @@ public abstract class Entity implements Positionable {
             } else {
                 if (isDead() && health < 0) {
                     health = 0;
-                    map.shakeScreen(2f);
                 }
             }
 
@@ -428,7 +430,7 @@ public abstract class Entity implements Positionable {
     }
 
     public float getDamage() {
-        return damage + MathUtils.floor(level * damagePerLevel);
+        return minDamage + Game.RANDOM.nextInt((int) (maxDamage - minDamage + 1)) + MathUtils.floor(level * damagePerLevel);
     }
 
     public float getDefense() {

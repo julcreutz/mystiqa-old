@@ -296,21 +296,60 @@ public abstract class Map {
         public float maxChance;
     }
 
-    public static class Ground {
+    public static class Choice<T> {
         public float minDifficulty;
         public float maxDifficulty;
 
         public float chance;
 
-        public Class tile;
+        public Class choice;
 
-        public Ground(float minDifficulty, float maxDifficulty, float chance, Class tile) {
+        public Choice(float minDifficulty, float maxDifficulty, float chance, Class choice) {
             this.minDifficulty = minDifficulty;
             this.maxDifficulty = maxDifficulty;
 
             this.chance = chance;
 
-            this.tile = tile;
+            this.choice = choice;
+        }
+
+        public T get() {
+            try {
+                return (T) choice.newInstance();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+    }
+
+    public static class Choices<T> {
+        private Array<Choice<T>> choices;
+
+        public Choices() {
+            choices = new Array<Choice<T>>();
+        }
+
+        public T get(Room r) {
+            Choice c = null;
+
+            while (c == null) {
+                for (Choice _c : choices) {
+                    if (Game.RANDOM.nextFloat() < MathUtils.lerp(_c.minDifficulty, _c.maxDifficulty, r.difficulty)
+                            && Game.RANDOM.nextFloat() < _c.chance) {
+                        c = _c;
+                    }
+                }
+            }
+
+            return (T) c.get();
+        }
+
+        public void addChoice(Choice<T> c) {
+            choices.add(c);
         }
     }
 
@@ -372,8 +411,6 @@ public abstract class Map {
     public int minMonsters;
     public int maxMonsters;
 
-    public Monster[] monsters;
-
     public Class boss;
 
     public Class key;
@@ -388,7 +425,8 @@ public abstract class Map {
 
     public Array<Lock> allLocks;
 
-    public Array<Ground> grounds;
+    public Choices<Tile> grounds;
+    public Choices<Entity> monsters;
 
     public Map() {
         guiLayer = new SpriteSheet("gui_layer");
@@ -398,7 +436,8 @@ public abstract class Map {
 
         teleports = new Array<Teleport>();
 
-        grounds = new Array<Ground>();
+        grounds = new Choices<Tile>();
+        monsters = new Choices<Entity>();
     }
 
     public void update() {
@@ -862,7 +901,7 @@ public abstract class Map {
                             }
                             break;
                         case ' ':
-                            tiles.set(getGround(r), xx, yy);
+                            tiles.set(grounds.get(r), xx, yy);
                             break;
                         case '.':
                             try {
@@ -874,7 +913,7 @@ public abstract class Map {
                             }
                             break;
                         case 'b':
-                            tiles.set(getGround(r), xx, yy);
+                            tiles.set(grounds.get(r), xx, yy);
 
                             try {
                                 Entity boss = (Entity) this.boss.newInstance();
@@ -900,7 +939,7 @@ public abstract class Map {
                                     e.printStackTrace();
                                 }
                             } else {
-                                tiles.set(getGround(r), xx, yy);
+                                tiles.set(grounds.get(r), xx, yy);
 
                                 try {
                                     Block b = (Block) block.newInstance();
@@ -918,7 +957,7 @@ public abstract class Map {
 
                             break;
                         case 'c':
-                            tiles.set(getGround(r), xx, yy);
+                            tiles.set(grounds.get(r), xx, yy);
 
                             if (Game.RANDOM.nextFloat() < r.treasureChance) {
                                 try {
@@ -1037,7 +1076,7 @@ public abstract class Map {
 
                 for (int y = r.y0(); y < r.y1(); y++) {
                     if (tiles.at(x, y) != null && isGround(tiles.at(x, y))) {
-                        tiles.set(getGround(r), x + 1, y);
+                        tiles.set(grounds.get(r), x + 1, y);
                     }
                 }
             }
@@ -1047,7 +1086,7 @@ public abstract class Map {
 
                 for (int y = r.y0(); y < r.y1(); y++) {
                     if (tiles.at(x, y) != null && isGround(tiles.at(x, y))) {
-                        tiles.set(getGround(r), x - 1, y);
+                        tiles.set(grounds.get(r), x - 1, y);
                     }
                 }
             }
@@ -1057,7 +1096,7 @@ public abstract class Map {
 
                 for (int x = r.x0(); x < r.x1(); x++) {
                     if (tiles.at(x, y) != null && isGround(tiles.at(x, y))) {
-                        tiles.set(getGround(r), x, y + 1);
+                        tiles.set(grounds.get(r), x, y + 1);
                     }
                 }
             }
@@ -1067,7 +1106,7 @@ public abstract class Map {
 
                 for (int x = r.x0(); x < r.x1(); x++) {
                     if (tiles.at(x, y) != null && isGround(tiles.at(x, y))) {
-                        tiles.set(getGround(r), x, y - 1);
+                        tiles.set(grounds.get(r), x, y - 1);
                     }
                 }
             }
@@ -1176,33 +1215,22 @@ public abstract class Map {
                 int monsterCount = (int) MathUtils.lerp(minMonsters, maxMonsters, r.difficulty);
 
                 while (r.getMonsterCount() < monsterCount) {
-                    /*Array<String> monsters = new Array<String>();
+                    Entity monster = monsters.get(r);
 
-                    for (Monster m : this.monsters) {
-                        if (Game.RANDOM.nextFloat() < MathUtils.lerp(m.minChance, m.maxChance, r.difficulty)) {
-                            monsters.add(m.monster);
-                        }
-                    }*/
+                    monster.level = Game.RANDOM.nextInt(4);
 
-                    //if (monsters.size > 0) {
-                        //Entity monster = Game.ENTITIES.load(monsters.get(Game.RANDOM.nextInt(monsters.size)));
-                        Entity monster = MathUtils.randomBoolean(.25f) ? new SpiderNest() : new Bat();
+                    int x;
+                    int y;
 
-                        monster.level = Game.RANDOM.nextInt(4);
+                    do {
+                        x = r.getTileX() + 1 + Game.RANDOM.nextInt(r.getTileWidth() - 2);
+                        y = r.getTileY() + 1 + Game.RANDOM.nextInt(r.getTileHeight() - 2);
+                    } while (tiles.at(x, y) != null && !isGround(tiles.at(x, y)));
 
-                        int x;
-                        int y;
+                    monster.x = x * 8;
+                    monster.y = y * 8;
 
-                        do {
-                            x = r.getTileX() + 1 + Game.RANDOM.nextInt(r.getTileWidth() - 2);
-                            y = r.getTileY() + 1 + Game.RANDOM.nextInt(r.getTileHeight() - 2);
-                        } while (tiles.at(x, y) != null && !isGround(tiles.at(x, y)));
-
-                        monster.x = x * 8;
-                        monster.y = y * 8;
-
-                        entities.addEntity(monster);
-                    //}
+                    entities.addEntity(monster);
                 }
             }
         }
@@ -1300,32 +1328,9 @@ public abstract class Map {
         return locks.get(Game.RANDOM.nextInt(locks.size));
     }
 
-    public Tile getGround(Room r) {
-        try {
-            Class tile = null;
-
-            do {
-                for (Ground g : grounds) {
-                    if (Game.RANDOM.nextFloat() < MathUtils.lerp(g.minDifficulty, g.maxDifficulty, r.difficulty)
-                            && Game.RANDOM.nextFloat() < g.chance) {
-                        tile = g.tile;
-                    }
-                }
-            } while (tile == null);
-
-            return (Tile) tile.newInstance();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
     public boolean isGround(Tile t) {
-        for (Ground ground : grounds) {
-            if (ground.tile.isInstance(t)) {
+        for (Choice c : grounds.choices) {
+            if (c.choice.isInstance(t)) {
                 return true;
             }
         }

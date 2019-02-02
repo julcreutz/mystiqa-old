@@ -40,7 +40,8 @@ public class Bat extends Monster {
 
         maxHealth = 7;
         maxHealthPerLevel = 1;
-        damage = 4;
+        minDamage = 2;
+        maxDamage = 5;
         damagePerLevel = .5f;
         defense = 1;
         defensePerLevel = .5f;

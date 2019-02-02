@@ -3,6 +3,7 @@ package game.main.positionable.entity.monster;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import game.SpriteSheet;
 import game.main.Game;
 
@@ -10,6 +11,8 @@ public class SpiderNest extends Monster {
     public float startSpawnTime;
     public float spawnTime;
     public float spawnSpiderTime;
+
+    public float spawnFireSpiderTime;
 
     public SpriteSheet spriteSheet;
     public float scaleX;
@@ -25,6 +28,7 @@ public class SpiderNest extends Monster {
         defensePerLevel = 1;
         experience = 5;
         experiencePerLevel = 2;
+        fireResistance = -.5f;
 
         receiveKnockback = false;
 
@@ -36,26 +40,42 @@ public class SpiderNest extends Monster {
     public void update() {
         super.update();
 
-        startSpawnTime -= Game.getDelta();
+        if (new Vector2(map.player.x, map.player.y).sub(x, y).len() < 24) {
+            startSpawnTime -= Game.getDelta();
 
-        if (startSpawnTime < 0) {
-            startSpawnTime = MathUtils.random(5f, 10f);
+            if (startSpawnTime < 0) {
+                startSpawnTime = MathUtils.random(3f, 6f);
 
-            spawnTime = 1f;
+                spawnTime = 1f;
+            }
+
+            if (spawnTime > 0) {
+                spawnTime -= Game.getDelta();
+
+                spawnSpiderTime -= Game.getDelta();
+
+                if (spawnSpiderTime < 0) {
+                    spawnSpiderTime = .2f;
+
+                    Spider s = new Spider();
+                    s.x = x;
+                    s.y = y;
+                    map.entities.addEntity(s);
+                }
+            }
         }
 
-        if (spawnTime > 0) {
-            spawnTime -= Game.getDelta();
+        if (isOnFire()) {
+            spawnFireSpiderTime -= Game.getDelta();
 
-            spawnSpiderTime -= Game.getDelta();
-
-            if (spawnSpiderTime < 0) {
-                spawnSpiderTime = .1f;
-
+            if (spawnFireSpiderTime < 0) {
                 Spider s = new Spider();
                 s.x = x;
                 s.y = y;
+                s.onFireTime = onFireTime;
                 map.entities.addEntity(s);
+
+                spawnFireSpiderTime = .5f;
             }
         }
     }
@@ -67,6 +87,20 @@ public class SpiderNest extends Monster {
         TextureRegion t = spriteSheet.grab(0, 0);
         batch.draw(t, x, y, t.getRegionWidth() * .5f, t.getRegionHeight() * .5f,
                 t.getRegionWidth(), t.getRegionHeight(), scaleX, 1, 0);
+    }
+
+    @Override
+    public void onDeath() {
+        super.onDeath();
+
+        for (int i = 0; i < MathUtils.random(5, 10); i++) {
+            Spider s = new Spider();
+            s.x = x;
+            s.y = y;
+            s.onFireTime = onFireTime;
+            map.player.hit.add(s);
+            map.entities.addEntity(s);
+        }
     }
 
     @Override

@@ -124,8 +124,8 @@ public class MeleeWeapon extends RightHand {
         }
 
         if (attacking) {
-            h.attackHitbox.set(x + MathUtils.cosDeg(rot) * range * 8f - h.x, y + MathUtils.sinDeg(rot) * range * 8f - h.y, 8, 8
-            );
+            h.attackHitbox.set(x + MathUtils.cosDeg(rot) * range * 8f - h.x,
+                    y + MathUtils.sinDeg(rot) * range * 8f - h.y, 8, 8);
         } else {
             h.attackHitbox.set(0, 0, 0, 0);
         }

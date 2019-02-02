@@ -7,7 +7,8 @@ public class BattleAxe extends MeleeWeapon {
         name = "Battle Axe";
         spriteSheet = new SpriteSheet("battle_axe");
 
-        damage = 13;
+        minDamage = 7;
+        maxDamage = 13;
         speed = 0.67f;
         angle = 180;
     }

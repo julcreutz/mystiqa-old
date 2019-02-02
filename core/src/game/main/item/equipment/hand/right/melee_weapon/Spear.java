@@ -6,7 +6,8 @@ public class Spear extends MeleeWeapon {
     public Spear() {
         spriteSheet = new SpriteSheet("spear");
 
-        damage = 4;
+        minDamage = 3;
+        maxDamage = 4;
         speed = 1;
         range = 1;
     }
