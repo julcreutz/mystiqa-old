@@ -141,7 +141,7 @@ public abstract class Map {
         }
 
         public int getTileY() {
-            return (int) (rect.y * 9);
+            return (int) (rect.y * 8);
         }
 
         public int getTileWidth() {
@@ -149,7 +149,7 @@ public abstract class Map {
         }
 
         public int getTileHeight() {
-            return (int) (rect.height * 9);
+            return (int) (rect.height * 8);
         }
 
         public int getCenterX() {
@@ -441,7 +441,7 @@ public abstract class Map {
 
     public void update() {
         toCamX = Game.WIDTH * .5f + MathUtils.floor((player.x + 4) / Game.WIDTH) * Game.WIDTH;
-        toCamY = Game.HEIGHT * .5f + MathUtils.floor((player.y + 4) / Game.HEIGHT) * Game.HEIGHT;
+        toCamY = Game.HEIGHT * .5f + MathUtils.floor((player.y + 4) / (Game.HEIGHT - 8)) * (Game.HEIGHT - 8);
 
         if (camX != toCamX || camY != toCamY) {
             if (camTime == 0) {
@@ -528,7 +528,7 @@ public abstract class Map {
 
     public void positionCamera() {
         camX = toCamX = camPosX = Game.WIDTH * .5f + MathUtils.floor((player.x + 4) / Game.WIDTH) * Game.WIDTH;
-        camY = toCamY = camPosY = Game.HEIGHT * .5f + MathUtils.floor((player.y + 4) / Game.HEIGHT) * Game.HEIGHT;
+        camY = toCamY = camPosY = Game.HEIGHT * .5f + MathUtils.floor((player.y + 4) / (Game.HEIGHT - 8)) * (Game.HEIGHT - 8);
     }
 
     public boolean isCamMoving() {
@@ -796,7 +796,7 @@ public abstract class Map {
             }
         }
 
-        tiles.initSize(WIDTH * 10, HEIGHT * 9);
+        tiles.initSize(WIDTH * 10, HEIGHT * 8);
         entities.clear();
 
         // Add doors
@@ -1202,8 +1202,8 @@ public abstract class Map {
         rooms.first().spawnMonsters = false;
 
         Player player = new Player();
-        player.x = bossRoom.getCenterX() * 8 - 4;
-        player.y = bossRoom.getCenterY() * 8 - 4;
+        player.x = rooms.first().getCenterX() * 8 - 4;
+        player.y = rooms.first().getCenterY() * 8 - 4;
 
         this.player = player;
         entities.addEntity(player);
