@@ -4,22 +4,27 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import game.main.positionable.entity.projectile.Projectile;
 import game.resource.SpriteSheet;
 import game.main.Game;
 
 public class SpiderQueen extends Monster {
-    public enum State {FLEE, PREPARE, ATTACK}
+    public enum State {FLEE, PREPARE_JUMP, JUMP, PREPARE_STING, STING}
     public State state;
 
     public float fleeAnimTime;
 
-    public float prepareTime;
+    public float prepareJumpTime;
 
-    public float attackAngle;
-    public float attackSpeed;
+    public float jumpAngle;
+    public float jumpSpeed;
 
     public float z;
     public float velZ;
+
+    public float prepareStingTime;
+
+    public float stingTime;
 
     public SpriteSheet spriteSheet;
     public TextureRegion image;
@@ -40,7 +45,7 @@ public class SpiderQueen extends Monster {
 
         state = State.FLEE;
 
-        spriteSheet = new SpriteSheet("spider_queen", 5, 1);
+        spriteSheet = new SpriteSheet("spider_queen", 3, 3);
 
         applyTileMovementSpeed = false;
     }
@@ -59,7 +64,11 @@ public class SpiderQueen extends Monster {
                 float distToPlayer = new Vector2(map.player.x, map.player.y).sub(x, y).len();
 
                 if (distToPlayer > 24f || distToPlayer < 8f) {
-                    state = State.PREPARE;
+                    if (MathUtils.randomBoolean(.5f)) {
+                        state = State.PREPARE_JUMP;
+                    } else {
+                        state = State.PREPARE_STING;
+                    }
                 } else {
                     float angleToPlayer = new Vector2(map.player.x, map.player.y).sub(x, y).angle();
 
@@ -77,17 +86,17 @@ public class SpiderQueen extends Monster {
                 }
 
                 break;
-            case PREPARE:
-                if (prepareTime == 0) {
-                    prepareTime = 1;
+            case PREPARE_JUMP:
+                if (prepareJumpTime == 0) {
+                    prepareJumpTime = 1f;
                 }
 
-                if (prepareTime > 0) {
-                    prepareTime -= Game.getDelta();
+                if (prepareJumpTime > 0) {
+                    prepareJumpTime -= Game.getDelta();
 
-                    if (prepareTime < 0) {
-                        prepareTime = 0;
-                        state = State.ATTACK;
+                    if (prepareJumpTime < 0) {
+                        prepareJumpTime = 0;
+                        state = State.JUMP;
                     }
                 }
 
@@ -97,23 +106,23 @@ public class SpiderQueen extends Monster {
                     scaleX = -1;
                 }
 
-                if (prepareTime < .25f) {
-                    image = spriteSheet.grab(2, 0);
+                if (prepareJumpTime < .5f) {
+                    image = spriteSheet.grab(0, 1);
                 } else {
                     image = spriteSheet.grab(0, 0);
                 }
 
                 break;
-            case ATTACK:
+            case JUMP:
                 if (z == 0) {
                     velZ = 96f;
 
-                    attackAngle = new Vector2(map.player.x, map.player.y).sub(x, y).angle();
-                    attackSpeed = new Vector2(map.player.x, map.player.y).sub(x, y).len() * 2.5f;
+                    jumpAngle = new Vector2(map.player.x, map.player.y).sub(x, y).angle();
+                    jumpSpeed = new Vector2(map.player.x, map.player.y).sub(x, y).len() * 2.5f;
                 }
 
-                velX += MathUtils.cosDeg(attackAngle) * attackSpeed;
-                velY += MathUtils.sinDeg(attackAngle) * attackSpeed;
+                velX += MathUtils.cosDeg(jumpAngle) * jumpSpeed;
+                velY += MathUtils.sinDeg(jumpAngle) * jumpSpeed;
 
                 z += velZ * Game.getDelta();
 
@@ -124,12 +133,67 @@ public class SpiderQueen extends Monster {
                     state = State.FLEE;
                 }
 
-                image = spriteSheet.grab(3, 0);
+                image = spriteSheet.grab(1, 1);
 
                 isPushing = false;
                 isPushable = false;
 
                 isVulnerable = false;
+
+                break;
+            case PREPARE_STING:
+                if (prepareStingTime == 0) {
+                    prepareStingTime = 1f;
+                }
+
+                if (prepareStingTime > 0) {
+                    prepareStingTime -= Game.getDelta();
+
+                    if (prepareStingTime < 0) {
+                        prepareStingTime = 0;
+                        state = State.STING;
+                    }
+                }
+
+                if (prepareStingTime < .5f) {
+                    image = spriteSheet.grab(0, 2);
+                } else {
+                    image = spriteSheet.grab(0, 0);
+                }
+
+                if (map.player.x > x) {
+                    scaleX = 1;
+                } else if (map.player.x < x) {
+                    scaleX = -1;
+                }
+
+                break;
+            case STING:
+                if (stingTime == 0) {
+                    stingTime = .5f;
+
+                    Projectile p = new Projectile();
+                    p.image = spriteSheet.grab(2, 2);
+                    p.dir = new Vector2(map.player.x, map.player.y).sub(x, y).angle();
+                    p.x = x + MathUtils.cosDeg(p.dir) * 4f;
+                    p.y = y + MathUtils.sinDeg(p.dir) * 4f;
+                    p.minDamage = 1;
+                    p.maxDamage = 3;
+                    p.fire = 1;
+                    p.speed = 64f;
+                    map.entities.addEntity(p);
+                }
+
+                if (stingTime > 0) {
+                    stingTime -= Game.getDelta();
+
+                    if (stingTime < 0) {
+                        stingTime = 0;
+                        state = State.FLEE;
+                    }
+                }
+
+                image = spriteSheet.grab(1, 2);
 
                 break;
         }
@@ -140,7 +204,7 @@ public class SpiderQueen extends Monster {
         super.render(batch);
 
         if (z > 0) {
-            batch.draw(spriteSheet.grab(4, 0), x, y);
+            batch.draw(spriteSheet.grab(2, 1), x, y);
         }
 
         if (image != null) {
@@ -151,6 +215,6 @@ public class SpiderQueen extends Monster {
 
     @Override
     public boolean isAttacking() {
-        return MathUtils.floor(z) == 0 && velZ < 0 && state == State.ATTACK;
+        return MathUtils.floor(z) == 0 && velZ < 0 && state == State.JUMP;
     }
 }

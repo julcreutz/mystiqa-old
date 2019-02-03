@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import game.resource.SpriteSheet;
 import game.main.Game;
-import game.main.positionable.entity.projectile.Fireball;
 
 public class Dragon extends Monster {
     public static class Head extends Monster {
@@ -112,15 +111,6 @@ public class Dragon extends Monster {
                 if (spewTime == 0) {
                     spewing = heads.random();
                     spewTime = MathUtils.random(.75f, 1f);
-
-                    Fireball p = new Fireball();
-
-                    p.x = spewing.x;
-                    p.y = spewing.y;
-
-                    p.dir = new Vector2(map.player.x, map.player.y).sub(spewing.x, spewing.y).angle();
-
-                    map.entities.addEntity(p);
                 }
 
                 spewTime -= Game.getDelta();

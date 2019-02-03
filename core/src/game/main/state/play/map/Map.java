@@ -129,8 +129,10 @@ public abstract class Map {
 
             // Keep monsters in room
             for (Entity e : getMonsters()) {
-                e.x = MathUtils.clamp(e.x, x0() * 8, (x1() - 1) * 8);
-                e.y = MathUtils.clamp(e.y, y0() * 8 + 8, (y1() - 1) * 8);
+                if (e.isVulnerable) {
+                    e.x = MathUtils.clamp(e.x, x0() * 8, (x1() - 1) * 8);
+                    e.y = MathUtils.clamp(e.y, y0() * 8, (y1() - 1) * 8);
+                }
             }
         }
 
@@ -790,7 +792,7 @@ public abstract class Map {
                 }
 
                 bossRoom.template = this.bossTemplate;
-                //bossRoom.spawnMonsters = false;
+                bossRoom.spawnMonsters = false;
             }
         }
 
@@ -1200,8 +1202,8 @@ public abstract class Map {
         rooms.first().spawnMonsters = false;
 
         Player player = new Player();
-        player.x = rooms.first().getCenterX() * 8 - 4;
-        player.y = rooms.first().getCenterY() * 8 - 4;
+        player.x = bossRoom.getCenterX() * 8 - 4;
+        player.y = bossRoom.getCenterY() * 8 - 4;
 
         this.player = player;
         entities.addEntity(player);

@@ -3,14 +3,15 @@ package game.main.positionable.entity.projectile;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
+import game.main.positionable.entity.monster.Monster;
 import game.resource.SpriteSheet;
 import game.main.Game;
 import game.main.positionable.Hitbox;
 import game.main.positionable.entity.Entity;
 import game.main.positionable.entity.particle.ParticleEmitter;
 
-public class Projectile extends Entity {
-    public SpriteSheet image;
+public class Projectile extends Monster {
+    public TextureRegion image;
 
     public float speed;
     public float dir;
@@ -26,6 +27,8 @@ public class Projectile extends Entity {
 
         collidesWithEntities = false;
         collidesWithTiles = false;
+
+        isFlying = true;
     }
 
     @Override
@@ -50,8 +53,6 @@ public class Projectile extends Entity {
         super.render(batch);
 
         if (image != null) {
-            TextureRegion image = this.image.grab(MathUtils.floor(Game.time * 20f) % this.image.getColumns(), 0);
-
             batch.draw(image, x, y, image.getRegionWidth() * .5f, image.getRegionHeight() * .5f,
                     image.getRegionWidth(), image.getRegionHeight(), 1, 1, dir);
         }

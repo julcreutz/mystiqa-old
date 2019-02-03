@@ -151,7 +151,7 @@ public class Play extends GameState {
 
         // Enemy health bars
         for (Entity e : map.entities.entities) {
-            if (e instanceof Monster) {
+            if (e instanceof Monster && e.isVulnerable) {
                 batch.draw(guiStats.grab(3, 0), e.getHitbox().getCenterX() - 4, e.getHitbox().getY() + e.getHitbox().getHeight() - 2);
                 batch.draw(guiStats.grab(3, 0), e.getHitbox().getCenterX() - 4 + 7, e.getHitbox().getY() + e.getHitbox().getHeight() - 2);
 
