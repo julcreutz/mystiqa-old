@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import game.SpriteSheet;
+import game.resource.SpriteSheet;
 import game.main.Game;
 import game.main.positionable.Hitbox;
 

@@ -1,7 +1,7 @@
 package game.main.positionable.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import game.SpriteSheet;
+import game.resource.SpriteSheet;
 import game.main.item.Item;
 
 public class Chest extends Entity implements Interactable {

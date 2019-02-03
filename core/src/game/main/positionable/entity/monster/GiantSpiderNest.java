@@ -4,9 +4,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import game.SpriteSheet;
+import game.resource.SpriteSheet;
 import game.main.Game;
-import game.main.positionable.tile.connected.CaveSpiderWeb;
 
 public class GiantSpiderNest extends Monster {
     public float startSpawnTime;

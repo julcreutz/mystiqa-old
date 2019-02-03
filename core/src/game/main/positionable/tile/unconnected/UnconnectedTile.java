@@ -1,6 +1,6 @@
 package game.main.positionable.tile.unconnected;
 
-import game.SpriteSheet;
+import game.resource.SpriteSheet;
 import game.main.Game;
 import game.main.state.play.map.Map;
 import game.main.positionable.tile.Tile;

@@ -2,8 +2,6 @@ package game.main.positionable.tile;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Rectangle;
-import game.SpriteSheet;
 import game.main.positionable.Hitbox;
 import game.main.positionable.Positionable;
 import game.main.state.play.map.Map;

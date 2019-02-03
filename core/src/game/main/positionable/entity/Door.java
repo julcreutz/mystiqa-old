@@ -3,7 +3,7 @@ package game.main.positionable.entity;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
-import game.SpriteSheet;
+import game.resource.SpriteSheet;
 import game.main.Game;
 import game.main.state.play.map.lock.Lock;
 

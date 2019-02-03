@@ -3,12 +3,9 @@ package game.main.positionable.entity.monster;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
-import game.SpriteSheet;
+import game.resource.SpriteSheet;
 import game.main.Game;
 import game.main.positionable.entity.Entity;
-import game.main.positionable.tile.Tile;
-import game.main.positionable.tile.connected.CaveSpiderWeb;
 
 public class SpiderNest extends Monster {
     public float startSpawnTime;

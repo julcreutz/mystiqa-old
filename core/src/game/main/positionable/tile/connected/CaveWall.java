@@ -1,6 +1,6 @@
 package game.main.positionable.tile.connected;
 
-import game.SpriteSheet;
+import game.resource.SpriteSheet;
 import game.main.positionable.Hitbox;
 
 public class CaveWall extends ConnectedTile {

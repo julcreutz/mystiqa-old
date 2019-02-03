@@ -1,9 +1,9 @@
 package game.main.item.equipment.hand.right.melee_weapon;
 
-import game.SpriteSheet;
+import game.resource.SpriteSheet;
 
-public class Sword extends MeleeWeapon {
-    public Sword() {
+public class Broadsword extends MeleeWeapon {
+    public Broadsword() {
         spriteSheet = new SpriteSheet("sword");
 
         minDamage = 5;

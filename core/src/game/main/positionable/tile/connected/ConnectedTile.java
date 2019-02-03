@@ -3,7 +3,7 @@ package game.main.positionable.tile.connected;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
-import game.SpriteSheet;
+import game.resource.SpriteSheet;
 import game.main.state.play.map.Map;
 import game.main.positionable.tile.Tile;
 

@@ -1,6 +1,6 @@
 package game.main.positionable.tile.unconnected;
 
-import game.SpriteSheet;
+import game.resource.SpriteSheet;
 
 public class CaveGround extends UnconnectedTile {
     public CaveGround() {

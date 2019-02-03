@@ -1,7 +1,7 @@
 package game.main.positionable.entity.particle;
 
 import com.badlogic.gdx.math.MathUtils;
-import game.SpriteSheet;
+import game.resource.SpriteSheet;
 import game.main.Game;
 
 public class Flame extends Particle {

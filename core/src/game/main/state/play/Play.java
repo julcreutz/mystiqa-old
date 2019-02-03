@@ -5,9 +5,11 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.math.MathUtils;
-import game.Colors;
-import game.SpriteSheet;
+import game.resource.Colors;
+import game.resource.SpriteSheet;
 import game.main.Game;
+import game.main.positionable.entity.Entity;
+import game.main.positionable.entity.monster.Monster;
 import game.main.state.GameState;
 import game.main.state.play.map.Map;
 import game.main.state.play.map.Cave;
@@ -22,6 +24,7 @@ public class Play extends GameState {
 
     public SpriteSheet guiLayer;
     public SpriteSheet guiBar;
+    public SpriteSheet guiStats;
 
     public String message;
     public float messageTime;
@@ -38,7 +41,8 @@ public class Play extends GameState {
         nextMap.generate();
 
         guiLayer = new SpriteSheet("gui_layer");
-        guiBar = new SpriteSheet("gui_bar");
+        guiBar = new SpriteSheet("gui_bar", 3, 1);
+        guiStats = new SpriteSheet("gui_stats", 4, 3);
     }
 
     @Override
@@ -145,31 +149,46 @@ public class Play extends GameState {
         batch.setProjectionMatrix(cam.combined);
         batch.begin();
 
-        // GUI
-        batch.draw(guiLayer.grab(0, 0),
-                cam.position.x - Game.WIDTH * .5f, cam.position.y + Game.HEIGHT * .5f - 8, Game.WIDTH, 8);
+        // Enemy health bars
+        for (Entity e : map.entities.entities) {
+            if (e instanceof Monster) {
+                batch.draw(guiStats.grab(3, 0), e.getHitbox().getCenterX() - 4, e.getHitbox().getY() + e.getHitbox().getHeight() - 2);
+                batch.draw(guiStats.grab(3, 0), e.getHitbox().getCenterX() - 4 + 7, e.getHitbox().getY() + e.getHitbox().getHeight() - 2);
 
-        if (message != null) {
-            write(message, cam.position.x, cam.position.y + Game.HEIGHT * .5f - 8, true);
+                batch.draw(guiStats.grab(1, 0), e.getHitbox().getCenterX() - 4 + 1, e.getHitbox().getY() + e.getHitbox().getHeight() - 2,
+                        6f, 8);
+
+                batch.draw(guiStats.grab(2, 0), e.getHitbox().getCenterX() - 4 + 1, e.getHitbox().getY() + e.getHitbox().getHeight() - 2,
+                        6f * e.getHealthPercentage(), 8);
+
+            }
         }
 
-        // Health
-        batch.setColor(Colors.RED);
-        String health = "" + MathUtils.round(map.player.health);
-
-        write(health, cam.position.x - Game.WIDTH * .5f, cam.position.y + Game.HEIGHT * .5f - 4, false);
-        batch.draw(guiBar.grab(0, 0), cam.position.x - Game.WIDTH * .5f + health.length() * 4, cam.position.y + Game.HEIGHT * .5f - 4,
-                (32 - health.length() * 4) * map.player.getHealthPercentage(), 4);
-
-        // Level and experience
-        batch.setColor(Colors.GREEN);
-        String level = "" + (map.player.level + 1);
-
-        write(level, cam.position.x, cam.position.y + Game.HEIGHT * .5f - 4, false);
-        batch.draw(guiBar.grab(0, 0), cam.position.x + level.length() * 4, cam.position.y + Game.HEIGHT * .5f - 4,
-                (32 - level.length() * 4) * map.player.getExperiencePercentage(), 4);
-
         batch.setColor(Colors.WHITE);
+
+        // Player stats
+
+        final float offset = 1;
+
+        // Health
+        batch.draw(guiStats.grab(0, 0), cam.position.x - Game.WIDTH * .5f + offset, cam.position.y + Game.HEIGHT * .5f - 8 - offset);
+        batch.draw(guiStats.grab(1, 0), cam.position.x - Game.WIDTH * .5f + 8 + offset, cam.position.y + Game.HEIGHT * .5f - 8 - offset, map.player.getMaxHealth() - 1, 8);
+        batch.draw(guiStats.grab(2, 0), cam.position.x - Game.WIDTH * .5f + 8 + offset, cam.position.y + Game.HEIGHT * .5f - 8 - offset, (map.player.getMaxHealth() - 1) * map.player.getHealthPercentage(), 8);
+        batch.draw(guiStats.grab(3, 0), cam.position.x - Game.WIDTH * .5f + 8 + offset + map.player.getMaxHealth() - 1, cam.position.y + Game.HEIGHT * .5f - 8 - offset);
+
+        // Magic
+        batch.draw(guiStats.grab(0, 1), cam.position.x - Game.WIDTH * .5f + offset, cam.position.y + Game.HEIGHT * .5f - 8 - 6 - offset);
+        batch.draw(guiStats.grab(1, 1), cam.position.x - Game.WIDTH * .5f + 8 + offset, cam.position.y + Game.HEIGHT * .5f - 8 - 6 - offset, map.player.maxMagic - 1, 8);
+        batch.draw(guiStats.grab(2, 1), cam.position.x - Game.WIDTH * .5f + 8 + offset, cam.position.y + Game.HEIGHT * .5f - 8 - 6 - offset, (map.player.maxMagic - 1) * map.player.getMagicPercentage(), 8);
+        batch.draw(guiStats.grab(3, 1), cam.position.x - Game.WIDTH * .5f + 8 + offset + map.player.maxMagic - 1, cam.position.y + Game.HEIGHT * .5f - 8 - 6 - offset);
+
+        /*
+        // Experience
+        batch.draw(guiStats.grab(0, 2), cam.position.x - Game.WIDTH * .5f + offset, cam.position.y - Game.HEIGHT * .5f - 3 + offset);
+        batch.draw(guiStats.grab(1, 2), cam.position.x - Game.WIDTH * .5f + 8 + offset, cam.position.y - Game.HEIGHT * .5f - 3 + offset, 69 - 1, 8);
+        batch.draw(guiStats.grab(2, 2), cam.position.x - Game.WIDTH * .5f + 8 + offset, cam.position.y - Game.HEIGHT * .5f - 3 + offset, (69 - 1) * map.player.getExperiencePercentage(), 8);
+        batch.draw(guiStats.grab(3, 2), cam.position.x - Game.WIDTH * .5f + 8 + offset + 69 - 1, cam.position.y - Game.HEIGHT * .5f - 3 + offset);
+        */
 
         batch.end();
 

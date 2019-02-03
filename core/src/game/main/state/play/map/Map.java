@@ -5,13 +5,10 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import game.SpriteSheet;
+import game.resource.SpriteSheet;
 import game.main.Game;
 import game.main.positionable.entity.*;
-import game.main.positionable.entity.monster.Bat;
 import game.main.positionable.entity.monster.Monster;
-import game.main.positionable.entity.monster.Spider;
-import game.main.positionable.entity.monster.SpiderNest;
 import game.main.state.play.Play;
 import game.main.state.play.map.lock.Lock;
 import game.main.positionable.tile.Tile;
@@ -142,7 +139,7 @@ public abstract class Map {
         }
 
         public int getTileY() {
-            return (int) (rect.y * 8);
+            return (int) (rect.y * 9);
         }
 
         public int getTileWidth() {
@@ -150,7 +147,7 @@ public abstract class Map {
         }
 
         public int getTileHeight() {
-            return (int) (rect.height * 8);
+            return (int) (rect.height * 9);
         }
 
         public int getCenterX() {
@@ -442,7 +439,7 @@ public abstract class Map {
 
     public void update() {
         toCamX = Game.WIDTH * .5f + MathUtils.floor((player.x + 4) / Game.WIDTH) * Game.WIDTH;
-        toCamY = Game.HEIGHT * .5f + MathUtils.floor((player.y + 4) / (Game.HEIGHT - 8)) * (Game.HEIGHT - 8);
+        toCamY = Game.HEIGHT * .5f + MathUtils.floor((player.y + 4) / Game.HEIGHT) * Game.HEIGHT;
 
         if (camX != toCamX || camY != toCamY) {
             if (camTime == 0) {
@@ -529,7 +526,7 @@ public abstract class Map {
 
     public void positionCamera() {
         camX = toCamX = camPosX = Game.WIDTH * .5f + MathUtils.floor((player.x + 4) / Game.WIDTH) * Game.WIDTH;
-        camY = toCamY = camPosY = Game.HEIGHT * .5f + MathUtils.floor((player.y + 4) / (Game.HEIGHT - 8)) * (Game.HEIGHT - 8);
+        camY = toCamY = camPosY = Game.HEIGHT * .5f + MathUtils.floor((player.y + 4) / Game.HEIGHT) * Game.HEIGHT;
     }
 
     public boolean isCamMoving() {
@@ -797,7 +794,7 @@ public abstract class Map {
             }
         }
 
-        tiles.initSize(WIDTH * 16, HEIGHT * 8);
+        tiles.initSize(WIDTH * 10, HEIGHT * 9);
         entities.clear();
 
         // Add doors

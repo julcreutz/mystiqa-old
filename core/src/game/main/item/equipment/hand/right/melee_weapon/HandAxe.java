@@ -1,6 +1,6 @@
 package game.main.item.equipment.hand.right.melee_weapon;
 
-import game.SpriteSheet;
+import game.resource.SpriteSheet;
 
 public class HandAxe extends MeleeWeapon {
     public HandAxe() {

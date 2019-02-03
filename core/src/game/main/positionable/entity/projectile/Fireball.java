@@ -1,6 +1,6 @@
 package game.main.positionable.entity.projectile;
 
-import game.SpriteSheet;
+import game.resource.SpriteSheet;
 
 public class Fireball extends Projectile {
     public Fireball() {

@@ -1,6 +1,6 @@
 package game.main.item.collectable;
 
-import game.SpriteSheet;
+import game.resource.SpriteSheet;
 
 public class Key extends Collectable {
     public Key() {

@@ -1,6 +1,6 @@
 package game.main.positionable.tile.connected;
 
-import game.SpriteSheet;
+import game.resource.SpriteSheet;
 
 public class CaveSpiderWeb extends ConnectedTile {
     public CaveSpiderWeb() {

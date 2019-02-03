@@ -3,7 +3,7 @@ package game.main.item.equipment.hand.left;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import game.SpriteSheet;
+import game.resource.SpriteSheet;
 import game.main.Game;
 import game.main.positionable.entity.event.BlockEvent;
 import game.main.positionable.entity.event.EntityEvent;

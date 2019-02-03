@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import game.SpriteSheet;
+import game.resource.SpriteSheet;
 import game.main.Game;
 import game.main.positionable.Hitbox;
 import game.main.positionable.entity.Entity;
@@ -31,7 +31,7 @@ public class Bat extends Monster {
     public float scaleX;
 
     public Bat() {
-        hitbox.set(3, 2, 4, 2);
+        hitbox.set(2, 2, 4, 2);
         state = State.IDLE;
         spriteSheet = new SpriteSheet("bat", 2, 1);
         scaleX = 1;

@@ -1,6 +1,6 @@
 package game.main.item.equipment.armor;
 
-import game.SpriteSheet;
+import game.resource.SpriteSheet;
 import game.main.item.equipment.Equipment;
 
 public class Armor extends Equipment {

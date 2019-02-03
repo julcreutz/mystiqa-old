@@ -1,6 +1,6 @@
 package game.main.item;
 
-import game.SpriteSheet;
+import game.resource.SpriteSheet;
 
 /** Superclass every type of item, e.g. weapons or consumables, must extend. Only consists of name and icon. */
 public abstract class Item {

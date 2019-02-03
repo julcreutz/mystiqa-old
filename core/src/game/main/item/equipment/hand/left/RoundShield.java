@@ -1,6 +1,6 @@
 package game.main.item.equipment.hand.left;
 
-import game.SpriteSheet;
+import game.resource.SpriteSheet;
 
 public class RoundShield extends Shield {
     public RoundShield() {

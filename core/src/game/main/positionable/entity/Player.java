@@ -5,14 +5,11 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import game.SpriteSheet;
+import game.resource.SpriteSheet;
 import game.main.Game;
 import game.main.item.equipment.armor.Armor;
-import game.main.item.equipment.armor.ChainMail;
-import game.main.item.equipment.armor.LeatherArmor;
-import game.main.item.equipment.armor.PlateArmor;
-import game.main.item.equipment.hand.left.HeaterShield;
-import game.main.item.equipment.hand.left.RoundShield;
+import game.main.item.equipment.armor.IronArmor;
+import game.main.item.equipment.hand.left.IronShield;
 import game.main.item.equipment.hand.left.Shield;
 import game.main.item.equipment.hand.right.RightHand;
 import game.main.item.equipment.hand.left.LeftHand;
@@ -32,6 +29,9 @@ public class Player extends Entity {
     public LeftHand leftHand;
 
     public Armor armor;
+
+    public int magic;
+    public int maxMagic;
 
     public float experience;
     public float maxExperience;
@@ -67,6 +67,8 @@ public class Player extends Entity {
         damagePerLevel = .5f;
         defense = 1;
         defensePerLevel = .5f;
+
+        maxMagic = 6;
 
         maxExperience = 20;
 
@@ -477,9 +479,11 @@ public class Player extends Entity {
     public void onAdded() {
         super.onAdded();
 
-        setRightHand(new Sword());
-        setLeftHand(new HeaterShield());
-        setArmor(new PlateArmor());
+        magic = maxMagic;
+
+        setRightHand(new Broadsword());
+        setLeftHand(new IronShield());
+        setArmor(new IronArmor());
     }
 
     @Override
@@ -593,5 +597,9 @@ public class Player extends Entity {
     public void setArmor(Armor armor) {
         this.armor = armor;
         map.entities.addListener(armor);
+    }
+
+    public float getMagicPercentage() {
+        return MathUtils.clamp(magic / maxMagic, 0, 1);
     }
 }
