@@ -22,17 +22,12 @@ public class SpiderNest extends Monster {
 
         isPushable = false;
 
-        maxHealth = 11;
-        maxHealthPerLevel = 3;
-        defense = 2;
-        defensePerLevel = 1;
-        experience = 5;
-        experiencePerLevel = 2;
+        maxHealth = 5;
         fireResistance = -.5f;
 
         receiveKnockback = false;
 
-        spriteSheet = new SpriteSheet("spider_nest");
+        spriteSheet = new SpriteSheet("entities/monsters/spider_nest");
         scaleX = MathUtils.randomBoolean(.5f) ? 1 : -1;
     }
 
@@ -48,7 +43,7 @@ public class SpiderNest extends Monster {
             if (spawnSpiderTime < 0) {
                 spawnSpiderTime = .2f;
 
-                Spider s = new Spider();
+                SpiderBaby s = new SpiderBaby();
                 s.x = x;
                 s.y = y;
                 map.player.hit.add(s);
@@ -87,7 +82,7 @@ public class SpiderNest extends Monster {
             spawnFireSpiderTime -= Game.getDelta();
 
             if (spawnFireSpiderTime < 0) {
-                Spider s = new Spider();
+                SpiderBaby s = new SpiderBaby();
                 s.x = x;
                 s.y = y;
                 s.onFireTime = onFireTime;
@@ -112,7 +107,7 @@ public class SpiderNest extends Monster {
         super.onDeath();
 
         for (int i = 0; i < 5; i++) {
-            Spider s = new Spider();
+            SpiderBaby s = new SpiderBaby();
             s.x = x;
             s.y = y;
             s.onFireTime = onFireTime;

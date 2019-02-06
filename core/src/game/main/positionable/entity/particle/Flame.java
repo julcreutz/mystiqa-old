@@ -6,7 +6,7 @@ import game.main.Game;
 
 public class Flame extends Particle {
     public Flame() {
-        image = new SpriteSheet("flame").grab(0, 0);
+        image = new SpriteSheet("entities/particles/flame").grab(0, 0);
         scale = 1;
         rot = -90;
     }

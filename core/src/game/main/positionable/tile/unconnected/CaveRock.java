@@ -4,6 +4,6 @@ import game.resource.SpriteSheet;
 
 public class CaveRock extends UnconnectedTile {
     public CaveRock() {
-        spriteSheet = new SpriteSheet("cave_rock", 2, 1);
+        spriteSheet = new SpriteSheet("tiles/cave_rock", 2, 1);
     }
 }

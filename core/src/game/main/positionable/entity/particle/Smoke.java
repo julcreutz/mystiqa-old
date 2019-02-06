@@ -9,7 +9,7 @@ public class Smoke extends Particle {
     private float speed;
 
     public Smoke() {
-        image = new SpriteSheet("particle_circle").grab(0, 0);
+        image = new SpriteSheet("entities/particles/particle_circle").grab(0, 0);
 
         dir = MathUtils.random(0f, 360f);
         speed = MathUtils.random(8f, 32f);

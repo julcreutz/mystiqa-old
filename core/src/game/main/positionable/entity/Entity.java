@@ -40,15 +40,11 @@ public abstract class Entity implements Positionable {
 
     public float health;
     public float maxHealth;
-    public float maxHealthPerLevel;
 
     public float speed;
 
-    public float minDamage;
-    public float maxDamage;
-    public float damagePerLevel;
+    public float damage;
     public float defense;
-    public float defensePerLevel;
 
     public float fire;
     public float fireResistance;
@@ -57,8 +53,6 @@ public abstract class Entity implements Positionable {
 
     public float block;
     public float maxBlock;
-
-    public int level;
 
     public boolean updated;
 
@@ -103,8 +97,6 @@ public abstract class Entity implements Positionable {
 
     public boolean isBlockable;
 
-    public float criticalChance;
-
     public boolean applyTileMovementSpeed;
 
     public Entity() {
@@ -114,7 +106,7 @@ public abstract class Entity implements Positionable {
 
         inventory = new Array<Item>();
 
-        star = new SpriteSheet("star");
+        star = new SpriteSheet("entities/star");
 
         receiveKnockback = true;
 
@@ -183,10 +175,8 @@ public abstract class Entity implements Positionable {
                             } else {
                                 if (attackHitbox.overlaps(e)) {
                                     if (!contains) {
-                                        boolean criticalHit = Game.RANDOM.nextFloat() < criticalChance;
-
                                         if (e.health > 0) {
-                                            float damage = getDamage() * (criticalHit ? 2 : 1);
+                                            float damage = getDamage();
 
                                             float dmg = MathUtils.clamp((damage * (1 - getFire())) - e.getDefense(), 1, Float.MAX_VALUE);
                                             e.health -= dmg;
@@ -206,7 +196,7 @@ public abstract class Entity implements Positionable {
                                             e.hitSpeed = e.isDead() ? 96f : 48f;
                                         }
 
-                                        map.shakeScreen((e.isDead() ? 2f : 1f) * (criticalHit ? 2 : 1) * e.hitShakeMultiplier);
+                                        map.shakeScreen((e.isDead() ? 2f : 1f) * e.hitShakeMultiplier);
 
                                         hit.add(e);
 
@@ -428,7 +418,7 @@ public abstract class Entity implements Positionable {
     }
 
     public float getMaxHealth() {
-        return maxHealth + MathUtils.floor(level * maxHealthPerLevel);
+        return maxHealth;
     }
 
     public float getHealthPercentage() {
@@ -440,11 +430,11 @@ public abstract class Entity implements Positionable {
     }
 
     public float getDamage() {
-        return (minDamage + Game.RANDOM.nextInt((int) (maxDamage - minDamage + 1)) + MathUtils.floor(level * damagePerLevel));
+        return damage;
     }
 
     public float getDefense() {
-        return defense + MathUtils.floor(level * defensePerLevel);
+        return defense;
     }
 
     public float getFire() {
@@ -562,11 +552,13 @@ public abstract class Entity implements Positionable {
     public void onBlock(Entity blocked) {
         sendEvent(new BlockEvent(this, blocked));
 
+        /*
         block -= blocked.getDamage();
         if (block < 0) {
             stunTime = Math.abs(block);
             setBlocking(false);
         }
+        */
     }
 
     public void onIsBlocked(Entity blocker) {

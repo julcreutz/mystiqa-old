@@ -33,20 +33,15 @@ public class Bat extends Monster {
     public Bat() {
         hitbox.set(2, 2, 4, 2);
         state = State.IDLE;
-        spriteSheet = new SpriteSheet("bat", 2, 1);
+        spriteSheet = new SpriteSheet("entities/monsters/bat", 2, 1);
         scaleX = 1;
 
         isFlying = true;
 
-        maxHealth = 7;
-        maxHealthPerLevel = 1;
-        minDamage = 2;
-        maxDamage = 5;
-        damagePerLevel = .5f;
+        maxHealth = 2;
+        damage = 1;
         defense = 1;
-        defensePerLevel = .5f;
         speed = 1;
-        experience = 3;
     }
 
     @Override

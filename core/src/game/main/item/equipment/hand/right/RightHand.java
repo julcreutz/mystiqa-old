@@ -1,12 +1,20 @@
 package game.main.item.equipment.hand.right;
 
 import game.main.item.equipment.hand.Hand;
+import game.main.positionable.entity.Player;
 
 public abstract class RightHand extends Hand {
-    public float minDamage;
-    public float maxDamage;
+    @Override
+    public void equip(Player p) {
+        super.equip(p);
 
-    public float criticalChance;
+        p.rightHand = this;
+    }
 
-    public float fire;
+    @Override
+    public void unequip(Player p) {
+        super.unequip(p);
+
+        p.rightHand = null;
+    }
 }

@@ -30,7 +30,7 @@ public abstract class GameState {
 
         buffer = createFrameBuffer();
 
-        font = new SpriteSheet("font", 10, 10);
+        font = new SpriteSheet("gui/font", 10, 10);
     }
 
     public void update(Game g) {

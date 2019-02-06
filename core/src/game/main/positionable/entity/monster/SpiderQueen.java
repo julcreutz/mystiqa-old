@@ -9,9 +9,57 @@ import game.resource.SpriteSheet;
 import game.main.Game;
 
 public class SpiderQueen extends Monster {
-    public enum State {FLEE, PREPARE_JUMP, JUMP, PREPARE_STING, STING}
-    public State state;
+    public static class Egg extends Monster {
+        private SpriteSheet spriteSheet;
+        private float time;
 
+        public Egg() {
+            hitbox.set(1, 1, 6, 4);
+
+            maxHealth = 6;
+
+            spriteSheet = new SpriteSheet("entities/monsters/spider_queen_egg");
+            time = 5f;
+
+            isPushable = false;
+            isPushing = false;
+        }
+
+        @Override
+        public void update() {
+            super.update();
+
+            time -= Game.getDelta();
+
+            if (time < 0) {
+                Spider s = new Spider();
+                s.x = x;
+                s.y = y;
+                map.entities.addEntity(s);
+                health = 0;
+            }
+        }
+
+        @Override
+        public void render(SpriteBatch batch) {
+            super.render(batch);
+
+            batch.draw(spriteSheet.grab(0, 0), x, y);
+        }
+
+        @Override
+        public boolean isAttacking() {
+            return false;
+        }
+    }
+
+    public enum State {FLEE, PREPARE_JUMP, JUMP, PREPARE_STING, STING, PREPARE_EGG, EGG}
+    public State state;
+    public State lastState;
+
+    public float fleeTime;
+    public float fleeAngle;
+    public float fleeSpeed;
     public float fleeAnimTime;
 
     public float prepareJumpTime;
@@ -26,26 +74,21 @@ public class SpiderQueen extends Monster {
 
     public float stingTime;
 
+    public float prepareEggTime;
+
     public SpriteSheet spriteSheet;
     public TextureRegion image;
     public float scaleX;
 
     public SpiderQueen() {
-        hitbox.set(0, 0, 8, 4);
+        hitbox.set(0, 0, 16, 8);
 
-        maxHealth = 40;
-        maxHealthPerLevel = 6;
-        minDamage = 5;
-        maxDamage = 8;
-        damagePerLevel = 2;
-        defense = 3;
-        defensePerLevel = 1;
-        experience = 10;
-        experiencePerLevel = 2;
+        maxHealth = 30;
+        damage = 2;
 
         state = State.FLEE;
 
-        spriteSheet = new SpriteSheet("spider_queen", 3, 3);
+        spriteSheet = new SpriteSheet("entities/monsters/spider_queen_large", 3, 3);
 
         applyTileMovementSpeed = false;
     }
@@ -61,22 +104,47 @@ public class SpiderQueen extends Monster {
 
         switch (state) {
             case FLEE:
-                float distToPlayer = new Vector2(map.player.x, map.player.y).sub(x, y).len();
-
-                if (distToPlayer > 24f || distToPlayer < 8f) {
-                    if (MathUtils.randomBoolean(.5f)) {
-                        state = State.PREPARE_JUMP;
+                if (fleeTime == 0) {
+                    if (new Vector2(map.player.x, map.player.y).sub(x, y).len() < 16) {
+                        fleeTime = .5f;
+                        fleeAngle = new Vector2(map.player.x, map.player.y).sub(x, y).angle() + 180;
+                        fleeSpeed = 48f;
                     } else {
-                        state = State.PREPARE_STING;
+                        fleeTime = .25f;
+                        fleeSpeed = 0;
                     }
-                } else {
-                    float angleToPlayer = new Vector2(map.player.x, map.player.y).sub(x, y).angle();
-
-                    velX += MathUtils.cosDeg(angleToPlayer + 180) * 48f;
-                    velY += MathUtils.sinDeg(angleToPlayer + 180) * 48f;
                 }
 
-                fleeAnimTime += Game.getDelta();
+                if (fleeTime > 0) {
+                    fleeTime -= Game.getDelta();
+
+                    if (fleeTime < 0) {
+                        fleeTime = 0;
+
+                        if (lastState == null || lastState == State.PREPARE_JUMP || lastState == State.PREPARE_STING) {
+                            if (MathUtils.randomBoolean(.25f)) {
+                                state = State.PREPARE_EGG;
+                            } else {
+                                if (MathUtils.randomBoolean(.5f)) {
+                                    state = State.PREPARE_JUMP;
+                                } else {
+                                    state = State.PREPARE_STING;
+                                }
+                            }
+                        } else if (lastState == State.PREPARE_EGG) {
+                            state = State.PREPARE_JUMP;
+                        }
+
+                        lastState = state;
+                    }
+                }
+
+                velX += MathUtils.cosDeg(fleeAngle) * fleeSpeed;
+                velY += MathUtils.sinDeg(fleeAngle) * fleeSpeed;
+
+                if (fleeSpeed > 0) {
+                    fleeAnimTime += Game.getDelta();
+                }
                 image = spriteSheet.grab(MathUtils.floor(fleeAnimTime * 10f) % 2, 0);
 
                 if (velX > 0) {
@@ -174,12 +242,10 @@ public class SpiderQueen extends Monster {
 
                     Projectile p = new Projectile();
                     p.image = spriteSheet.grab(2, 2);
-                    p.dir = new Vector2(map.player.x, map.player.y).sub(x, y).angle();
-                    p.x = x + MathUtils.cosDeg(p.dir) * 4f;
-                    p.y = y + MathUtils.sinDeg(p.dir) * 4f;
-                    p.minDamage = 1;
-                    p.maxDamage = 3;
-                    p.fire = 1;
+                    p.dir = new Vector2(map.player.x, map.player.y).sub(x + 4, y).angle();
+                    p.x = x + 4;
+                    p.y = y;
+                    p.damage = 1;
                     p.speed = 64f;
                     map.entities.addEntity(p);
                 }
@@ -194,6 +260,31 @@ public class SpiderQueen extends Monster {
                 }
 
                 image = spriteSheet.grab(1, 2);
+
+                break;
+            case PREPARE_EGG:
+                if (prepareEggTime == 0) {
+                    prepareEggTime = 1f;
+                }
+
+                if (prepareEggTime > 0) {
+                    prepareEggTime -= Game.getDelta();
+
+                    if (prepareEggTime < 0) {
+                        prepareEggTime = 0;
+                        state = State.EGG;
+                    }
+                }
+
+                image = spriteSheet.grab(1, 2);
+
+                break;
+            case EGG:
+                Egg e = new Egg();
+                e.x = x + 4;
+                e.y = y;
+                map.entities.addEntity(e);
+                state = State.FLEE;
 
                 break;
         }

@@ -2,20 +2,12 @@ package game.main;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.math.MathUtils;
-import game.main.item.equipment.hand.right.melee_weapon.BattleAxe;
-import game.main.state.play.map.Cave;
 import game.resource.Shaders;
 import game.resource.Textures;
 import game.main.state.play.Play;
 import game.main.state.GameState;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.Random;
 
 public class Game extends ApplicationAdapter {

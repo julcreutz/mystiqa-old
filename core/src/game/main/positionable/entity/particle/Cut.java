@@ -6,7 +6,7 @@ import game.main.Game;
 
 public class Cut extends Particle {
     public Cut(float rot) {
-        image = new SpriteSheet("particle_line").grab(0, 0);
+        image = new SpriteSheet("entities/particles/particle_line").grab(0, 0);
         this.rot = rot;
         scale = MathUtils.random(1.5f, 2f);
     }

@@ -10,7 +10,7 @@ public class Chest extends Entity implements Interactable {
 
     public Chest() {
         hitbox.set(0, 0, 8, 4);
-        spriteSheet = new SpriteSheet("chest", 2, 1);
+        spriteSheet = new SpriteSheet("entities/chest", 2, 1);
 
         isVulnerable = false;
     }

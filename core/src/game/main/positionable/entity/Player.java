@@ -10,7 +10,6 @@ import game.main.Game;
 import game.main.item.equipment.armor.Armor;
 import game.main.item.equipment.armor.IronArmor;
 import game.main.item.equipment.hand.left.IronShield;
-import game.main.item.equipment.hand.left.Shield;
 import game.main.item.equipment.hand.right.RightHand;
 import game.main.item.equipment.hand.left.LeftHand;
 import game.main.item.equipment.hand.right.melee_weapon.*;
@@ -32,9 +31,6 @@ public class Player extends Entity {
 
     public int magic;
     public int maxMagic;
-
-    public float experience;
-    public float maxExperience;
 
     public int step;
     public int dir;
@@ -60,21 +56,14 @@ public class Player extends Entity {
         attackHitbox = new Hitbox(this);
         blockHitbox = new Hitbox(this);
 
-        maxHealth = 15;
+        maxHealth = 9;
         speed = 1;
-        minDamage = 1;
-        maxDamage = 1;
-        damagePerLevel = .5f;
-        defense = 1;
-        defensePerLevel = .5f;
 
         maxMagic = 6;
 
-        maxExperience = 20;
-
-        feet = new SpriteSheet("human_feet", 4, 4);
-        body = new SpriteSheet("human_body", 5, 4);
-        head = new SpriteSheet("human_head", 1, 4);
+        feet = new SpriteSheet("entities/human_feet", 4, 4);
+        body = new SpriteSheet("entities/human_body", 5, 4);
+        head = new SpriteSheet("entities/human_head", 1, 4);
     }
 
     @Override
@@ -481,9 +470,9 @@ public class Player extends Entity {
 
         magic = maxMagic;
 
-        setRightHand(new Broadsword());
-        setLeftHand(new IronShield());
-        setArmor(new IronArmor());
+        new IronSword().equip(this);
+        new IronShield().equip(this);
+        new IronArmor().equip(this);
     }
 
     @Override
@@ -526,77 +515,10 @@ public class Player extends Entity {
     }
 
     @Override
-    public float getMaxHealth() {
-        return super.getMaxHealth() + level * 2;
-    }
-
-    @Override
-    public float getSpeed() {
-        return super.getSpeed() + (armor != null ? armor.speed : 0);
-    }
-
-    @Override
-    public float getDefense() {
-        return super.getDefense() + (armor != null ? armor.defense : 0);
-    }
-
-    @Override
-    public float getFire() {
-        return super.getFire() + (rightHand != null ? rightHand.fire : 0);
-    }
-
-    public void addExperience(float experience) {
-        this.experience += experience;
-
-        if (this.experience >= getMaxExperience()) {
-            this.experience -= getMaxExperience();
-            level++;
-
-            health = getMaxHealth();
-
-            map.play.setMessage("You reach level " + (level + 1) + "!");
-        }
-    }
-
-    public float getMaxExperience() {
-        return maxExperience + level * level * 5;
-    }
-
-    public float getExperiencePercentage() {
-        return experience / getMaxExperience();
-    }
-
-    @Override
-    public float getMaxBlock() {
-        return super.getMaxBlock() + (leftHand instanceof Shield ? ((Shield) leftHand).block : 0);
-    }
-
-    @Override
     public void onHit(Entity by) {
         super.onHit(by);
 
         invincibleTime += 1f;
-    }
-
-    public void setRightHand(RightHand rightHand) {
-        this.rightHand = rightHand;
-
-        minDamage += rightHand.minDamage;
-        maxDamage += rightHand.maxDamage;
-
-        criticalChance += rightHand.criticalChance;
-
-        map.entities.addListener(rightHand);
-    }
-
-    public void setLeftHand(LeftHand leftHand) {
-        this.leftHand = leftHand;
-        map.entities.addListener(leftHand);
-    }
-
-    public void setArmor(Armor armor) {
-        this.armor = armor;
-        map.entities.addListener(armor);
     }
 
     public float getMagicPercentage() {

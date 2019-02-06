@@ -4,7 +4,7 @@ import game.resource.SpriteSheet;
 
 public class Key extends Collectable {
     public Key() {
-        icon = new SpriteSheet("key");
+        icon = new SpriteSheet("items/collectables/key");
     }
 
     @Override

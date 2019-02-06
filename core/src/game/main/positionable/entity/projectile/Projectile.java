@@ -19,7 +19,7 @@ public class Projectile extends Monster {
     public ParticleEmitter particles;
 
     public Projectile() {
-        hitbox.set(0, 0, 8, 8);
+        hitbox.set(4, 4, 2, 2);
 
         isVulnerable = false;
 

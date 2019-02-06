@@ -56,11 +56,15 @@ public class MeleeWeapon extends RightHand {
 
     public boolean wasBlocking;
 
+    public float damage;
+    public float fire;
+
     @Override
     public void update(Player h) {
         super.update(h);
 
         if (isAttacking()) {
+            // Manipulate player move speed
             if (attacking) {
                 h.moveSpeed *= 0;
                 attackTime -= Game.getDelta() * 4f * speed;
@@ -68,21 +72,25 @@ public class MeleeWeapon extends RightHand {
                 h.moveSpeed *= .5f;
             }
 
+            // Calculate weapon angle
             float a;
 
             if (angle == 0) {
                 a = h.dir * 90;
-                dist = 6 - range * 4f + MathUtils.sin(attackTime * MathUtils.PI) * (range * 4f + 2f);
+                dist = 6;
             } else {
                 a = h.dir * 90 - 135 + (1 - attackTime) * angle;
                 dist = 6 + MathUtils.sin(attackTime * MathUtils.PI) * (2f);
             }
 
+            // Update position
             x = h.x + MathUtils.cosDeg(a) * dist;
             y = h.y + MathUtils.sinDeg(a) * dist + (h.yOffset - h.y);
 
+            // Rotate image
             rot = a;
 
+            // Choose whether to render behind or in front of player
             switch (h.dir) {
                 case 0:
                 case 2:
@@ -94,6 +102,7 @@ public class MeleeWeapon extends RightHand {
                     break;
             }
 
+            // End attacking
             if (attackTime < 0) {
                 attackTime = 0;
                 attacking = false;
@@ -101,6 +110,7 @@ public class MeleeWeapon extends RightHand {
                 h.blocking = wasBlocking;
             }
 
+            // Calculate player arm index
             float relativeAngle = a - h.dir * 90f;
 
             if (relativeAngle < -90f) {
@@ -123,6 +133,7 @@ public class MeleeWeapon extends RightHand {
             renderBehind = true;
         }
 
+        // Update player attack hitbox
         if (attacking) {
             h.attackHitbox.set(x + MathUtils.cosDeg(rot) * range * 8f - h.x,
                     y + MathUtils.sinDeg(rot) * range * 8f - h.y, 8, 8);
@@ -132,6 +143,7 @@ public class MeleeWeapon extends RightHand {
 
         image = spriteSheet.grab(0, 0);
 
+        // Spawn fire particles if needed
         if (fire > 0) {
             fireParticleTime -= Game.getDelta();
 
@@ -202,5 +214,19 @@ public class MeleeWeapon extends RightHand {
     @Override
     public boolean renderBehind() {
         return renderBehind;
+    }
+
+    @Override
+    public void equip(Player p) {
+        super.equip(p);
+
+        p.damage += damage;
+    }
+
+    @Override
+    public void unequip(Player p) {
+        super.unequip(p);
+
+        p.damage -= damage;
     }
 }

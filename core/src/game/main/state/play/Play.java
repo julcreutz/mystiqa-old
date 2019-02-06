@@ -40,9 +40,9 @@ public class Play extends GameState {
         nextMap = new Cave();
         nextMap.generate();
 
-        guiLayer = new SpriteSheet("gui_layer");
-        guiBar = new SpriteSheet("gui_bar", 3, 1);
-        guiStats = new SpriteSheet("gui_stats", 4, 3);
+        guiLayer = new SpriteSheet("gui/gui_layer");
+        guiBar = new SpriteSheet("gui/gui_bar", 3, 1);
+        guiStats = new SpriteSheet("gui/gui_stats", 4, 3);
     }
 
     @Override

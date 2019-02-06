@@ -35,12 +35,11 @@ public class Slime extends Monster {
 
     public Slime() {
         hitbox.set(1, 1, 6, 4);
-        spriteSheet = new SpriteSheet("slime", 2, 2);
+        spriteSheet = new SpriteSheet("entities/monsters/slime", 2, 2);
         state = State.RANDOM_MOVEMENT;
 
-        health = 9;
-        minDamage = 2;
-        maxDamage = 4;
+        health = 3;
+        damage = 1;
         defense = 2;
         speed = 1;
     }

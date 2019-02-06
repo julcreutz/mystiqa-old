@@ -8,6 +8,6 @@ public class CaveHole extends ConnectedTile {
         hitbox = new Hitbox(this, 0, 0, 8, 8);
         isOverfliable = true;
         connectWith = new Class[] {CaveWall.class, CaveBridge.class};
-        spriteSheet = new SpriteSheet("cave_hole", 5, 4);
+        spriteSheet = new SpriteSheet("tiles/cave_hole", 5, 4);
     }
 }

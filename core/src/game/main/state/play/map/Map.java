@@ -428,7 +428,7 @@ public abstract class Map {
     public Choices<Entity> monsters;
 
     public Map() {
-        guiLayer = new SpriteSheet("gui_layer");
+        guiLayer = new SpriteSheet("gui/gui_layer");
 
         tiles = new TileManager(this);
         entities = new EntityManager(this);
@@ -1215,8 +1215,6 @@ public abstract class Map {
 
                 while (r.getMonsterCount() < monsterCount) {
                     Entity monster = monsters.get(r);
-
-                    monster.level = Game.RANDOM.nextInt(4);
 
                     int x;
                     int y;
