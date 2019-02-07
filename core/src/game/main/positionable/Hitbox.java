@@ -1,7 +1,9 @@
 package game.main.positionable;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import game.main.positionable.entity.Entity;
+import game.resource.SpriteSheet;
 
 /**
  * Describes a rectangle offset by specified x and y values multiplier to
@@ -136,5 +138,9 @@ public class Hitbox {
         this.offsetY = offsetY;
 
         rect.setSize(width, height);
+    }
+
+    public void render(SpriteBatch batch) {
+        batch.draw(new SpriteSheet("gui/gui_layer").grab(0, 0), getX(), getY(), getWidth(), getHeight());
     }
 }

@@ -56,11 +56,11 @@ public class Spider extends Monster {
             case FLEE:
                 if (fleeTime == 0) {
                     if (new Vector2(map.player.x, map.player.y).sub(x, y).len() < 16) {
-                        fleeTime = .5f;
+                        fleeTime = MathUtils.random(.25f, .5f);
                         fleeAngle = new Vector2(map.player.x, map.player.y).sub(x, y).angle() + 180;
                         fleeSpeed = 48f;
                     } else {
-                        fleeTime = .25f;
+                        fleeTime = MathUtils.random(.25f, .5f);
                         fleeSpeed = 0;
                     }
                 }
@@ -91,7 +91,7 @@ public class Spider extends Monster {
                 break;
             case PREPARE_JUMP:
                 if (prepareJumpTime == 0) {
-                    prepareJumpTime = 1f;
+                    prepareJumpTime = MathUtils.random(.5f, 1f);
                 }
 
                 if (prepareJumpTime > 0) {
@@ -109,7 +109,7 @@ public class Spider extends Monster {
                     scaleX = -1;
                 }
 
-                if (prepareJumpTime < .5f) {
+                if (prepareJumpTime < .25f) {
                     image = spriteSheet.grab(0, 1);
                 } else {
                     image = spriteSheet.grab(0, 0);

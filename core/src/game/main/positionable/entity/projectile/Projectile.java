@@ -19,8 +19,6 @@ public class Projectile extends Monster {
     public ParticleEmitter particles;
 
     public Projectile() {
-        hitbox.set(4, 4, 2, 2);
-
         isVulnerable = false;
 
         isPushable = false;
@@ -85,5 +83,10 @@ public class Projectile extends Monster {
     @Override
     public boolean removeOnDisabled() {
         return true;
+    }
+
+    public void setImage(TextureRegion image) {
+        this.image = image;
+        hitbox.set(0, 0, image.getRegionWidth(), image.getRegionHeight());
     }
 }

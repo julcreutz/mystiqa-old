@@ -5,14 +5,12 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.math.MathUtils;
+import game.main.state.play.map.Forest;
 import game.resource.Colors;
 import game.resource.SpriteSheet;
 import game.main.Game;
-import game.main.positionable.entity.Entity;
-import game.main.positionable.entity.monster.Monster;
 import game.main.state.GameState;
 import game.main.state.play.map.Map;
-import game.main.state.play.map.Cave;
 
 public class Play extends GameState {
     public Map map;
@@ -37,7 +35,7 @@ public class Play extends GameState {
         lighting = createFrameBuffer();
         gui = createFrameBuffer();
 
-        nextMap = new Cave();
+        nextMap = new Forest();
         nextMap.generate();
 
         guiLayer = new SpriteSheet("gui/gui_layer");
@@ -50,7 +48,7 @@ public class Play extends GameState {
         super.update(g);
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
-            nextMap = new Cave();
+            nextMap = new Forest();
             nextMap.generate();
         }
 

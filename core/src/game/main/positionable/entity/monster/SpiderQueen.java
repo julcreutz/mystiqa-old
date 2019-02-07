@@ -16,7 +16,7 @@ public class SpiderQueen extends Monster {
         public Egg() {
             hitbox.set(1, 1, 6, 4);
 
-            maxHealth = 6;
+            maxHealth = 3;
 
             spriteSheet = new SpriteSheet("entities/monsters/spider_queen_egg");
             time = 5f;
@@ -77,6 +77,7 @@ public class SpiderQueen extends Monster {
     public float prepareEggTime;
 
     public SpriteSheet spriteSheet;
+    public SpriteSheet sting;
     public TextureRegion image;
     public float scaleX;
 
@@ -88,7 +89,8 @@ public class SpiderQueen extends Monster {
 
         state = State.FLEE;
 
-        spriteSheet = new SpriteSheet("entities/monsters/spider_queen_large", 3, 3);
+        spriteSheet = new SpriteSheet("entities/monsters/spider_queen_large", 3, 4);
+        sting = new SpriteSheet("entities/monsters/spider_queen_sting");
 
         applyTileMovementSpeed = false;
     }
@@ -106,11 +108,11 @@ public class SpiderQueen extends Monster {
             case FLEE:
                 if (fleeTime == 0) {
                     if (new Vector2(map.player.x, map.player.y).sub(x, y).len() < 16) {
-                        fleeTime = .5f;
+                        fleeTime = MathUtils.random(.25f, .5f);
                         fleeAngle = new Vector2(map.player.x, map.player.y).sub(x, y).angle() + 180;
                         fleeSpeed = 48f;
                     } else {
-                        fleeTime = .25f;
+                        fleeTime = MathUtils.random(.25f, 1f);
                         fleeSpeed = 0;
                     }
                 }
@@ -241,10 +243,10 @@ public class SpiderQueen extends Monster {
                     stingTime = .5f;
 
                     Projectile p = new Projectile();
-                    p.image = spriteSheet.grab(2, 2);
-                    p.dir = new Vector2(map.player.x, map.player.y).sub(x + 4, y).angle();
-                    p.x = x + 4;
+                    p.setImage(sting.grab(0, 0));
+                    p.x = x + 8;
                     p.y = y;
+                    p.dir = new Vector2(map.player.x, map.player.y).sub(p.x, p.y).angle();
                     p.damage = 1;
                     p.speed = 64f;
                     map.entities.addEntity(p);
@@ -276,7 +278,7 @@ public class SpiderQueen extends Monster {
                     }
                 }
 
-                image = spriteSheet.grab(1, 2);
+                image = spriteSheet.grab(0, 3);
 
                 break;
             case EGG:
