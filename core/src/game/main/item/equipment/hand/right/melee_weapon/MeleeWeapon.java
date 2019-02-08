@@ -11,27 +11,6 @@ import game.main.positionable.entity.particle.Flame;
 import game.main.item.equipment.hand.right.RightHand;
 
 public class MeleeWeapon extends RightHand {
-    public static final float[][] X = new float[][] {
-            {5, 6, 5, 3},
-            {3, 0, 3, 4},
-            {-5, -6, -5, -3},
-            {-3, 0, -3, -5}
-    };
-
-    public static final float[][] Y = new float[][] {
-            {-1, 1, -1, -3},
-            {3, 2, 3, 1},
-            {-1, 1, -1, -3},
-            {-6, -6, -6, -5}
-    };
-
-    public static final float[][] ROT = new float[][] {
-            {0, 22.5f, 0, -22.5f},
-            {90, 90 + 22.5f, 90, 90 - 22.5f},
-            {180, 180 - 22.5f, 180, 180 + 22.5f},
-            {270, 270 + 22.5f, 270, 270 - 22.5f}
-    };
-
     public SpriteSheet spriteSheet;
     public TextureRegion image;
 
@@ -123,12 +102,27 @@ public class MeleeWeapon extends RightHand {
         } else {
             armIndex = h.step;
 
-            x = h.x + X[h.dir][h.step];
-            y = h.y + Y[h.dir][h.step];
-            rot = ROT[h.dir][h.step];
+            this.x = h.x + new float[][] {
+                    {5, 6, 5, 3},
+                    {3, 0, 3, 4},
+                    {-5, -6, -5, -3},
+                    {-3, 0, -3, -5}
+            }[h.dir][h.step];
+            this.y = h.y + new float[][] {
+                    {-1, 1, -1, -3},
+                    {3, 2, 3, 1},
+                    {-1, 1, -1, -3},
+                    {-6, -6, -6, -5}
+            }[h.dir][h.step];
+            this.rot = new float[][] {
+                    {0, 22.5f, 0, -22.5f},
+                    {90, 90 + 22.5f, 90, 90 - 22.5f},
+                    {180, 180 - 22.5f, 180, 180 + 22.5f},
+                    {270, 270 + 22.5f, 270, 270 - 22.5f}
+            }[h.dir][h.step];
 
-            x -= MathUtils.cosDeg(rot) * (range * 4f);
-            y -= MathUtils.sinDeg(rot) * (range * 4f);
+            this.x -= MathUtils.cosDeg(this.rot) * (range * 4f);
+            this.y -= MathUtils.sinDeg(this.rot) * (range * 4f);
 
             renderBehind = true;
         }

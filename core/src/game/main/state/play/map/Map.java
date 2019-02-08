@@ -1209,25 +1209,27 @@ public abstract class Map {
         entities.addEntity(player);
 
         // Place monsters randomly
-        for (Room r : rooms) {
-            if (r.spawnMonsters) {
-                int monsterCount = (int) MathUtils.lerp(minMonsters, maxMonsters, r.difficulty);
+        if (monsters.choices.size > 0) {
+            for (Room r : rooms) {
+                if (r.spawnMonsters) {
+                    int monsterCount = (int) MathUtils.lerp(minMonsters, maxMonsters, r.difficulty);
 
-                while (r.getMonsterCount() < monsterCount) {
-                    Entity monster = monsters.get(r);
+                    while (r.getMonsterCount() < monsterCount) {
+                        Entity monster = monsters.get(r);
 
-                    int x;
-                    int y;
+                        int x;
+                        int y;
 
-                    do {
-                        x = r.getTileX() + 1 + Game.RANDOM.nextInt(r.getTileWidth() - 2);
-                        y = r.getTileY() + 1 + Game.RANDOM.nextInt(r.getTileHeight() - 2);
-                    } while (tiles.at(x, y) != null && !isGround(tiles.at(x, y)));
+                        do {
+                            x = r.getTileX() + 1 + Game.RANDOM.nextInt(r.getTileWidth() - 2);
+                            y = r.getTileY() + 1 + Game.RANDOM.nextInt(r.getTileHeight() - 2);
+                        } while (tiles.at(x, y) != null && !isGround(tiles.at(x, y)));
 
-                    monster.x = x * 8;
-                    monster.y = y * 8;
+                        monster.x = x * 8;
+                        monster.y = y * 8;
 
-                    entities.addEntity(monster);
+                        entities.addEntity(monster);
+                    }
                 }
             }
         }

@@ -5,7 +5,8 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.math.MathUtils;
-import game.main.state.play.map.Forest;
+import game.main.state.play.map.Mines;
+import game.main.state.play.map.SpiderNest;
 import game.resource.Colors;
 import game.resource.SpriteSheet;
 import game.main.Game;
@@ -35,7 +36,7 @@ public class Play extends GameState {
         lighting = createFrameBuffer();
         gui = createFrameBuffer();
 
-        nextMap = new Forest();
+        nextMap = new Mines();
         nextMap.generate();
 
         guiLayer = new SpriteSheet("gui/gui_layer");
@@ -48,7 +49,7 @@ public class Play extends GameState {
         super.update(g);
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
-            nextMap = new Forest();
+            nextMap = new Mines();
             nextMap.generate();
         }
 
